@@ -1,18 +1,20 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("com.google.devtools.ksp")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
     namespace = "com.example.myapplication"
-    compileSdk = 34
+    compileSdk = rootProject.extra["compileSdk"] as Int
 
     defaultConfig {
         applicationId = "com.example.myapplication"
-        minSdk = 24
-        targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        minSdk = rootProject.extra["minSdk"] as Int
+        targetSdk = rootProject.extra["targetSdk"] as Int
+        versionCode = rootProject.extra["versionCode"] as Int
+        versionName = rootProject.extra["versionName"] as String
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -51,7 +53,7 @@ android {
 
 dependencies {
 
-    implementation("androidx.core:core-ktx:1.12.0")
+    implementation("androidx.core:core-ktx:${rootProject.extra["core-ktxVersion"]}")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
     implementation("androidx.activity:activity-compose:1.8.2")
     implementation(platform("androidx.compose:compose-bom:2023.08.00"))
@@ -66,4 +68,32 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+
+    // hilt
+    implementation ("com.google.dagger:hilt-android:2.50")
+    ksp ("com.google.dagger:hilt-compiler:2.50")   // Hilt compiler
+    implementation ("androidx.hilt:hilt-navigation-compose:1.0.0") // compose에서 hilt
+
+    // material icon
+    implementation ("androidx.compose.material:material-icons-extended:${rootProject.extra["compose_ui_version"]}")
+
+    // vico
+    implementation("com.patrykandpatrick.vico:compose:${rootProject.extra["vico-version"]}") // For Jetpack Compose.
+    implementation("com.patrykandpatrick.vico:compose-m3:${rootProject.extra["vico-version"]}") // For `compose`. Creates a `ChartStyle` based on an M3 Material Theme.
+
+    // viewPager2
+    implementation ("com.tbuonomo:dotsindicator:5.0")
+    implementation ("androidx.compose.foundation:foundation:1.4.0")
+
+    // okHttp, requestBodu 사용하기 위함
+    implementation ("com.squareup.okhttp3:okhttp:4.9.1")
+
+    // retrofit
+    implementation ("com.google.code.gson:gson:2.8.9")
+    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation ("com.squareup.retrofit2:converter-gson:2.6.0")
+
+    // okhttp
+    implementation ("com.squareup.okhttp3:okhttp:4.8.0")
+    implementation ("com.squareup.okhttp3:logging-interceptor:4.8.0")
 }
