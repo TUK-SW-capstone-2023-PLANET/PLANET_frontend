@@ -1,9 +1,15 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
 }
+
+val properties = Properties()
+properties.load(project.rootProject.file("local.properties").inputStream())
+val naver_client_id = properties.getProperty("naver_client_id")
 
 android {
     namespace = "com.example.myapplication"
@@ -15,6 +21,7 @@ android {
         targetSdk = rootProject.extra["targetSdk"] as Int
         versionCode = rootProject.extra["versionCode"] as Int
         versionName = rootProject.extra["versionName"] as String
+        manifestPlaceholders["NAVER_CLIENT_ID"] = naver_client_id
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -100,4 +107,12 @@ dependencies {
     // okhttp
     implementation ("com.squareup.okhttp3:okhttp:4.8.0")
     implementation ("com.squareup.okhttp3:logging-interceptor:4.8.0")
+
+    // Naver Map SDK
+    implementation("com.naver.maps:map-sdk:3.17.0")
+    implementation ("io.github.fornewid:naver-map-compose:1.6.0")
+//    implementation ("com.google.android.gms:play-services-location:21.0.1")
+//    implementation ("io.github.fornewid:naver-map-location:21.0.1")
+    implementation("com.google.android.material:material:1.11.0")
+    implementation("com.google.android.gms:play-services-location:21.1.0")
 }

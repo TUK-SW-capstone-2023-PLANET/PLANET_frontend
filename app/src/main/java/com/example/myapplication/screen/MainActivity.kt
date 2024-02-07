@@ -9,22 +9,28 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import com.example.myapplication.ui.theme.MyApplicationTheme
+import com.naver.maps.map.compose.ExperimentalNaverMapApi
+import com.naver.maps.map.compose.NaverMap
 
 class MainActivity : ComponentActivity() {
+    @OptIn(ExperimentalNaverMapApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             MyApplicationTheme {
                 // A surface container using the 'background' color from the theme
-                Column {
-                    Text(text = "asd", style = MaterialTheme.typography.headlineLarge)
-                    Text(text = "asd", style = MaterialTheme.typography.titleLarge)
-                    Text(text = "asd", style = MaterialTheme.typography.titleMedium)
-                    Text(text = "asd", style = MaterialTheme.typography.bodyLarge)
-                }
-//                Button(onClick = { /*TODO*/ }) {
+//                Column {
 //                    Text(text = "asd", style = MaterialTheme.typography.headlineLarge)
+//                    Text(text = "asd", style = MaterialTheme.typography.titleLarge)
+//                    Text(text = "asd", style = MaterialTheme.typography.titleMedium)
+//                    Text(text = "asd", style = MaterialTheme.typography.bodyLarge)
 //                }
+////                Button(onClick = { /*TODO*/ }) {
+////                    Text(text = "asd", style = MaterialTheme.typography.headlineLarge)
+////                }
+                NaverMap {
+
+                }
             }
         }
     }
