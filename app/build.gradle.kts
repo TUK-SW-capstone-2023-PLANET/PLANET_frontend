@@ -1,4 +1,4 @@
-import java.util.Properties
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 
 plugins {
     id("com.android.application")
@@ -7,9 +7,9 @@ plugins {
     id("com.google.dagger.hilt.android")
 }
 
-val properties = Properties()
-properties.load(project.rootProject.file("local.properties").inputStream())
-val naver_client_id = properties.getProperty("naver_client_id")
+fun getApiKey(propertyKey: String): String {
+    return gradleLocalProperties(rootDir).getProperty(propertyKey)
+}
 
 android {
     namespace = "com.example.myapplication"
@@ -21,8 +21,7 @@ android {
         targetSdk = rootProject.extra["targetSdk"] as Int
         versionCode = rootProject.extra["versionCode"] as Int
         versionName = rootProject.extra["versionName"] as String
-        manifestPlaceholders["NAVER_CLIENT_ID"] = naver_client_id
-
+        manifestPlaceholders["NAVER_CLIENT_ID"] = getApiKey("naver_client_id")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
@@ -31,11 +30,14 @@ android {
 
     buildTypes {
         release {
+            buildFeatures.buildConfig = true
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            buildConfigField("String", "NAVER_CLIENT_KEY", getApiKey("naver_client_id"))
+            buildConfigField("String", "NAVER_SECRET_KEY", getApiKey("naver_secret_key"))
         }
     }
     compileOptions {
@@ -114,5 +116,7 @@ dependencies {
 //    implementation ("com.google.android.gms:play-services-location:21.0.1")
 //    implementation ("io.github.fornewid:naver-map-location:21.0.1")
     implementation("com.google.android.material:material:1.11.0")
-    implementation("com.google.android.gms:play-services-location:21.1.0")
+    implementation("com.google.android.gms:play-services-location:21.0.1")
+    implementation ("io.github.fornewid:naver-map-location:21.0.1")
 }
+
