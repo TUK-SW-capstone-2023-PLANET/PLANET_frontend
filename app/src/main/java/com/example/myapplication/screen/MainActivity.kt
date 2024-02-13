@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -23,8 +24,10 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -34,32 +37,46 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.myapplication.component.map.MyItem
+import com.example.myapplication.component.map.NaverMapClustering
 import com.example.myapplication.network.GeocoderApi
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import com.example.myapplication.util.noRippleClickable
+import com.example.myapplication.viewmodel.MapViewModel
 import com.naver.maps.geometry.LatLng
+import com.naver.maps.map.CameraAnimation
+import com.naver.maps.map.CameraPosition
+import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.compose.ExperimentalNaverMapApi
 import com.naver.maps.map.compose.LocationTrackingMode
 import com.naver.maps.map.compose.MapProperties
 import com.naver.maps.map.compose.MapUiSettings
+import com.naver.maps.map.compose.Marker
 import com.naver.maps.map.compose.NaverMap
 import com.naver.maps.map.compose.PathOverlay
 import com.naver.maps.map.compose.rememberCameraPositionState
 import com.naver.maps.map.compose.rememberFusedLocationSource
+import com.naver.maps.map.compose.rememberMarkerState
+import com.naver.maps.map.util.MarkerIcons
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.random.Random
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
+
     @Inject
     lateinit var geocoderApi: GeocoderApi
+    private val mapViewModel by viewModels<MapViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             MyApplicationTheme {
-                Map()
+                Map(mapViewModel)
 //                ScrollToTopDerivedAndRememberedCase()
 //                Test()
             }
@@ -129,7 +146,7 @@ class MainActivity : ComponentActivity() {
 
     @OptIn(ExperimentalNaverMapApi::class)
     @Composable
-    fun Map() {
+    fun Map(mapViewModel: MapViewModel = viewModel()) {
         val coroutineScope = rememberCoroutineScope()
 
         val list = listOf(
@@ -185,6 +202,22 @@ class MainActivity : ComponentActivity() {
             LatLng(37.5586699, 126.9783698),
         )
 
+        // --> 클러스터링 더미 데이터, api 통신 이후 데이터 받아서 넣으면 됨
+        val items = remember { mutableStateListOf<MyItem>() }
+        val POSITION = LatLng(37.5666102, 126.9783881)
+        LaunchedEffect(Unit) {
+            repeat(1000) {
+                val position = LatLng(
+                    POSITION.latitude + Random.nextFloat(),
+                    POSITION.longitude + Random.nextFloat(),
+                )
+                items.add(MyItem(position, "Marker", "Snippet"))
+            }
+        }
+        // <-- 클러스터링 더미 데이터, api 통신 이후 데이터 받아서 넣으면 됨
+
+
+
         var mapProperties by remember {
             mutableStateOf(
                 MapProperties(
@@ -209,15 +242,16 @@ class MainActivity : ComponentActivity() {
                 properties = mapProperties,
                 uiSettings = mapUiSettings
             ) {
+
+                NaverMapClustering(items = items)
                 PathOverlay(coords = list)
             }
             Button(
                 onClick = {
                     Log.d("daeYoung", "${cameraPositionState.position}")
                     coroutineScope.launch {
-                        val latLng = cameraPositionState.position.target
-                        val result = geocoderApi.getMonthWaterBill(latLng)
-                        Log.d("daeYoung", "result: ${result.results}")
+                        mapViewModel.setLatLng(cameraPositionState.position.target)
+                        mapViewModel.getRegion()
                     }
                 },
                 modifier = Modifier

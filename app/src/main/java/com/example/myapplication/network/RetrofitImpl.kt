@@ -1,6 +1,7 @@
 package com.example.myapplication.network
 
-import com.naver.maps.map.BuildConfig
+import com.example.myapplication.BuildConfig
+import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -20,16 +21,24 @@ import javax.inject.Singleton
 object RetrofitModule {
     private const val URL = "http://192.168.45.57:8000"
     private const val NAVER_URL = "https://naveropenapi.apigw.ntruss.com"
-//    const val NAVER_CLIENT_KEY = BuildConfig.NAVER_CLIENT_KEY
-//    const val NAVER_SECRET_KEY = .NAVER_SECRET_KEY
-
-//    val properties = Properties().load(project.rootProject.file("local.properties").inputStream())
-    //    properties.load(project.rootProject.file("local.properties").inputStream())
-//    val naver_client_id = properties.getProperty("naver_client_id")
+//    val parser = TikXml.Builder().exceptionOnUnreadXml(false).build()
 
     @Singleton
     @Provides
     fun client(): OkHttpClient {
+        return  OkHttpClient.Builder()
+            .addInterceptor(HttpLoggingInterceptor().apply {
+                setLevel(HttpLoggingInterceptor.Level.BODY)
+            })
+            .connectTimeout(100, TimeUnit.SECONDS)
+            .readTimeout(100, TimeUnit.SECONDS)
+            .writeTimeout(100, TimeUnit.SECONDS)
+            .build()
+    }
+
+    @Singleton
+    @Provides
+    fun naverHeader(): OkHttpClient {
         return  OkHttpClient.Builder()
             .addInterceptor(AppInterceptor())
             .addInterceptor(HttpLoggingInterceptor().apply {
@@ -55,10 +64,13 @@ object RetrofitModule {
     @Singleton
     @Provides
     fun getNaverApi(): GeocoderApi {
+        val gson = GsonBuilder().setLenient().create()
+
         return Retrofit.Builder()
             .baseUrl(NAVER_URL)
+//            .addConverterFactory(TikXmlConverterFactory.create(parser))
             .addConverterFactory(GsonConverterFactory.create())
-            .client(client())
+            .client(naverHeader())
             .build()
             .create(GeocoderApi::class.java)
     }
@@ -67,8 +79,8 @@ object RetrofitModule {
         @Throws(IOException::class)
         override fun intercept(chain: Interceptor.Chain) : Response = with(chain) {
             val newRequest = request().newBuilder()
-                .addHeader("X-NCP-APIGW-API-KEY-ID", "(header Value)")
-                .addHeader("X-NCP-APIGW-API-KEY", "(header Value)")
+                .addHeader("X-NCP-APIGW-API-KEY-ID", "${BuildConfig.NAVER_CLIENT_KEY}")
+                .addHeader("X-NCP-APIGW-API-KEY", "${BuildConfig.NAVER_SECRET_KEY}")
                 .build()
             proceed(newRequest)
         }

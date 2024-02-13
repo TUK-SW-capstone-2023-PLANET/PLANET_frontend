@@ -5,10 +5,15 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
+//    id("org.jetbrains.kotlin.kapt")
 }
 
 fun getApiKey(propertyKey: String): String {
     return gradleLocalProperties(rootDir).getProperty(propertyKey)
+}
+
+fun getStringApiKey(propertyKey: String): String {
+    return "\"${gradleLocalProperties(rootDir).getProperty(propertyKey)}\""
 }
 
 android {
@@ -23,6 +28,8 @@ android {
         versionName = rootProject.extra["versionName"] as String
         manifestPlaceholders["NAVER_CLIENT_ID"] = getApiKey("naver_client_id")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "NAVER_CLIENT_KEY", getStringApiKey("naver_client_id"))
+        buildConfigField("String", "NAVER_SECRET_KEY", getStringApiKey("naver_secret_key"))
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -36,8 +43,6 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            buildConfigField("String", "NAVER_CLIENT_KEY", getApiKey("naver_client_id"))
-            buildConfigField("String", "NAVER_SECRET_KEY", getApiKey("naver_secret_key"))
         }
     }
     compileOptions {
@@ -83,40 +88,50 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
     // hilt
-    implementation ("com.google.dagger:hilt-android:2.50")
-    ksp ("com.google.dagger:hilt-compiler:2.50")   // Hilt compiler
-    implementation ("androidx.hilt:hilt-navigation-compose:1.0.0") // compose에서 hilt
+    implementation("com.google.dagger:hilt-android:2.50")
+    ksp("com.google.dagger:hilt-compiler:2.50")   // Hilt compiler
+    implementation("androidx.hilt:hilt-navigation-compose:1.0.0") // compose에서 hilt
 
-    // material icon
-    implementation ("androidx.compose.material:material-icons-extended:${rootProject.extra["compose_ui_version"]}")
+    // material icon,  https://fonts.google.com/icons
+    implementation("androidx.compose.material:material-icons-extended:${rootProject.extra["compose_ui_version"]}")
 
     // vico
     implementation("com.patrykandpatrick.vico:compose:${rootProject.extra["vico-version"]}") // For Jetpack Compose.
     implementation("com.patrykandpatrick.vico:compose-m3:${rootProject.extra["vico-version"]}") // For `compose`. Creates a `ChartStyle` based on an M3 Material Theme.
 
     // viewPager2
-    implementation ("com.tbuonomo:dotsindicator:5.0")
-    implementation ("androidx.compose.foundation:foundation:1.4.0")
+    implementation("com.tbuonomo:dotsindicator:5.0")
+    implementation("androidx.compose.foundation:foundation:1.4.0")
 
     // okHttp, requestBodu 사용하기 위함
-    implementation ("com.squareup.okhttp3:okhttp:4.9.1")
+    implementation("com.squareup.okhttp3:okhttp:4.9.1")
 
     // retrofit
-    implementation ("com.google.code.gson:gson:2.8.9")
-    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation ("com.squareup.retrofit2:converter-gson:2.6.0")
+    implementation("com.google.code.gson:gson:2.8.9")
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.6.0")
+
+    // retrofit xml parsing
+//    implementation ("com.tickaroo.tikxml:annotation:0.8.13")
+//    implementation ("com.tickaroo.tikxml:core:0.8.13")
+//    implementation ("com.tickaroo.tikxml:retrofit-converter:0.8.13")
+//    kapt ("com.tickaroo.tikxml:processor:0.8.13'")
+//    kapt("groupId:artifactId:1.9.22")
 
     // okhttp
-    implementation ("com.squareup.okhttp3:okhttp:4.8.0")
-    implementation ("com.squareup.okhttp3:logging-interceptor:4.8.0")
+    implementation("com.squareup.okhttp3:okhttp:4.8.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.8.0")
 
     // Naver Map SDK
     implementation("com.naver.maps:map-sdk:3.17.0")
-    implementation ("io.github.fornewid:naver-map-compose:1.6.0")
+    implementation("io.github.fornewid:naver-map-compose:1.6.0")
 //    implementation ("com.google.android.gms:play-services-location:21.0.1")
 //    implementation ("io.github.fornewid:naver-map-location:21.0.1")
+
     implementation("com.google.android.material:material:1.11.0")
     implementation("com.google.android.gms:play-services-location:21.0.1")
-    implementation ("io.github.fornewid:naver-map-location:21.0.1")
+    implementation("io.github.fornewid:naver-map-location:21.0.1")
+    // Naver Map clustering
+    implementation("io.github.ParkSangGwon:tedclustering-naver:1.0.2")
 }
 
