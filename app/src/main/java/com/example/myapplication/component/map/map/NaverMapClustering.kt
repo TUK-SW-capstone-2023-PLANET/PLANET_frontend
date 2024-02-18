@@ -1,13 +1,11 @@
-package com.example.myapplication.component.map
+package com.example.myapplication.component.map.map
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.compose.DisposableMapEffect
 import com.naver.maps.map.compose.ExperimentalNaverMapApi
@@ -17,8 +15,6 @@ import ted.gun0912.clustering.clustering.TedClusterItem
 import ted.gun0912.clustering.geometry.TedLatLng
 import ted.gun0912.clustering.naver.TedNaverClustering
 import com.example.myapplication.R
-import com.naver.maps.map.util.MarkerIcons
-import com.tbuonomo.viewpagerdotsindicator.dpToPx
 
 @OptIn(ExperimentalNaverMapApi::class)
 @Composable
