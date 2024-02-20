@@ -3,11 +3,7 @@ package com.example.myapplication.screen
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.result.registerForActivityResult
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -25,7 +21,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.example.myapplication.network.GeocoderApi
-import com.example.myapplication.screen.map.MapGraph
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import com.example.myapplication.util.RequestPermission
 import com.example.myapplication.viewmodel.MapViewModel
@@ -38,7 +33,7 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var geocoderApi: GeocoderApi
-    private val mapViewModel by viewModels<MapViewModel>()
+//    private val mapViewModel by viewModels<MapViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

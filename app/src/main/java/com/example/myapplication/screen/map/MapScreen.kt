@@ -149,8 +149,8 @@ fun MapScreen(mapViewModel: MapViewModel = viewModel()) {
             onClick = {
                 Log.d("daeYoung", "${cameraPositionState.position}")
                 coroutineScope.launch {
-                    mapViewModel.setLatLng(cameraPositionState.position.target)
-                    mapViewModel.getRegion()
+//                    mapViewModel.setLatLng(cameraPositionState.position.target)
+//                    mapViewModel.getRegion()
                 }
             },
             modifier = Modifier

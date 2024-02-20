@@ -6,9 +6,12 @@ import android.os.Handler
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import com.example.myapplication.screen.MainActivity
+import com.example.myapplication.screen.map.MapActivity
 import com.example.myapplication.screen.splash.ui.theme.PLANETTheme
 import com.example.myapplication.util.RequestPermission
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SplashActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -16,7 +19,8 @@ class SplashActivity : ComponentActivity() {
             PLANETTheme {
                 Handler().postDelayed(Runnable {
                     // 앱의 main activity로 넘어가기
-                    val i = Intent(this, MainActivity::class.java)
+//                    val i = Intent(this, MainActivity::class.java)
+                    val i = Intent(this, MapActivity::class.java)
                     startActivity(i)
                     // 현재 액티비티 닫기
                     finish()

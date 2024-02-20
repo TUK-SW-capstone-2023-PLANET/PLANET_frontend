@@ -1,5 +1,7 @@
 package com.example.myapplication.util
 
+import android.content.Context
+import android.net.Uri
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -12,16 +14,23 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.unit.dp
+import androidx.core.content.FileProvider
+import com.example.myapplication.BuildConfig
 import com.example.myapplication.TAG
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.permissions.shouldShowRationale
+import java.io.File
+import java.util.Objects
 
 fun Modifier.noRippleClickable(onClick: () -> Unit): Modifier = composed {
     clickable(indication = null,
@@ -29,6 +38,11 @@ fun Modifier.noRippleClickable(onClick: () -> Unit): Modifier = composed {
         onClick()
     }
 }
+
+// 새 파일을 만들기 위한 함수
+fun Context.createNewFile() = File(
+    filesDir, "${System.currentTimeMillis()}.jpg"
+).apply { createNewFile() }
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
@@ -38,9 +52,6 @@ fun RequestPermission() {
         android.Manifest.permission.ACCESS_COARSE_LOCATION,
         android.Manifest.permission.ACCESS_FINE_LOCATION,
     )
-
-    // Initialize the ActivityResultLauncher
-    //
 
     val cameraPermissionState = rememberPermissionState(android.Manifest.permission.CAMERA)
     val requestPermissionLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
@@ -64,4 +75,31 @@ fun RequestPermission() {
             Log.d(TAG, "camera permission is ok(LaunchedEffect)")
         }
     }
+}
+
+@OptIn(ExperimentalPermissionsApi::class)
+@Composable
+fun RequestCameraPermission() {
+    val cameraPermissionState = rememberPermissionState(android.Manifest.permission.CAMERA)
+    cameraPermissionState.launchPermissionRequest()
+}
+
+@OptIn(ExperimentalPermissionsApi::class)
+@Composable
+fun TakePicture(context: Context) {
+    val file = context.createNewFile()
+    val uri = FileProvider.getUriForFile(
+        Objects.requireNonNull(context),
+        BuildConfig.APPLICATION_ID + ".provider", file
+    )
+
+    var capturedImageUri by remember {
+        mutableStateOf<Uri>(Uri.EMPTY)
+    }
+
+    val cameraLauncher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) {
+        capturedImageUri = uri
+    }
+
+    val cameraPermissionState = rememberPermissionState(android.Manifest.permission.CAMERA)
 }

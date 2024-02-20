@@ -1,5 +1,10 @@
 package com.example.myapplication.screen.map
 
+import android.Manifest
+import android.net.Uri
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -19,7 +24,10 @@ import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -27,6 +35,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
@@ -36,15 +45,26 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myapplication.R
+import com.example.myapplication.TAG
+import com.example.myapplication.component.map.common.CameraButton
+import com.example.myapplication.component.map.common.LockButton
 import com.example.myapplication.component.map.record.RoundCornerCard
+import com.example.myapplication.util.ComposeFileProvider
+import com.example.myapplication.util.createNewFile
+import com.example.myapplication.viewmodel.MapViewModel
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
+import java.util.Objects
 
-@Preview(showBackground = true)
+@OptIn(ExperimentalPermissionsApi::class)
+//@Preview(showBackground = true)
 @Composable
-fun RecordScreen() {
+fun RecordScreen(mapViewModel: MapViewModel = viewModel()) {
     val timerColorList =
         listOf(colorResource(id = R.color.main_color1), colorResource(id = R.color.main_color3))
     val fontColor = colorResource(id = R.color.font_background_color1)
@@ -61,11 +81,33 @@ fun RecordScreen() {
         textMeasurer2.measure(drawText2, textStyle2)
     }
 
+    val context = LocalContext.current
+    val file = context.createNewFile()
+//    val uri = FileProvider.getUriForFile(
+//        Objects.requireNonNull(context),
+//        BuildConfig.APPLICATION_ID + ".provider", file
+//    )
+
+    val uri = ComposeFileProvider.getImageUri(Objects.requireNonNull(context))
+
+    var capturedImageUri by remember {
+        mutableStateOf<Uri>(Uri.EMPTY)
+    }
+
+    val cameraLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { success ->
+            if (success) capturedImageUri = uri
+//            Log.d(TAG, "uri: $uri")
+        }
+
+
+    val cameraPermissionState = rememberPermissionState(Manifest.permission.CAMERA)
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(color = colorResource(id = R.color.main_color4))
-            .padding(16.dp),
+            .padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -237,6 +279,22 @@ fun RecordScreen() {
                         append(" 개")
                     }
                 })
+            }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+            LockButton()
+            CameraButton {
+                if (cameraPermissionState.status.isGranted) {
+                    runCatching { cameraLauncher.launch(uri) }.onFailure { error ->
+//                        Log.d(TAG, "error: ${cameraLauncher.contract.getSynchronousResult(context, photoUri!!)}")
+                        Log.d(TAG, "error: ${error.message}")
+                    }
+
+                } else {
+                    cameraPermissionState.launchPermissionRequest()
+                }
             }
         }
     }

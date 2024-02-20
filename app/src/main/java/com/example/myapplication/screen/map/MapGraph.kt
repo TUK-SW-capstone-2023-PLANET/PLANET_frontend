@@ -1,5 +1,6 @@
 package com.example.myapplication.screen.map
 
+import android.content.Context
 import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
@@ -26,15 +27,19 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.myapplication.TAG
 import com.example.myapplication.data.map.Tabltem
 import com.example.myapplication.viewmodel.MapViewModel
 import kotlinx.coroutines.launch
+import java.io.File
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MapGraph(mapViewModel: MapViewModel = viewModel()) {
-
+    val directory = File(LocalContext.current.cacheDir, "images")
+    Log.d(TAG, "directory: ${directory.path}")
     val tabltems = listOf(
         Tabltem(
             unselectedIcon = Icons.Outlined.Delete,
@@ -85,7 +90,7 @@ fun MapGraph(mapViewModel: MapViewModel = viewModel()) {
         HorizontalPager(state = pagerState, modifier = Modifier.fillMaxSize()) { index ->
             when(index) {
                 0 -> Text(text = index.toString())
-                1 -> RecordScreen()
+                1 -> RecordScreen(mapViewModel = mapViewModel)
                 2 -> MapScreen(mapViewModel = mapViewModel)
             }
         }
