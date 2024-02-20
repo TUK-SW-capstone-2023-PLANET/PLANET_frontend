@@ -1,6 +1,8 @@
 package com.example.myapplication.screen.map
 
+import android.graphics.PointF
 import android.util.Log
+import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,11 +18,13 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myapplication.component.map.map.MyItem
 import com.example.myapplication.component.map.map.NaverMapClustering
 import com.example.myapplication.viewmodel.MapViewModel
 import com.naver.maps.geometry.LatLng
+import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.compose.ExperimentalNaverMapApi
 import com.naver.maps.map.compose.LocationTrackingMode
 import com.naver.maps.map.compose.MapProperties
@@ -124,6 +128,14 @@ fun MapScreen(mapViewModel: MapViewModel = viewModel()) {
 
     Box(modifier = Modifier.fillMaxSize()) {
         NaverMap(
+            modifier = Modifier.pointerInput(Unit) {// 뷰 페이저가 지도의 포커싱을 가져가는 issue를 해결
+                detectDragGestures { _, dragAmount ->
+                    cameraPositionState.move(
+                        CameraUpdate.scrollBy(
+                        PointF(dragAmount.x, dragAmount.y)
+                    ))
+                }
+            },
             locationSource = locationSource,
             cameraPositionState = cameraPositionState,
             properties = mapProperties,

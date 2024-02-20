@@ -21,6 +21,7 @@ android {
     compileSdk = rootProject.extra["compileSdk"] as Int
 
     defaultConfig {
+        manifestPlaceholders += mapOf()
         applicationId = "com.example.myapplication"
         minSdk = rootProject.extra["minSdk"] as Int
         targetSdk = rootProject.extra["targetSdk"] as Int
@@ -77,11 +78,13 @@ dependencies {
     implementation("androidx.compose.material3:material3")
     implementation(platform("androidx.compose:compose-bom:2023.08.00"))
     implementation(platform("androidx.compose:compose-bom:2023.08.00"))
+    implementation(platform("androidx.compose:compose-bom:2023.08.00"))
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     androidTestImplementation(platform("androidx.compose:compose-bom:2023.08.00"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
+    androidTestImplementation(platform("androidx.compose:compose-bom:2023.08.00"))
     androidTestImplementation(platform("androidx.compose:compose-bom:2023.08.00"))
     androidTestImplementation(platform("androidx.compose:compose-bom:2023.08.00"))
     debugImplementation("androidx.compose.ui:ui-tooling")
@@ -133,5 +136,8 @@ dependencies {
     implementation("io.github.fornewid:naver-map-location:21.0.1")
     // Naver Map clustering
     implementation("io.github.ParkSangGwon:tedclustering-naver:1.0.2")
+
+    // compose 에서 권한 요청
+    implementation ("com.google.accompanist:accompanist-permissions:0.34.0")
 }
 

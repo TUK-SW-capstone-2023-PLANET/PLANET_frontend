@@ -1,6 +1,7 @@
 package com.example.myapplication.screen.map
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -63,6 +64,7 @@ fun RecordScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(color = colorResource(id = R.color.main_color4))
             .padding(16.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
