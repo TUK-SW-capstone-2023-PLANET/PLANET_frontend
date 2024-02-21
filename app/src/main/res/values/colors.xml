@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="main_color1">#FF0C964A</color>
+    <color name="main_color2">#FF3CB371</color>
+    <color name="main_color3">#FF79CF9F</color>
+    <color name="main_color4">#FFF6FCF9</color>
+    <color name="font_background_color1">#FF5B5B5B</color>
+    <color name="font_background_color2">#FF9D9D9D</color>
+    <color name="font_background_color3">#FFE8E8E8</color>
+    <color name="font_background_color4">#FFF5F5F5</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+</resources>
