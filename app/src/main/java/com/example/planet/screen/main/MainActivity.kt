@@ -1,5 +1,6 @@
 package com.example.planet.screen.main
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -21,6 +22,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.example.planet.network.GeocoderApi
+import com.example.planet.screen.map.MapActivity
 import com.example.planet.ui.theme.MyApplicationTheme
 import com.example.planet.util.RequestPermission
 import com.example.planet.viewmodel.MainViewModel
@@ -40,10 +42,17 @@ class MainActivity : ComponentActivity() {
         setContent {
             MyApplicationTheme {
 //                RequestPermission()
-                MainScreen(mainViewModel = mainViewModel)
+                MainScreen(mainViewModel = mainViewModel) {
+                    startMapActivity()
+                }
 
             }
         }
+    }
+
+    private fun startMapActivity() {
+        val intent = Intent(this, MapActivity::class.java)
+        startActivity(intent)
     }
 }
 
