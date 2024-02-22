@@ -74,15 +74,15 @@ fun RecordScreen(mapViewModel: MapViewModel = viewModel()) {
     val fontColor = colorResource(id = R.color.font_background_color1)
     val textMeasurer1 = rememberTextMeasurer()
     val textMeasurer2 = rememberTextMeasurer()
-    val drawText1 = "1hour"
-    val drawText2 = "04:44"
+    val hour = "${mapViewModel.hour.value}hour"
+    val minuteSecond = mapViewModel.formattedTime.value
     val textStyle1 = TextStyle(color = fontColor, fontWeight = FontWeight.Medium)
     val textStyle2 = TextStyle(color = Color.Black, fontWeight = FontWeight.Bold, fontSize = 45.sp)
-    val textLayoutResult1 = remember(drawText1) {
-        textMeasurer1.measure(drawText1, textStyle1)
+    val textLayoutResult1 = remember(hour) {
+        textMeasurer1.measure(hour, textStyle1)
     }
-    val textLayoutResult2 = remember(drawText2) {
-        textMeasurer2.measure(drawText2, textStyle2)
+    val textLayoutResult2 = remember(minuteSecond) {
+        textMeasurer2.measure(minuteSecond, textStyle2)
     }
 
     DisposableEffect(Unit) {
@@ -155,7 +155,7 @@ fun RecordScreen(mapViewModel: MapViewModel = viewModel()) {
                 )
                 drawText(
                     textMeasurer = textMeasurer1,
-                    text = drawText1,
+                    text = hour,
                     style = textStyle1,
                     topLeft = Offset(
                         center.x - textLayoutResult1.size.width / 2,
@@ -164,7 +164,7 @@ fun RecordScreen(mapViewModel: MapViewModel = viewModel()) {
                 )
                 drawText(
                     textMeasurer = textMeasurer2,
-                    text = drawText2,
+                    text = minuteSecond,
                     style = textStyle2,
                     topLeft = Offset(
                         center.x - textLayoutResult2.size.width / 2,

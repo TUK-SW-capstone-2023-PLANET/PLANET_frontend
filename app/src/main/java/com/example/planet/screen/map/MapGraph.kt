@@ -18,6 +18,7 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -32,6 +33,7 @@ import com.example.planet.TAG
 import com.example.planet.component.map.trashList.TrashCard
 import com.example.planet.data.map.Tabltem
 import com.example.planet.viewmodel.MapViewModel
+import com.naver.maps.map.MapView
 import kotlinx.coroutines.launch
 import java.io.File
 
@@ -62,6 +64,12 @@ fun MapGraph(mapViewModel: MapViewModel = viewModel()) {
     LaunchedEffect(pagerState.currentPage, pagerState.isScrollInProgress) {
         if (!pagerState.isScrollInProgress) {
             selectedTabIndex = pagerState.currentPage
+        }
+    }
+    DisposableEffect(Unit) {
+        mapViewModel.startTimer()
+        onDispose {
+            mapViewModel.endTimer()
         }
     }
 
