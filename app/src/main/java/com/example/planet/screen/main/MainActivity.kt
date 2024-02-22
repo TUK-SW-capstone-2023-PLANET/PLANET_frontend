@@ -1,9 +1,10 @@
-package com.example.planet.screen
+package com.example.planet.screen.main
 
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,6 +23,7 @@ import androidx.compose.ui.Modifier
 import com.example.planet.network.GeocoderApi
 import com.example.planet.ui.theme.MyApplicationTheme
 import com.example.planet.util.RequestPermission
+import com.example.planet.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -31,13 +33,15 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var geocoderApi: GeocoderApi
-//    private val mapViewModel by viewModels<MapViewModel>()
+    private val mainViewModel by viewModels<MainViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             MyApplicationTheme {
-                RequestPermission()
+//                RequestPermission()
+                MainScreen(mainViewModel = mainViewModel)
+
             }
         }
     }

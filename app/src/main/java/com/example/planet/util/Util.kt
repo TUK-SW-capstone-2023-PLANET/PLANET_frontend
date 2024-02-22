@@ -23,6 +23,8 @@ import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.permissions.shouldShowRationale
 import java.io.File
+import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Objects
 
 fun Modifier.noRippleClickable(onClick: () -> Unit): Modifier = composed {
@@ -32,10 +34,39 @@ fun Modifier.noRippleClickable(onClick: () -> Unit): Modifier = composed {
     }
 }
 
-// 새 파일을 만들기 위한 함수
-fun Context.createNewFile() = File(
-    filesDir, "${System.currentTimeMillis()}.jpg"
-).apply { createNewFile() }
+// 이미지 파일 만들기
+fun Context.createImageFile(): File {
+    // Create an image file name
+    val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+    val imageFileName = "JPEG_" + timeStamp + "_"
+    val image = File.createTempFile(
+        imageFileName, /* prefix */
+        ".jpg", /* suffix */
+        externalCacheDir      /* directory */
+    )
+    return image
+}
+
+fun File.allDelete():Boolean? {
+    var returnData = false
+    val result = runCatching {     if (this.exists()) {
+        val files = this.listFiles()
+        if (files != null && files.size >0) {
+            files.forEachIndexed { index, file ->
+                returnData = file.delete()
+            }
+            return returnData
+        } else {
+            return false
+        }
+    } else {
+        return false
+    } }.onSuccess { return true }.onFailure { error ->
+        Log.d(TAG, "error: ${error.message}")
+        return false }
+
+    return result.getOrNull()
+}
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
@@ -75,24 +106,4 @@ fun RequestPermission() {
 fun RequestCameraPermission() {
     val cameraPermissionState = rememberPermissionState(android.Manifest.permission.CAMERA)
     cameraPermissionState.launchPermissionRequest()
-}
-
-@OptIn(ExperimentalPermissionsApi::class)
-@Composable
-fun TakePicture(context: Context) {
-    val file = context.createNewFile()
-    val uri = FileProvider.getUriForFile(
-        Objects.requireNonNull(context),
-        BuildConfig.APPLICATION_ID + ".provider", file
-    )
-
-    var capturedImageUri by remember {
-        mutableStateOf<Uri>(Uri.EMPTY)
-    }
-
-    val cameraLauncher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) {
-        capturedImageUri = uri
-    }
-
-    val cameraPermissionState = rememberPermissionState(android.Manifest.permission.CAMERA)
 }

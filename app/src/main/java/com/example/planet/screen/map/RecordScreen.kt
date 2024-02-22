@@ -24,6 +24,7 @@ import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -55,12 +56,13 @@ import com.example.planet.TAG
 import com.example.planet.component.map.common.CameraButton
 import com.example.planet.component.map.common.LockButton
 import com.example.planet.component.map.record.RoundCornerCard
-import com.example.planet.util.ComposeFileProvider
-import com.example.planet.util.createNewFile
+import com.example.planet.util.allDelete
+import com.example.planet.util.createImageFile
 import com.example.planet.viewmodel.MapViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
+import java.io.File
 import java.util.Objects
 
 @OptIn(ExperimentalPermissionsApi::class)
@@ -83,15 +85,20 @@ fun RecordScreen(mapViewModel: MapViewModel = viewModel()) {
         textMeasurer2.measure(drawText2, textStyle2)
     }
 
+    DisposableEffect(Unit) {
+        onDispose {
+            val path = "/storage/emulated/0/Android/data/${BuildConfig.APPLICATION_ID}/cache/"
+            val cashFile = File(path)
+            val result = cashFile.allDelete()
+            Log.d(TAG, "onDispose 실행되나?\n cashFile.delete(): ${result}")
+        }
+    }
     val context = LocalContext.current
-    val file = context.createNewFile()
-//    val uri = FileProvider.getUriForFile(
-//        Objects.requireNonNull(context),
-//        BuildConfig.APPLICATION_ID + ".provider", file
-//    )
-    Log.d(TAG, "\nfile: $file\n authority: ${BuildConfig.APPLICATION_ID + ".provider"}")
-
-    val uri = ComposeFileProvider.getImageUri(Objects.requireNonNull(context))
+    val file = context.createImageFile()
+    val uri = FileProvider.getUriForFile(
+        Objects.requireNonNull(context),
+        BuildConfig.APPLICATION_ID + ".provider", file
+    )
 
     var capturedImageUri by remember {
         mutableStateOf<Uri>(Uri.EMPTY)
@@ -100,7 +107,6 @@ fun RecordScreen(mapViewModel: MapViewModel = viewModel()) {
     val cameraLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { success ->
             if (success) capturedImageUri = uri
-//            Log.d(TAG, "uri: $uri")
         }
 
 
@@ -291,7 +297,6 @@ fun RecordScreen(mapViewModel: MapViewModel = viewModel()) {
             CameraButton {
                 if (cameraPermissionState.status.isGranted) {
                     runCatching { cameraLauncher.launch(uri) }.onFailure { error ->
-//                        Log.d(TAG, "error: ${cameraLauncher.contract.getSynchronousResult(context, photoUri!!)}")
                         Log.d(TAG, "error: ${error.message}")
                     }
 

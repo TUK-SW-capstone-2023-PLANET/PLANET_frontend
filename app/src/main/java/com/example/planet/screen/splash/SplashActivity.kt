@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.Handler
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import com.example.planet.screen.main.MainActivity
 import com.example.planet.screen.map.MapActivity
 import com.example.planet.screen.splash.ui.theme.PLANETTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -18,7 +19,7 @@ class SplashActivity : ComponentActivity() {
                 Handler().postDelayed(Runnable {
                     // 앱의 main activity로 넘어가기
 //                    val i = Intent(this, MainActivity::class.java)
-                    val i = Intent(this, MapActivity::class.java)
+                    val i = Intent(this, MainActivity::class.java)
                     startActivity(i)
                     // 현재 액티비티 닫기
                     finish()

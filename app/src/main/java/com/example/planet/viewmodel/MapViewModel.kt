@@ -1,14 +1,10 @@
 package com.example.planet.viewmodel
 
 import android.content.Context
-import androidx.core.content.FileProvider
 import androidx.lifecycle.ViewModel
-import com.example.planet.BuildConfig
 import com.example.planet.repository.MapRepository
-import com.example.planet.util.createNewFile
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import java.util.Objects
 import javax.inject.Inject
 
 @HiltViewModel
@@ -19,7 +15,6 @@ class MapViewModel @Inject constructor(
 
 
 //    val uri = ComposeFileProvider.getImageUri(Objects.requireNonNull(context))
-    val file = context.createNewFile()
 //    val uri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID, file)
 //    val uri = FileProvider.getUriForFile(
 //        Objects.requireNonNull(context),
