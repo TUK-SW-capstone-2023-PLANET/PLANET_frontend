@@ -20,7 +20,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.planet.component.map.map.MyItem
 import com.example.planet.component.map.map.NaverMapClustering
 import com.example.planet.viewmodel.MapViewModel
 import com.naver.maps.geometry.LatLng
@@ -95,17 +94,17 @@ fun MapScreen(mapViewModel: MapViewModel = viewModel()) {
     )
 
     // --> 클러스터링 더미 데이터, api 통신 이후 데이터 받아서 넣으면 됨
-    val items = remember { mutableStateListOf<MyItem>() }
-    val POSITION = LatLng(37.5666102, 126.9783881)
-    LaunchedEffect(Unit) {
-        repeat(1000) {
-            val position = LatLng(
-                POSITION.latitude + Random.nextFloat(),
-                POSITION.longitude + Random.nextFloat(),
-            )
-            items.add(MyItem(position, "Marker", "Snippet"))
-        }
-    }
+//    val items = remember { mutableStateListOf<MyItem>() }
+//    val POSITION = LatLng(37.5666102, 126.9783881)
+//    LaunchedEffect(Unit) {
+//        repeat(1000) {
+//            val position = LatLng(
+//                POSITION.latitude + Random.nextFloat(),
+//                POSITION.longitude + Random.nextFloat(),
+//            )
+//            items.add(MyItem(position, "Marker", "Snippet"))
+//        }
+//    }
     // <-- 클러스터링 더미 데이터, api 통신 이후 데이터 받아서 넣으면 됨
 
 
@@ -142,7 +141,7 @@ fun MapScreen(mapViewModel: MapViewModel = viewModel()) {
             uiSettings = mapUiSettings
         ) {
 
-            NaverMapClustering(items = items)
+            NaverMapClustering(items = mapViewModel.trashCanItem)
             PathOverlay(coords = list)  // 내가 해왔던 경로 찍으면 됌
         }
         Button(

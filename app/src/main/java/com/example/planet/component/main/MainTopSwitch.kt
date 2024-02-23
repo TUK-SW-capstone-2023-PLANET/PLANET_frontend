@@ -35,7 +35,7 @@ fun MainTopSwitch(mainViewModel: MainViewModel = viewModel()) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(4.dp)
+                .padding(2.dp)
         ) {
             PloggingSwitchButton(
                 text = "플로깅",

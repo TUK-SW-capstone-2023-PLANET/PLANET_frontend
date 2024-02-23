@@ -18,14 +18,14 @@ import com.example.planet.R
 
 @OptIn(ExperimentalNaverMapApi::class)
 @Composable
-fun NaverMapClustering(items: List<MyItem> = emptyList()) {
+fun NaverMapClustering(items: List<TrashCanItem> = emptyList()) {
 
     val context = LocalContext.current
-    var clusterManager by remember { mutableStateOf<TedNaverClustering<MyItem>?>(null) }
+    var clusterManager by remember { mutableStateOf<TedNaverClustering<TrashCanItem>?>(null) }
     DisposableMapEffect(items) { map ->
         if (clusterManager == null) {
             clusterManager =
-                TedNaverClustering.with<MyItem>(context, map)
+                TedNaverClustering.with<TrashCanItem>(context, map)
                     .customMarker { clusterItem ->
                         Marker(clusterItem.itemPosition).apply {
 //                            icon = MarkerIcons.RED
@@ -45,10 +45,11 @@ fun NaverMapClustering(items: List<MyItem> = emptyList()) {
     }
 }
 
-data class MyItem(
+data class TrashCanItem(
     val itemPosition: LatLng,
-    val itemTitle: String,
-    val itemSnippet: String,
+    val trashCanId: Int,
+    val itemTitle: String = "",
+    val itemSnippet: String = "",
 ) : TedClusterItem {
 
     override fun getTedLatLng(): TedLatLng {

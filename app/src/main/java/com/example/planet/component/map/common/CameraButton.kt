@@ -1,5 +1,7 @@
 package com.example.planet.component.map.common
 
+import android.Manifest
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,9 +17,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.planet.TAG
+import com.example.planet.util.noRippleClickable
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun CameraButton(onClick:() -> Unit) {
+fun CameraButton(onClick: () -> Unit) {
+    val cameraPermissionState = rememberPermissionState(Manifest.permission.CAMERA)
+
     Card(
         modifier = Modifier.size(50.dp),
         shape = CircleShape,
@@ -28,7 +38,15 @@ fun CameraButton(onClick:() -> Unit) {
         elevation = CardDefaults.elevatedCardElevation(4.dp)
     ) {
         Box(
-            modifier = Modifier.fillMaxSize().clickable { onClick() }
+            modifier = Modifier
+                .fillMaxSize()
+                .noRippleClickable {
+                    if (cameraPermissionState.status.isGranted) {
+                        onClick()
+                    } else {
+                        cameraPermissionState.launchPermissionRequest()
+                    }
+                }
         ) {
             Icon(
                 imageVector = Icons.Default.CameraAlt,

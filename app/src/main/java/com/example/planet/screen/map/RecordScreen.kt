@@ -20,11 +20,15 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -48,6 +52,7 @@ import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import androidx.core.content.FileProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.planet.BuildConfig
@@ -59,6 +64,7 @@ import com.example.planet.component.map.common.LockButton
 import com.example.planet.component.map.record.RoundCornerCard
 import com.example.planet.util.allDelete
 import com.example.planet.util.createImageFile
+import com.example.planet.util.noRippleClickable
 import com.example.planet.viewmodel.MapViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
@@ -86,11 +92,15 @@ fun RecordScreen(mapViewModel: MapViewModel = viewModel()) {
         textMeasurer2.measure(minuteSecond, textStyle2)
     }
     val context = LocalContext.current
-    val file = context.createImageFile()
-    val uri = FileProvider.getUriForFile(
-        Objects.requireNonNull(context),
-        BuildConfig.APPLICATION_ID + ".provider", file
-    )
+    val uri: Uri by remember {
+        derivedStateOf {
+            val file = context.createImageFile()
+            FileProvider.getUriForFile(
+                Objects.requireNonNull(context),
+                BuildConfig.APPLICATION_ID + ".provider", file
+            )
+        }
+    }
 
     var capturedImageUri by remember {
         mutableStateOf<Uri>(Uri.EMPTY)
@@ -101,16 +111,15 @@ fun RecordScreen(mapViewModel: MapViewModel = viewModel()) {
             if (success) capturedImageUri = uri
         }
 
-
-    val cameraPermissionState = rememberPermissionState(Manifest.permission.CAMERA)
-
-
     if (mapViewModel.dialogState.value) {
         PloggingDialog(mapViewModel = mapViewModel)
         mapViewModel.pauseTimer()
     }
 
     DisposableEffect(Unit) {
+        Log.d(TAG, "DisposableEffect() 실행\n uri: ${uri}")
+
+
         onDispose {
             val path = "/storage/emulated/0/Android/data/${BuildConfig.APPLICATION_ID}/cache/"
             val cashFile = File(path)
@@ -127,7 +136,10 @@ fun RecordScreen(mapViewModel: MapViewModel = viewModel()) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "열심히 하는 당신을 응원합니다.", color = colorResource(id = R.color.font_background_color1))
+        Text(
+            text = "열심히 하는 당신을 응원합니다.",
+            color = colorResource(id = R.color.font_background_color1)
+        )
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -186,7 +198,7 @@ fun RecordScreen(mapViewModel: MapViewModel = viewModel()) {
                     .align(Alignment.BottomCenter)
                     .padding(bottom = 90.dp)
                     .size(50.dp)
-                    .clickable { mapViewModel.displayOnDialog() },
+                    .noRippleClickable { mapViewModel.displayOnDialog() },
                 tint = colorResource(id = R.color.font_background_color3)
             )
         }
@@ -299,18 +311,19 @@ fun RecordScreen(mapViewModel: MapViewModel = viewModel()) {
         }
 
         Spacer(modifier = Modifier.height(16.dp))
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            LockButton()
-            CameraButton {
-                if (cameraPermissionState.status.isGranted) {
-                    runCatching { cameraLauncher.launch(uri) }.onFailure { error ->
-                        Log.d(TAG, "error: ${error.message}")
-                    }
-
-                } else {
-                    cameraPermissionState.launchPermissionRequest()
-                }
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = if (!mapViewModel.lockScreenState.value) Arrangement.SpaceBetween else Arrangement.End
+        ) {
+            if (!mapViewModel.lockScreenState.value) {
+                LockButton(imgaeVector = Icons.Default.Lock, lock = { mapViewModel.lockScreen() })
             }
+            CameraButton { cameraLauncher.launch(uri) }
         }
     }
+
 }
+
+
+
+
