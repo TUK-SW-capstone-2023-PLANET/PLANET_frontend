@@ -1,15 +1,20 @@
 package com.example.planet.viewmodel
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.planet.TAG
+import com.example.planet.data.ApiState
+import com.example.planet.data.dto.TrashCan
 import com.example.planet.repository.MapRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -70,35 +75,21 @@ class MapViewModel @Inject constructor(
         return formatter
     }
 
-//    val uri = ComposeFileProvider.getImageUri(Objects.requireNonNull(context))
-//    val uri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID, file)
-//    val uri = FileProvider.getUriForFile(
-//        Objects.requireNonNull(context),
-//        BuildConfig.APPLICATION_ID + ".provider", file
-//    )
 
 
-//    private var latLng: LatLng = LatLng(0.0, 0.0)
-//
-//    fun setLatLng(latLng: LatLng) {
-//        this.latLng = latLng
-//    }
-//
-//    suspend fun getRegion() {
-//        val longitude = latLng.longitude
-//        val latitude = latLng.latitude
-//
-//        when (val apiState = mapRepository.getRegion(coords = "$longitude, $latitude").first()) {
-//            is ApiState.Success<*> -> {
-//                val result = apiState.value as Geocoding
-//                Log.d("daeYoung", "성공: ${result}")
-//            }
-//
-//            is ApiState.Error -> {
-//                Log.d("daeYoung", "실패: ${apiState.errMsg}")
-//            }
-//
-//            ApiState.Loading -> {}
-//        }
-//    }
+    fun getAllTrashCanLocation() {
+        viewModelScope.launch {
+            when(val apiState = mapRepository.getAllTrashCanLocation().first()) {
+                is ApiState.Success<*> -> {
+                    val result = apiState.value as List<*>
+                    Log.d(TAG, "result: $result")
+                }
+                is ApiState.Error -> {
+                    Log.d("daeYoung", "getAllTrashCanLocation() 실패: ${apiState.errMsg}")
+                }
+                ApiState.Loading -> TODO()
+            }
+        }
+
+    }
 }

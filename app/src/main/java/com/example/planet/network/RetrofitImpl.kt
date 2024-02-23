@@ -19,28 +19,13 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object RetrofitModule {
-    private const val URL = "http://192.168.45.57:8000"
+    private const val URL = "http://3.37.87.60:8080/"
     private const val NAVER_URL = "https://naveropenapi.apigw.ntruss.com"
-//    val parser = TikXml.Builder().exceptionOnUnreadXml(false).build()
 
     @Singleton
     @Provides
     fun client(): OkHttpClient {
         return  OkHttpClient.Builder()
-            .addInterceptor(HttpLoggingInterceptor().apply {
-                setLevel(HttpLoggingInterceptor.Level.BODY)
-            })
-            .connectTimeout(100, TimeUnit.SECONDS)
-            .readTimeout(100, TimeUnit.SECONDS)
-            .writeTimeout(100, TimeUnit.SECONDS)
-            .build()
-    }
-
-    @Singleton
-    @Provides
-    fun naverHeader(): OkHttpClient {
-        return  OkHttpClient.Builder()
-            .addInterceptor(AppInterceptor())
             .addInterceptor(HttpLoggingInterceptor().apply {
                 setLevel(HttpLoggingInterceptor.Level.BODY)
             })
@@ -61,29 +46,15 @@ object RetrofitModule {
             .create(ApiService::class.java)
     }
 
-    @Singleton
-    @Provides
-    fun getNaverApi(): GeocoderApi {
-        val gson = GsonBuilder().setLenient().create()
-
-        return Retrofit.Builder()
-            .baseUrl(NAVER_URL)
-//            .addConverterFactory(TikXmlConverterFactory.create(parser))
-            .addConverterFactory(GsonConverterFactory.create())
-            .client(naverHeader())
-            .build()
-            .create(GeocoderApi::class.java)
-    }
-
-    class AppInterceptor : Interceptor {
-        @Throws(IOException::class)
-        override fun intercept(chain: Interceptor.Chain) : Response = with(chain) {
-            val newRequest = request().newBuilder()
-                .addHeader("X-NCP-APIGW-API-KEY-ID", "${BuildConfig.NAVER_CLIENT_KEY}")
-                .addHeader("X-NCP-APIGW-API-KEY", "${BuildConfig.NAVER_SECRET_KEY}")
-                .build()
-            proceed(newRequest)
-        }
-    }
+//    class AppInterceptor : Interceptor {
+//        @Throws(IOException::class)
+//        override fun intercept(chain: Interceptor.Chain) : Response = with(chain) {
+//            val newRequest = request().newBuilder()
+//                .addHeader("X-NCP-APIGW-API-KEY-ID", "${BuildConfig.NAVER_CLIENT_KEY}")
+//                .addHeader("X-NCP-APIGW-API-KEY", "${BuildConfig.NAVER_SECRET_KEY}")
+//                .build()
+//            proceed(newRequest)
+//        }
+//    }
 }
 

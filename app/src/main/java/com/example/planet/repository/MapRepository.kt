@@ -1,17 +1,17 @@
 package com.example.planet.repository
 
 import com.example.planet.data.ApiState
-import com.example.planet.network.GeocoderApi
+import com.example.planet.network.ApiService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
-class MapRepository @Inject constructor(private val geocoderApi: GeocoderApi) {
-    suspend fun getRegion(coords: String): Flow<ApiState> = flow {
+class MapRepository @Inject constructor(private val apiService: ApiService) {
+    suspend fun getAllTrashCanLocation(): Flow<ApiState> = flow {
         kotlin.runCatching {
-            geocoderApi.getRegion(coords = coords)
+            apiService.getAllTrashCanLocation()
         }.onSuccess {
             emit(ApiState.Success(it))
         }.onFailure { error ->

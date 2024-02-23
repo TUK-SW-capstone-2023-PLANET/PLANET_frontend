@@ -127,12 +127,11 @@ dependencies {
     // Naver Map SDK
     implementation("com.naver.maps:map-sdk:3.17.0")
     implementation("io.github.fornewid:naver-map-compose:1.6.0")
-//    implementation ("com.google.android.gms:play-services-location:21.0.1")
-//    implementation ("io.github.fornewid:naver-map-location:21.0.1")
-
-    implementation("com.google.android.material:material:1.11.0")
     implementation("com.google.android.gms:play-services-location:21.0.1")
     implementation("io.github.fornewid:naver-map-location:21.0.1")
+
+//    implementation("com.google.android.material:material:1.11.0")
+
     // Naver Map clustering
     implementation("io.github.ParkSangGwon:tedclustering-naver:1.0.2")
 

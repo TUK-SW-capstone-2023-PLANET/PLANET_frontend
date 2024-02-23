@@ -21,10 +21,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.example.planet.network.GeocoderApi
 import com.example.planet.screen.map.MapActivity
 import com.example.planet.ui.theme.MyApplicationTheme
-import com.example.planet.util.RequestPermission
 import com.example.planet.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -33,8 +31,6 @@ import javax.inject.Inject
 class MainActivity : ComponentActivity() {
 
 
-    @Inject
-    lateinit var geocoderApi: GeocoderApi
     private val mainViewModel by viewModels<MainViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {

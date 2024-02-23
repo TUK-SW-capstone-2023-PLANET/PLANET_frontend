@@ -68,6 +68,7 @@ fun MapGraph(mapViewModel: MapViewModel = viewModel()) {
     }
     DisposableEffect(Unit) {
         mapViewModel.startTimer()
+        mapViewModel.getAllTrashCanLocation()
         onDispose {
             mapViewModel.endTimer()
         }
