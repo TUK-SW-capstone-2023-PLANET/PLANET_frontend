@@ -53,6 +53,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.planet.BuildConfig
 import com.example.planet.R
 import com.example.planet.TAG
+import com.example.planet.component.common.PloggingDialog
 import com.example.planet.component.map.common.CameraButton
 import com.example.planet.component.map.common.LockButton
 import com.example.planet.component.map.record.RoundCornerCard
@@ -84,15 +85,6 @@ fun RecordScreen(mapViewModel: MapViewModel = viewModel()) {
     val textLayoutResult2 = remember(minuteSecond) {
         textMeasurer2.measure(minuteSecond, textStyle2)
     }
-
-    DisposableEffect(Unit) {
-        onDispose {
-            val path = "/storage/emulated/0/Android/data/${BuildConfig.APPLICATION_ID}/cache/"
-            val cashFile = File(path)
-            val result = cashFile.allDelete()
-            Log.d(TAG, "onDispose 실행되나?\n cashFile.delete(): ${result}")
-        }
-    }
     val context = LocalContext.current
     val file = context.createImageFile()
     val uri = FileProvider.getUriForFile(
@@ -111,6 +103,21 @@ fun RecordScreen(mapViewModel: MapViewModel = viewModel()) {
 
 
     val cameraPermissionState = rememberPermissionState(Manifest.permission.CAMERA)
+
+
+    if (mapViewModel.dialogState.value) {
+        PloggingDialog(mapViewModel = mapViewModel)
+        mapViewModel.pauseTimer()
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            val path = "/storage/emulated/0/Android/data/${BuildConfig.APPLICATION_ID}/cache/"
+            val cashFile = File(path)
+            val result = cashFile.allDelete()
+            Log.d(TAG, "onDispose 실행되나?\n cashFile.delete(): ${result}")
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -179,7 +186,7 @@ fun RecordScreen(mapViewModel: MapViewModel = viewModel()) {
                     .align(Alignment.BottomCenter)
                     .padding(bottom = 90.dp)
                     .size(50.dp)
-                    .clickable {},
+                    .clickable { mapViewModel.displayOnDialog() },
                 tint = colorResource(id = R.color.font_background_color3)
             )
         }

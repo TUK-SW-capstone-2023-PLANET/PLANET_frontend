@@ -20,6 +20,9 @@ class MapViewModel @Inject constructor(
     private val mapRepository: MapRepository
 ) : ViewModel() {
 
+    private val _dialogState = mutableStateOf(false)
+    val dialogState: State<Boolean> = _dialogState
+
     private val _formattedTime = mutableStateOf("00 : 00")       // 사용 시간(MM:ss)
     val formattedTime: State<String> = _formattedTime
 
@@ -30,7 +33,10 @@ class MapViewModel @Inject constructor(
     private var milliseconds: Long = 0L                                // 타이머 시간
 
 
-
+    // dialog display or close
+    fun displayOnDialog() {
+        _dialogState.value = !_dialogState.value
+    }
 
     // 타이머 시작
     fun startTimer() {
@@ -49,6 +55,11 @@ class MapViewModel @Inject constructor(
         _formattedTime.value = "00 : 00"
         _hour.value = "0"
     }
+
+    fun pauseTimer() {
+        job.cancel()
+    }
+
     // 시간 format 설정
     private fun formatTime(milliseconds: Long): String {
         val hours = TimeUnit.MILLISECONDS.toHours(milliseconds) % 24
