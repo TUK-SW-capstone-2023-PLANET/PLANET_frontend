@@ -25,11 +25,11 @@ import com.google.accompanist.permissions.rememberPermissionState
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun CameraButton(onClick: () -> Unit) {
+fun CameraButton(modifier: Modifier = Modifier, onClick: () -> Unit) {
     val cameraPermissionState = rememberPermissionState(Manifest.permission.CAMERA)
 
     Card(
-        modifier = Modifier.size(50.dp),
+        modifier = modifier.size(50.dp),
         shape = CircleShape,
         colors = CardDefaults.cardColors(
             contentColor = Color.Black,

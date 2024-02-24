@@ -2,20 +2,32 @@ package com.example.planet.screen.map
 
 import android.graphics.PointF
 import android.location.Location
+import android.net.Uri
 import android.util.Log
+import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.planet.TAG
+import com.example.planet.component.map.common.CameraButton
 import com.example.planet.component.map.map.MyLocationButton
 import com.example.planet.component.map.map.NaverMapClustering
 import com.example.planet.viewmodel.MapViewModel
@@ -35,7 +47,10 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalNaverMapApi::class)
 @Composable
-fun MapScreen(mapViewModel: MapViewModel = viewModel()) {
+fun MapScreen(
+    mapViewModel: MapViewModel = viewModel(),
+    cameraLauncher: ManagedActivityResultLauncher<Uri, Boolean>
+) {
     val coroutineScope = rememberCoroutineScope()
 
     val list = listOf(
@@ -107,10 +122,11 @@ fun MapScreen(mapViewModel: MapViewModel = viewModel()) {
     }
     val locationSource = rememberFusedLocationSource(isCompassEnabled = true)
     val cameraPositionState = rememberCameraPositionState()
-    var currentUserLocation:LatLng by remember {
+    var currentUserLocation: LatLng by remember {
         mutableStateOf(LatLng(0.0, 0.0))
     }
-    val cameraPosition = CameraPosition(LatLng(currentUserLocation.latitude, currentUserLocation.longitude), 14.0)
+    val cameraPosition =
+        CameraPosition(LatLng(currentUserLocation.latitude, currentUserLocation.longitude), 14.0)
     cameraPositionState.position.target // 카메라의 현재 위치
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -138,7 +154,21 @@ fun MapScreen(mapViewModel: MapViewModel = viewModel()) {
             NaverMapClustering(items = mapViewModel.trashCanItem)
             PathOverlay(coords = list)  // 내가 해왔던 경로 찍으면 됌
         }
-        MyLocationButton{
+        // 여기서부터 임시로 거리측정에 오류가 있는지 없는지 확인하기 위함
+        Card(
+            modifier = Modifier
+                .wrapContentSize(align = Alignment.Center)
+                .align(Alignment.BottomCenter)
+                .padding(16.dp), shape = RoundedCornerShape(8.dp)
+        ) {
+            Text(text = "${mapViewModel.distance.value}", modifier = Modifier.padding(16.dp))
+        }
+        // 여기까지
+        MyLocationButton(
+            modifier = Modifier
+                .padding(bottom = 46.dp, end = 16.dp)
+                .align(Alignment.BottomEnd)
+        ) {
             coroutineScope.launch {
                 cameraPositionState.animate(
                     CameraUpdate.toCameraPosition(cameraPosition),
@@ -146,6 +176,13 @@ fun MapScreen(mapViewModel: MapViewModel = viewModel()) {
                     durationMs = 3000
                 )
             }
+        }
+        CameraButton(
+            modifier = Modifier
+                .padding(bottom = 112.dp, end = 16.dp)
+                .align(Alignment.BottomEnd)
+        ) {
+            cameraLauncher.launch(mapViewModel.uri.value)
         }
     }
 }

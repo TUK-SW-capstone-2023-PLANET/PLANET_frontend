@@ -1,18 +1,25 @@
 package com.example.planet.viewmodel
 
 import android.content.Context
+import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.core.content.FileProvider
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.planet.BuildConfig
 import com.example.planet.TAG
 import com.example.planet.component.map.map.TrashCanItem
 import com.example.planet.data.ApiState
 import com.example.planet.data.dto.TrashCan
 import com.example.planet.repository.MapRepository
+import com.example.planet.util.DistanceManager
+import com.example.planet.util.createImageFile
 import com.naver.maps.geometry.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -20,6 +27,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import java.util.Objects
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -35,13 +43,6 @@ class MapViewModel @Inject constructor(
     private val _lockScreenState = mutableStateOf(false)
     val lockScreenState: State<Boolean> = _lockScreenState
 
-//    private val _lockState = derivedStateOf {
-//        lockScreen()
-//        unlockScreen()
-//    }
-//    val lockState: State<Boolean> = _lockState
-
-
     private val _formattedTime = mutableStateOf("00 : 00")       // 사용 시간(MM:ss)
     val formattedTime: State<String> = _formattedTime
 
@@ -50,33 +51,46 @@ class MapViewModel @Inject constructor(
     private val _trashCanItem = mutableStateListOf<TrashCanItem>()
     val trashCanItem: List<TrashCanItem> = _trashCanItem
 
-    private var plogginId: Int = 0                                     // 플로깅 PK
-    private lateinit var job: Job                                      // 타이머 코루틴
-    private var milliseconds: Long = 0L                                // 타이머 시간
+    private val _uri: State<Uri> =
+        derivedStateOf {
+            val file = context.createImageFile()
+            FileProvider.getUriForFile(
+                Objects.requireNonNull(context),
+                BuildConfig.APPLICATION_ID + ".provider", file
+            )
+        }
+    val uri: State<Uri> = _uri
 
+    private val _distance = mutableStateOf<Double>(0.0)
+    val distance: State<Double> = _distance
+
+    private var plogginId: Int = 0                                      // 플로깅 PK
+    private lateinit var timerJob: Job                                  // 타이머 코루틴
+    private lateinit var distanceCalculateJob: Job                      // 1초마다 위도,경도의 거리를 계산하는 코루틴
+    private var milliseconds: Long = 0L                                 // 타이머 시간
+    private val distanceManager = DistanceManager                       // 거리 계산 객체
 
     // dialog display or close
     fun displayOnDialog() {
         _dialogState.value = !_dialogState.value
     }
 
-    fun lockScreen():Boolean {
+    fun lockScreen(): Boolean {
         _lockScreenState.value = true
         return _lockScreenState.value
 //        return true
     }
 
-    fun unlockScreen():Boolean {
+    fun unlockScreen(): Boolean {
         _lockScreenState.value = false
         return _lockScreenState.value
 //        return false
     }
 
 
-
     // 타이머 시작
     fun startTimer() {
-        job = viewModelScope.launch {
+        timerJob = viewModelScope.launch {
             while (true) {
                 delay(1000)
                 milliseconds += 1000L
@@ -87,13 +101,22 @@ class MapViewModel @Inject constructor(
     }
 
     fun endTimer() {
-        job.cancel()
+        timerJob.cancel()
         _formattedTime.value = "00 : 00"
         _hour.value = "0"
     }
 
     fun pauseTimer() {
-        job.cancel()
+        timerJob.cancel()
+    }
+
+    fun distanceCalculate(lat1: Double, lon1: Double, lat2: Double, lon2: Double) {
+        distanceCalculateJob = viewModelScope.launch {
+            while (true) {
+                delay(1000)
+                _distance.value += distanceManager.getDistance(lat1, lon1, lat2, lon2)
+            }
+        }
     }
 
     // 시간 format 설정
@@ -107,23 +130,29 @@ class MapViewModel @Inject constructor(
     }
 
 
-
     fun getAllTrashCanLocation() {
         viewModelScope.launch {
-            when(val apiState = mapRepository.getAllTrashCanLocation().first()) {
+            when (val apiState = mapRepository.getAllTrashCanLocation().first()) {
                 is ApiState.Success<*> -> {
                     val result = apiState.value as List<TrashCan>
 
                     result.forEach {
-                        val trashCanItem = TrashCanItem(itemPosition = LatLng(it.location.latitude, it.location.longitude), trashCanId = it.trashCanId)
+                        val trashCanItem = TrashCanItem(
+                            itemPosition = LatLng(
+                                it.location.latitude,
+                                it.location.longitude
+                            ), trashCanId = it.trashCanId
+                        )
                         _trashCanItem.add(trashCanItem)
 //                        TODO()
                     }
                     _trashCanItem.distinct() // 중복제거
                 }
+
                 is ApiState.Error -> {
                     Log.d("daeYoung", "getAllTrashCanLocation() 실패: ${apiState.errMsg}")
                 }
+
                 ApiState.Loading -> TODO()
             }
         }
@@ -132,14 +161,16 @@ class MapViewModel @Inject constructor(
 
     fun getPloggingId() {
         viewModelScope.launch {
-            when(val apiState = mapRepository.getPloggingId().first()) {
+            when (val apiState = mapRepository.getPloggingId().first()) {
                 is ApiState.Success<*> -> {
                     plogginId = apiState.value as Int
                     Log.d(TAG, "getPloggingId: $plogginId")
                 }
+
                 is ApiState.Error -> {
                     Log.d("daeYoung", "getAllTrashCanLocation() 실패: ${apiState.errMsg}")
                 }
+
                 ApiState.Loading -> TODO()
             }
         }

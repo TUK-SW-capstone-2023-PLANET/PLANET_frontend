@@ -3,6 +3,7 @@ package com.example.planet.screen.map
 import android.Manifest
 import android.net.Uri
 import android.util.Log
+import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Canvas
@@ -77,7 +78,7 @@ import java.util.Objects
 @OptIn(ExperimentalPermissionsApi::class)
 //@Preview(showBackground = true)
 @Composable
-fun RecordScreen(mapViewModel: MapViewModel = viewModel()) {
+fun RecordScreen(mapViewModel: MapViewModel = viewModel(), cameraLauncher: ManagedActivityResultLauncher<Uri, Boolean>) {
     val timerColorList =
         listOf(colorResource(id = R.color.main_color1), colorResource(id = R.color.main_color3))
     val fontColor = colorResource(id = R.color.font_background_color1)
@@ -94,28 +95,6 @@ fun RecordScreen(mapViewModel: MapViewModel = viewModel()) {
         textMeasurer2.measure(minuteSecond, textStyle2)
     }
     val context = LocalContext.current
-    val uri: Uri by remember {
-        derivedStateOf {
-            val file = context.createImageFile()
-            FileProvider.getUriForFile(
-                Objects.requireNonNull(context),
-                BuildConfig.APPLICATION_ID + ".provider", file
-            )
-        }
-    }
-
-
-    Log.d(TAG, "RecordScreen lock실행: ${mapViewModel.lockScreenState.value}")
-
-    var capturedImageUri by remember {
-        mutableStateOf<Uri>(Uri.EMPTY)
-    }
-
-    val cameraLauncher =
-        rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { success ->
-            if (success) capturedImageUri = uri
-            // 사진 저장하는 API 호출
-        }
 
     if (mapViewModel.dialogState.value) {
         PloggingDialog(mapViewModel = mapViewModel)
@@ -321,7 +300,7 @@ fun RecordScreen(mapViewModel: MapViewModel = viewModel()) {
             if (!mapViewModel.lockScreenState.value) {
                 LockButton(imgaeVector = Icons.Default.Lock, lock = { mapViewModel.lockScreen() })
             }
-            CameraButton { cameraLauncher.launch(uri) }
+            CameraButton { cameraLauncher.launch(mapViewModel.uri.value) }
         }
     }
 

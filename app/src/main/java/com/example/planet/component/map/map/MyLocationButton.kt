@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CameraAlt
+import androidx.compose.material.icons.filled.MyLocation
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -18,9 +19,9 @@ import com.example.planet.util.noRippleClickable
 import com.google.accompanist.permissions.isGranted
 
 @Composable
-fun MyLocationButton(onClick: () -> Unit) {
+fun MyLocationButton(modifier: Modifier = Modifier, onClick: () -> Unit) {
     Card(
-        modifier = Modifier.size(50.dp),
+        modifier = modifier.size(50.dp),
         shape = CircleShape,
         colors = CardDefaults.cardColors(
             contentColor = Color.Black,
@@ -33,7 +34,7 @@ fun MyLocationButton(onClick: () -> Unit) {
                 .noRippleClickable { onClick() }
         ) {
             Icon(
-                imageVector = Icons.Default.CameraAlt,
+                imageVector = Icons.Default.MyLocation,
                 contentDescription = null,
                 modifier = Modifier.align(Alignment.Center)
             )
