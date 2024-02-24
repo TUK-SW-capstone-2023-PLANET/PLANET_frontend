@@ -102,6 +102,8 @@ fun RecordScreen(mapViewModel: MapViewModel = viewModel()) {
         }
     }
 
+    Log.d(TAG, "RecordScreen lock실행: ${mapViewModel.lockScreenState.value}")
+
     var capturedImageUri by remember {
         mutableStateOf<Uri>(Uri.EMPTY)
     }
@@ -117,9 +119,6 @@ fun RecordScreen(mapViewModel: MapViewModel = viewModel()) {
     }
 
     DisposableEffect(Unit) {
-        Log.d(TAG, "DisposableEffect() 실행\n uri: ${uri}")
-
-
         onDispose {
             val path = "/storage/emulated/0/Android/data/${BuildConfig.APPLICATION_ID}/cache/"
             val cashFile = File(path)

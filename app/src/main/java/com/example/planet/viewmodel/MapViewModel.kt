@@ -3,6 +3,7 @@ package com.example.planet.viewmodel
 import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.State
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -34,17 +35,24 @@ class MapViewModel @Inject constructor(
     private val _lockScreenState = mutableStateOf(false)
     val lockScreenState: State<Boolean> = _lockScreenState
 
+//    private val _lockState = derivedStateOf {
+//        lockScreen()
+//        unlockScreen()
+//    }
+//    val lockState: State<Boolean> = _lockState
+
+
     private val _formattedTime = mutableStateOf("00 : 00")       // 사용 시간(MM:ss)
     val formattedTime: State<String> = _formattedTime
 
     private val _hour = mutableStateOf<String>("0")
     val hour: State<String> = _hour
-
-    private lateinit var job: Job                                      // 타이머 코루틴
-    private var milliseconds: Long = 0L                                // 타이머 시간
-
     private val _trashCanItem = mutableStateListOf<TrashCanItem>()
     val trashCanItem: List<TrashCanItem> = _trashCanItem
+
+    private var plogginId: Int = 0                                     // 플로깅 PK
+    private lateinit var job: Job                                      // 타이머 코루틴
+    private var milliseconds: Long = 0L                                // 타이머 시간
 
 
     // dialog display or close
@@ -52,12 +60,16 @@ class MapViewModel @Inject constructor(
         _dialogState.value = !_dialogState.value
     }
 
-    fun lockScreen() {
+    fun lockScreen():Boolean {
         _lockScreenState.value = true
+        return _lockScreenState.value
+//        return true
     }
 
-    fun unlockScreen() {
+    fun unlockScreen():Boolean {
         _lockScreenState.value = false
+        return _lockScreenState.value
+//        return false
     }
 
 
@@ -105,7 +117,25 @@ class MapViewModel @Inject constructor(
                     result.forEach {
                         val trashCanItem = TrashCanItem(itemPosition = LatLng(it.location.latitude, it.location.longitude), trashCanId = it.trashCanId)
                         _trashCanItem.add(trashCanItem)
+//                        TODO()
                     }
+                    _trashCanItem.distinct() // 중복제거
+                }
+                is ApiState.Error -> {
+                    Log.d("daeYoung", "getAllTrashCanLocation() 실패: ${apiState.errMsg}")
+                }
+                ApiState.Loading -> TODO()
+            }
+        }
+
+    }
+
+    fun getPloggingId() {
+        viewModelScope.launch {
+            when(val apiState = mapRepository.getPloggingId().first()) {
+                is ApiState.Success<*> -> {
+                    plogginId = apiState.value as Int
+                    Log.d(TAG, "getPloggingId: $plogginId")
                 }
                 is ApiState.Error -> {
                     Log.d("daeYoung", "getAllTrashCanLocation() 실패: ${apiState.errMsg}")

@@ -93,21 +93,6 @@ fun MapScreen(mapViewModel: MapViewModel = viewModel()) {
         LatLng(37.5586699, 126.9783698),
     )
 
-    // --> 클러스터링 더미 데이터, api 통신 이후 데이터 받아서 넣으면 됨
-//    val items = remember { mutableStateListOf<MyItem>() }
-//    val POSITION = LatLng(37.5666102, 126.9783881)
-//    LaunchedEffect(Unit) {
-//        repeat(1000) {
-//            val position = LatLng(
-//                POSITION.latitude + Random.nextFloat(),
-//                POSITION.longitude + Random.nextFloat(),
-//            )
-//            items.add(MyItem(position, "Marker", "Snippet"))
-//        }
-//    }
-    // <-- 클러스터링 더미 데이터, api 통신 이후 데이터 받아서 넣으면 됨
-
-
     var mapProperties by remember {
         mutableStateOf(
             MapProperties(
@@ -124,6 +109,8 @@ fun MapScreen(mapViewModel: MapViewModel = viewModel()) {
     }
     val locationSource = rememberFusedLocationSource(isCompassEnabled = true)
     val cameraPositionState = rememberCameraPositionState()
+
+    cameraPositionState.position.target // 현재 위치
 
     Box(modifier = Modifier.fillMaxSize()) {
         NaverMap(
@@ -144,19 +131,19 @@ fun MapScreen(mapViewModel: MapViewModel = viewModel()) {
             NaverMapClustering(items = mapViewModel.trashCanItem)
             PathOverlay(coords = list)  // 내가 해왔던 경로 찍으면 됌
         }
-        Button(
-            onClick = {
-                Log.d("daeYoung", "${cameraPositionState.position}")
-                coroutineScope.launch {
-//                    mapViewModel.setLatLng(cameraPositionState.position.target)
-//                    mapViewModel.getRegion()
-                }
-            },
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .fillMaxWidth()
-        ) {
-            Text(text = "reverse geocode")
-        }
+//        Button(
+//            onClick = {
+//                Log.d("daeYoung", "${cameraPositionState.position}")
+//                coroutineScope.launch {
+////                    mapViewModel.setLatLng(cameraPositionState.position.target)
+////                    mapViewModel.getRegion()
+//                }
+//            },
+//            modifier = Modifier
+//                .align(Alignment.BottomCenter)
+//                .fillMaxWidth()
+//        ) {
+//            Text(text = "reverse geocode")
+//        }
     }
 }

@@ -6,4 +6,8 @@ import retrofit2.http.GET
 interface ApiService {
     @GET("/trash-can/all")
     suspend fun getAllTrashCanLocation(): List<TrashCan>
+
+    @GET("/plogging/id")
+    suspend fun getPloggingId(): Int
+
 }

@@ -19,4 +19,14 @@ class MapRepository @Inject constructor(private val apiService: ApiService) {
         }
     }.flowOn(Dispatchers.IO)
 
+    suspend fun getPloggingId(): Flow<ApiState> = flow {
+        kotlin.runCatching {
+            apiService.getPloggingId()
+        }.onSuccess {
+            emit(ApiState.Success(it))
+        }.onFailure { error ->
+            error.message?.let { emit(ApiState.Error(it)) }
+        }
+    }.flowOn(Dispatchers.IO)
+
 }

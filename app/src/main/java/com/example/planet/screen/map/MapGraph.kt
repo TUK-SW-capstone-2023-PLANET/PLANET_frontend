@@ -72,6 +72,8 @@ fun MapGraph(mapViewModel: MapViewModel = viewModel()) {
     val pagerState = rememberPagerState { tabltems.size }
     val coroutineScope = rememberCoroutineScope()
 
+    Log.d(TAG, "MapGraph lock실행: ${mapViewModel.lockScreenState.value}")
+
     LaunchedEffect(pagerState.currentPage, pagerState.isScrollInProgress) {
         if (!pagerState.isScrollInProgress) {
             selectedTabIndex = pagerState.currentPage
@@ -80,6 +82,7 @@ fun MapGraph(mapViewModel: MapViewModel = viewModel()) {
     DisposableEffect(Unit) {
         mapViewModel.startTimer()
         mapViewModel.getAllTrashCanLocation()
+        mapViewModel.getPloggingId()
         onDispose {
             mapViewModel.endTimer()
         }
