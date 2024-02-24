@@ -32,6 +32,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -69,6 +70,7 @@ import com.example.planet.viewmodel.MapViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
+import kotlinx.coroutines.launch
 import java.io.File
 import java.util.Objects
 
@@ -102,6 +104,7 @@ fun RecordScreen(mapViewModel: MapViewModel = viewModel()) {
         }
     }
 
+
     Log.d(TAG, "RecordScreen lock실행: ${mapViewModel.lockScreenState.value}")
 
     var capturedImageUri by remember {
@@ -111,6 +114,7 @@ fun RecordScreen(mapViewModel: MapViewModel = viewModel()) {
     val cameraLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { success ->
             if (success) capturedImageUri = uri
+            // 사진 저장하는 API 호출
         }
 
     if (mapViewModel.dialogState.value) {

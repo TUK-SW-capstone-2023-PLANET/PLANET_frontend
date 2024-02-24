@@ -1,28 +1,27 @@
 package com.example.planet.screen.map
 
 import android.graphics.PointF
+import android.location.Location
 import android.util.Log
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.planet.TAG
+import com.example.planet.component.map.map.MyLocationButton
 import com.example.planet.component.map.map.NaverMapClustering
 import com.example.planet.viewmodel.MapViewModel
 import com.naver.maps.geometry.LatLng
+import com.naver.maps.map.CameraAnimation
+import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.compose.ExperimentalNaverMapApi
 import com.naver.maps.map.compose.LocationTrackingMode
@@ -33,7 +32,6 @@ import com.naver.maps.map.compose.PathOverlay
 import com.naver.maps.map.compose.rememberCameraPositionState
 import com.naver.maps.map.compose.rememberFusedLocationSource
 import kotlinx.coroutines.launch
-import kotlin.random.Random
 
 @OptIn(ExperimentalNaverMapApi::class)
 @Composable
@@ -104,13 +102,16 @@ fun MapScreen(mapViewModel: MapViewModel = viewModel()) {
     }
     var mapUiSettings by remember {
         mutableStateOf(
-            MapUiSettings(isLocationButtonEnabled = true)
+            MapUiSettings(isLocationButtonEnabled = false)
         )
     }
     val locationSource = rememberFusedLocationSource(isCompassEnabled = true)
     val cameraPositionState = rememberCameraPositionState()
-
-    cameraPositionState.position.target // 현재 위치
+    var currentUserLocation:LatLng by remember {
+        mutableStateOf(LatLng(0.0, 0.0))
+    }
+    val cameraPosition = CameraPosition(LatLng(currentUserLocation.latitude, currentUserLocation.longitude), 14.0)
+    cameraPositionState.position.target // 카메라의 현재 위치
 
     Box(modifier = Modifier.fillMaxSize()) {
         NaverMap(
@@ -118,32 +119,33 @@ fun MapScreen(mapViewModel: MapViewModel = viewModel()) {
                 detectDragGestures { _, dragAmount ->
                     cameraPositionState.move(
                         CameraUpdate.scrollBy(
-                        PointF(dragAmount.x, dragAmount.y)
-                    ))
+                            PointF(dragAmount.x, dragAmount.y)
+                        )
+                    )
                 }
             },
             locationSource = locationSource,
             cameraPositionState = cameraPositionState,
             properties = mapProperties,
-            uiSettings = mapUiSettings
+            uiSettings = mapUiSettings,
+            // 현재유저의 LatLng 찾는 콜백함수
+            onLocationChange = { location ->
+                currentUserLocation = LatLng(location.latitude, location.longitude)
+                Log.d(TAG, "currentUserLocation: $currentUserLocation")
+            }
         ) {
 
             NaverMapClustering(items = mapViewModel.trashCanItem)
             PathOverlay(coords = list)  // 내가 해왔던 경로 찍으면 됌
         }
-//        Button(
-//            onClick = {
-//                Log.d("daeYoung", "${cameraPositionState.position}")
-//                coroutineScope.launch {
-////                    mapViewModel.setLatLng(cameraPositionState.position.target)
-////                    mapViewModel.getRegion()
-//                }
-//            },
-//            modifier = Modifier
-//                .align(Alignment.BottomCenter)
-//                .fillMaxWidth()
-//        ) {
-//            Text(text = "reverse geocode")
-//        }
+        MyLocationButton{
+            coroutineScope.launch {
+                cameraPositionState.animate(
+                    CameraUpdate.toCameraPosition(cameraPosition),
+                    animation = CameraAnimation.Fly,
+                    durationMs = 3000
+                )
+            }
+        }
     }
 }
