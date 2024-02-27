@@ -16,6 +16,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -30,6 +32,7 @@ import com.example.planet.TAG
 import com.example.planet.component.map.common.CameraButton
 import com.example.planet.component.map.map.MyLocationButton
 import com.example.planet.component.map.map.NaverMapClustering
+import com.example.planet.util.DistanceManager
 import com.example.planet.viewmodel.MapViewModel
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraAnimation
@@ -43,6 +46,7 @@ import com.naver.maps.map.compose.NaverMap
 import com.naver.maps.map.compose.PathOverlay
 import com.naver.maps.map.compose.rememberCameraPositionState
 import com.naver.maps.map.compose.rememberFusedLocationSource
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalNaverMapApi::class)
@@ -111,7 +115,7 @@ fun MapScreen(
             MapProperties(
                 maxZoom = 18.0,
                 minZoom = 7.0,
-                locationTrackingMode = LocationTrackingMode.Face,
+                locationTrackingMode = LocationTrackingMode.Follow,
             )
         )
     }
@@ -122,34 +126,46 @@ fun MapScreen(
     }
     val locationSource = rememberFusedLocationSource(isCompassEnabled = true)
     val cameraPositionState = rememberCameraPositionState()
-    var currentUserLocation: LatLng by remember {
-        mutableStateOf(LatLng(0.0, 0.0))
-    }
+
     val cameraPosition =
-        CameraPosition(LatLng(currentUserLocation.latitude, currentUserLocation.longitude), 14.0)
+        CameraPosition(LatLng(mapViewModel.currentLatLng?.latitude ?: 0.0, mapViewModel.currentLatLng?.longitude ?: 0.0), 14.0)
     cameraPositionState.position.target // 카메라의 현재 위치
 
+    DisposableEffect(Unit) {
+        onDispose {
+            val result = mapViewModel.cashFileAllDelete()
+            Log.d(TAG, "mapScreen onDispose\n cashFile.delete(): ${result}")
+        }
+    }
+
     Box(modifier = Modifier.fillMaxSize()) {
-        NaverMap(
-            modifier = Modifier.pointerInput(Unit) {// 뷰 페이저가 지도의 포커싱을 가져가는 issue를 해결
-                detectDragGestures { _, dragAmount ->
-                    cameraPositionState.move(
-                        CameraUpdate.scrollBy(
-                            PointF(dragAmount.x, dragAmount.y)
-                        )
+        NaverMap(modifier = Modifier.pointerInput(Unit) {// 뷰 페이저가 지도의 포커싱을 가져가는 issue를 해결
+            detectDragGestures { _, dragAmount ->
+                cameraPositionState.move(
+                    CameraUpdate.scrollBy(
+                        PointF(dragAmount.x, dragAmount.y)
                     )
-                }
-            },
+                )
+            }
+        },
             locationSource = locationSource,
             cameraPositionState = cameraPositionState,
             properties = mapProperties,
             uiSettings = mapUiSettings,
             // 현재유저의 LatLng 찾는 콜백함수
             onLocationChange = { location ->
-                currentUserLocation = LatLng(location.latitude, location.longitude)
-                Log.d(TAG, "currentUserLocation: $currentUserLocation")
-            }
-        ) {
+//                if (mapViewModel.currentLatLng != null) {
+//                    if (mapViewModel.pastLatLng == null) {
+//                        mapViewModel.pastLatLng = mapViewModel.currentLatLng
+//                    }
+//                    else if (mapViewModel.currentLatLng!!.latitude != mapViewModel.pastLatLng!!.latitude || mapViewModel.currentLatLng!!.longitude != mapViewModel.pastLatLng!!.longitude) {
+//                        mapViewModel.pastLatLng = mapViewModel.currentLatLng
+//                    }
+//                }
+//                        Log.d(TAG, "${DistanceManager.getDistance(37.638591, 127.026325, 37.643801, 127.031755).toString()}")
+//                        Log.d(TAG, "${DistanceManager.getDistance(37.4021, 127.1108, 37.3944, 127.1108).toString()}")
+                mapViewModel.currentLatLng = LatLng(location.latitude, location.longitude)
+            }) {
 
             NaverMapClustering(items = mapViewModel.trashCanItem)
             PathOverlay(coords = list)  // 내가 해왔던 경로 찍으면 됌
@@ -182,7 +198,7 @@ fun MapScreen(
                 .padding(bottom = 112.dp, end = 16.dp)
                 .align(Alignment.BottomEnd)
         ) {
-            cameraLauncher.launch(mapViewModel.uri.value)
+            cameraLauncher.launch(mapViewModel.getImageUri())
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.example.planet.network
 
 import com.example.planet.BuildConfig
+import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
@@ -21,7 +22,9 @@ import javax.inject.Singleton
 object RetrofitModule {
     private const val URL = "http://3.37.87.60:8080/"
     private const val NAVER_URL = "https://naveropenapi.apigw.ntruss.com"
-
+    val gson : Gson = GsonBuilder()
+        .setLenient()
+        .create()
     @Singleton
     @Provides
     fun client(): OkHttpClient {
@@ -40,7 +43,7 @@ object RetrofitModule {
     fun getRetrofitImpl(): ApiService {
         return Retrofit.Builder()
             .baseUrl(URL)
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(gson))
             .client(client())
             .build()
             .create(ApiService::class.java)

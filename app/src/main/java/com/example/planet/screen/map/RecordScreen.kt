@@ -103,10 +103,8 @@ fun RecordScreen(mapViewModel: MapViewModel = viewModel(), cameraLauncher: Manag
 
     DisposableEffect(Unit) {
         onDispose {
-            val path = "/storage/emulated/0/Android/data/${BuildConfig.APPLICATION_ID}/cache/"
-            val cashFile = File(path)
-            val result = cashFile.allDelete()
-            Log.d(TAG, "onDispose 실행되나?\n cashFile.delete(): ${result}")
+            val result = mapViewModel.cashFileAllDelete()
+            Log.d(TAG, "recordScreen onDispose\n cashFile.delete(): ${result}")
         }
     }
 
@@ -198,7 +196,7 @@ fun RecordScreen(mapViewModel: MapViewModel = viewModel(), cameraLauncher: Manag
                         fontStyle = FontStyle.Italic
                     )
                 ) {
-                    append("12.89")
+                    append(mapViewModel.roundDistance())
                 }
                 withStyle(SpanStyle(fontSize = 25.sp, fontWeight = FontWeight.Medium)) {
                     append(" km")
@@ -300,7 +298,7 @@ fun RecordScreen(mapViewModel: MapViewModel = viewModel(), cameraLauncher: Manag
             if (!mapViewModel.lockScreenState.value) {
                 LockButton(imgaeVector = Icons.Default.Lock, lock = { mapViewModel.lockScreen() })
             }
-            CameraButton { cameraLauncher.launch(mapViewModel.uri.value) }
+            CameraButton { cameraLauncher.launch(mapViewModel.getImageUri()) }
         }
     }
 

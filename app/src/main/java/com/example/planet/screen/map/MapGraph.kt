@@ -1,6 +1,7 @@
 package com.example.planet.screen.map
 
 import android.net.Uri
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -49,6 +50,8 @@ import com.example.planet.data.map.Tabltem
 import com.example.planet.viewmodel.MapViewModel
 import kotlinx.coroutines.launch
 import com.example.planet.R
+import com.example.planet.TAG
+import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -56,16 +59,16 @@ fun MapGraph(mapViewModel: MapViewModel = viewModel()) {
 
     val tabltems = listOf(
         Tabltem(
-            unselectedIcon = Icons.Outlined.Delete,
-            selectedIcon = Icons.Filled.Delete
+            unselectedIcon = Icons.Outlined.Map,
+            selectedIcon = Icons.Filled.Map
         ),
         Tabltem(
             unselectedIcon = Icons.Outlined.Schedule,
             selectedIcon = Icons.Filled.Schedule
         ),
         Tabltem(
-            unselectedIcon = Icons.Outlined.Map,
-            selectedIcon = Icons.Filled.Map
+            unselectedIcon = Icons.Outlined.Delete,
+            selectedIcon = Icons.Filled.Delete
         ),
     )
     var selectedTabIndex by remember {
@@ -79,14 +82,26 @@ fun MapGraph(mapViewModel: MapViewModel = viewModel()) {
     }
     val cameraLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { success ->
-            if (success) capturedImageUri = mapViewModel.uri.value
+//            if (success) capturedImageUri = mapViewModel.uri.value
+            if (success) Log.d(TAG, "take picture 성공")
             // 사진 저장하는 API 호출
+            mapViewModel.postImage()
         }
 
 
     LaunchedEffect(pagerState.currentPage, pagerState.isScrollInProgress) {
         if (!pagerState.isScrollInProgress) {
             selectedTabIndex = pagerState.currentPage
+        }
+    }
+    LaunchedEffect(Unit) {
+        while (true) {
+            mapViewModel.pastLatLng = mapViewModel.currentLatLng
+            delay(4000)
+            Log.d(TAG, "계산중: ${mapViewModel.distance.value}")
+            Log.d(TAG, "pastLocation: ${mapViewModel.pastLatLng}")
+            Log.d(TAG, "currentLocation: ${mapViewModel.currentLatLng}")
+            mapViewModel.distanceCalculate()
         }
     }
     DisposableEffect(Unit) {
@@ -137,13 +152,13 @@ fun MapGraph(mapViewModel: MapViewModel = viewModel()) {
                 }
                 HorizontalPager(state = pagerState, modifier = Modifier.fillMaxSize()) { index ->
                     when (index) {
-                        0 -> TrashListScreen()
+                        0 -> MapScreen(mapViewModel = mapViewModel, cameraLauncher = cameraLauncher)
                         1 -> RecordScreen(
                             mapViewModel = mapViewModel,
                             cameraLauncher = cameraLauncher
                         )
 
-                        2 -> MapScreen(mapViewModel = mapViewModel, cameraLauncher = cameraLauncher)
+                        2 -> TrashListScreen()
                     }
                 }
             }
