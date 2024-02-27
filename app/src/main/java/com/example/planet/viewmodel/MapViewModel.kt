@@ -4,11 +4,8 @@ import android.content.Context
 import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.State
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.core.content.FileProvider
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -18,7 +15,6 @@ import com.example.planet.component.map.map.TrashCanItem
 import com.example.planet.data.ApiState
 import com.example.planet.data.dto.ImageUrl
 import com.example.planet.data.dto.PloggingImage
-import com.example.planet.data.dto.Trash
 import com.example.planet.data.dto.TrashCan
 import com.example.planet.repository.MapRepository
 import com.example.planet.util.DistanceManager
@@ -34,7 +30,6 @@ import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
-import java.io.File
 import java.util.Objects
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -257,7 +252,7 @@ class MapViewModel @Inject constructor(
             when (val apiState =
                 mapRepository.postPloggingLive(ploggingData = ploggingImage).first()) {
                 is ApiState.Success<*> -> {
-                    val result = apiState.value as List<Trash>
+                    val result = apiState.value as List<Map<String, Int>>
                     Log.d("daeYoung", "postPloggingImageUrl() 성공: $result")
                 }
 

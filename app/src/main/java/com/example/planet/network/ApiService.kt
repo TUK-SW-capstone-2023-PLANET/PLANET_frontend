@@ -2,7 +2,6 @@ package com.example.planet.network
 
 import com.example.planet.data.dto.ImageUrl
 import com.example.planet.data.dto.PloggingImage
-import com.example.planet.data.dto.Trash
 import com.example.planet.data.dto.TrashCan
 import okhttp3.MultipartBody
 import retrofit2.http.Body
@@ -23,6 +22,6 @@ interface ApiService {
     suspend fun postImage(@Part file: MultipartBody.Part): ImageUrl
 
     @POST("/plogging-live")
-    suspend fun postPloggingLive(@Body ploggingImage: PloggingImage): List<Trash>
+    suspend fun postPloggingLive(@Body ploggingImage: PloggingImage): List<Map<String, Int>>
 
 }
