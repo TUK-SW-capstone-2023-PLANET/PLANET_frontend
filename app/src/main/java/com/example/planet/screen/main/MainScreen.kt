@@ -2,22 +2,38 @@ package com.example.planet.screen.main
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.DirectionsRun
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.planet.R
 import com.example.planet.component.main.MainTopSwitch
@@ -25,6 +41,10 @@ import com.example.planet.viewmodel.MainViewModel
 
 @Composable
 fun MainScreen(mainViewModel: MainViewModel = viewModel(), onClick: () -> Unit) {
+    var selectedTabIndex by remember {
+        mutableIntStateOf(0) // or use mutableStateOf(0)
+    }
+    val tabTitles = listOf("나의 플로깅", "대학교", "시즌", "이벤트")
 
     Scaffold(
         floatingActionButton = {
@@ -49,6 +69,75 @@ fun MainScreen(mainViewModel: MainViewModel = viewModel(), onClick: () -> Unit) 
         ) {
             MainTopSwitch(mainViewModel = mainViewModel)
             MainTopBanner()
+            TabRow(
+                modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp),
+                selectedTabIndex = selectedTabIndex,
+                indicator = {},
+                divider = {}) {
+                tabTitles.forEachIndexed { index, title ->
+                    Card(
+                        modifier = Modifier
+                            .padding(end = if(index != 3)8.dp else 0.dp),
+                        shape = RoundedCornerShape(8.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = if (selectedTabIndex == index) colorResource(id = R.color.main_color2)
+                            else colorResource(id = R.color.font_background_color3),
+                            contentColor = if (selectedTabIndex == index) Color.White
+                            else colorResource(id = R.color.font_background_color2)
+                        )
+                    ) {
+                            Tab(
+                                modifier = Modifier,
+                                selected = (selectedTabIndex == index),
+                                text = { Text(text = title, fontSize = 10.sp) },
+                                onClick = { selectedTabIndex = index })
+                    }
+                }
+            }
+            Divider(thickness = 1.dp, modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp))
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun Test() {
+    var selectedTabIndex by remember {
+        mutableIntStateOf(0) // or use mutableStateOf(0)
+    }
+    val tabTitles = listOf("나의 플로깅", "대학교", "시즌", "이벤트")
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+        , horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        MainTopBanner()
+        TabRow(
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp),
+            selectedTabIndex = selectedTabIndex,
+            indicator = {},
+            divider = {}) {
+            tabTitles.forEachIndexed { index, title ->
+                Card(
+                    modifier = Modifier
+                        .padding(end = if(index != 3)8.dp else 0.dp),
+                    shape = RoundedCornerShape(8.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = if (selectedTabIndex == index) colorResource(id = R.color.main_color2)
+                        else colorResource(id = R.color.font_background_color3),
+                        contentColor = if (selectedTabIndex == index) Color.White
+                        else colorResource(id = R.color.font_background_color2)
+                    )
+                ) {
+                    Tab(
+                        modifier = Modifier,
+                        selected = (selectedTabIndex == index),
+                        text = { Text(text = title, fontSize = 10.sp) },
+                        onClick = { selectedTabIndex = index })
+                }
+            }
+        }
+        Divider(thickness = 1.dp, modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp))
     }
 }

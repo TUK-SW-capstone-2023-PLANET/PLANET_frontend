@@ -10,6 +10,7 @@ buildscript {
         set("hilt-version", "2.50")
         set("compose_ui_version", "1.3.0-alpha01")
         set("vico-version", "2.0.0-alpha.6")
+        set("accompanist_version", "0.28.0")
     }
 }
 plugins {

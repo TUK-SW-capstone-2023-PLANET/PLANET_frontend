@@ -102,8 +102,10 @@ dependencies {
     implementation("com.patrykandpatrick.vico:compose-m3:${rootProject.extra["vico-version"]}") // For `compose`. Creates a `ChartStyle` based on an M3 Material Theme.
 
     // viewPager2
-    implementation("com.tbuonomo:dotsindicator:5.0")
-    implementation("androidx.compose.foundation:foundation:1.4.0")
+//    implementation("com.tbuonomo:dotsindicator:5.0")
+//    implementation("androidx.compose.foundation:foundation:1.4.0")
+    implementation ("com.google.accompanist:accompanist-pager:${rootProject.extra["accompanist_version"]}") // Pager
+    implementation ("com.google.accompanist:accompanist-pager-indicators:${rootProject.extra["accompanist_version"]}") // Pager Indicators
 
     // okHttp, requestBodu 사용하기 위함
     implementation("com.squareup.okhttp3:okhttp:4.9.1")
