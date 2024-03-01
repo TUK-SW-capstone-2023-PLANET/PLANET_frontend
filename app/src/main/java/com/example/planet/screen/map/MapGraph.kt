@@ -26,6 +26,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -77,9 +78,6 @@ fun MapGraph(mapViewModel: MapViewModel = viewModel()) {
     val pagerState = rememberPagerState { tabltems.size }
     val coroutineScope = rememberCoroutineScope()
 
-    var capturedImageUri by remember {
-        mutableStateOf<Uri>(Uri.EMPTY)
-    }
     val cameraLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { success ->
 //            if (success) capturedImageUri = mapViewModel.uri.value
@@ -101,7 +99,7 @@ fun MapGraph(mapViewModel: MapViewModel = viewModel()) {
             Log.d(TAG, "계산중: ${mapViewModel.distance.value}")
             Log.d(TAG, "pastLocation: ${mapViewModel.pastLatLng}")
             Log.d(TAG, "currentLocation: ${mapViewModel.currentLatLng}")
-            mapViewModel.distanceCalculate()
+            mapViewModel.allCalculate()
         }
     }
     DisposableEffect(Unit) {

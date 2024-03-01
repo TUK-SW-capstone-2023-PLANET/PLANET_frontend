@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.State
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.content.FileProvider
@@ -55,18 +56,43 @@ class MapViewModel @Inject constructor(
     private val _trashCanItem = mutableStateListOf<TrashCanItem>()
     val trashCanItem: List<TrashCanItem> = _trashCanItem
 
-    private val _distance = mutableStateOf<Double>(0.0)           // km 단위
+    private val _distance = mutableStateOf<Double>(0.0)          // km 단위
     val distance: State<Double> = _distance
 
-    private var ploggingId: Int = 0                                    // 플로깅 PK
+    //private val _kcal = mutableStateOf<Double>(0.0)              // 4초 마다 소비되는 kacl
+    private val _kcal = derivedStateOf {
+        minSpeed = distance.value / (milliseconds / 6000.0)   // 분속 측정
+        MET= when(minSpeed) {
+            in 0.0..54.0 -> (2/135)*minSpeed + 4/5
+            in 54.0..67.0 -> (1/13)*(minSpeed - 54) + 2.0
+            in 67.0..81.0 -> (3/140)*(minSpeed - 67) + 3.0
+            in 81.0..94.0 -> (1/26)*(minSpeed - 81) + 3.3
+            in 94.0..100.0 -> (1/30)*(minSpeed - 94) + 3.8
+            in 100.0..107.0 -> (1/7)*(minSpeed - 100) + 4.0
+            in 107.0..134.0 -> (1/9)*(minSpeed - 107) + 5.0
+            in 134.0..161.0 -> (2/27)*(minSpeed - 134) + 8.0
+            in 161.0..190.0 -> (1/29)*(minSpeed - 161) + 10.0
+            in 190.0..268.0 -> (5/156)*(minSpeed - 190) + 11.0
+            in 268.0..321.0 -> (9/106)*(minSpeed - 268) + 14.5
+            else -> (2/27)*(minSpeed - 321) + 19.0
+        }
+        0.005 * MET *(3.5 * weight * minSpeed)
+    }
+    val kcal: State<Double> = _kcal
+
+    private var ploggingId: Int = 0                                     // 플로깅 PK
     private lateinit var timerJob: Job                                  // 타이머 코루틴
     private lateinit var distanceCalculateJob: Job                      // 1초마다 위도,경도의 거리를 계산하는 코루틴
     private var milliseconds: Long = 0L                                 // 타이머 시간
     private val distanceManager = DistanceManager                       // 거리 계산 객체
+    private var minSpeed: Double = 0.0                                  // m/min, 1분 당 몇m?, 속력
+    private var MET:Double = 0.0                                        // MET
+    private val weight: Double = 70.0                                   // 사용자의 몸무계
     var currentLatLng: LatLng? = null
     var pastLatLng: LatLng? = null
-    var trashCanLatLng: LatLng? = null
+    var trashCanLatLng: LatLng? = null                                  // 쓰레기통 위치
     var imageUrl: String = ""                                           // 사진을 imageUrl로 바꾼거
+    var totalScore: Int = 0                                             // 모든 쓰레기의 총 개수
 
     fun getImageUri(): Uri {
 //        Log.d(TAG, "externalCashDir: ${context.externalCacheDir}")
@@ -117,21 +143,17 @@ class MapViewModel @Inject constructor(
         timerJob.cancel()
     }
 
-    fun Infinite1Minute() {
-        viewModelScope.launch {
-            while (true) {
-                delay(1000)
-            }
-        }
-
-    }
-
     fun cashFileAllDelete() {
         val cashFile = context.externalCacheDir
         val result = cashFile?.allDelete()
     }
 
-    fun distanceCalculate() {
+    fun allCalculate() {  // 4초마다 거리 계산, 속력 계산, MET 계산, kcal 계산, 페이스 계산
+        distanceCalculate()
+//        kcalCalculate()
+    }
+
+    private fun distanceCalculate() {
         if (currentLatLng != null && pastLatLng != null) {
             if (currentLatLng!!.latitude != pastLatLng!!.latitude || currentLatLng!!.longitude != pastLatLng!!.longitude) {
                 val distance = distanceManager.getDistance(
@@ -147,10 +169,32 @@ class MapViewModel @Inject constructor(
         }
     }
 
+    private fun kcalCalculate() {
+        minSpeed = distance.value / (milliseconds / 6000.0)   // 분속 측정
+        MET= when(minSpeed) {
+            in 0.0..54.0 -> (2/135)*minSpeed + 4/5
+            in 54.0..67.0 -> (1/13)*(minSpeed - 54) + 2.0
+            in 67.0..81.0 -> (3/140)*(minSpeed - 67) + 3.0
+            in 81.0..94.0 -> (1/26)*(minSpeed - 81) + 3.3
+            in 94.0..100.0 -> (1/30)*(minSpeed - 94) + 3.8
+            in 100.0..107.0 -> (1/7)*(minSpeed - 100) + 4.0
+            in 107.0..134.0 -> (1/9)*(minSpeed - 107) + 5.0
+            in 134.0..161.0 -> (2/27)*(minSpeed - 134) + 8.0
+            in 161.0..190.0 -> (1/29)*(minSpeed - 161) + 10.0
+            in 190.0..268.0 -> (5/156)*(minSpeed - 190) + 11.0
+            in 268.0..321.0 -> (9/106)*(minSpeed - 268) + 14.5
+            else -> (2/27)*(minSpeed - 321) + 19.0
+        }
+//        _kcal.value = 0.005 * MET *(3.5 * weight * minSpeed)
+    }
+
     fun roundDistance(): String {
         val formatDistance = round(distance.value * 100) / 100
         return formatDistance.toString()
     }
+
+    fun roundKcal(): String = round(kcal.value).toString()
+
 
     // 시간 format 설정
     private fun formatTime(milliseconds: Long): String {
@@ -253,6 +297,11 @@ class MapViewModel @Inject constructor(
                 mapRepository.postPloggingLive(ploggingData = ploggingImage).first()) {
                 is ApiState.Success<*> -> {
                     val result = apiState.value as List<Map<String, Int>>
+                    result.forEach { trash ->
+                        trash.values.forEach {
+                            totalScore += it
+                        }
+                    }
                     Log.d("daeYoung", "postPloggingImageUrl() 성공: $result")
                 }
 

@@ -48,6 +48,7 @@ fun MainScreen(mainViewModel: MainViewModel = viewModel(), onClick: () -> Unit) 
                 .padding(it), horizontalAlignment = Alignment.CenterHorizontally
         ) {
             MainTopSwitch(mainViewModel = mainViewModel)
+            MainTopBanner()
         }
     }
 }

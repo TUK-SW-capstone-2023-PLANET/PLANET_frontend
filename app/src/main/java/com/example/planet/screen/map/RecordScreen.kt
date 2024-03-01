@@ -243,7 +243,7 @@ fun RecordScreen(mapViewModel: MapViewModel = viewModel(), cameraLauncher: Manag
                             fontWeight = FontWeight.SemiBold,
                         )
                     ) {
-                        append("320")
+                        append(mapViewModel.roundKcal())
                     }
                     withStyle(SpanStyle(fontSize = 20.sp, fontWeight = FontWeight.SemiBold)) {
                         append(" kcal")
@@ -281,7 +281,7 @@ fun RecordScreen(mapViewModel: MapViewModel = viewModel(), cameraLauncher: Manag
                             fontWeight = FontWeight.SemiBold,
                         )
                     ) {
-                        append("12")
+                        append(mapViewModel.totalScore.toString())
                     }
                     withStyle(SpanStyle(fontSize = 20.sp, fontWeight = FontWeight.SemiBold)) {
                         append(" 개")
