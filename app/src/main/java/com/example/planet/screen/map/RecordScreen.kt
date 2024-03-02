@@ -217,7 +217,7 @@ fun RecordScreen(mapViewModel: MapViewModel = viewModel(), cameraLauncher: Manag
                             fontWeight = FontWeight.SemiBold,
                         )
                     ) {
-                        append("5")
+                        append(mapViewModel.pace.value.first.toString())
                     }
                     withStyle(SpanStyle(fontSize = 22.sp, fontWeight = FontWeight.SemiBold)) {
                         append("'")
@@ -228,7 +228,7 @@ fun RecordScreen(mapViewModel: MapViewModel = viewModel(), cameraLauncher: Manag
                             fontWeight = FontWeight.SemiBold,
                         )
                     ) {
-                        append("31")
+                        append(mapViewModel.pace.value.second.toString())
                     }
                     withStyle(SpanStyle(fontSize = 22.sp, fontWeight = FontWeight.SemiBold)) {
                         append("\"")

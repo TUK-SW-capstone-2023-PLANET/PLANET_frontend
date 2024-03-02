@@ -59,33 +59,41 @@ class MapViewModel @Inject constructor(
     private val _distance = mutableStateOf<Double>(0.0)          // km 단위
     val distance: State<Double> = _distance
 
-    //private val _kcal = mutableStateOf<Double>(0.0)              // 4초 마다 소비되는 kacl
+    private val _minSpeed = mutableStateOf(0.0)                 // 분속, 1분 당 몇 m를 가는지
+    val minSpeed: State<Double> = _minSpeed
+
+
     private val _kcal = derivedStateOf {
-        minSpeed = distance.value / (milliseconds / 6000.0)   // 분속 측정
-        MET= when(minSpeed) {
-            in 0.0..54.0 -> (2/135)*minSpeed + 4/5
-            in 54.0..67.0 -> (1/13)*(minSpeed - 54) + 2.0
-            in 67.0..81.0 -> (3/140)*(minSpeed - 67) + 3.0
-            in 81.0..94.0 -> (1/26)*(minSpeed - 81) + 3.3
-            in 94.0..100.0 -> (1/30)*(minSpeed - 94) + 3.8
-            in 100.0..107.0 -> (1/7)*(minSpeed - 100) + 4.0
-            in 107.0..134.0 -> (1/9)*(minSpeed - 107) + 5.0
-            in 134.0..161.0 -> (2/27)*(minSpeed - 134) + 8.0
-            in 161.0..190.0 -> (1/29)*(minSpeed - 161) + 10.0
-            in 190.0..268.0 -> (5/156)*(minSpeed - 190) + 11.0
-            in 268.0..321.0 -> (9/106)*(minSpeed - 268) + 14.5
-            else -> (2/27)*(minSpeed - 321) + 19.0
+        _minSpeed.value = _distance.value / (milliseconds / 6000.0)   // 분속 측정
+        MET= when(minSpeed.value) {
+            in 0.0..54.0 -> (2/135)*minSpeed.value + 4/5
+            in 54.0..67.0 -> (1/13)*(minSpeed.value - 54) + 2.0
+            in 67.0..81.0 -> (3/140)*(minSpeed.value - 67) + 3.0
+            in 81.0..94.0 -> (1/26)*(minSpeed.value - 81) + 3.3
+            in 94.0..100.0 -> (1/30)*(minSpeed.value - 94) + 3.8
+            in 100.0..107.0 -> (1/7)*(minSpeed.value - 100) + 4.0
+            in 107.0..134.0 -> (1/9)*(minSpeed.value - 107) + 5.0
+            in 134.0..161.0 -> (2/27)*(minSpeed.value - 134) + 8.0
+            in 161.0..190.0 -> (1/29)*(minSpeed.value - 161) + 10.0
+            in 190.0..268.0 -> (5/156)*(minSpeed.value - 190) + 11.0
+            in 268.0..321.0 -> (9/106)*(minSpeed.value - 268) + 14.5
+            else -> (2/27)*(minSpeed.value - 321) + 19.0
         }
-        0.005 * MET *(3.5 * weight * minSpeed)
+        Log.d(TAG, "minSpeed: $minSpeed, MET: $MET, kcal: ${0.005 * MET *(3.5 * weight * minSpeed.value)}")
+        0.005 * MET *(3.5 * weight * minSpeed.value)
     }
     val kcal: State<Double> = _kcal
+
+    private val _pace = derivedStateOf {
+        (1000 / minSpeed.value).toInt() to 60000 / minSpeed.value - (1000 / minSpeed.value).toInt()
+    }
+    val pace: State<Pair<Int, Double>> = _pace
 
     private var ploggingId: Int = 0                                     // 플로깅 PK
     private lateinit var timerJob: Job                                  // 타이머 코루틴
     private lateinit var distanceCalculateJob: Job                      // 1초마다 위도,경도의 거리를 계산하는 코루틴
     private var milliseconds: Long = 0L                                 // 타이머 시간
     private val distanceManager = DistanceManager                       // 거리 계산 객체
-    private var minSpeed: Double = 0.0                                  // m/min, 1분 당 몇m?, 속력
     private var MET:Double = 0.0                                        // MET
     private val weight: Double = 70.0                                   // 사용자의 몸무계
     var currentLatLng: LatLng? = null
@@ -148,12 +156,7 @@ class MapViewModel @Inject constructor(
         val result = cashFile?.allDelete()
     }
 
-    fun allCalculate() {  // 4초마다 거리 계산, 속력 계산, MET 계산, kcal 계산, 페이스 계산
-        distanceCalculate()
-//        kcalCalculate()
-    }
-
-    private fun distanceCalculate() {
+    fun distanceCalculate() {
         if (currentLatLng != null && pastLatLng != null) {
             if (currentLatLng!!.latitude != pastLatLng!!.latitude || currentLatLng!!.longitude != pastLatLng!!.longitude) {
                 val distance = distanceManager.getDistance(
@@ -162,30 +165,11 @@ class MapViewModel @Inject constructor(
                     currentLatLng!!.latitude,
                     currentLatLng!!.longitude
                 )
-                if (distance >= 5) {
+                if (distance >= 7.5) {
                     _distance.value += distance / 1000.0
                 }
             }
         }
-    }
-
-    private fun kcalCalculate() {
-        minSpeed = distance.value / (milliseconds / 6000.0)   // 분속 측정
-        MET= when(minSpeed) {
-            in 0.0..54.0 -> (2/135)*minSpeed + 4/5
-            in 54.0..67.0 -> (1/13)*(minSpeed - 54) + 2.0
-            in 67.0..81.0 -> (3/140)*(minSpeed - 67) + 3.0
-            in 81.0..94.0 -> (1/26)*(minSpeed - 81) + 3.3
-            in 94.0..100.0 -> (1/30)*(minSpeed - 94) + 3.8
-            in 100.0..107.0 -> (1/7)*(minSpeed - 100) + 4.0
-            in 107.0..134.0 -> (1/9)*(minSpeed - 107) + 5.0
-            in 134.0..161.0 -> (2/27)*(minSpeed - 134) + 8.0
-            in 161.0..190.0 -> (1/29)*(minSpeed - 161) + 10.0
-            in 190.0..268.0 -> (5/156)*(minSpeed - 190) + 11.0
-            in 268.0..321.0 -> (9/106)*(minSpeed - 268) + 14.5
-            else -> (2/27)*(minSpeed - 321) + 19.0
-        }
-//        _kcal.value = 0.005 * MET *(3.5 * weight * minSpeed)
     }
 
     fun roundDistance(): String {

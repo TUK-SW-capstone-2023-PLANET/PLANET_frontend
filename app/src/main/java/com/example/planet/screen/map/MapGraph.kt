@@ -84,11 +84,11 @@ fun MapGraph(mapViewModel: MapViewModel = viewModel()) {
     LaunchedEffect(Unit) {
         while (true) {
             mapViewModel.pastLatLng = mapViewModel.currentLatLng
-            delay(4000)
+            delay(5000)
             Log.d(TAG, "계산중: ${mapViewModel.distance.value}")
             Log.d(TAG, "pastLocation: ${mapViewModel.pastLatLng}")
             Log.d(TAG, "currentLocation: ${mapViewModel.currentLatLng}")
-            mapViewModel.allCalculate()
+            mapViewModel.distanceCalculate()
         }
     }
     DisposableEffect(Unit) {
