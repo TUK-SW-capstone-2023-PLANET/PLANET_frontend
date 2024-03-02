@@ -55,21 +55,6 @@ import kotlinx.coroutines.launch
 @Composable
 fun MapGraph(mapViewModel: MapViewModel = viewModel()) {
 
-    val tabltems = listOf(
-        Tabltem(
-            unselectedIcon = Icons.Outlined.Map,
-            selectedIcon = Icons.Filled.Map
-        ),
-        Tabltem(
-            unselectedIcon = Icons.Outlined.Schedule,
-            selectedIcon = Icons.Filled.Schedule
-        ),
-        Tabltem(
-            unselectedIcon = Icons.Outlined.Delete,
-            selectedIcon = Icons.Filled.Delete
-        ),
-    )
-
     val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
 
@@ -80,6 +65,21 @@ fun MapGraph(mapViewModel: MapViewModel = viewModel()) {
             // 사진 저장하는 API 호출
             mapViewModel.postImage()
         }
+
+    val tabltems = listOf(
+        Tabltem(
+            unselectedIcon = Icons.Outlined.Map,
+            selectedIcon = Icons.Filled.Map,
+        ),
+        Tabltem(
+            unselectedIcon = Icons.Outlined.Schedule,
+            selectedIcon = Icons.Filled.Schedule
+        ),
+        Tabltem(
+            unselectedIcon = Icons.Outlined.Delete,
+            selectedIcon = Icons.Filled.Delete
+        ),
+    )
 
     LaunchedEffect(Unit) {
         while (true) {
