@@ -7,6 +7,7 @@ import android.util.Log
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -177,7 +178,13 @@ fun MapScreen(
                 .align(Alignment.BottomCenter)
                 .padding(16.dp), shape = RoundedCornerShape(8.dp)
         ) {
-            Text(text = "${mapViewModel.distance.value}", modifier = Modifier.padding(16.dp))
+            Column {
+                Text(text = "거리: ${mapViewModel.distance.value}", modifier = Modifier.padding(16.dp))
+                Text(text = "분속: ${mapViewModel.minSpeed.value}", modifier = Modifier.padding(horizontal = 16.dp))
+                Text(text = "MET: ${mapViewModel.met.value}", modifier = Modifier.padding(16.dp))
+                Text(text = "kacl: ${mapViewModel.kcal.value}", modifier = Modifier.padding(horizontal = 16.dp))
+                Text(text = "pace: ${mapViewModel.pace.value}", modifier = Modifier.padding(16.dp))
+            }
         }
         // 여기까지
         MyLocationButton(

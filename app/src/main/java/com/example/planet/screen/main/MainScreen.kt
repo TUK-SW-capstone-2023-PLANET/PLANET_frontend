@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -19,14 +18,9 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,8 +31,9 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.planet.R
 import com.example.planet.component.common.MyScrollableTabRow
-import com.example.planet.component.common.NoRippleInteractionSource
 import com.example.planet.component.main.MainTopSwitch
+import com.example.planet.screen.main.plogging.PloggingHelpScreen
+import com.example.planet.screen.main.plogging.UniversityScreen
 import com.example.planet.viewmodel.MainViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -116,8 +111,8 @@ fun MainScreen(mainViewModel: MainViewModel = viewModel(), onClick: () -> Unit) 
             )
             HorizontalPager(count = tabItems.count(), state = pagerState) { page ->
                 when (page) {
-                    0 -> Text(text = "$page", modifier = Modifier.fillMaxSize())
-                    1 -> Text(text = "$page", modifier = Modifier.fillMaxSize())
+                    0 -> PloggingHelpScreen()
+                    1 -> UniversityScreen()
                     2 -> Text(text = "$page", modifier = Modifier.fillMaxSize())
                     3 -> Text(text = "$page", modifier = Modifier.fillMaxSize())
                 }
@@ -126,58 +121,84 @@ fun MainScreen(mainViewModel: MainViewModel = viewModel(), onClick: () -> Unit) 
     }
 }
 
+@OptIn(ExperimentalPagerApi::class)
 @Preview(showBackground = true)
 @Composable
 fun Test() {
-    var selectedTabIndex by remember {
-        mutableIntStateOf(0) // or use mutableStateOf(0)
-    }
-    val tabTitles = listOf("나의 플로깅", "대학교", "시즌", "이벤트")
+    val pagerState = rememberPagerState()
+    val coroutineScope = rememberCoroutineScope()
+    val tabItems = listOf("나의 플로깅", "대학교", "시즌", "이벤트")
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally
+    Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(
+                contentColor = Color.White,
+                containerColor = colorResource(id = R.color.main_color1),
+                shape = CircleShape,
+                onClick = {  }) {
+                Icon(
+                    imageVector = Icons.Rounded.DirectionsRun,
+                    contentDescription = null,
+                    modifier = Modifier.size(33.dp)
+                )
+            }
+        },
+        floatingActionButtonPosition = FabPosition.Center
     ) {
-        MainTopBanner()
-        MyScrollableTabRow(modifier = Modifier
-            .height(45.dp)
-            .padding(vertical = 8.dp),
-            edgePadding = 16.dp,
-            selectedTabIndex = selectedTabIndex,
-            minItemWidth = 0.dp,
-            indicator = {},
-            divider = {}
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(it), horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            tabTitles.forEachIndexed { index, title ->
-                Card(
-                    modifier = Modifier
-                        .wrapContentSize()
-                        .padding(end = if (index != 3) 8.dp else 0.dp),
-                    shape = RoundedCornerShape(8.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = if (selectedTabIndex == index) colorResource(id = R.color.main_color2)
-                        else colorResource(id = R.color.font_background_color3),
-                        contentColor = if (selectedTabIndex == index) Color.White
-                        else colorResource(id = R.color.font_background_color2)
-                    )
-                ) {
-                    Tab(
-                        modifier = Modifier.padding(0.dp),
-                        selected = (selectedTabIndex == index),
-                        text = { Text(text = title, fontSize = 11.sp) },
-                        onClick = { selectedTabIndex = index },
-                        interactionSource = NoRippleInteractionSource()
-                    )
+//            MainTopSwitch(mainViewModel = mainViewModel)
+            MainTopBanner()
+            MyScrollableTabRow(
+                modifier = Modifier
+                    .height(45.dp)
+                    .padding(vertical = 8.dp),
+                edgePadding = 16.dp,
+                selectedTabIndex = pagerState.currentPage,
+                minItemWidth = 0.dp,
+                indicator = {},
+                divider = {}) {
+                tabItems.forEachIndexed { index, title ->
+                    Card(
+                        modifier = Modifier
+                            .padding(end = if (index != 3) 8.dp else 0.dp),
+                        shape = RoundedCornerShape(8.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = if (pagerState.currentPage == index) colorResource(id = R.color.main_color2)
+                            else colorResource(id = R.color.font_background_color3),
+                            contentColor = if (pagerState.currentPage == index) Color.White
+                            else colorResource(id = R.color.font_background_color2)
+                        )
+                    ) {
+                        Tab(
+                            modifier = Modifier,
+                            selected = (pagerState.currentPage == index),
+                            text = { Text(text = title, fontSize = 11.sp) },
+                            onClick = {
+                                coroutineScope.launch {
+                                    pagerState.animateScrollToPage(index)
+                                }
+                            })
+                    }
                 }
-
-
+            }
+            Divider(
+                thickness = 1.dp,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+            )
+            HorizontalPager(count = tabItems.count(), state = pagerState) { page ->
+                when (page) {
+                    0 -> PloggingHelpScreen()
+                    1 -> UniversityScreen()
+                    2 -> Text(text = "$page", modifier = Modifier.fillMaxSize())
+                    3 -> Text(text = "$page", modifier = Modifier.fillMaxSize())
+                }
             }
         }
-        Divider(
-            thickness = 1.dp,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-        )
     }
 }

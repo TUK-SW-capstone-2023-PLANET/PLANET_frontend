@@ -5,6 +5,7 @@ import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.content.FileProvider
@@ -41,6 +42,17 @@ class MapViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val mapRepository: MapRepository
 ) : ViewModel() {
+    private var ploggingId: Int = 0                                     // 플로깅 PK
+    private lateinit var timerJob: Job                                  // 타이머 코루틴
+    private lateinit var distanceCalculateJob: Job                      // 1초마다 위도,경도의 거리를 계산하는 코루틴
+    private var milliseconds: Long = 0L                                 // 타이머 시간
+    private val distanceManager = DistanceManager                       // 거리 계산 객체
+    private val weight: Double = 70.0                                   // 사용자의 몸무계
+    var currentLatLng: LatLng? = null
+    var pastLatLng: LatLng? = null
+    var trashCanLatLng: LatLng? = null                                  // 쓰레기통 위치
+    var imageUrl: String = ""                                           // 사진을 imageUrl로 바꾼거
+    var totalScore: Int = 0                                             // 모든 쓰레기의 총 개수
 
     private val _dialogState = mutableStateOf(false)
     val dialogState: State<Boolean> = _dialogState
@@ -56,51 +68,58 @@ class MapViewModel @Inject constructor(
     private val _trashCanItem = mutableStateListOf<TrashCanItem>()
     val trashCanItem: List<TrashCanItem> = _trashCanItem
 
-    private val _distance = mutableStateOf<Double>(0.0)          // km 단위
+    private val _distance = mutableDoubleStateOf(0.0)            // km 단위
     val distance: State<Double> = _distance
 
-    private val _minSpeed = mutableStateOf(0.0)                 // 분속, 1분 당 몇 m를 가는지
+    private val _minSpeed = derivedStateOf {                            // 분속, 1분 당 몇 m를 가는지
+        if (distance.value <= 0.0 || milliseconds == 0L) {
+            return@derivedStateOf 0.0
+        } else {
+            return@derivedStateOf (distance.value * 1000) / (milliseconds / 1000.0) * 60   // 분속 측정
+        }
+    }
     val minSpeed: State<Double> = _minSpeed
 
+    private val _met = derivedStateOf {                                 // MET
+        when (minSpeed.value) {
+            in 0.0..54.0 -> {
+                return@derivedStateOf (2 / 135) * minSpeed.value + (4/5)
+            }
+            in 54.0..67.0 -> return@derivedStateOf (1 / 13) * (minSpeed.value - 54) + 2.0
+            in 67.0..81.0 -> return@derivedStateOf (3 / 140) * (minSpeed.value - 67) + 3.0
+            in 81.0..94.0 -> return@derivedStateOf (1 / 26) * (minSpeed.value - 81) + 3.3
+            in 94.0..100.0 -> return@derivedStateOf (1 / 30) * (minSpeed.value - 94) + 3.8
+            in 100.0..107.0 -> return@derivedStateOf (1 / 7) * (minSpeed.value - 100) + 4.0
+            in 107.0..134.0 -> return@derivedStateOf (1 / 9) * (minSpeed.value - 107) + 5.0
+            in 134.0..161.0 -> return@derivedStateOf (2 / 27) * (minSpeed.value - 134) + 8.0
+            in 161.0..190.0 -> return@derivedStateOf (1 / 29) * (minSpeed.value - 161) + 10.0
+            in 190.0..268.0 -> return@derivedStateOf (5 / 156) * (minSpeed.value - 190) + 11.0
+            in 268.0..321.0 -> return@derivedStateOf (9 / 106) * (minSpeed.value - 268) + 14.5
+            else -> return@derivedStateOf (2 / 27) * (minSpeed.value - 321) + 19.0
+        }
+    }
+    val met: State<Double> = _met
 
     private val _kcal = derivedStateOf {
-        _minSpeed.value = _distance.value / (milliseconds / 6000.0)   // 분속 측정
-        MET= when(minSpeed.value) {
-            in 0.0..54.0 -> (2/135)*minSpeed.value + 4/5
-            in 54.0..67.0 -> (1/13)*(minSpeed.value - 54) + 2.0
-            in 67.0..81.0 -> (3/140)*(minSpeed.value - 67) + 3.0
-            in 81.0..94.0 -> (1/26)*(minSpeed.value - 81) + 3.3
-            in 94.0..100.0 -> (1/30)*(minSpeed.value - 94) + 3.8
-            in 100.0..107.0 -> (1/7)*(minSpeed.value - 100) + 4.0
-            in 107.0..134.0 -> (1/9)*(minSpeed.value - 107) + 5.0
-            in 134.0..161.0 -> (2/27)*(minSpeed.value - 134) + 8.0
-            in 161.0..190.0 -> (1/29)*(minSpeed.value - 161) + 10.0
-            in 190.0..268.0 -> (5/156)*(minSpeed.value - 190) + 11.0
-            in 268.0..321.0 -> (9/106)*(minSpeed.value - 268) + 14.5
-            else -> (2/27)*(minSpeed.value - 321) + 19.0
-        }
-        Log.d(TAG, "minSpeed: $minSpeed, MET: $MET, kcal: ${0.005 * MET *(3.5 * weight * minSpeed.value)}")
-        0.005 * MET *(3.5 * weight * minSpeed.value)
+        Log.d(
+            TAG,
+            "minSpeed: $minSpeed, MET: $met, kcal: ${0.005 * met.value * (3.5 * weight * minSpeed.value)}"
+        )
+        0.005 * met.value * (3.5 * weight * minSpeed.value)
     }
     val kcal: State<Double> = _kcal
 
-    private val _pace = derivedStateOf {
-        (1000 / minSpeed.value).toInt() to 60000 / minSpeed.value - (1000 / minSpeed.value).toInt()
+    private val _pace = derivedStateOf {                                // 평균 페이스, 1km 기준으로 측정
+        if (minSpeed.value > 0.0) {
+            return@derivedStateOf (1000 / minSpeed.value).toInt() to 60000 / minSpeed.value - (1000 / minSpeed.value).toInt()
+        } else {
+            return@derivedStateOf 0 to 0.0
+        }
+
     }
     val pace: State<Pair<Int, Double>> = _pace
 
-    private var ploggingId: Int = 0                                     // 플로깅 PK
-    private lateinit var timerJob: Job                                  // 타이머 코루틴
-    private lateinit var distanceCalculateJob: Job                      // 1초마다 위도,경도의 거리를 계산하는 코루틴
-    private var milliseconds: Long = 0L                                 // 타이머 시간
-    private val distanceManager = DistanceManager                       // 거리 계산 객체
-    private var MET:Double = 0.0                                        // MET
-    private val weight: Double = 70.0                                   // 사용자의 몸무계
-    var currentLatLng: LatLng? = null
-    var pastLatLng: LatLng? = null
-    var trashCanLatLng: LatLng? = null                                  // 쓰레기통 위치
-    var imageUrl: String = ""                                           // 사진을 imageUrl로 바꾼거
-    var totalScore: Int = 0                                             // 모든 쓰레기의 총 개수
+
 
     fun getImageUri(): Uri {
 //        Log.d(TAG, "externalCashDir: ${context.externalCacheDir}")
@@ -157,6 +176,10 @@ class MapViewModel @Inject constructor(
     }
 
     fun distanceCalculate() {
+        Log.d(
+            TAG,
+            "distance: ${distance.value}\nminSpeed: ${minSpeed.value}\nMET: $met\nkcal: ${kcal.value}\npace: ${pace.value}"
+        )
         if (currentLatLng != null && pastLatLng != null) {
             if (currentLatLng!!.latitude != pastLatLng!!.latitude || currentLatLng!!.longitude != pastLatLng!!.longitude) {
                 val distance = distanceManager.getDistance(
@@ -165,7 +188,7 @@ class MapViewModel @Inject constructor(
                     currentLatLng!!.latitude,
                     currentLatLng!!.longitude
                 )
-                if (distance >= 7.5) {
+                if (distance >= 7.0) {
                     _distance.value += distance / 1000.0
                 }
             }
@@ -177,7 +200,9 @@ class MapViewModel @Inject constructor(
         return formatDistance.toString()
     }
 
-    fun roundKcal(): String = round(kcal.value).toString()
+
+    fun roundKcal(): String =
+        round(kcal.value).toString()
 
 
     // 시간 format 설정
