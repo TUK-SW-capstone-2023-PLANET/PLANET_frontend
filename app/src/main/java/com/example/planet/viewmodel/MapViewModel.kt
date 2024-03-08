@@ -83,7 +83,8 @@ class MapViewModel @Inject constructor(
     private val _met = derivedStateOf {                                 // MET
         when (minSpeed.value) {
             in 0.0..54.0 -> {
-                return@derivedStateOf (2 / 135) * minSpeed.value + (4/5)
+                Log.d(TAG, "met: ${(2 / 135) * minSpeed.value + 1.2}")
+                return@derivedStateOf (2 / 135) * minSpeed.value + 1.2
             }
             in 54.0..67.0 -> return@derivedStateOf (1 / 13) * (minSpeed.value - 54) + 2.0
             in 67.0..81.0 -> return@derivedStateOf (3 / 140) * (minSpeed.value - 67) + 3.0
@@ -115,7 +116,6 @@ class MapViewModel @Inject constructor(
         } else {
             return@derivedStateOf 0 to 0.0
         }
-
     }
     val pace: State<Pair<Int, Double>> = _pace
 

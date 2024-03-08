@@ -189,7 +189,8 @@ fun Test() {
                 thickness = 1.dp,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
+                    .padding(horizontal = 16.dp),
+                color = colorResource(id = R.color.font_background_color3)
             )
             HorizontalPager(count = tabItems.count(), state = pagerState) { page ->
                 when (page) {
