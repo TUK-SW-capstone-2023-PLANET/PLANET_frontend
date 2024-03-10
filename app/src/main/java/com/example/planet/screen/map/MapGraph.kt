@@ -1,6 +1,7 @@
 package com.example.planet.screen.map
 
 import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -39,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.planet.TAG
+import com.example.planet.component.common.PloggingDialog
 import com.example.planet.component.map.common.LockButton
 import com.example.planet.data.map.Tabltem
 import com.example.planet.viewmodel.MapViewModel
@@ -85,10 +87,11 @@ fun MapGraph(mapViewModel: MapViewModel = viewModel()) {
         while (true) {
             mapViewModel.pastLatLng = mapViewModel.currentLatLng
             delay(5000)
-            Log.d(TAG, "계산중: ${mapViewModel.distance.value}")
-            Log.d(TAG, "pastLocation: ${mapViewModel.pastLatLng}")
-            Log.d(TAG, "currentLocation: ${mapViewModel.currentLatLng}")
+//            Log.d(TAG, "계산중: ${mapViewModel.distance.value}")
+//            Log.d(TAG, "pastLocation: ${mapViewModel.pastLatLng}")
+//            Log.d(TAG, "currentLocation: ${mapViewModel.currentLatLng}")
             mapViewModel.distanceCalculate()
+
         }
     }
     DisposableEffect(Unit) {
@@ -99,6 +102,13 @@ fun MapGraph(mapViewModel: MapViewModel = viewModel()) {
             mapViewModel.endTimer()
         }
     }
+
+    BackHandler {
+        Log.d(TAG, "BackHandler 호출")
+        mapViewModel.displayOnDialog()
+        mapViewModel.pauseTimer()
+    }
+
     // 탑 앱바 적용하면 RecordScreen 화면 카메라, 잠금 버튼 뭉게짐
 //    Scaffold(topBar = {
 //        CenterAlignedTopAppBar(title = {
@@ -109,6 +119,10 @@ fun MapGraph(mapViewModel: MapViewModel = viewModel()) {
 //            )
 //        })
 //    })
+    if (mapViewModel.dialogState.value) {
+        PloggingDialog(mapViewModel = mapViewModel)
+        mapViewModel.pauseTimer()
+    }
     Box(
         modifier = Modifier
             .fillMaxSize()

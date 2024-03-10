@@ -38,7 +38,10 @@ import com.example.planet.viewmodel.MapViewModel
 
 @Composable
 fun PloggingDialog(mapViewModel: MapViewModel = viewModel()) {
-    Dialog(onDismissRequest = { mapViewModel.displayOnDialog() }) {
+    Dialog(onDismissRequest = {
+        mapViewModel.displayOnDialog()
+        mapViewModel.startTimer()
+    }) {
         Surface(
             modifier = Modifier
                 .fillMaxWidth(0.7f)

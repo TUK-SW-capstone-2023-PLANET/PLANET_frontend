@@ -16,6 +16,7 @@ import com.example.planet.TAG
 import com.example.planet.component.map.map.TrashCanItem
 import com.example.planet.data.ApiState
 import com.example.planet.data.dto.ImageUrl
+import com.example.planet.data.dto.Location
 import com.example.planet.data.dto.PloggingImage
 import com.example.planet.data.dto.TrashCan
 import com.example.planet.repository.MapRepository
@@ -102,10 +103,10 @@ class MapViewModel @Inject constructor(
     val met: State<Double> = _met
 
     private val _kcal = derivedStateOf {
-        Log.d(
-            TAG,
-            "minSpeed: $minSpeed, MET: $met, kcal: ${0.005 * met.value * (3.5 * weight * minSpeed.value)}"
-        )
+//        Log.d(
+//            TAG,
+//            "minSpeed: $minSpeed, MET: $met, kcal: ${0.005 * met.value * (3.5 * weight * minSpeed.value)}"
+//        )
         0.005 * met.value * (3.5 * weight * minSpeed.value)
     }
     val kcal: State<Double> = _kcal
@@ -119,7 +120,7 @@ class MapViewModel @Inject constructor(
     }
     val pace: State<Pair<Int, Double>> = _pace
 
-
+    val ploggingLog = mutableStateListOf<Location>()
 
     fun getImageUri(): Uri {
 //        Log.d(TAG, "externalCashDir: ${context.externalCacheDir}")
@@ -175,12 +176,17 @@ class MapViewModel @Inject constructor(
         val result = cashFile?.allDelete()
     }
 
+    private fun storePloggingLog(location: Location) {  // 지난 플로깅 로그(위도 경도) 기록
+        ploggingLog.add(location)
+    }
+
     fun distanceCalculate() {
         Log.d(
             TAG,
             "distance: ${distance.value}\nminSpeed: ${minSpeed.value}\nMET: $met\nkcal: ${kcal.value}\npace: ${pace.value}"
         )
         if (currentLatLng != null && pastLatLng != null) {
+            storePloggingLog(location = Location(pastLatLng!!.latitude, pastLatLng!!.longitude))
             if (currentLatLng!!.latitude != pastLatLng!!.latitude || currentLatLng!!.longitude != pastLatLng!!.longitude) {
                 val distance = distanceManager.getDistance(
                     pastLatLng!!.latitude,
@@ -202,7 +208,10 @@ class MapViewModel @Inject constructor(
 
 
     fun roundKcal(): String =
-        round(kcal.value).toString()
+        round(kcal.value).toInt().toString()
+
+    fun roundpaceSecond(): String =
+        round(pace.value.second).toInt().toString()
 
 
     // 시간 format 설정
