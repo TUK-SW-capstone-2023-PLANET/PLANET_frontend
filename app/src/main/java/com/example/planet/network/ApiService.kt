@@ -1,5 +1,6 @@
 package com.example.planet.network
 
+import com.example.planet.data.dto.Advertisement
 import com.example.planet.data.dto.ImageUrl
 import com.example.planet.data.dto.PloggingComplete
 import com.example.planet.data.dto.PloggingImage
@@ -28,5 +29,8 @@ interface ApiService {
 
     @POST("/plogging")
     suspend fun postPlogging(@Body ploggingInfo: PloggingInfo): PloggingComplete
+
+    @GET("/advertisement")
+    suspend fun getAdvertisement(): List<Advertisement>
 
 }

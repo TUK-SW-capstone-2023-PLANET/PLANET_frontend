@@ -23,6 +23,7 @@ import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.permissions.shouldShowRationale
 import java.io.File
+import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Objects
@@ -66,6 +67,11 @@ fun File.allDelete():Boolean? {
         return false }
 
     return result.getOrNull()
+}
+
+fun numberComma(number: Int): String {
+    val decimal = DecimalFormat("#,###")
+    return decimal.format(number)
 }
 
 @OptIn(ExperimentalPermissionsApi::class)

@@ -2,7 +2,6 @@ package com.example.planet.screen.map
 
 import android.net.Uri
 import android.util.Log
-import androidx.activity.compose.BackHandler
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -47,7 +46,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.planet.R
 import com.example.planet.TAG
-import com.example.planet.component.common.PloggingDialog
 import com.example.planet.component.map.common.CameraButton
 import com.example.planet.component.map.common.LockButton
 import com.example.planet.component.map.record.RoundCornerCard
@@ -241,7 +239,7 @@ fun RecordScreen(mapViewModel: MapViewModel = viewModel(), cameraLauncher: Manag
                             fontWeight = FontWeight.SemiBold,
                         )
                     ) {
-                        append("3,260")
+                        append(mapViewModel.formatTrashScore())
                     }
                     withStyle(SpanStyle(fontSize = 20.sp, fontWeight = FontWeight.SemiBold)) {
                         append("점")
@@ -256,7 +254,7 @@ fun RecordScreen(mapViewModel: MapViewModel = viewModel(), cameraLauncher: Manag
                             fontWeight = FontWeight.SemiBold,
                         )
                     ) {
-                        append(mapViewModel.totalScore.toString())
+                        append(mapViewModel.totalTrashCount.toString())
                     }
                     withStyle(SpanStyle(fontSize = 20.sp, fontWeight = FontWeight.SemiBold)) {
                         append(" 개")

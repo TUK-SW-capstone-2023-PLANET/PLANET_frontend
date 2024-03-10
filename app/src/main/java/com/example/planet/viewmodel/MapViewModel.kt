@@ -17,12 +17,15 @@ import com.example.planet.component.map.map.TrashCanItem
 import com.example.planet.data.ApiState
 import com.example.planet.data.dto.ImageUrl
 import com.example.planet.data.dto.Location
+import com.example.planet.data.dto.PloggingComplete
 import com.example.planet.data.dto.PloggingImage
+import com.example.planet.data.dto.PloggingInfo
 import com.example.planet.data.dto.TrashCan
 import com.example.planet.repository.MapRepository
 import com.example.planet.util.DistanceManager
 import com.example.planet.util.allDelete
 import com.example.planet.util.createImageFile
+import com.example.planet.util.numberComma
 import com.naver.maps.geometry.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -53,7 +56,7 @@ class MapViewModel @Inject constructor(
     var pastLatLng: LatLng? = null
     var trashCanLatLng: LatLng? = null                                  // 쓰레기통 위치
     var imageUrl: String = ""                                           // 사진을 imageUrl로 바꾼거
-    var totalScore: Int = 0                                             // 모든 쓰레기의 총 개수
+    var totalTrashCount: Int = 0                                        // 모든 쓰레기의 총 개수
 
     private val _dialogState = mutableStateOf(false)
     val dialogState: State<Boolean> = _dialogState
@@ -120,7 +123,11 @@ class MapViewModel @Inject constructor(
     }
     val pace: State<Pair<Int, Double>> = _pace
 
+    private val _totalTrashScore = mutableStateOf<Int>(0)                   // 모든 쓰레기의 총 점수
+    val totalTrashScore: State<Int> = _totalTrashScore
+
     val ploggingLog = mutableStateListOf<Location>()
+    var trashItems = mutableStateListOf<Map<String, Int>>()
 
     fun getImageUri(): Uri {
 //        Log.d(TAG, "externalCashDir: ${context.externalCacheDir}")
@@ -212,6 +219,12 @@ class MapViewModel @Inject constructor(
 
     fun roundpaceSecond(): String =
         round(pace.value.second).toInt().toString()
+
+    fun formatTrashScore(): String =
+        numberComma(totalTrashScore.value)
+
+
+    fun paceToSecond(): Long = round(pace.value.second).toLong() + (pace.value.first * 60)
 
 
     // 시간 format 설정
@@ -314,17 +327,51 @@ class MapViewModel @Inject constructor(
             when (val apiState =
                 mapRepository.postPloggingLive(ploggingData = ploggingImage).first()) {
                 is ApiState.Success<*> -> {
-                    val result = apiState.value as List<Map<String, Int>>
-                    result.forEach { trash ->
-                        trash.values.forEach {
-                            totalScore += it
-                        }
+                    (apiState.value as List<Map<String, Int>>).forEach {
+                        trashItems.add(it)
                     }
-                    Log.d("daeYoung", "postPloggingImageUrl() 성공: $result")
+                }
+                is ApiState.Error -> {
+                    Log.d("daeYoung", "postPloggingImageUrl() 실패: ${apiState.errMsg}")
+                }
+
+                ApiState.Loading -> TODO()
+            }
+        }
+    }
+
+    fun postPlogging() {
+        val ploggingIfo = PloggingInfo(
+            ploggingId = ploggingId,
+            userId = 0,
+            location = ploggingLog,
+            trashCount = trashItems,
+            distance = distance.value,
+            kcal = kcal.value,
+            speed = paceToSecond(),
+            score = totalTrashScore.value,
+            ploggingTime = milliseconds / 1000,
+        )
+        Log.d(TAG,
+            "ploggingId: $ploggingId\n" +
+                    "location: $ploggingLog\n" +
+                    "trashCount: $trashItems\n" +
+                    "distance: ${distance.value}\n" +
+                    "kcal: ${kcal.value}\n" +
+                    "speed: ${paceToSecond()}\n" +
+                    "score: $totalTrashScore\n" +
+                    "ploggingTime: ${milliseconds / 1000}\n"
+            )
+        viewModelScope.launch {
+            when (val apiState =
+                mapRepository.postPlogging(ploggingInfo = ploggingIfo).first()) {
+                is ApiState.Success<*> -> {
+                    val result = apiState.value as PloggingComplete
+                    Log.d("daeYoung", "postPlogging() 성공: $result")
                 }
 
                 is ApiState.Error -> {
-                    Log.d("daeYoung", "postPloggingImageUrl() 실패: ${apiState.errMsg}")
+                    Log.d("daeYoung", "postPlogging() 실패: ${apiState.errMsg}")
                 }
 
                 ApiState.Loading -> TODO()

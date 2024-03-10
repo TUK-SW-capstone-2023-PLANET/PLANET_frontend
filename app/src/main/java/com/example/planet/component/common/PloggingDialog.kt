@@ -49,7 +49,7 @@ fun PloggingDialog(mapViewModel: MapViewModel = viewModel()) {
             shape = RoundedCornerShape(8.dp),
             color = Color.White
         ) {
-            DialogContent(replay = { mapViewModel.startTimer() }) { mapViewModel.displayOnDialog() }
+            DialogContent(stop = {mapViewModel.postPlogging()}, replay = { mapViewModel.startTimer() }) { mapViewModel.displayOnDialog() }
         }
     }
 }
