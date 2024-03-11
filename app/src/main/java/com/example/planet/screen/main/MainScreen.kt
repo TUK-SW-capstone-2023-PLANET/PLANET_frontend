@@ -1,5 +1,6 @@
 package com.example.planet.screen.main
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,6 +21,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.planet.R
+import com.example.planet.TAG
 import com.example.planet.component.common.MyScrollableTabRow
 import com.example.planet.component.main.MainTopSwitch
 import com.example.planet.screen.main.plogging.PloggingHelpScreen
@@ -46,6 +49,10 @@ fun MainScreen(mainViewModel: MainViewModel = viewModel(), onClick: () -> Unit) 
     val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
     val tabItems = listOf("나의 플로깅", "대학교", "시즌", "이벤트")
+
+    LaunchedEffect(Unit) {
+        mainViewModel.getAdvertisement()
+    }
 
     Scaffold(
         floatingActionButton = {
@@ -69,7 +76,9 @@ fun MainScreen(mainViewModel: MainViewModel = viewModel(), onClick: () -> Unit) 
                 .padding(it), horizontalAlignment = Alignment.CenterHorizontally
         ) {
             MainTopSwitch(mainViewModel = mainViewModel)
-            MainTopBanner()
+            if (mainViewModel.imageUrlList.isNotEmpty()) {
+                MainTopBanner(imageUrlList = mainViewModel.imageUrlList)
+            }
             MyScrollableTabRow(
                 modifier = Modifier
                     .height(45.dp)
@@ -151,7 +160,7 @@ fun Test() {
                 .padding(it), horizontalAlignment = Alignment.CenterHorizontally
         ) {
 //            MainTopSwitch(mainViewModel = mainViewModel)
-            MainTopBanner()
+//            MainTopBanner(imageUrlList = main)
             MyScrollableTabRow(
                 modifier = Modifier
                     .height(45.dp)

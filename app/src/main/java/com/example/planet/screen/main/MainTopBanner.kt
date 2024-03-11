@@ -15,30 +15,40 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
+import coil.compose.AsyncImagePainter
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
+import coil.size.Size
 import com.example.planet.R
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.jetbrains.annotations.Async
+
 
 @OptIn(ExperimentalFoundationApi::class)
-@Preview(showBackground = true)
 @Composable
-fun MainTopBanner() {
+fun MainTopBanner(imageUrlList: List<String>) {
     val bannerCount = 4
     val pagerState = rememberPagerState {
         bannerCount
     }
     val coroutineScope = rememberCoroutineScope()
+    val painterList = mutableListOf<ImageRequest>()
+
     DisposableEffect(Unit) {
         val job = coroutineScope.launch {
             while (true) {
@@ -48,6 +58,15 @@ fun MainTopBanner() {
         }
         onDispose { job.cancel() }
     }
+    imageUrlList.forEach {
+        painterList.add(
+            ImageRequest.Builder(LocalContext.current)
+            .data(it)
+            .crossfade(true)
+            .build()
+        )
+    }
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -55,28 +74,21 @@ fun MainTopBanner() {
     ) {
         HorizontalPager(state = pagerState, modifier = Modifier.fillMaxWidth()) { index ->
             when (index) {
-                0 -> Image(
-                    painter = painterResource(id = R.drawable.main_banner1),
+                0 -> AsyncImage(
+                    model = painterList[0],
                     contentDescription = null,
-                    contentScale = ContentScale.Crop
                 )
-
-                1 -> Image(
-                    painter = painterResource(id = R.drawable.main_banner2),
+                1 -> AsyncImage(
+                    model = painterList[1],
                     contentDescription = null,
-                    contentScale = ContentScale.Crop
                 )
-
-                2 -> Image(
-                    painter = painterResource(id = R.drawable.main_banner3),
+                2 -> AsyncImage(
+                    model = painterList[2],
                     contentDescription = null,
-                    contentScale = ContentScale.Crop
                 )
-
-                3 -> Image(
-                    painter = painterResource(id = R.drawable.main_banner4),
+                3 -> AsyncImage(
+                    model = painterList[3],
                     contentDescription = null,
-                    contentScale = ContentScale.Crop
                 )
             }
         }

@@ -12,7 +12,7 @@ class MainRepository @Inject constructor(private val apiService: ApiService) {
 
     suspend fun getAdvertisement(): Flow<ApiState> = flow{
         kotlin.runCatching {
-            apiService.getAllTrashCanLocation()
+            apiService.getAdvertisement()
         }.onSuccess {
             emit(ApiState.Success(it))
         }.onFailure { error ->
