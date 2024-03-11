@@ -1,7 +1,6 @@
 package com.example.planet.util
 
 import android.content.Context
-import android.net.Uri
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -9,14 +8,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
-import androidx.core.content.FileProvider
-import com.example.planet.BuildConfig
 import com.example.planet.TAG
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
@@ -26,7 +20,7 @@ import java.io.File
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.Date
-import java.util.Objects
+import kotlin.math.round
 
 fun Modifier.noRippleClickable(onClick: () -> Unit): Modifier = composed {
     clickable(indication = null,
@@ -69,9 +63,14 @@ fun File.allDelete():Boolean? {
     return result.getOrNull()
 }
 
-fun numberComma(number: Int): String {
+fun Int.numberComma(): String {
     val decimal = DecimalFormat("#,###")
-    return decimal.format(number)
+    return decimal.format(this)
+}
+
+fun Double.round(): String {
+    val formatDistance = round(this * 100) / 100
+    return formatDistance.toString()
 }
 
 @OptIn(ExperimentalPermissionsApi::class)

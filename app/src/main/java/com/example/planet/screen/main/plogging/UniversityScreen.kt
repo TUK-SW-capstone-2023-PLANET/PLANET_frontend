@@ -33,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
@@ -42,30 +43,27 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.example.planet.R
 import com.example.planet.component.main.SubTitle
 import com.example.planet.component.main.SubTitleDescription
 import com.example.planet.component.main.plogging.UniversityContentRow
 import com.example.planet.component.main.plogging.UniversityGraph
+import com.example.planet.data.dto.UniversityPerson
+import com.example.planet.util.numberComma
+import com.example.planet.util.round
 import kotlinx.coroutines.delay
 import java.text.DecimalFormat
 import kotlin.math.round
 
 @Composable
-@Preview(showBackground = true)
-fun UniversityScreen() {
+fun UniversityScreen(universityPersonList: List<UniversityPerson>) {
 
     var visible by remember { mutableStateOf(false) }
     var scrollState = rememberScrollState()
     var GraphHeight2th: Int = round(120 / 1120921.0 * 921218.0).toInt()
     var GraphHeight3th: Int = round(120 / 1120921.0 * 218213.0).toInt()
-    val universityPeople = listOf<UniversityPerson>(
-        UniversityPerson(rank = 1, name = "행복하고픈 정대영", score = 371357, contribute = 33.129),
-        UniversityPerson(rank = 2, name = "고통받는 이승민", score = 268589, contribute = 23.961),
-        UniversityPerson(rank = 3, name = "컴공 간판 강기환", score = 21075, contribute = 1.88),
-        UniversityPerson(rank = 4, name = "일론머스크", score = 19716, contribute = 1.758),
-    )
-    val dec = DecimalFormat("#,###")
 
     LaunchedEffect(Unit) {
         delay(200)
@@ -226,8 +224,11 @@ fun UniversityScreen() {
                         .fillMaxWidth(0.3f)
                         .aspectRatio(1f), shape = CircleShape
                 ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.plogginghelp_card2),
+                    AsyncImage(
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data(universityPersonList[0].imageUrl)
+                            .crossfade(true)
+                            .build(),
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
                     )
@@ -240,24 +241,30 @@ fun UniversityScreen() {
                     verticalArrangement = Arrangement.SpaceEvenly
                 ) {
                     Row(modifier = Modifier, verticalAlignment = Alignment.Bottom) {
-                        Image(
-                            painter = painterResource(id = R.drawable.university2),
+                        AsyncImage(
+                            model = ImageRequest.Builder(LocalContext.current)
+                                .data(universityPersonList[0].universityLogo)
+                                .crossfade(true)
+                                .build(),
                             contentDescription = null,
                             modifier = Modifier.size(25.dp)
                         )
                         Text(
-                            text = "한국공학대학교",
+                            text = universityPersonList[0].universityName,
                             fontWeight = FontWeight.Bold,
                             fontSize = 16.sp,
                             modifier = Modifier.padding(horizontal = 4.dp)
                         )
-                        Image(
-                            painter = painterResource(id = R.drawable.ranking_number1),
-                            contentDescription = null,
-                            modifier = Modifier.size(20.dp)
-                        )
+//                        AsyncImage(
+//                            model = ImageRequest.Builder(LocalContext.current)
+//                                .data(universityPersonList[0].)
+//                                .crossfade(true)
+//                                .build(),
+//                            contentDescription = null,
+//                            modifier = Modifier.size(20.dp)
+//                        )
                     }
-                    Text(text = "HappyBean", fontSize = 16.sp)
+                    Text(text = universityPersonList[0].nickName, fontSize = 16.sp)
                     Text(text = buildAnnotatedString {
                         withStyle(
                             style = SpanStyle(
@@ -265,7 +272,7 @@ fun UniversityScreen() {
                                 color = colorResource(id = R.color.font_background_color1)
                             )
                         ) {
-                            append("1,120")
+                            append(universityPersonList[0].score.toString())
                             append("점")
                         }
                         withStyle(
@@ -275,7 +282,7 @@ fun UniversityScreen() {
                             )
                         ) {
                             append(" (")
-                            append("0.09")
+                            append(universityPersonList[0].contribution.round())
                             append("%)")
                         }
 
@@ -288,7 +295,7 @@ fun UniversityScreen() {
                                 color = colorResource(id = R.color.font_background_color1)
                             )
                         ) {
-                            append("73")
+                            append(universityPersonList[0].rank.toString())
                             append("등")
                         }
                     })
@@ -335,8 +342,10 @@ fun UniversityScreen() {
                     }
                 }
                 Divider(thickness = 1.dp, modifier = Modifier.fillMaxWidth().padding(vertical = 2.dp), color = colorResource(id = R.color.font_background_color3))
-                universityPeople.forEach {
-                    UniversityContentRow(rank = it.rank, name = it.name, score = dec.format(it.score), contribute = it.contribute)
+                universityPersonList.forEachIndexed { index, universityPerson ->
+                    if (index > 0) {
+                        UniversityContentRow(rank = universityPerson.rank, nickname = universityPerson.nickName, score = universityPerson.score.numberComma(), contribution = universityPerson.contribution)
+                    }
                 }
             }
         }
@@ -344,9 +353,3 @@ fun UniversityScreen() {
     }
 }
 
-data class UniversityPerson(
-    val rank: Int,
-    val name: String,
-    val score: Int,
-    val contribute: Double
-)

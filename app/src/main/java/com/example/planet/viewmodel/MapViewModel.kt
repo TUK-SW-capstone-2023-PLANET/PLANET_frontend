@@ -221,7 +221,7 @@ class MapViewModel @Inject constructor(
         round(pace.value.second).toInt().toString()
 
     fun formatTrashScore(): String =
-        numberComma(totalTrashScore.value)
+        totalTrashScore.value.numberComma()
 
 
     fun paceToSecond(): Long = round(pace.value.second).toLong() + (pace.value.first * 60)

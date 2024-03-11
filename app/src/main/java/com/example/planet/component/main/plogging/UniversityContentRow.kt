@@ -12,9 +12,10 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.planet.R
+import com.example.planet.util.round
 
 @Composable
-fun UniversityContentRow(medal: Canvas? = null, rank: Int, name: String, score: String, contribute: Double) {
+fun UniversityContentRow(medal: Canvas? = null, rank: Int, nickname: String, score: String, contribution: Double) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -29,7 +30,7 @@ fun UniversityContentRow(medal: Canvas? = null, rank: Int, name: String, score: 
                 modifier = Modifier.fillMaxWidth(0.3f)
             )
             Text(
-                text = name,
+                text = nickname,
                 color = colorResource(id = R.color.font_background_color2),
                 fontSize = 12.sp,
                 modifier = Modifier.weight(1f)
@@ -43,7 +44,7 @@ fun UniversityContentRow(medal: Canvas? = null, rank: Int, name: String, score: 
                 modifier = Modifier.fillMaxWidth(0.5f)
             )
             Text(
-                text = "$contribute%",
+                text = "${contribution.round()}%",
                 color = colorResource(id = R.color.font_background_color2),
                 fontSize = 12.sp,
                 modifier = Modifier.fillMaxWidth()

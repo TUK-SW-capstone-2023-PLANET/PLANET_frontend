@@ -19,4 +19,15 @@ class MainRepository @Inject constructor(private val apiService: ApiService) {
             error.message?.let { emit(ApiState.Error(it)) }
         }
     }.flowOn(Dispatchers.IO)
+
+    suspend fun getUniversityPeople(userId: Int = 0): Flow<ApiState> = flow{
+        kotlin.runCatching {
+            apiService.getUniversityPeople(userId = userId)
+        }.onSuccess {
+            emit(ApiState.Success(it))
+        }.onFailure { error ->
+            error.message?.let { emit(ApiState.Error(it)) }
+        }
+    }.flowOn(Dispatchers.IO)
+
 }
