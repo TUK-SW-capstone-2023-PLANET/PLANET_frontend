@@ -51,6 +51,7 @@ fun MainScreen(mainViewModel: MainViewModel = viewModel(), onClick: () -> Unit) 
     LaunchedEffect(Unit) {
         mainViewModel.getAdvertisement()
         mainViewModel.getUniversityPeople()
+        mainViewModel.getSeasonPeople()
     }
 
     Scaffold(

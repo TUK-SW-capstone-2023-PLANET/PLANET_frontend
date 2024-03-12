@@ -5,6 +5,7 @@ import com.example.planet.data.dto.ImageUrl
 import com.example.planet.data.dto.PloggingComplete
 import com.example.planet.data.dto.PloggingImage
 import com.example.planet.data.dto.PloggingInfo
+import com.example.planet.data.dto.SeasonPeople
 import com.example.planet.data.dto.TrashCan
 import com.example.planet.data.dto.UniversityPerson
 import okhttp3.MultipartBody
@@ -37,5 +38,8 @@ interface ApiService {
 
     @GET("/user/{userId}/university")
     suspend fun getUniversityPeople(@Path("userId") userId: Int): List<Map<Int, UniversityPerson>>
+
+    @GET("/season/user/{userId}")
+    suspend fun getSeasonPeople(@Path("userId") userId: Int): List<Map<Int, SeasonPeople>>
 
 }
