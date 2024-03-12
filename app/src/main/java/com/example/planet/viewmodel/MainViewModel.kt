@@ -9,6 +9,7 @@ import com.example.planet.TAG
 import com.example.planet.data.ApiState
 import com.example.planet.data.dto.Advertisement
 import com.example.planet.data.dto.SeasonPeople
+import com.example.planet.data.dto.Tier
 import com.example.planet.data.dto.UniversityPerson
 import com.example.planet.repository.MainRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -31,12 +32,19 @@ class MainViewModel @Inject constructor(
     private val _seasonPerson = mutableStateListOf<SeasonPeople>()
     val seasonPerson: List<SeasonPeople> = _seasonPerson
 
+    private val _tierList = mutableStateOf(emptyList<Tier>())
+    val tierList: State<List<Tier>> = _tierList
+
     fun changePloggingScreen() {
         _ploggingOrRecordSwitch.value = false
     }
 
     fun changeRecordScreen() {
         _ploggingOrRecordSwitch.value = true
+    }
+
+    fun changeSeasonScreen() {
+        _tierList.value = emptyList()
     }
 
     suspend fun getAdvertisement() {
@@ -83,15 +91,32 @@ class MainViewModel @Inject constructor(
                 result[0].values.forEach {
                     _seasonPerson.add(it)
                 }
-                Log.d(TAG, "getUniversityPeople() 성공")
+                Log.d(TAG, "getSeasonPeople() 성공")
             }
 
             is ApiState.Error -> {
-                Log.d("daeYoung", "getUniversityPeople() 실패: ${apiState.errMsg}")
+                Log.d("daeYoung", "getSeasonPeople() 실패: ${apiState.errMsg}")
             }
 
             ApiState.Loading -> TODO()
         }
     }
+
+    suspend fun getTierList() {
+        when (val apiState = mainRepository.getTierList().first()) {
+            is ApiState.Success<*> -> {
+                _tierList.value = apiState.value as List<Tier>
+
+                Log.d(TAG, "getTierList() 성공")
+            }
+
+            is ApiState.Error -> {
+                Log.d("daeYoung", "getTierList() 실패: ${apiState.errMsg}")
+            }
+
+            ApiState.Loading -> TODO()
+        }
+    }
+
 
 }

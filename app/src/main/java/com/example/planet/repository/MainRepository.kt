@@ -40,4 +40,14 @@ class MainRepository @Inject constructor(private val apiService: ApiService) {
         }
     }.flowOn(Dispatchers.IO)
 
+    suspend fun getTierList(): Flow<ApiState> = flow{
+        kotlin.runCatching {
+            apiService.getTierList()
+        }.onSuccess {
+            emit(ApiState.Success(it))
+        }.onFailure { error ->
+            error.message?.let { emit(ApiState.Error(it)) }
+        }
+    }.flowOn(Dispatchers.IO)
+
 }
