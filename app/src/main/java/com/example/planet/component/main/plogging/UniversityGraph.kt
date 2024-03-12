@@ -55,7 +55,7 @@ fun UniversityGraph(visible: Boolean = false, universityLogo: Painter, score: St
             Canvas(
                 modifier = Modifier
                     .height(graphHeight)
-                    .width(60.dp)
+                    .width(50.dp)
                     .animateContentSize()
             ) {
                 drawRect(

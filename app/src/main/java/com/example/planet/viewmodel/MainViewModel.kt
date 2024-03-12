@@ -46,7 +46,7 @@ class MainViewModel @Inject constructor(
                 result.forEach {
                     _imageUrlList.add(it.imageUrl)
                 }
-                Log.d(TAG, "getAdvertisement() 성공)
+                Log.d(TAG, "getAdvertisement() 성공")
             }
 
             is ApiState.Error -> {
