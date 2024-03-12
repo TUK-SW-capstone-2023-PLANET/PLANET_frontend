@@ -1,6 +1,6 @@
 package com.example.planet.data.dto
 
-data class SeasonPeople(
+data class SeasonPerson(
     val userName: String,
     val universityLogo: String,
     val score: Int,

@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel
 import com.example.planet.TAG
 import com.example.planet.data.ApiState
 import com.example.planet.data.dto.Advertisement
-import com.example.planet.data.dto.SeasonPeople
+import com.example.planet.data.dto.SeasonPerson
 import com.example.planet.data.dto.Tier
 import com.example.planet.data.dto.UniversityPerson
 import com.example.planet.repository.MainRepository
@@ -29,8 +29,8 @@ class MainViewModel @Inject constructor(
     private val _universityPerson = mutableStateListOf<UniversityPerson>()
     val universityPerson: List<UniversityPerson> = _universityPerson
 
-    private val _seasonPerson = mutableStateListOf<SeasonPeople>()
-    val seasonPerson: List<SeasonPeople> = _seasonPerson
+    private val _seasonPerson = mutableStateListOf<SeasonPerson>()
+    val seasonPerson: List<SeasonPerson> = _seasonPerson
 
     private val _tierList = mutableStateOf(emptyList<Tier>())
     val tierList: State<List<Tier>> = _tierList
@@ -87,7 +87,7 @@ class MainViewModel @Inject constructor(
     suspend fun getSeasonPeople() {
         when (val apiState = mainRepository.getSeasonPeople().first()) {
             is ApiState.Success<*> -> {
-                val result = apiState.value as List<Map<Int, SeasonPeople>>
+                val result = apiState.value as List<Map<Int, SeasonPerson>>
                 result[0].values.forEach {
                     _seasonPerson.add(it)
                 }
