@@ -2,4 +2,11 @@
     <string name="app_name">Planet</string>
     <string name="title_activity_map">MapActivity</string>
     <string name="title_activity_splash">SplashActivity</string>
+    <string name="mainscreen_ploggingpage_season_explanation">
+        플래닛에서는 시즌마다 사용자의 활동을 평가하여 티어를 부여하고 있습니다.
+        점수와 기여도는 플로깅 활동을 통해서 책정됩니다.
+        티어는 플래닛에서 자신의 기여도의 척도를 확인할 수 있으며,
+        다양한 이벤트 혜택을 받을 수 있습니다.\n\n
+         높은 티어를 받아 세상을 위한 자신의 플로깅 활동을 보여주세요!
+    </string>
 </resources>

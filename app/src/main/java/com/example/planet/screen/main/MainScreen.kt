@@ -34,6 +34,7 @@ import com.example.planet.R
 import com.example.planet.component.common.MyScrollableTabRow
 import com.example.planet.component.main.MainTopSwitch
 import com.example.planet.screen.main.plogging.PloggingHelpScreen
+import com.example.planet.screen.main.plogging.SeasonScreen
 import com.example.planet.screen.main.plogging.UniversityScreen
 import com.example.planet.viewmodel.MainViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -123,7 +124,7 @@ fun MainScreen(mainViewModel: MainViewModel = viewModel(), onClick: () -> Unit) 
                 when (page) {
                     0 -> PloggingHelpScreen()
                     1 -> UniversityScreen(universityPersonList = mainViewModel.universityPerson)
-                    2 -> Text(text = "$page", modifier = Modifier.fillMaxSize())
+                    2 -> SeasonScreen(mainViewModel = mainViewModel)
                     3 -> Text(text = "$page", modifier = Modifier.fillMaxSize())
                 }
             }

@@ -8,5 +8,5 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun SubTitle(title: String, modifier: Modifier = Modifier) {
-    Text(text = title, fontWeight = FontWeight.Bold, fontSize = 14.sp, modifier = modifier)
+    Text(text = title, fontWeight = FontWeight.Bold, fontSize = 15.sp, modifier = modifier)
 }
