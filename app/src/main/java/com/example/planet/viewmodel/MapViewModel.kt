@@ -114,6 +114,9 @@ class MapViewModel @Inject constructor(
     }
     val kcal: State<Double> = _kcal
 
+    private val _totalKcal = mutableStateOf<Double>(0.0)
+    val totalKcal: State<Double> = _totalKcal
+
     private val _pace = derivedStateOf {                                // 평균 페이스, 1km 기준으로 측정
         if (minSpeed.value > 0.0) {
             return@derivedStateOf (1000 / minSpeed.value).toInt() to 60000 / minSpeed.value - (1000 / minSpeed.value).toInt()
@@ -208,6 +211,10 @@ class MapViewModel @Inject constructor(
         }
     }
 
+    fun kcalCalculate() {
+        _totalKcal.value += kcal.value
+    }
+
     fun roundDistance(): String {
         val formatDistance = round(distance.value * 100) / 100
         return formatDistance.toString()
@@ -215,7 +222,8 @@ class MapViewModel @Inject constructor(
 
 
     fun roundKcal(): String =
-        round(kcal.value).toInt().toString()
+//        round(kcal.value).toInt().toString()
+        round(totalKcal.value).toString()
 
     fun roundpaceSecond(): String =
         round(pace.value.second).toInt().toString()

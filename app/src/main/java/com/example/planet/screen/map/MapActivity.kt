@@ -17,7 +17,9 @@ class MapActivity : ComponentActivity() {
         setContent {
             MyApplicationTheme {
                 // A surface container using the 'background' color from the theme
-                MapGraph(mapViewModel = mapViewModel)
+                MapGraph(mapViewModel = mapViewModel) {
+                    finish()
+                }
             }
         }
     }

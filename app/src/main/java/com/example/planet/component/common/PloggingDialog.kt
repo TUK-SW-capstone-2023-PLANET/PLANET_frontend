@@ -37,7 +37,7 @@ import com.example.planet.R
 import com.example.planet.viewmodel.MapViewModel
 
 @Composable
-fun PloggingDialog(mapViewModel: MapViewModel = viewModel()) {
+fun PloggingDialog(mapViewModel: MapViewModel = viewModel(), onClick: () -> Unit) {
     Dialog(onDismissRequest = {
         mapViewModel.displayOnDialog()
         mapViewModel.startTimer()
@@ -49,7 +49,12 @@ fun PloggingDialog(mapViewModel: MapViewModel = viewModel()) {
             shape = RoundedCornerShape(8.dp),
             color = Color.White
         ) {
-            DialogContent(stop = {mapViewModel.postPlogging()}, replay = { mapViewModel.startTimer() }) { mapViewModel.displayOnDialog() }
+            DialogContent(
+                stop = {
+                    mapViewModel.postPlogging()
+                    onClick()
+                },
+                replay = { mapViewModel.startTimer() }) { mapViewModel.displayOnDialog() }
         }
     }
 }

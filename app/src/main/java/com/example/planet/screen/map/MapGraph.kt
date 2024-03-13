@@ -55,7 +55,7 @@ import kotlinx.coroutines.launch
     ExperimentalFoundationApi::class, ExperimentalPagerApi::class
 )
 @Composable
-fun MapGraph(mapViewModel: MapViewModel = viewModel()) {
+fun MapGraph(mapViewModel: MapViewModel = viewModel(), onClick: () -> Unit) {
 
     val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
@@ -94,6 +94,10 @@ fun MapGraph(mapViewModel: MapViewModel = viewModel()) {
 
         }
     }
+    LaunchedEffect(mapViewModel.kcal.value) {
+        mapViewModel.kcalCalculate()
+    }
+
     DisposableEffect(Unit) {
         mapViewModel.startTimer()
         mapViewModel.getAllTrashCanLocation()
@@ -120,7 +124,9 @@ fun MapGraph(mapViewModel: MapViewModel = viewModel()) {
 //        })
 //    })
     if (mapViewModel.dialogState.value) {
-        PloggingDialog(mapViewModel = mapViewModel)
+        PloggingDialog(mapViewModel = mapViewModel) {
+            onClick()
+        }
         mapViewModel.pauseTimer()
     }
     Box(
