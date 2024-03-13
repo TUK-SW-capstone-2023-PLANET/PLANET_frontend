@@ -56,7 +56,6 @@ class MapViewModel @Inject constructor(
     var pastLatLng: LatLng? = null
     var trashCanLatLng: LatLng? = null                                  // 쓰레기통 위치
     var imageUrl: String = ""                                           // 사진을 imageUrl로 바꾼거
-    var totalTrashCount: Int = 0                                        // 모든 쓰레기의 총 개수
 
     private val _dialogState = mutableStateOf(false)
     val dialogState: State<Boolean> = _dialogState
@@ -128,6 +127,9 @@ class MapViewModel @Inject constructor(
 
     private val _totalTrashScore = mutableStateOf<Int>(0)                   // 모든 쓰레기의 총 점수
     val totalTrashScore: State<Int> = _totalTrashScore
+
+    private val _totalTrashCount = mutableStateOf(0)                        // 모든 쓰레기의 총 개수
+    val totalTrashCount: State<Int> = _totalTrashCount
 
     val ploggingLog = mutableStateListOf<Location>()
     var trashItems = mutableStateListOf<Map<String, Int>>()
@@ -335,9 +337,12 @@ class MapViewModel @Inject constructor(
             when (val apiState =
                 mapRepository.postPloggingLive(ploggingData = ploggingImage).first()) {
                 is ApiState.Success<*> -> {
-                    (apiState.value as List<Map<String, Int>>).forEach {
-                        trashItems.add(it)
+                    (apiState.value as List<Map<String, Int>>).forEach { trash ->
+                        trashItems.add(trash)
+                        _totalTrashCount.value += trash.values.toList()[0]
                     }
+                    Log.d("daeYoung", "postPloggingImageUrl() 성공")
+                    Log.d("daeYoung", "postPloggingImageUrl()")
                 }
                 is ApiState.Error -> {
                     Log.d("daeYoung", "postPloggingImageUrl() 실패: ${apiState.errMsg}")

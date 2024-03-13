@@ -254,7 +254,7 @@ fun RecordScreen(mapViewModel: MapViewModel = viewModel(), cameraLauncher: Manag
                             fontWeight = FontWeight.SemiBold,
                         )
                     ) {
-                        append(mapViewModel.totalTrashCount.toString())
+                        append(mapViewModel.totalTrashCount.value.toString())
                     }
                     withStyle(SpanStyle(fontSize = 20.sp, fontWeight = FontWeight.SemiBold)) {
                         append(" 개")
