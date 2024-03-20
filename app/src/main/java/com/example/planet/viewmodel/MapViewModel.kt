@@ -21,6 +21,8 @@ import com.example.planet.data.dto.PloggingComplete
 import com.example.planet.data.dto.PloggingImage
 import com.example.planet.data.dto.PloggingInfo
 import com.example.planet.data.dto.TrashCan
+import com.example.planet.data.map.Trash
+import com.example.planet.data.map.TrashImage
 import com.example.planet.repository.MapRepository
 import com.example.planet.util.DistanceManager
 import com.example.planet.util.allDelete
@@ -85,10 +87,8 @@ class MapViewModel @Inject constructor(
 
     private val _met = derivedStateOf {                                 // MET
         when (minSpeed.value) {
-            in 0.0..54.0 -> {
-                Log.d(TAG, "met: ${(2 / 135) * minSpeed.value + 1.2}")
-                return@derivedStateOf (2 / 135) * minSpeed.value + 1.2
-            }
+            0.0 -> 1.2
+            in 0.0..54.0 -> return@derivedStateOf (2 / 135) * minSpeed.value + 1.2
             in 54.0..67.0 -> return@derivedStateOf (1 / 13) * (minSpeed.value - 54) + 2.0
             in 67.0..81.0 -> return@derivedStateOf (3 / 140) * (minSpeed.value - 67) + 3.0
             in 81.0..94.0 -> return@derivedStateOf (1 / 26) * (minSpeed.value - 81) + 3.3
@@ -109,7 +109,12 @@ class MapViewModel @Inject constructor(
 //            TAG,
 //            "minSpeed: $minSpeed, MET: $met, kcal: ${0.005 * met.value * (3.5 * weight * minSpeed.value)}"
 //        )
-        0.005 * met.value * (3.5 * weight * minSpeed.value)
+        if (minSpeed.value == 0.0) {
+            0.0
+        } else {
+            0.005 * met.value * (3.5 * weight * (milliseconds / 60000))
+        }
+
     }
     val kcal: State<Double> = _kcal
 
@@ -133,6 +138,7 @@ class MapViewModel @Inject constructor(
 
     val ploggingLog = mutableStateListOf<Location>()
     var trashItems = mutableStateListOf<Map<String, Int>>()
+    var trashs = mutableStateListOf<Trash>()
 
     fun getImageUri(): Uri {
 //        Log.d(TAG, "externalCashDir: ${context.externalCacheDir}")
@@ -309,7 +315,7 @@ class MapViewModel @Inject constructor(
                         val result = apiState.value as ImageUrl
                         Log.d("daeYoung", "postImage() 성공: $result")
                         trashCanLatLng = currentLatLng
-                        Log.d("daeYoung", "trashCanLatLng: $trashCanLatLng")
+                        Log.d("daeYoung", "currentLatLng: $trashCanLatLng")
                         imageFile.delete()
                         postPloggingImageUrl()
                     }
@@ -337,13 +343,151 @@ class MapViewModel @Inject constructor(
             when (val apiState =
                 mapRepository.postPloggingLive(ploggingData = ploggingImage).first()) {
                 is ApiState.Success<*> -> {
+//                    (apiState.value as List<Map<String, Int>>).forEach { trash ->
+//                        trashItems.add(trash)
+//                        _totalTrashCount.value += trash.values.toList()[0]
+//                    }
                     (apiState.value as List<Map<String, Int>>).forEach { trash ->
-                        trashItems.add(trash)
-                        _totalTrashCount.value += trash.values.toList()[0]
+                        trashItems.add(trash)  // 플로깅 저장 api 수정되면 삭제할 것
+                        val trashCount = trash.values.toList()[0]
+                        _totalTrashCount.value += trashCount
+                        when (trash.keys.toList()[0]) {
+                            TrashImage.Battery().trash -> {
+                                if (!trashs.map { trash -> trash.name }.contains(TrashImage.Battery().trash)) {
+                                    trashs.add(
+                                        Trash(
+                                            name = TrashImage.Battery().trash,
+                                            image = TrashImage.Battery().image,
+                                            count = trashCount
+                                        )
+                                    )
+                                }
+                            }
+
+                            TrashImage.Bottle().trash -> {
+                                if (!trashs.map { trash -> trash.name }.contains(TrashImage.Bottle().trash)) {
+                                    trashs.add(
+                                        Trash(
+                                            name = TrashImage.Bottle().trash,
+                                            image = TrashImage.Bottle().image,
+                                            count = trashCount
+                                        )
+                                    )
+                                }
+                            }
+
+                            TrashImage.Can().trash -> {
+                                if (!trashs.map { trash -> trash.name }.contains(TrashImage.Can().trash)) {
+                                    trashs.add(
+                                        Trash(
+                                            name = TrashImage.Can().trash,
+                                            image = TrashImage.Can().image,
+                                            count = trashCount
+                                        )
+                                    )
+                                }
+                            }
+
+                            TrashImage.Glass().trash -> {
+                                if (!trashs.map { trash -> trash.name }.contains(TrashImage.Glass().trash)) {
+                                    trashs.add(
+                                        Trash(
+                                            name = TrashImage.Glass().trash,
+                                            image = TrashImage.Glass().image,
+                                            count = trashCount
+                                        )
+                                    )
+                                }
+                            }
+
+                            TrashImage.Paper().trash -> {
+                                if (!trashs.map { trash -> trash.name }.contains(TrashImage.Paper().trash)) {
+                                    trashs.add(
+                                        Trash(
+                                            name = TrashImage.Paper().trash,
+                                            image = TrashImage.Paper().image,
+                                            count = trashCount
+                                        )
+                                    )
+                                }
+                            }
+
+                            TrashImage.GeneralWaste().trash -> {
+                                if (!trashs.map { trash -> trash.name }.contains(TrashImage.GeneralWaste().trash)) {
+                                    trashs.add(
+                                        Trash(
+                                            name = TrashImage.GeneralWaste().trash,
+                                            image = TrashImage.GeneralWaste().image,
+                                            count = trashCount
+                                        )
+                                    )
+                                }
+                            }
+
+                            TrashImage.PaperCup().trash -> {
+                                if (!trashs.map { trash -> trash.name }.contains(TrashImage.PaperCup().trash)) {
+                                    trashs.add(
+                                        Trash(
+                                            name = TrashImage.PaperCup().trash,
+                                            image = TrashImage.PaperCup().image,
+                                            count = trashCount
+                                        )
+                                    )
+                                }
+                            }
+
+                            TrashImage.Pet().trash -> {
+                                if (!trashs.map { trash -> trash.name }.contains(TrashImage.Pet().trash)) {
+                                    trashs.add(
+                                        Trash(
+                                            name = TrashImage.Pet().trash,
+                                            image = TrashImage.Pet().image,
+                                            count = trashCount
+                                        )
+                                    )
+                                }
+                            }
+
+                            TrashImage.Plastic().trash -> {
+                                if (!trashs.map { trash -> trash.name }.contains(TrashImage.Plastic().trash)) {
+                                    trashs.add(
+                                        Trash(
+                                            name = TrashImage.Plastic().trash,
+                                            image = TrashImage.Plastic().image,
+                                            count = trashCount
+                                        )
+                                    )
+                                }
+                            }
+
+                            TrashImage.PlasticBag().trash -> {
+                                if (!trashs.map { trash -> trash.name }.contains(TrashImage.PlasticBag().trash)) {
+                                    trashs.add(
+                                        Trash(
+                                            name = TrashImage.PlasticBag().trash,
+                                            image = TrashImage.PlasticBag().image,
+                                            count = trashCount
+                                        )
+                                    )
+                                }
+                            }
+
+                            TrashImage.Styrofoam().trash -> {
+                                if (!trashs.map { trash -> trash.name }.contains(TrashImage.Styrofoam().trash)) {
+                                    trashs.add(
+                                        Trash(
+                                            name = TrashImage.Styrofoam().trash,
+                                            image = TrashImage.Styrofoam().image,
+                                            count = trashCount
+                                        )
+                                    )
+                                }
+                            }
+                        }
                     }
-                    Log.d("daeYoung", "postPloggingImageUrl() 성공")
-                    Log.d("daeYoung", "postPloggingImageUrl()")
+                    Log.d("daeYoung", "postPloggingImageUrl() 성공, trashs: $trashs")
                 }
+
                 is ApiState.Error -> {
                     Log.d("daeYoung", "postPloggingImageUrl() 실패: ${apiState.errMsg}")
                 }
@@ -365,7 +509,8 @@ class MapViewModel @Inject constructor(
             score = totalTrashScore.value,
             ploggingTime = milliseconds / 1000,
         )
-        Log.d(TAG,
+        Log.d(
+            TAG,
             "ploggingId: $ploggingId\n" +
                     "location: $ploggingLog\n" +
                     "trashCount: $trashItems\n" +
@@ -374,7 +519,7 @@ class MapViewModel @Inject constructor(
                     "speed: ${paceToSecond()}\n" +
                     "score: $totalTrashScore\n" +
                     "ploggingTime: ${milliseconds / 1000}\n"
-            )
+        )
         viewModelScope.launch {
             when (val apiState =
                 mapRepository.postPlogging(ploggingInfo = ploggingIfo).first()) {

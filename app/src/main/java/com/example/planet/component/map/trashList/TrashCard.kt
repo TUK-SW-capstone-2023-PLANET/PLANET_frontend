@@ -27,29 +27,28 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.planet.R
 
-@Preview(showBackground = true)
 @Composable
-fun TrashCard() {
+fun TrashCard(trash: String, count: Int, image: Int) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .height(100.dp)
+            .height(110.dp)
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
-            painter = painterResource(id = R.drawable.vinyl_trash),
+            painter = painterResource(id = image),
             contentDescription = null,
             modifier = Modifier.size(50.dp)
         )
         Column(modifier = Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(text = "비닐류", modifier = Modifier.padding(bottom = 8.dp), color = colorResource(id = R.color.font_background_color1))
+            Text(text = trash, modifier = Modifier.padding(bottom = 8.dp), color = colorResource(id = R.color.font_background_color1))
             Row(modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f), horizontalArrangement = Arrangement.SpaceEvenly) {
                 Column(modifier = Modifier, horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(text = "개수", color = colorResource(id = R.color.font_background_color1))
-                    Text(text = "4", color = colorResource(id = R.color.font_background_color1), fontWeight = FontWeight.Medium)
+                    Text(text = count.toString(), color = colorResource(id = R.color.font_background_color1), fontWeight = FontWeight.Medium)
                 }
                 Divider(
 //                        color = Color.Red,
@@ -58,7 +57,7 @@ fun TrashCard() {
                         .width(1.dp)
                 )
                 Column(modifier = Modifier, horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(text = "개수", color = colorResource(id = R.color.font_background_color1))
+                    Text(text = "점수", color = colorResource(id = R.color.font_background_color1))
                     Text(text = "4", color = colorResource(id = R.color.font_background_color1), fontWeight = FontWeight.Medium)
                 }
             }

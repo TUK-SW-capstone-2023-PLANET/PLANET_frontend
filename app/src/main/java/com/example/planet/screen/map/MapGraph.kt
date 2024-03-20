@@ -169,7 +169,7 @@ fun MapGraph(mapViewModel: MapViewModel = viewModel(), onClick: () -> Unit) {
                         cameraLauncher = cameraLauncher
                     )
 
-                    2 -> TrashListScreen()
+                    2 -> TrashListScreen(trashList = mapViewModel.trashs)
                 }
             }
 
