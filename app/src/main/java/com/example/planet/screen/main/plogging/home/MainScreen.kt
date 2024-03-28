@@ -1,6 +1,5 @@
-package com.example.planet.screen.main
+package com.example.planet.screen.main.plogging.home
 
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -28,18 +27,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.planet.R
-import com.example.planet.TAG
 import com.example.planet.component.common.MyScrollableTabRow
 import com.example.planet.component.main.MainTopSwitch
-import com.example.planet.screen.main.plogging.PloggingHelpScreen
-import com.example.planet.screen.main.plogging.SeasonScreen
-import com.example.planet.screen.main.plogging.TierScreen
-import com.example.planet.screen.main.plogging.UniversityScreen
+import com.example.planet.component.main.plogging.MainTopBanner
 import com.example.planet.viewmodel.MainViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager

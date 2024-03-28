@@ -21,11 +21,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.navigation.compose.rememberNavController
+import com.example.planet.component.navigation.NavigationGraph
+import com.example.planet.screen.main.plogging.home.MainScreen
 import com.example.planet.screen.map.MapActivity
 import com.example.planet.ui.theme.MyApplicationTheme
 import com.example.planet.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -36,9 +38,10 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            val navController = rememberNavController()
             MyApplicationTheme {
 //                RequestPermission()
-                MainScreen(mainViewModel = mainViewModel) {
+                NavigationGraph(navController = navController, mainViewModel = mainViewModel) {
                     startMapActivity()
                 }
             }

@@ -1,4 +1,4 @@
-package com.example.planet.screen.main.plogging
+package com.example.planet.screen.main.plogging.home
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -18,7 +18,6 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.planet.data.dto.Tier
-import com.example.planet.viewmodel.MainViewModel
 
 @Composable
 fun TierScreen(tierList: List<Tier>) {

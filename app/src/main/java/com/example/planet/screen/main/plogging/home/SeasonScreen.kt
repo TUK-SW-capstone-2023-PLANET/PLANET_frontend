@@ -1,4 +1,4 @@
-package com.example.planet.screen.main.plogging
+package com.example.planet.screen.main.plogging.home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
