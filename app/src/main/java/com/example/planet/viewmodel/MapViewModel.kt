@@ -112,7 +112,7 @@ class MapViewModel @Inject constructor(
         if (minSpeed.value == 0.0) {
             0.0
         } else {
-            0.005 * met.value * (3.5 * weight * (milliseconds / 60000))
+            0.005 * met.value * (3.5 * weight * (milliseconds / 12000))
         }
 
     }
@@ -353,7 +353,9 @@ class MapViewModel @Inject constructor(
                         _totalTrashCount.value += trashCount
                         when (trash.keys.toList()[0]) {
                             TrashImage.Battery().trash -> {
-                                if (!trashs.map { trash -> trash.name }.contains(TrashImage.Battery().trash)) {
+                                _totalTrashScore.value += TrashImage.Battery().score * trashCount
+                                if (!trashs.map { trash -> trash.name }
+                                        .contains(TrashImage.Battery().trash)) {
                                     trashs.add(
                                         Trash(
                                             name = TrashImage.Battery().trash,
@@ -365,7 +367,9 @@ class MapViewModel @Inject constructor(
                             }
 
                             TrashImage.Bottle().trash -> {
-                                if (!trashs.map { trash -> trash.name }.contains(TrashImage.Bottle().trash)) {
+                                _totalTrashScore.value += TrashImage.Bottle().score * trashCount
+                                if (!trashs.map { trash -> trash.name }
+                                        .contains(TrashImage.Bottle().trash)) {
                                     trashs.add(
                                         Trash(
                                             name = TrashImage.Bottle().trash,
@@ -377,7 +381,9 @@ class MapViewModel @Inject constructor(
                             }
 
                             TrashImage.Can().trash -> {
-                                if (!trashs.map { trash -> trash.name }.contains(TrashImage.Can().trash)) {
+                                _totalTrashScore.value += TrashImage.Can().score * trashCount
+                                if (!trashs.map { trash -> trash.name }
+                                        .contains(TrashImage.Can().trash)) {
                                     trashs.add(
                                         Trash(
                                             name = TrashImage.Can().trash,
@@ -389,7 +395,9 @@ class MapViewModel @Inject constructor(
                             }
 
                             TrashImage.Glass().trash -> {
-                                if (!trashs.map { trash -> trash.name }.contains(TrashImage.Glass().trash)) {
+                                _totalTrashScore.value += TrashImage.Glass().score * trashCount
+                                if (!trashs.map { trash -> trash.name }
+                                        .contains(TrashImage.Glass().trash)) {
                                     trashs.add(
                                         Trash(
                                             name = TrashImage.Glass().trash,
@@ -401,7 +409,9 @@ class MapViewModel @Inject constructor(
                             }
 
                             TrashImage.Paper().trash -> {
-                                if (!trashs.map { trash -> trash.name }.contains(TrashImage.Paper().trash)) {
+                                _totalTrashScore.value += TrashImage.Paper().score * trashCount
+                                if (!trashs.map { trash -> trash.name }
+                                        .contains(TrashImage.Paper().trash)) {
                                     trashs.add(
                                         Trash(
                                             name = TrashImage.Paper().trash,
@@ -413,7 +423,9 @@ class MapViewModel @Inject constructor(
                             }
 
                             TrashImage.GeneralWaste().trash -> {
-                                if (!trashs.map { trash -> trash.name }.contains(TrashImage.GeneralWaste().trash)) {
+                                _totalTrashScore.value += TrashImage.GeneralWaste().score * trashCount
+                                if (!trashs.map { trash -> trash.name }
+                                        .contains(TrashImage.GeneralWaste().trash)) {
                                     trashs.add(
                                         Trash(
                                             name = TrashImage.GeneralWaste().trash,
@@ -425,7 +437,9 @@ class MapViewModel @Inject constructor(
                             }
 
                             TrashImage.PaperCup().trash -> {
-                                if (!trashs.map { trash -> trash.name }.contains(TrashImage.PaperCup().trash)) {
+                                _totalTrashScore.value += TrashImage.PaperCup().score * trashCount
+                                if (!trashs.map { trash -> trash.name }
+                                        .contains(TrashImage.PaperCup().trash)) {
                                     trashs.add(
                                         Trash(
                                             name = TrashImage.PaperCup().trash,
@@ -437,7 +451,9 @@ class MapViewModel @Inject constructor(
                             }
 
                             TrashImage.Pet().trash -> {
-                                if (!trashs.map { trash -> trash.name }.contains(TrashImage.Pet().trash)) {
+                                _totalTrashScore.value += TrashImage.Pet().score * trashCount
+                                if (!trashs.map { trash -> trash.name }
+                                        .contains(TrashImage.Pet().trash)) {
                                     trashs.add(
                                         Trash(
                                             name = TrashImage.Pet().trash,
@@ -449,7 +465,9 @@ class MapViewModel @Inject constructor(
                             }
 
                             TrashImage.Plastic().trash -> {
-                                if (!trashs.map { trash -> trash.name }.contains(TrashImage.Plastic().trash)) {
+                                _totalTrashScore.value += TrashImage.Plastic().score * trashCount
+                                if (!trashs.map { trash -> trash.name }
+                                        .contains(TrashImage.Plastic().trash)) {
                                     trashs.add(
                                         Trash(
                                             name = TrashImage.Plastic().trash,
@@ -461,7 +479,9 @@ class MapViewModel @Inject constructor(
                             }
 
                             TrashImage.PlasticBag().trash -> {
-                                if (!trashs.map { trash -> trash.name }.contains(TrashImage.PlasticBag().trash)) {
+                                _totalTrashScore.value += TrashImage.PlasticBag().score * trashCount
+                                if (!trashs.map { trash -> trash.name }
+                                        .contains(TrashImage.PlasticBag().trash)) {
                                     trashs.add(
                                         Trash(
                                             name = TrashImage.PlasticBag().trash,
@@ -473,7 +493,9 @@ class MapViewModel @Inject constructor(
                             }
 
                             TrashImage.Styrofoam().trash -> {
-                                if (!trashs.map { trash -> trash.name }.contains(TrashImage.Styrofoam().trash)) {
+                                _totalTrashScore.value += TrashImage.Styrofoam().score * trashCount
+                                if (!trashs.map { trash -> trash.name }
+                                        .contains(TrashImage.Styrofoam().trash)) {
                                     trashs.add(
                                         Trash(
                                             name = TrashImage.Styrofoam().trash,
