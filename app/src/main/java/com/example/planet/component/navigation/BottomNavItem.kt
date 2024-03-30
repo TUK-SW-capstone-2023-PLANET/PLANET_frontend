@@ -19,29 +19,30 @@ sealed class BottomNavItem(
     var bottomIcon: ImageVector,
     val bottomTitle: String,
 ) {
-    data object HomeScreen : BottomNavItem(
-        screenRoute = HOME,
-        bottomIcon = Icons.Rounded.Home,
-        bottomTitle = "Home",
-    )
-    data object RankingScreen : BottomNavItem(
-        screenRoute = RANKING,
-        bottomIcon = Icons.Rounded.BarChart,
-        bottomTitle = "Statistics",
-    )
-    data object UserScreen : BottomNavItem(
-        screenRoute = USER,
-        bottomIcon = Icons.Rounded.Person,
-        bottomTitle = "Setting",
-    )
     data object MessageScreen : BottomNavItem(
         screenRoute = MESSAGE,
         bottomIcon = Icons.Rounded.Chat,
-        bottomTitle = "Setting",
+        bottomTitle = "쪽지",
     )
     data object CommunityScreen : BottomNavItem(
         screenRoute = COMMUNITY,
         bottomIcon = Icons.Rounded.Hub,
-        bottomTitle = "Setting",
+        bottomTitle = "커뮤니티",
     )
+    data object HomeScreen : BottomNavItem(
+        screenRoute = HOME,
+        bottomIcon = Icons.Rounded.Home,
+        bottomTitle = "홈",
+    )
+    data object RankingScreen : BottomNavItem(
+        screenRoute = RANKING,
+        bottomIcon = Icons.Rounded.BarChart,
+        bottomTitle = "랭킹",
+    )
+    data object UserScreen : BottomNavItem(
+        screenRoute = USER,
+        bottomIcon = Icons.Rounded.Person,
+        bottomTitle = "유저",
+    )
+
 }

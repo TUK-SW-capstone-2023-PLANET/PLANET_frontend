@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -35,47 +36,70 @@ fun SeasonContentRow(
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
-
-        medal()
-        Text(
-            text = rank.toString() + "등",
-            color = colorResource(id = R.color.font_background_color2),
-            fontSize = 12.sp,
-            modifier = Modifier.fillMaxWidth(0.15f)
-        )
-        Box(modifier = Modifier.fillMaxWidth(0.15f).fillMaxHeight()) {
-            AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(tier)
-                    .crossfade(true)
-                    .build(),
-                contentDescription = null,
-                modifier = Modifier.fillMaxWidth(0.6f).align(Alignment.CenterStart)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(0.3f)
+                .height(IntrinsicSize.Min),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            medal()
+            Text(
+                text = rank.toString() + "등",
+                color = colorResource(id = R.color.font_background_color2),
+                fontSize = 12.sp,
+                modifier = Modifier.weight(1f)
             )
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight()
+            ) {
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(tier)
+                        .crossfade(true)
+                        .build(),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxSize(0.8f)
+                        .align(Alignment.CenterStart)
+                )
+            }
         }
-
         Text(
             text = nickname,
             color = colorResource(id = R.color.font_background_color2),
             fontSize = 12.sp,
-            modifier = Modifier.fillMaxWidth(0.5f)
+            modifier = Modifier.weight(1f)
         )
-
-        Text(
-            text = "${score}점",
-            color = colorResource(id = R.color.font_background_color2),
-            fontSize = 12.sp,
-            modifier = Modifier.fillMaxWidth(0.6f)
-        )
-        Box(modifier = Modifier.fillMaxWidth().fillMaxHeight()) {
-            AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(universityLogo)
-                    .crossfade(true)
-                    .build(),
-                contentDescription = null,
-                modifier = Modifier.fillMaxWidth(0.6f).align(Alignment.CenterStart)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(0.5f)
+                .height(IntrinsicSize.Min),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "${score}점",
+                color = colorResource(id = R.color.font_background_color2),
+                fontSize = 12.sp,
+                modifier = Modifier.weight(1f)
             )
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight()
+            ) {
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(universityLogo)
+                        .crossfade(true)
+                        .build(),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxSize(0.6f)
+                        .align(Alignment.CenterStart)
+                )
+            }
         }
     }
     Divider(

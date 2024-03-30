@@ -1,4 +1,4 @@
-package com.example.planet.screen.main.plogging.home
+package com.example.planet.screen.main.plogging
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
@@ -34,6 +34,10 @@ import com.example.planet.R
 import com.example.planet.component.common.MyScrollableTabRow
 import com.example.planet.component.main.MainTopSwitch
 import com.example.planet.component.main.plogging.MainTopBanner
+import com.example.planet.screen.main.plogging.home.PloggingHelpScreen
+import com.example.planet.screen.main.plogging.home.SeasonScreen
+import com.example.planet.screen.main.plogging.home.TierScreen
+import com.example.planet.screen.main.plogging.home.UniversityScreen
 import com.example.planet.viewmodel.MainViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -80,7 +84,6 @@ fun MainScreen(mainViewModel: MainViewModel = viewModel(), onClick: () -> Unit) 
                 .fillMaxSize()
                 .padding(it), horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            MainTopSwitch(mainViewModel = mainViewModel)
             if (mainViewModel.tierList.value.isNotEmpty()) {
                 TierScreen(tierList = mainViewModel.tierList.value)
             } else {

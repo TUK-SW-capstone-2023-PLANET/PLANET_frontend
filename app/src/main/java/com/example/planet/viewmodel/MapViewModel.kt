@@ -215,6 +215,7 @@ class MapViewModel @Inject constructor(
                 if (distance >= 7.0) {
                     _distance.value += distance / 1000.0
                 }
+//                _distance.value += distance / 1000.0
             }
         }
     }

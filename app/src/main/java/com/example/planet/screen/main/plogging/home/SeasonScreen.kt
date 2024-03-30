@@ -28,6 +28,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -259,13 +260,13 @@ fun SeasonScreen(mainViewModel: MainViewModel) {
                 1 -> {
                     SeasonContentRow(
                         medal = {
-//                            Divider(
-//                                color = colorResource(id = R.color.main_color1),
-//                                modifier = Modifier
-//                                    .fillMaxHeight()
-//                                    .width(4.dp)
-//                            )
-                            Spacer(modifier = Modifier.width(24.dp))
+                            Divider(
+                                color = colorResource(id = R.color.main_color1),
+                                modifier = Modifier
+                                    .fillMaxHeight()
+                                    .width(4.dp)
+                            )
+                            Spacer(modifier = Modifier.width(20.dp))
                         },
                         rank = user.rank,
                         tier = user.tierImageUrl,
@@ -278,13 +279,13 @@ fun SeasonScreen(mainViewModel: MainViewModel) {
                 2 -> {
                     SeasonContentRow(
                         medal = {
-//                            Divider(
-//                                color = colorResource(id = R.color.main_color2),
-//                                modifier = Modifier
-//                                    .fillMaxHeight()
-//                                    .width(4.dp)
-//                            )
-                            Spacer(modifier = Modifier.width(24.dp))
+                            Divider(
+                                color = colorResource(id = R.color.main_color2),
+                                modifier = Modifier
+                                    .fillMaxHeight()
+                                    .width(4.dp)
+                            )
+                            Spacer(modifier = Modifier.width(20.dp))
                         },
                         rank = user.rank,
                         tier = user.tierImageUrl,
@@ -297,13 +298,13 @@ fun SeasonScreen(mainViewModel: MainViewModel) {
                 3 -> {
                     SeasonContentRow(
                         medal = {
-//                            Divider(
-//                                color = colorResource(id = R.color.main_color2).copy(alpha = 0.8f),
-//                                modifier = Modifier
-//                                    .fillMaxHeight()
-//                                    .width(4.dp)
-//                            )
-                            Spacer(modifier = Modifier.width(24.dp))
+                            Divider(
+                                color = colorResource(id = R.color.main_color2),
+                                modifier = Modifier
+                                    .fillMaxHeight()
+                                    .width(4.dp)
+                            )
+                            Spacer(modifier = Modifier.width(20.dp))
                         },
                         rank = user.rank,
                         tier = user.tierImageUrl,
@@ -312,7 +313,60 @@ fun SeasonScreen(mainViewModel: MainViewModel) {
                         universityLogo = user.universityLogo
                     )
                 }
-
+                4 -> {
+                    SeasonContentRow(
+                        medal = {
+                            Divider(
+                                color = colorResource(id = R.color.main_color2).copy(alpha = 0.8f),
+                                modifier = Modifier
+                                    .fillMaxHeight()
+                                    .width(4.dp)
+                            )
+                            Spacer(modifier = Modifier.width(20.dp))
+                        },
+                        rank = user.rank,
+                        tier = user.tierImageUrl,
+                        nickname = user.userName,
+                        score = user.score.numberComma(),
+                        universityLogo = user.universityLogo
+                    )
+                }
+                5 -> {
+                    SeasonContentRow(
+                        medal = {
+                            Divider(
+                                color = colorResource(id = R.color.main_color2).copy(alpha = 0.6f),
+                                modifier = Modifier
+                                    .fillMaxHeight()
+                                    .width(4.dp)
+                            )
+                            Spacer(modifier = Modifier.width(20.dp))
+                        },
+                        rank = user.rank,
+                        tier = user.tierImageUrl,
+                        nickname = user.userName,
+                        score = user.score.numberComma(),
+                        universityLogo = user.universityLogo
+                    )
+                }
+                6 -> {
+                    SeasonContentRow(
+                        medal = {
+                            Divider(
+                                color = Color(0xFFBED7EE).copy(alpha = 0.4f),
+                                modifier = Modifier
+                                    .fillMaxHeight()
+                                    .width(4.dp)
+                            )
+                            Spacer(modifier = Modifier.width(20.dp))
+                        },
+                        rank = user.rank,
+                        tier = user.tierImageUrl,
+                        nickname = user.userName,
+                        score = user.score.numberComma(),
+                        universityLogo = user.universityLogo
+                    )
+                }
                 else -> {
                     SeasonContentRow(
                         medal = {
@@ -577,12 +631,12 @@ fun Test() {
                 1 -> {
                     SeasonContentRow(
                         medal = {
-//                            Divider(
-//                                color = colorResource(id = R.color.main_color1),
-//                                modifier = Modifier
-//                                    .fillMaxHeight()
-//                                    .width(4.dp)
-//                            )
+                            Divider(
+                                color = colorResource(id = R.color.main_color1),
+                                modifier = Modifier
+                                    .fillMaxHeight()
+                                    .width(4.dp)
+                            )
                             Spacer(modifier = Modifier.width(24.dp))
                         },
                         rank = user.rank,

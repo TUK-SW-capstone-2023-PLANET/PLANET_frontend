@@ -27,11 +27,12 @@ import com.example.planet.R
 @Composable
 fun BottomNavigation(navController: NavHostController) {
     val items = listOf<BottomNavItem>(
-        BottomNavItem.RankingScreen,
-        BottomNavItem.HomeScreen,
-        BottomNavItem.UserScreen,
         BottomNavItem.MessageScreen,
         BottomNavItem.CommunityScreen,
+        BottomNavItem.HomeScreen,
+        BottomNavItem.RankingScreen,
+        BottomNavItem.UserScreen,
+
     )
     val color = colorResource(id = R.color.font_background_color2)
     NavigationBar(

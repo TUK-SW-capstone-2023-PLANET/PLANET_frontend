@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Pause
@@ -180,8 +181,8 @@ fun RecordScreen(mapViewModel: MapViewModel = viewModel(), cameraLauncher: Manag
         Row(modifier = Modifier.fillMaxWidth()) {
             RoundCornerCard(
                 modifier = Modifier
-                    .padding(end = 16.dp)
-                    .fillMaxWidth(0.5f), title = "현재 페이스"
+                    .weight(1f),
+                title = "현재 페이스"
             ) {
                 Text(text = buildAnnotatedString {
                     withStyle(
@@ -208,7 +209,8 @@ fun RecordScreen(mapViewModel: MapViewModel = viewModel(), cameraLauncher: Manag
                     }
                 })
             }
-            RoundCornerCard(modifier = Modifier, title = "칼로리") {
+            Spacer(modifier = Modifier.width(16.dp))
+            RoundCornerCard(modifier = Modifier.weight(1f), title = "칼로리") {
                 Text(text = buildAnnotatedString {
                     withStyle(
                         SpanStyle(
@@ -228,8 +230,7 @@ fun RecordScreen(mapViewModel: MapViewModel = viewModel(), cameraLauncher: Manag
         Row(modifier = Modifier.fillMaxWidth()) {
             RoundCornerCard(
                 modifier = Modifier
-                    .padding(end = 16.dp)
-                    .fillMaxWidth(0.5f),
+                    .weight(1f),
                 title = "현재 점수"
             ) {
                 Text(text = buildAnnotatedString {
@@ -246,7 +247,8 @@ fun RecordScreen(mapViewModel: MapViewModel = viewModel(), cameraLauncher: Manag
                     }
                 })
             }
-            RoundCornerCard(modifier = Modifier, title = "주운 쓰레기") {
+            Spacer(modifier = Modifier.width(16.dp))
+            RoundCornerCard(modifier = Modifier.weight(1f), title = "주운 쓰레기") {
                 Text(text = buildAnnotatedString {
                     withStyle(
                         SpanStyle(
