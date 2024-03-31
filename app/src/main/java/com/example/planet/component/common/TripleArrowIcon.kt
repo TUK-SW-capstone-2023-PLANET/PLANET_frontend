@@ -1,4 +1,4 @@
-package com.example.planet.component.main.plogging
+package com.example.planet.component.common
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
@@ -13,7 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun TripleArrow() {
+fun TripleArrowIcon() {
     Box(modifier = Modifier.wrapContentSize()) {
         Icon(
             imageVector = Icons.Default.ArrowForwardIos,
@@ -30,6 +30,7 @@ fun TripleArrow() {
                 .padding(start = 14.dp)
                 .size(20.dp),
             tint = Color(0xFFD2D2D2)
+
         )
         Icon(
             imageVector = Icons.Default.ArrowForwardIos,

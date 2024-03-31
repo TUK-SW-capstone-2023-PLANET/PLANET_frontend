@@ -1,7 +1,6 @@
 package com.example.planet.screen.main.plogging.home
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -18,11 +17,8 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowForwardIos
 import androidx.compose.material3.Card
 import androidx.compose.material3.Divider
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -46,9 +42,9 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.planet.R
+import com.example.planet.component.common.TripleArrowIcon
 import com.example.planet.component.main.SubTitle
 import com.example.planet.component.main.SubTitleDescription
-import com.example.planet.component.main.plogging.TripleArrow
 import com.example.planet.component.main.plogging.UniversityContentRow
 import com.example.planet.component.main.plogging.UniversityGraph
 import com.example.planet.component.main.plogging.UniversityTitleRow
@@ -92,7 +88,7 @@ fun UniversityScreen(universityPersonList: List<UniversityPerson>) {
                 SubTitle(title = "대학교 순위", modifier = Modifier.padding(end = 8.dp))
                 SubTitleDescription("학교를 인증하여, 학교의 위상을 높히세요!!")
             }
-            TripleArrow()
+            TripleArrowIcon()
         }
         Column(
             modifier = Modifier
@@ -116,7 +112,7 @@ fun UniversityScreen(universityPersonList: List<UniversityPerson>) {
                     graphHeight = GraphHeight2th.dp,
                     colors = listOf(Color(0XFFD1CFCF), Color(0XFFFFFFFF)),
                     universityName = "연세대학교",
-                    medal = painterResource(id = R.drawable.ranking_number2)
+                    medal = painterResource(id = R.drawable.medal_2st)
                 )
                 UniversityGraph(
                     visible = visible,
@@ -125,7 +121,7 @@ fun UniversityScreen(universityPersonList: List<UniversityPerson>) {
                     graphHeight = 120.dp,
                     colors = listOf(Color(0xFFFFCC31), Color(0XFFFFFFFF)),
                     universityName = "한국공학대학교",
-                    medal = painterResource(id = R.drawable.ranking_number1)
+                    medal = painterResource(id = R.drawable.medal_1st)
                 )
                 UniversityGraph(
                     visible = visible,
@@ -134,7 +130,7 @@ fun UniversityScreen(universityPersonList: List<UniversityPerson>) {
                     graphHeight = GraphHeight3th.dp,
                     colors = listOf(Color(0xFFE1B983), Color(0XFFFFFFFF)),
                     universityName = "고려대학교",
-                    medal = painterResource(id = R.drawable.ranking_number3)
+                    medal = painterResource(id = R.drawable.medal_3st)
                 )
             }
 
@@ -164,31 +160,7 @@ fun UniversityScreen(universityPersonList: List<UniversityPerson>) {
                         fontSize = 9.sp
                     )
                 }
-                Box(modifier = Modifier.wrapContentSize()) {
-                    Icon(
-                        imageVector = Icons.Default.ArrowForwardIos,
-                        contentDescription = null,
-                        modifier = Modifier
-                            .padding(start = 7.dp)
-                            .size(20.dp),
-                        tint = Color(0xFFF2F2F2)
-                    )
-                    Icon(
-                        imageVector = Icons.Default.ArrowForwardIos,
-                        contentDescription = null,
-                        modifier = Modifier
-                            .padding(start = 14.dp)
-                            .size(20.dp),
-                        tint = Color(0xFFD2D2D2)
-
-                    )
-                    Icon(
-                        imageVector = Icons.Default.ArrowForwardIos,
-                        contentDescription = null,
-                        modifier = Modifier.size(20.dp),
-                        tint = Color(0xFFFAFAFA)
-                    )
-                }
+                TripleArrowIcon()
             }
             Row(
                 modifier = Modifier
