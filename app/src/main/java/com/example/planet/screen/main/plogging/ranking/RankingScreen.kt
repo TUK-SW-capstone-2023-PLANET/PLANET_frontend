@@ -27,15 +27,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.planet.R
 import com.example.planet.component.main.plogging.ranking.MiddleHead
 import com.example.planet.component.main.plogging.ranking.TearProfile
 import com.example.planet.component.main.plogging.ranking.TrophyProfile
 import com.example.planet.component.main.plogging.ranking.UniversityProfile
+import com.example.planet.component.navigation.ScreenNav
 
 @Composable
-@Preview(showBackground = true)
-fun RankingScreen() {
+fun RankingScreen(navController: NavController) {
     val scrollState = rememberScrollState()
     Column(
         modifier = Modifier
@@ -48,7 +49,9 @@ fun RankingScreen() {
             image = painterResource(id = R.drawable.plogging_ranking_planet),
             title = "플래닛 랭킹",
             description = "플래닛 누적점수를 통해 최고의 자리를 차지하세요."
-        )
+        ) {
+            navController.navigate(ScreenNav.PlanetRankingScreen.screenRoute)
+        }
 
         Row(
             modifier = Modifier.fillMaxWidth(),

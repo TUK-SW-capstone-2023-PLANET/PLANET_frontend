@@ -26,7 +26,11 @@ import com.example.planet.component.main.MainTopSwitch
 import com.example.planet.screen.main.plogging.community.CommunityScreen
 import com.example.planet.screen.main.plogging.MainScreen
 import com.example.planet.screen.main.plogging.message.MessageScreen
+import com.example.planet.screen.main.plogging.ranking.PlanetRankingScreen
 import com.example.planet.screen.main.plogging.ranking.RankingScreen
+import com.example.planet.screen.main.plogging.ranking.SeasonRankingScreen
+import com.example.planet.screen.main.plogging.ranking.UniversityIndividualRankingScreen
+import com.example.planet.screen.main.plogging.ranking.UniversityRankingScreen
 import com.example.planet.screen.main.plogging.user.UserScreen
 import com.example.planet.viewmodel.MainViewModel
 
@@ -57,7 +61,7 @@ fun NavigationGraph(
                     MainScreen(mainViewModel = mainViewModel) { onClick() }
                 }
                 composable(BottomNavItem.RankingScreen.screenRoute) {
-                    RankingScreen()
+                    RankingScreen(navController = navController)
                 }
                 composable(BottomNavItem.UserScreen.screenRoute) {
                     UserScreen()
@@ -67,6 +71,19 @@ fun NavigationGraph(
                 }
                 composable(BottomNavItem.CommunityScreen.screenRoute) {
                     CommunityScreen()
+                }
+
+                composable(ScreenNav.PlanetRankingScreen.screenRoute) {
+                    PlanetRankingScreen()
+                }
+                composable(ScreenNav.SeasonRankingScreen.screenRoute) {
+                    SeasonRankingScreen()
+                }
+                composable(ScreenNav.UniversityRankingScreen.screenRoute) {
+                    UniversityRankingScreen()
+                }
+                composable(ScreenNav.UniversityIndividualRankingScreen.screenRoute) {
+                    UniversityIndividualRankingScreen()
                 }
             }
         }

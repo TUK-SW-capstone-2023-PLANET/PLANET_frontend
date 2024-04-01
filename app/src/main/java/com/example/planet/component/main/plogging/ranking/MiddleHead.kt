@@ -23,7 +23,7 @@ import com.example.planet.component.main.SubTitle
 import com.example.planet.component.main.SubTitleDescription
 
 @Composable
-fun MiddleHead(image: Painter, title: String, description: String) {
+fun MiddleHead(image: Painter, title: String, description: String, onClick: () -> Unit = {}) {
     Divider(
         thickness = 1.dp,
         modifier = Modifier
@@ -46,7 +46,7 @@ fun MiddleHead(image: Painter, title: String, description: String) {
                 SubTitle(title = title)
                 SubTitleDescription(description = description)
             }
-            TripleArrowIcon()
+            TripleArrowIcon { onClick() }
         }
 
     }

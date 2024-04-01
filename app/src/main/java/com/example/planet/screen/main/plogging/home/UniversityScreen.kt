@@ -88,7 +88,7 @@ fun UniversityScreen(universityPersonList: List<UniversityPerson>) {
                 SubTitle(title = "대학교 순위", modifier = Modifier.padding(end = 8.dp))
                 SubTitleDescription("학교를 인증하여, 학교의 위상을 높히세요!!")
             }
-            TripleArrowIcon()
+            TripleArrowIcon {}
         }
         Column(
             modifier = Modifier
@@ -160,7 +160,7 @@ fun UniversityScreen(universityPersonList: List<UniversityPerson>) {
                         fontSize = 9.sp
                     )
                 }
-                TripleArrowIcon()
+                TripleArrowIcon {}
             }
             Row(
                 modifier = Modifier

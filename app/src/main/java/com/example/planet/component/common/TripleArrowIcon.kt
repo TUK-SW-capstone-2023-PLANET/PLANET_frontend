@@ -1,5 +1,6 @@
 package com.example.planet.component.common
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -13,8 +14,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun TripleArrowIcon() {
-    Box(modifier = Modifier.wrapContentSize()) {
+fun TripleArrowIcon(onClick: () -> Unit) {
+    Box(modifier = Modifier.wrapContentSize().clickable { onClick() }) {
         Icon(
             imageVector = Icons.Default.ArrowForwardIos,
             contentDescription = null,
