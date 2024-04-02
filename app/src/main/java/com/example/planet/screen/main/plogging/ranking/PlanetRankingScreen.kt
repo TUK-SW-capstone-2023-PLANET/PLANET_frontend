@@ -46,10 +46,6 @@ fun PlanetRankingScreen(
         navController.popBackStack()
     }
 
-    LaunchedEffect(Unit) {
-        Log.d("daeYoung"," mainViewModel.universityPerson: ${mainViewModel.universityPerson}")
-    }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -112,9 +108,19 @@ fun PlanetRankingScreen(
         }
 
         UniversityTitleRow()
+        /* TODO(api 연동해서 전체 플로깅 대상으로 된 리스트로 할 것)*/
         mainViewModel.universityPerson.forEachIndexed { index, universityPerson ->
             when (index) {
-                0 -> {}
+                0 -> {
+                    UniversityContentRow(
+                        medal = { Spacer(modifier = Modifier.width(24.dp)) },
+                        rank = universityPerson.rank,
+                        nickname = universityPerson.nickName,
+                        score = universityPerson.score.numberComma(),
+                        contribution = universityPerson.contribution,
+                        color = colorResource(id = R.color.main_color4)
+                    )
+                }
                 1 -> {
                     UniversityContentRow(
                         medal = {

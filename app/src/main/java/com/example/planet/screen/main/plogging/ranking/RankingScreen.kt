@@ -52,12 +52,12 @@ fun RankingScreen(navController: NavController, mainViewModel: MainViewModel = h
             image = painterResource(id = R.drawable.plogging_ranking_planet),
             title = "플래닛 랭킹",
             description = "플래닛 누적점수를 통해 최고의 자리를 차지하세요.",
-            icon = { TripleArrowIcon{
-                mainViewModel.mainTopSwitchOnHide()
-                if (!mainViewModel.mainTopSwitchIsShow.value) {
+            icon = {
+                TripleArrowIcon {
+                    mainViewModel.mainTopSwitchOnHide()
                     navController.navigate(ScreenNav.PlanetRankingScreen.screenRoute)
                 }
-            } }
+            }
         )
 
         Row(
@@ -91,7 +91,12 @@ fun RankingScreen(navController: NavController, mainViewModel: MainViewModel = h
             image = painterResource(id = R.drawable.plogging_ranking_season),
             title = "Spring Season IV",
             description = "아름다운 자연과 함께 봄의 주인공이 되어 보세요!",
-            icon = { TripleArrowIcon{navController.navigate(ScreenNav.PlanetRankingScreen.screenRoute)} }
+            icon = {
+                TripleArrowIcon {
+                    mainViewModel.mainTopSwitchOnHide()
+                    navController.navigate(ScreenNav.SeasonRankingScreen.screenRoute)
+                }
+            }
         )
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -122,7 +127,7 @@ fun RankingScreen(navController: NavController, mainViewModel: MainViewModel = h
             image = painterResource(id = R.drawable.plogging_ranking_university),
             title = "대학교 랭킹",
             description = "학교를 인증하여, 학교의 위상을 높히세요!!",
-            icon = { TripleArrowIcon{navController.navigate(ScreenNav.PlanetRankingScreen.screenRoute)} }
+            icon = { TripleArrowIcon { navController.navigate(ScreenNav.PlanetRankingScreen.screenRoute) } }
         )
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -155,7 +160,7 @@ fun RankingScreen(navController: NavController, mainViewModel: MainViewModel = h
             image = painterResource(id = R.drawable.plogging_ranking_university),
             title = "대학교 개인 랭킹",
             description = "대학교 랭킹의 나의 기여도는?",
-            icon = { TripleArrowIcon{navController.navigate(ScreenNav.PlanetRankingScreen.screenRoute)} }
+            icon = { TripleArrowIcon { navController.navigate(ScreenNav.PlanetRankingScreen.screenRoute) } }
         )
 
         Row(
@@ -179,7 +184,11 @@ fun RankingScreen(navController: NavController, mainViewModel: MainViewModel = h
             }
             Column(modifier = Modifier.fillMaxWidth(0.8f)) {
                 UniversityIndividualRankingTitle()
-                UniversityIndividualRankingContent(ranking = 1, name = "행복한 정대영", score = "371,357점") {
+                UniversityIndividualRankingContent(
+                    ranking = 1,
+                    name = "행복한 정대영",
+                    score = "371,357점"
+                ) {
                     Divider(
                         color = colorResource(id = R.color.ranking_color1),
                         modifier = Modifier
@@ -188,7 +197,11 @@ fun RankingScreen(navController: NavController, mainViewModel: MainViewModel = h
                     )
                     Spacer(modifier = Modifier.width(13.dp))
                 }
-                UniversityIndividualRankingContent(ranking = 3, name = "고통받는 이승민", score = "268,589점") {
+                UniversityIndividualRankingContent(
+                    ranking = 3,
+                    name = "고통받는 이승민",
+                    score = "268,589점"
+                ) {
                     Divider(
                         color = colorResource(id = R.color.ranking_color2),
                         modifier = Modifier
@@ -197,7 +210,11 @@ fun RankingScreen(navController: NavController, mainViewModel: MainViewModel = h
                     )
                     Spacer(modifier = Modifier.width(13.dp))
                 }
-                UniversityIndividualRankingContent(ranking = 3, name = "컴공간판 강기환", score = "21,075점") {
+                UniversityIndividualRankingContent(
+                    ranking = 3,
+                    name = "컴공간판 강기환",
+                    score = "21,075점"
+                ) {
                     Divider(
                         color = colorResource(id = R.color.ranking_color3),
                         modifier = Modifier
@@ -237,13 +254,20 @@ fun UniversityIndividualRankingTitle() {
             modifier = Modifier.weight(1f)
         )
     }
-    Divider(thickness = 1.dp, modifier = Modifier
-        .fillMaxWidth()
-        .padding(vertical = 2.dp), color = colorResource(id = R.color.font_background_color3))
+    Divider(
+        thickness = 1.dp, modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 2.dp), color = colorResource(id = R.color.font_background_color3)
+    )
 }
 
 @Composable
-fun UniversityIndividualRankingContent(ranking: Int, name: String, score: String, medal: @Composable RowScope.() -> Unit) {
+fun UniversityIndividualRankingContent(
+    ranking: Int,
+    name: String,
+    score: String,
+    medal: @Composable RowScope.() -> Unit
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -269,7 +293,9 @@ fun UniversityIndividualRankingContent(ranking: Int, name: String, score: String
             modifier = Modifier.weight(1f)
         )
     }
-    Divider(thickness = 1.dp, modifier = Modifier
-        .fillMaxWidth()
-        .padding(vertical = 2.dp), color = colorResource(id = R.color.font_background_color3))
+    Divider(
+        thickness = 1.dp, modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 2.dp), color = colorResource(id = R.color.font_background_color3)
+    )
 }

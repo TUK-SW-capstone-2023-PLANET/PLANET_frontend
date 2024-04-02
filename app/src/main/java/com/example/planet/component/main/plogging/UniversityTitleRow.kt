@@ -14,11 +14,11 @@ import com.example.planet.R
 
 @Composable
 fun UniversityTitleRow() {
-    Divider(thickness = 1.dp, modifier = Modifier.fillMaxWidth().padding(bottom = 2.dp), color = colorResource(id = R.color.font_background_color3))
+    Divider(thickness = 1.dp, modifier = Modifier.fillMaxWidth(), color = colorResource(id = R.color.font_background_color3))
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 24.dp)
+            .padding(start = 24.dp, top = 2.dp, bottom = 2.dp)
     ) {
         Row(modifier = Modifier.fillMaxWidth(0.5f)) {
             Text(
@@ -39,15 +39,15 @@ fun UniversityTitleRow() {
                 text = "점수",
                 color = colorResource(id = R.color.font_background_color2),
                 fontSize = 12.sp,
-                modifier = Modifier.fillMaxWidth(0.5f)
+                modifier = Modifier.weight(1f)
             )
             Text(
                 text = "기여도",
                 color = colorResource(id = R.color.font_background_color2),
                 fontSize = 12.sp,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.weight(1f)
             )
         }
     }
-    Divider(thickness = 1.dp, modifier = Modifier.fillMaxWidth().padding(vertical = 2.dp), color = colorResource(id = R.color.font_background_color3))
+    Divider(thickness = 1.dp, modifier = Modifier.fillMaxWidth(), color = colorResource(id = R.color.font_background_color3))
 }

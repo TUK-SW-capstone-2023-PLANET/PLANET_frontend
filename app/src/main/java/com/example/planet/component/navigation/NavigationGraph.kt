@@ -84,7 +84,7 @@ fun NavigationGraph(
                     PlanetRankingScreen(navController = navController, mainViewModel = mainViewModel)
                 }
                 composable(ScreenNav.SeasonRankingScreen.screenRoute) {
-                    SeasonRankingScreen()
+                    SeasonRankingScreen(navController = navController, mainViewModel = mainViewModel)
                 }
                 composable(ScreenNav.UniversityRankingScreen.screenRoute) {
                     UniversityRankingScreen()

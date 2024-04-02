@@ -1,5 +1,6 @@
 package com.example.planet.component.main.plogging
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -26,11 +27,14 @@ fun UniversityContentRow(
     rank: Int,
     nickname: String,
     score: String,
-    contribution: Double
+    contribution: Double,
+    color: Color = Color.White
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .background(color = color)
+            .padding(vertical = 2.dp)
     ) {
         Row(
             modifier = Modifier
@@ -61,19 +65,19 @@ fun UniversityContentRow(
                 text = "${score}점",
                 color = colorResource(id = R.color.font_background_color2),
                 fontSize = 12.sp,
-                modifier = Modifier.fillMaxWidth(0.5f)
+                modifier = Modifier.weight(1f)
             )
             Text(
                 text = "${contribution.round()}%",
                 color = colorResource(id = R.color.font_background_color2),
                 fontSize = 12.sp,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.weight(1f)
             )
         }
     }
     Divider(
-        thickness = 1.dp, modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 2.dp), color = colorResource(id = R.color.font_background_color3)
+        thickness = 1.dp,
+        modifier = Modifier.fillMaxWidth(),
+        color = colorResource(id = R.color.font_background_color3)
     )
 }
