@@ -35,6 +35,13 @@ class MainViewModel @Inject constructor(
     private val _tierList = mutableStateOf(emptyList<Tier>())
     val tierList: State<List<Tier>> = _tierList
 
+    private val _mainTopSwitchIsShow = mutableStateOf<Boolean>(true)
+    val mainTopSwitchIsShow: State<Boolean> = _mainTopSwitchIsShow
+
+    private val _searchText = mutableStateOf("")
+    val searchText: State<String> = _searchText
+
+
     fun changePloggingScreen() {
         _ploggingOrRecordSwitch.value = false
     }
@@ -45,6 +52,18 @@ class MainViewModel @Inject constructor(
 
     fun changeSeasonScreen() {
         _tierList.value = emptyList()
+    }
+
+    fun mainTopSwitchOnHide() {
+        _mainTopSwitchIsShow.value = false
+    }
+
+    fun mainTopSwitchOnShow() {
+        _mainTopSwitchIsShow.value = true
+    }
+
+    val changeSearchText: (String) -> Unit = { text ->
+        _searchText.value = text
     }
 
     suspend fun getAdvertisement() {

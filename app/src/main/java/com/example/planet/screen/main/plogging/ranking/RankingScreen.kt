@@ -27,16 +27,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.planet.R
+import com.example.planet.component.common.TripleArrowIcon
 import com.example.planet.component.main.plogging.ranking.MiddleHead
 import com.example.planet.component.main.plogging.ranking.TearProfile
 import com.example.planet.component.main.plogging.ranking.TrophyProfile
 import com.example.planet.component.main.plogging.ranking.UniversityProfile
 import com.example.planet.component.navigation.ScreenNav
+import com.example.planet.viewmodel.MainViewModel
 
 @Composable
-fun RankingScreen(navController: NavController) {
+fun RankingScreen(navController: NavController, mainViewModel: MainViewModel = hiltViewModel()) {
     val scrollState = rememberScrollState()
     Column(
         modifier = Modifier
@@ -48,10 +51,14 @@ fun RankingScreen(navController: NavController) {
         MiddleHead(
             image = painterResource(id = R.drawable.plogging_ranking_planet),
             title = "플래닛 랭킹",
-            description = "플래닛 누적점수를 통해 최고의 자리를 차지하세요."
-        ) {
-            navController.navigate(ScreenNav.PlanetRankingScreen.screenRoute)
-        }
+            description = "플래닛 누적점수를 통해 최고의 자리를 차지하세요.",
+            icon = { TripleArrowIcon{
+                mainViewModel.mainTopSwitchOnHide()
+                if (!mainViewModel.mainTopSwitchIsShow.value) {
+                    navController.navigate(ScreenNav.PlanetRankingScreen.screenRoute)
+                }
+            } }
+        )
 
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -83,7 +90,8 @@ fun RankingScreen(navController: NavController) {
         MiddleHead(
             image = painterResource(id = R.drawable.plogging_ranking_season),
             title = "Spring Season IV",
-            description = "아름다운 자연과 함께 봄의 주인공이 되어 보세요!"
+            description = "아름다운 자연과 함께 봄의 주인공이 되어 보세요!",
+            icon = { TripleArrowIcon{navController.navigate(ScreenNav.PlanetRankingScreen.screenRoute)} }
         )
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -113,7 +121,8 @@ fun RankingScreen(navController: NavController) {
         MiddleHead(
             image = painterResource(id = R.drawable.plogging_ranking_university),
             title = "대학교 랭킹",
-            description = "학교를 인증하여, 학교의 위상을 높히세요!!"
+            description = "학교를 인증하여, 학교의 위상을 높히세요!!",
+            icon = { TripleArrowIcon{navController.navigate(ScreenNav.PlanetRankingScreen.screenRoute)} }
         )
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -145,7 +154,8 @@ fun RankingScreen(navController: NavController) {
         MiddleHead(
             image = painterResource(id = R.drawable.plogging_ranking_university),
             title = "대학교 개인 랭킹",
-            description = "대학교 랭킹의 나의 기여도는?"
+            description = "대학교 랭킹의 나의 기여도는?",
+            icon = { TripleArrowIcon{navController.navigate(ScreenNav.PlanetRankingScreen.screenRoute)} }
         )
 
         Row(

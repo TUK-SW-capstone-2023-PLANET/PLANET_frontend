@@ -1,11 +1,14 @@
 package com.example.planet.component.navigation
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.rounded.DirectionsRun
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
@@ -32,6 +35,7 @@ import com.example.planet.screen.main.plogging.ranking.SeasonRankingScreen
 import com.example.planet.screen.main.plogging.ranking.UniversityIndividualRankingScreen
 import com.example.planet.screen.main.plogging.ranking.UniversityRankingScreen
 import com.example.planet.screen.main.plogging.user.UserScreen
+import com.example.planet.util.noRippleClickable
 import com.example.planet.viewmodel.MainViewModel
 
 
@@ -52,7 +56,10 @@ fun NavigationGraph(
                 .padding(it),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            MainTopSwitch(mainViewModel = mainViewModel)
+            if(mainViewModel.mainTopSwitchIsShow.value) {
+                MainTopSwitch(mainViewModel = mainViewModel)
+            }
+
             NavHost(
                 navController = navController,
                 startDestination = BottomNavItem.HomeScreen.screenRoute
@@ -61,7 +68,7 @@ fun NavigationGraph(
                     MainScreen(mainViewModel = mainViewModel) { onClick() }
                 }
                 composable(BottomNavItem.RankingScreen.screenRoute) {
-                    RankingScreen(navController = navController)
+                    RankingScreen(navController = navController, mainViewModel = mainViewModel)
                 }
                 composable(BottomNavItem.UserScreen.screenRoute) {
                     UserScreen()
@@ -74,7 +81,7 @@ fun NavigationGraph(
                 }
 
                 composable(ScreenNav.PlanetRankingScreen.screenRoute) {
-                    PlanetRankingScreen()
+                    PlanetRankingScreen(navController = navController, mainViewModel = mainViewModel)
                 }
                 composable(ScreenNav.SeasonRankingScreen.screenRoute) {
                     SeasonRankingScreen()

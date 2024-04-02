@@ -12,10 +12,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.planet.util.noRippleClickable
 
 @Composable
 fun TripleArrowIcon(onClick: () -> Unit) {
-    Box(modifier = Modifier.wrapContentSize().clickable { onClick() }) {
+    Box(modifier = Modifier.wrapContentSize().noRippleClickable { onClick() }) {
         Icon(
             imageVector = Icons.Default.ArrowForwardIos,
             contentDescription = null,

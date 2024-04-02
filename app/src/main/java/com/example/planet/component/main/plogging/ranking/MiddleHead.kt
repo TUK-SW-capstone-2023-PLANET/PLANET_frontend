@@ -23,12 +23,12 @@ import com.example.planet.component.main.SubTitle
 import com.example.planet.component.main.SubTitleDescription
 
 @Composable
-fun MiddleHead(image: Painter, title: String, description: String, onClick: () -> Unit = {}) {
+fun MiddleHead(image: Painter, title: String, description: String, icon: @Composable () -> Unit = {}) {
     Divider(
         thickness = 1.dp,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp),
+            .padding(bottom = 8.dp, top = 16.dp),
         color = colorResource(id = R.color.font_background_color3)
     )
 
@@ -39,14 +39,16 @@ fun MiddleHead(image: Painter, title: String, description: String, onClick: () -
             Image(
                 painter = image,
                 contentDescription = null,
-                modifier = Modifier.padding(top = 3.dp).size(16.dp)
+                modifier = Modifier
+                    .padding(top = 3.dp)
+                    .size(16.dp)
             )
             Spacer(modifier = Modifier.width(4.dp))
             Column(modifier = Modifier.weight(1f)) {
                 SubTitle(title = title)
                 SubTitleDescription(description = description)
             }
-            TripleArrowIcon { onClick() }
+            icon()
         }
 
     }

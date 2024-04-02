@@ -32,7 +32,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.planet.R
 import com.example.planet.component.common.MyScrollableTabRow
-import com.example.planet.component.main.MainTopSwitch
 import com.example.planet.component.main.plogging.MainTopBanner
 import com.example.planet.screen.main.plogging.home.PloggingHelpScreen
 import com.example.planet.screen.main.plogging.home.SeasonScreen
