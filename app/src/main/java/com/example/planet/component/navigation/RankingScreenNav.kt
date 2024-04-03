@@ -1,8 +1,5 @@
 package com.example.planet.component.navigation
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Chat
-
 const val PlANET_RANKING = "planetRankingScreen"
 const val SEASON_RANKING = "seasonRankingScreen"
 const val UNIVERSITY_RANKING = "universityRankingScreen"

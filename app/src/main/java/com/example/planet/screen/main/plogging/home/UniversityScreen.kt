@@ -37,7 +37,6 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -46,9 +45,9 @@ import com.example.planet.R
 import com.example.planet.component.common.TripleArrowIcon
 import com.example.planet.component.main.SubTitle
 import com.example.planet.component.main.SubTitleDescription
-import com.example.planet.component.main.plogging.UniversityContentRow
 import com.example.planet.component.main.plogging.UniversityGraph
-import com.example.planet.component.main.plogging.UniversityTitleRow
+import com.example.planet.component.main.plogging.UniversityIndividualContentRow
+import com.example.planet.component.main.plogging.UniversityIndividualTitleRow
 import com.example.planet.data.dto.UniversityPerson
 import com.example.planet.util.numberComma
 import com.example.planet.util.round
@@ -256,12 +255,12 @@ fun UniversityScreen(universityPersonList: List<UniversityPerson>) {
                     .fillMaxWidth()
                     .wrapContentHeight()
             ) {
-                UniversityTitleRow()
+                UniversityIndividualTitleRow()
                 universityPersonList.forEachIndexed { index, universityPerson ->
                     when (index) {
                         0 -> {}
                         1 -> {
-                            UniversityContentRow(
+                            UniversityIndividualContentRow(
                                 medal = {
                                     Divider(
                                         color = colorResource(id = R.color.ranking_color1),
@@ -279,7 +278,7 @@ fun UniversityScreen(universityPersonList: List<UniversityPerson>) {
                         }
 
                         2 -> {
-                            UniversityContentRow(
+                            UniversityIndividualContentRow(
                                 medal = {
                                     Divider(
                                         color = colorResource(id = R.color.ranking_color2),
@@ -297,7 +296,7 @@ fun UniversityScreen(universityPersonList: List<UniversityPerson>) {
                         }
 
                         3 -> {
-                            UniversityContentRow(
+                            UniversityIndividualContentRow(
                                 medal = {
                                     Divider(
                                         color = colorResource(id = R.color.ranking_color3),
@@ -315,7 +314,7 @@ fun UniversityScreen(universityPersonList: List<UniversityPerson>) {
                         }
 
                         else -> {
-                            UniversityContentRow(
+                            UniversityIndividualContentRow(
                                 medal = { Spacer(modifier = Modifier.width(24.dp)) },
                                 rank = universityPerson.rank,
                                 nickname = universityPerson.nickName,

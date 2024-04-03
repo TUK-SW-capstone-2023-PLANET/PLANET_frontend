@@ -29,16 +29,11 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.planet.R
-import com.example.planet.component.common.TripleArrowIcon
 import com.example.planet.component.main.plogging.SeasonContentRow
 import com.example.planet.component.main.plogging.SeasonTitleRow
-import com.example.planet.component.main.plogging.UniversityContentRow
-import com.example.planet.component.main.plogging.UniversityTitleRow
 import com.example.planet.component.main.plogging.ranking.MiddleHead
 import com.example.planet.component.main.plogging.ranking.SearchTextField
 import com.example.planet.component.main.plogging.ranking.TearProfile
-import com.example.planet.component.main.plogging.ranking.TrophyProfile
-import com.example.planet.component.navigation.ScreenNav
 import com.example.planet.data.dto.SeasonPerson
 import com.example.planet.util.noRippleClickable
 import com.example.planet.util.numberComma

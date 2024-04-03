@@ -127,7 +127,12 @@ fun RankingScreen(navController: NavController, mainViewModel: MainViewModel = h
             image = painterResource(id = R.drawable.plogging_ranking_university),
             title = "대학교 랭킹",
             description = "학교를 인증하여, 학교의 위상을 높히세요!!",
-            icon = { TripleArrowIcon { navController.navigate(ScreenNav.PlanetRankingScreen.screenRoute) } }
+            icon = {
+                TripleArrowIcon {
+                    mainViewModel.mainTopSwitchOnHide()
+                    navController.navigate(ScreenNav.UniversityRankingScreen.screenRoute)
+                }
+            }
         )
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -160,7 +165,7 @@ fun RankingScreen(navController: NavController, mainViewModel: MainViewModel = h
             image = painterResource(id = R.drawable.plogging_ranking_university),
             title = "대학교 개인 랭킹",
             description = "대학교 랭킹의 나의 기여도는?",
-            icon = { TripleArrowIcon { navController.navigate(ScreenNav.PlanetRankingScreen.screenRoute) } }
+            icon = { TripleArrowIcon { navController.navigate(ScreenNav.UniversityRankingScreen.screenRoute) } }
         )
 
         Row(

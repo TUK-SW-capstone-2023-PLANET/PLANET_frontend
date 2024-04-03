@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.sp
 import com.example.planet.R
 
 @Composable
-fun UniversityTitleRow() {
+fun UniversityIndividualTitleRow() {
     Divider(thickness = 1.dp, modifier = Modifier.fillMaxWidth(), color = colorResource(id = R.color.font_background_color3))
     Row(
         modifier = Modifier
