@@ -90,7 +90,7 @@ fun NavigationGraph(
                     UniversityRankingScreen(navController = navController, mainViewModel = mainViewModel)
                 }
                 composable(ScreenNav.UniversityIndividualRankingScreen.screenRoute) {
-                    UniversityIndividualRankingScreen()
+                    UniversityIndividualRankingScreen(navController = navController, mainViewModel = mainViewModel)
                 }
             }
         }

@@ -52,12 +52,6 @@ fun UniversityIndividualContentRow(
                 fontSize = 12.sp,
                 modifier = Modifier.weight(1f)
             )
-//            Text(
-//                text = nickname,
-//                color = colorResource(id = R.color.font_background_color2),
-//                fontSize = 12.sp,
-//                modifier = Modifier.weight(1f)
-//            )
         }
         Row(modifier = Modifier
             .weight(1f),

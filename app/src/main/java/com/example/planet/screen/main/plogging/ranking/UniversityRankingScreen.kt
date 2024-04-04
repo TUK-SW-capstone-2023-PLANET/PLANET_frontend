@@ -64,7 +64,8 @@ fun UniversityRankingScreen(
                 contentDescription = null,
                 tint = colorResource(id = R.color.font_background_color1),
                 modifier = Modifier.noRippleClickable {
-
+                    mainViewModel.mainTopSwitchOnShow()
+                    navController.popBackStack()
                 })
         }
         MiddleHead(

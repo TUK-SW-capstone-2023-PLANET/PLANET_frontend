@@ -28,15 +28,27 @@ import androidx.compose.ui.unit.sp
 import com.example.planet.R
 
 @Composable
-fun UniversityGraph(visible: Boolean = false, universityLogo: Painter, score: String, graphHeight: Dp, colors: List<Color>, universityName: String, medal: Painter) {
+fun UniversityGraph(
+    visible: Boolean = false,
+    universityLogo: Painter,
+    score: String,
+    graphHeight: Dp,
+    colors: List<Color>,
+    universityName: String,
+    medal: Painter
+) {
     Column(
         modifier = Modifier.wrapContentSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        AnimatedVisibility(visible = visible,
+        AnimatedVisibility(
+            visible = visible,
             enter = scaleIn()
         ) {
-            Column(modifier = Modifier.wrapContentSize(), horizontalAlignment = Alignment.CenterHorizontally) {
+            Column(
+                modifier = Modifier.wrapContentSize(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 Image(
                     painter = universityLogo,
                     contentDescription = null,
@@ -65,8 +77,10 @@ fun UniversityGraph(visible: Boolean = false, universityLogo: Painter, score: St
                 )
             }
         }
-        AnimatedVisibility(visible = visible,
-            enter = scaleIn()){
+        AnimatedVisibility(
+            visible = visible,
+            enter = scaleIn()
+        ) {
             Row(
                 modifier = Modifier
                     .wrapContentSize()

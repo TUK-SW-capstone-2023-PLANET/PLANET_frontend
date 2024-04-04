@@ -165,7 +165,12 @@ fun RankingScreen(navController: NavController, mainViewModel: MainViewModel = h
             image = painterResource(id = R.drawable.plogging_ranking_university),
             title = "대학교 개인 랭킹",
             description = "대학교 랭킹의 나의 기여도는?",
-            icon = { TripleArrowIcon { navController.navigate(ScreenNav.UniversityRankingScreen.screenRoute) } }
+            icon = {
+                TripleArrowIcon {
+                    mainViewModel.mainTopSwitchOnHide()
+                    navController.navigate(ScreenNav.UniversityIndividualRankingScreen.screenRoute)
+                }
+            }
         )
 
         Row(

@@ -2,8 +2,11 @@ package com.example.planet.viewmodel
 
 import android.util.Log
 import androidx.compose.runtime.State
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import com.example.planet.TAG
 import com.example.planet.data.ApiState
@@ -15,11 +18,13 @@ import com.example.planet.repository.MainRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
+import kotlin.math.round
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val mainRepository: MainRepository
 ) : ViewModel() {
+
     private val _ploggingOrRecordSwitch = mutableStateOf(true)
     val ploggingOrRecordSwitch: State<Boolean> = _ploggingOrRecordSwitch
 
@@ -41,6 +46,22 @@ class MainViewModel @Inject constructor(
     private val _searchText = mutableStateOf("")
     val searchText: State<String> = _searchText
 
+    private val _graphHeight1th = mutableStateOf(120)
+    val graphHeight1th: State<Int> = _graphHeight1th
+
+    private val _graphHeight2th = derivedStateOf {
+        Log.d("daeYoung", "_graphHeight2th 실행")
+        round(graphHeight1th.value / 1120921.0 * 921218.0).toInt()
+        // 371357이 1등 점수, 268589.0에 2등 점수
+    }
+    val graphHeight2th: Dp = _graphHeight2th.value.dp
+
+    private val _graphHeight3th = derivedStateOf {
+        Log.d("daeYoung", "_graphHeight3th 실행")
+        round(graphHeight1th.value / 1120921.0 * 218213.0).toInt()
+        // 371357이 1등 점수, 268589.0에 3등 점수
+    }
+    val graphHeight3th: Dp = _graphHeight3th.value.dp
 
     fun changePloggingScreen() {
         _ploggingOrRecordSwitch.value = false
