@@ -28,6 +28,7 @@ import com.example.planet.R
 import com.example.planet.component.main.MainTopSwitch
 import com.example.planet.screen.main.plogging.community.CommunityScreen
 import com.example.planet.screen.main.plogging.MainScreen
+import com.example.planet.screen.main.plogging.home.TierScreen
 import com.example.planet.screen.main.plogging.message.MessageScreen
 import com.example.planet.screen.main.plogging.ranking.PlanetRankingScreen
 import com.example.planet.screen.main.plogging.ranking.RankingScreen
@@ -65,7 +66,7 @@ fun NavigationGraph(
                 startDestination = BottomNavItem.HomeScreen.screenRoute
             ) {
                 composable(BottomNavItem.HomeScreen.screenRoute) {
-                    MainScreen(mainViewModel = mainViewModel) { onClick() }
+                    MainScreen(navController = navController, mainViewModel = mainViewModel) { onClick() }
                 }
                 composable(BottomNavItem.RankingScreen.screenRoute) {
                     RankingScreen(navController = navController, mainViewModel = mainViewModel)
@@ -79,6 +80,10 @@ fun NavigationGraph(
                 composable(BottomNavItem.CommunityScreen.screenRoute) {
                     CommunityScreen()
                 }
+                composable(ScreenNav.TierScreen.screenRoute) {
+                    TierScreen(tierList = mainViewModel.tierList.value)
+                }
+
 
                 composable(ScreenNav.PlanetRankingScreen.screenRoute) {
                     PlanetRankingScreen(navController = navController, mainViewModel = mainViewModel)

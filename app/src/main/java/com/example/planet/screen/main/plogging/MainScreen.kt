@@ -30,6 +30,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.planet.R
 import com.example.planet.component.common.MyScrollableTabRow
 import com.example.planet.component.main.plogging.MainTopBanner
@@ -45,22 +46,10 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun MainScreen(mainViewModel: MainViewModel = viewModel(), onClick: () -> Unit) {
+fun MainScreen(navController: NavController, mainViewModel: MainViewModel = viewModel(), onClick: () -> Unit) {
     val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
     val tabItems = listOf("나의 플로깅", "대학교", "시즌", "이벤트")
-
-    LaunchedEffect(Unit) {
-        mainViewModel.getAdvertisement()
-        mainViewModel.getUniversityPeople()
-        mainViewModel.getSeasonPeople()
-    }
-
-    BackHandler {
-        if (mainViewModel.tierList.value.isNotEmpty()) {
-            mainViewModel.changeSeasonScreen()
-        }
-    }
 
     Scaffold(
         floatingActionButton = {
@@ -83,59 +72,55 @@ fun MainScreen(mainViewModel: MainViewModel = viewModel(), onClick: () -> Unit) 
                 .fillMaxSize()
                 .padding(it), horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            if (mainViewModel.tierList.value.isNotEmpty()) {
-                TierScreen(tierList = mainViewModel.tierList.value)
-            } else {
-                /* TODO("스켈레톤 ui 적용할 것") */
-                if (mainViewModel.imageUrlList.isNotEmpty()) {
-                    MainTopBanner(imageUrlList = mainViewModel.imageUrlList)
-                }
-                MyScrollableTabRow(
-                    modifier = Modifier
-                        .height(45.dp)
-                        .padding(vertical = 8.dp),
-                    edgePadding = 16.dp,
-                    selectedTabIndex = pagerState.currentPage,
-                    minItemWidth = 0.dp,
-                    indicator = {},
-                    divider = {}) {
-                    tabItems.forEachIndexed { index, title ->
-                        Card(
-                            modifier = Modifier
-                                .padding(end = if (index != 3) 8.dp else 0.dp),
-                            shape = RoundedCornerShape(8.dp),
-                            colors = CardDefaults.cardColors(
-                                containerColor = if (pagerState.currentPage == index) colorResource(id = R.color.main_color2)
-                                else colorResource(id = R.color.font_background_color3),
-                                contentColor = if (pagerState.currentPage == index) Color.White
-                                else colorResource(id = R.color.font_background_color2)
-                            )
-                        ) {
-                            Tab(
-                                modifier = Modifier,
-                                selected = (pagerState.currentPage == index),
-                                text = { Text(text = title, fontSize = 11.sp) },
-                                onClick = {
-                                    coroutineScope.launch {
-                                        pagerState.animateScrollToPage(index)
-                                    }
-                                })
-                        }
+            /* TODO("스켈레톤 ui 적용할 것") */
+            if (mainViewModel.imageUrlList.isNotEmpty()) {
+                MainTopBanner(imageUrlList = mainViewModel.imageUrlList)
+            }
+            MyScrollableTabRow(
+                modifier = Modifier
+                    .height(45.dp)
+                    .padding(vertical = 8.dp),
+                edgePadding = 16.dp,
+                selectedTabIndex = pagerState.currentPage,
+                minItemWidth = 0.dp,
+                indicator = {},
+                divider = {}) {
+                tabItems.forEachIndexed { index, title ->
+                    Card(
+                        modifier = Modifier
+                            .padding(end = if (index != 3) 8.dp else 0.dp),
+                        shape = RoundedCornerShape(8.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = if (pagerState.currentPage == index) colorResource(id = R.color.main_color2)
+                            else colorResource(id = R.color.font_background_color3),
+                            contentColor = if (pagerState.currentPage == index) Color.White
+                            else colorResource(id = R.color.font_background_color2)
+                        )
+                    ) {
+                        Tab(
+                            modifier = Modifier,
+                            selected = (pagerState.currentPage == index),
+                            text = { Text(text = title, fontSize = 11.sp) },
+                            onClick = {
+                                coroutineScope.launch {
+                                    pagerState.animateScrollToPage(index)
+                                }
+                            })
                     }
                 }
-                Divider(
-                    thickness = 1.dp,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                )
-                HorizontalPager(count = tabItems.count(), state = pagerState) { page ->
-                    when (page) {
-                        0 -> PloggingHelpScreen()
-                        1 -> UniversityScreen(universityPersonList = mainViewModel.universityPerson)
-                        2 -> SeasonScreen(mainViewModel = mainViewModel)
-                        3 -> Text(text = "$page", modifier = Modifier.fillMaxSize())
-                    }
+            }
+            Divider(
+                thickness = 1.dp,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+            )
+            HorizontalPager(count = tabItems.count(), state = pagerState) { page ->
+                when (page) {
+                    0 -> PloggingHelpScreen()
+                    1 -> UniversityScreen(universityPersonList = mainViewModel.universityPerson)
+                    2 -> SeasonScreen(navController = navController, mainViewModel = mainViewModel)
+                    3 -> Text(text = "$page", modifier = Modifier.fillMaxSize())
                 }
             }
 

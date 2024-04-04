@@ -35,13 +35,13 @@ interface ApiService {
     suspend fun postPlogging(@Body ploggingInfo: PloggingInfo): PloggingComplete
 
     @GET("/advertisement")
-    suspend fun getAdvertisement(): List<Advertisement>
+    suspend fun getTopBanner(): List<Advertisement>
 
     @GET("/user/{userId}/university")
-    suspend fun getUniversityPeople(@Path("userId") userId: Int): List<Map<Int, UniversityPerson>>
+    suspend fun getUniversityInfo(@Path("userId") userId: Int): List<Map<Int, UniversityPerson>>
 
     @GET("/season/user/{userId}")
-    suspend fun getSeasonPeople(@Path("userId") userId: Int): List<Map<Int, SeasonPerson>>
+    suspend fun getSeasonInfo(@Path("userId") userId: Int): List<Map<Int, SeasonPerson>>
 
     @GET("/tier")
     suspend fun getTierList(): List<Tier>

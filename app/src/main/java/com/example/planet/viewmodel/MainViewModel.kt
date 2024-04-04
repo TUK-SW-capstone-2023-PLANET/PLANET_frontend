@@ -8,6 +8,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.planet.TAG
 import com.example.planet.data.ApiState
 import com.example.planet.data.dto.Advertisement
@@ -15,15 +16,30 @@ import com.example.planet.data.dto.SeasonPerson
 import com.example.planet.data.dto.Tier
 import com.example.planet.data.dto.UniversityPerson
 import com.example.planet.repository.MainRepository
+import com.example.planet.usecase.GerTierListUseCase
+import com.example.planet.usecase.GetBannerUseCase
+import com.example.planet.usecase.GetSeasonInfoUseCase
+import com.example.planet.usecase.GetUniversityInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.math.round
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val mainRepository: MainRepository
+    private val getBannerUseCase: GetBannerUseCase,
+    private val getUniversityInfoUseCase: GetUniversityInfoUseCase,
+    private val getSeasonInfoUseCase: GetSeasonInfoUseCase,
+    private val gerTierListUseCase: GerTierListUseCase,
 ) : ViewModel() {
+    init {
+        viewModelScope.launch {
+            getTopBanner()
+            getUniversityInfo()
+            getSeasonInfo()
+        }
+    }
 
     private val _ploggingOrRecordSwitch = mutableStateOf(true)
     val ploggingOrRecordSwitch: State<Boolean> = _ploggingOrRecordSwitch
@@ -87,55 +103,54 @@ class MainViewModel @Inject constructor(
         _searchText.value = text
     }
 
-    suspend fun getAdvertisement() {
-        when (val apiState = mainRepository.getAdvertisement().first()) {
+    private suspend fun getTopBanner() {
+        // TODO(로딩 중 스켈리톤 ui 적용하기)
+        when (val apiState = getBannerUseCase().first()) {
             is ApiState.Success<*> -> {
                 val result = apiState.value as List<Advertisement>
                 result.forEach {
                     _imageUrlList.add(it.imageUrl)
                 }
-                Log.d(TAG, "getAdvertisement() 성공")
+                Log.d(TAG, "getTopBanner() 성공")
             }
-
             is ApiState.Error -> {
-                Log.d("daeYoung", "getAdvertisement() 실패: ${apiState.errMsg}")
+                Log.d("daeYoung", "getTopBanner() 실패: ${apiState.errMsg}")
             }
-
             ApiState.Loading -> TODO()
         }
     }
 
 
-    suspend fun getUniversityPeople() {
-        when (val apiState = mainRepository.getUniversityPeople().first()) {
+    private suspend fun getUniversityInfo() {
+        when (val apiState = getUniversityInfoUseCase().first()) {
             is ApiState.Success<*> -> {
                 val result = apiState.value as List<Map<Int, UniversityPerson>>
                 result[0].values.forEach {
                     _universityPerson.add(it)
                 }
-                Log.d(TAG, "getUniversityPeople() 성공")
+                Log.d(TAG, "getUniversityInfo() 성공")
             }
 
             is ApiState.Error -> {
-                Log.d("daeYoung", "getUniversityPeople() 실패: ${apiState.errMsg}")
+                Log.d("daeYoung", "getUniversityInfo() 실패: ${apiState.errMsg}")
             }
 
             ApiState.Loading -> TODO()
         }
     }
 
-    suspend fun getSeasonPeople() {
-        when (val apiState = mainRepository.getSeasonPeople().first()) {
+    private suspend fun getSeasonInfo() {
+        when (val apiState = getSeasonInfoUseCase().first()) {
             is ApiState.Success<*> -> {
                 val result = apiState.value as List<Map<Int, SeasonPerson>>
                 result[0].values.forEach {
                     _seasonPerson.add(it)
                 }
-                Log.d(TAG, "getSeasonPeople() 성공")
+                Log.d(TAG, "getSeasonInfo() 성공")
             }
 
             is ApiState.Error -> {
-                Log.d("daeYoung", "getSeasonPeople() 실패: ${apiState.errMsg}")
+                Log.d("daeYoung", "getSeasonInfo() 실패: ${apiState.errMsg}")
             }
 
             ApiState.Loading -> TODO()
@@ -143,13 +158,11 @@ class MainViewModel @Inject constructor(
     }
 
     suspend fun getTierList() {
-        when (val apiState = mainRepository.getTierList().first()) {
+        when (val apiState = gerTierListUseCase().first()) {
             is ApiState.Success<*> -> {
                 _tierList.value = apiState.value as List<Tier>
-
                 Log.d(TAG, "getTierList() 성공")
             }
-
             is ApiState.Error -> {
                 Log.d("daeYoung", "getTierList() 실패: ${apiState.errMsg}")
             }
@@ -157,6 +170,4 @@ class MainViewModel @Inject constructor(
             ApiState.Loading -> TODO()
         }
     }
-
-
 }

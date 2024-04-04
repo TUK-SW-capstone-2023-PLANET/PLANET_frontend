@@ -37,6 +37,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.planet.R
@@ -44,6 +45,7 @@ import com.example.planet.component.main.SubTitle
 import com.example.planet.component.main.SubTitleDescription
 import com.example.planet.component.main.plogging.SeasonContentRow
 import com.example.planet.component.main.plogging.SeasonTitleRow
+import com.example.planet.component.navigation.ScreenNav
 import com.example.planet.data.dto.SeasonPerson
 import com.example.planet.util.noRippleClickable
 import com.example.planet.util.numberComma
@@ -51,7 +53,7 @@ import com.example.planet.viewmodel.MainViewModel
 import kotlinx.coroutines.launch
 
 @Composable
-fun SeasonScreen(mainViewModel: MainViewModel) {
+fun SeasonScreen(navController: NavController, mainViewModel: MainViewModel) {
     var scrollState = rememberScrollState()
     val coroutineScope = rememberCoroutineScope()
 
@@ -84,6 +86,7 @@ fun SeasonScreen(mainViewModel: MainViewModel) {
                     .noRippleClickable {
                         coroutineScope.launch {
                             mainViewModel.getTierList()
+                            navController.navigate(ScreenNav.TierScreen.screenRoute)
                         }
                     },
                 tint = colorResource(id = R.color.font_background_color2)

@@ -10,9 +10,9 @@ import javax.inject.Inject
 
 class MainRepository @Inject constructor(private val apiService: ApiService) {
 
-    suspend fun getAdvertisement(): Flow<ApiState> = flow{
+    suspend fun getTopBanner(): Flow<ApiState> = flow{
         kotlin.runCatching {
-            apiService.getAdvertisement()
+            apiService.getTopBanner()
         }.onSuccess {
             emit(ApiState.Success(it))
         }.onFailure { error ->
@@ -20,9 +20,9 @@ class MainRepository @Inject constructor(private val apiService: ApiService) {
         }
     }.flowOn(Dispatchers.IO)
 
-    suspend fun getUniversityPeople(userId: Int = 0): Flow<ApiState> = flow{
+    suspend fun getUniversityInfo(userId: Int = 0): Flow<ApiState> = flow{
         kotlin.runCatching {
-            apiService.getUniversityPeople(userId = userId)
+            apiService.getUniversityInfo(userId = userId)
         }.onSuccess {
             emit(ApiState.Success(it))
         }.onFailure { error ->
@@ -30,9 +30,9 @@ class MainRepository @Inject constructor(private val apiService: ApiService) {
         }
     }.flowOn(Dispatchers.IO)
 
-    suspend fun getSeasonPeople(userId: Int = 0): Flow<ApiState> = flow{
+    suspend fun getSeasonInfo(userId: Int = 0): Flow<ApiState> = flow{
         kotlin.runCatching {
-            apiService.getSeasonPeople(userId = userId)
+            apiService.getSeasonInfo(userId = userId)
         }.onSuccess {
             emit(ApiState.Success(it))
         }.onFailure { error ->
