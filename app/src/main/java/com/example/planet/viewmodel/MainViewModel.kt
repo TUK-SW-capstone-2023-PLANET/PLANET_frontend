@@ -14,12 +14,13 @@ import com.example.planet.data.ApiState
 import com.example.planet.data.dto.Advertisement
 import com.example.planet.data.dto.SeasonPerson
 import com.example.planet.data.dto.Tier
-import com.example.planet.data.dto.UniversityPerson
-import com.example.planet.repository.MainRepository
+import com.example.planet.data.dto.ranking.University
+import com.example.planet.data.dto.ranking.UniversityPerson
 import com.example.planet.usecase.GerTierListUseCase
 import com.example.planet.usecase.GetBannerUseCase
 import com.example.planet.usecase.GetSeasonInfoUseCase
-import com.example.planet.usecase.GetUniversityInfoUseCase
+import com.example.planet.usecase.ranking.GetHigherUniversitiesUseCase
+import com.example.planet.usecase.ranking.GetUniversityAllUserInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -29,14 +30,16 @@ import kotlin.math.round
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val getBannerUseCase: GetBannerUseCase,
-    private val getUniversityInfoUseCase: GetUniversityInfoUseCase,
+    private val getUniversityAllUserInfoUseCase: GetUniversityAllUserInfoUseCase,
+    private val getHigherUniversities: GetHigherUniversitiesUseCase,
     private val getSeasonInfoUseCase: GetSeasonInfoUseCase,
     private val gerTierListUseCase: GerTierListUseCase,
 ) : ViewModel() {
     init {
         viewModelScope.launch {
+            getTopHigherUniversities()
             getTopBanner()
-            getUniversityInfo()
+            getUniversityAllUserInfo()
             getSeasonInfo()
         }
     }
@@ -78,6 +81,9 @@ class MainViewModel @Inject constructor(
         // 371357이 1등 점수, 268589.0에 3등 점수
     }
     val graphHeight3th: Dp = _graphHeight3th.value.dp
+
+    private val _higherUniversity = mutableStateListOf<University>()
+    val higherUniversity: List<University> = _higherUniversity
 
     fun changePloggingScreen() {
         _ploggingOrRecordSwitch.value = false
@@ -121,18 +127,18 @@ class MainViewModel @Inject constructor(
     }
 
 
-    private suspend fun getUniversityInfo() {
-        when (val apiState = getUniversityInfoUseCase().first()) {
+    private suspend fun getUniversityAllUserInfo() {
+        when (val apiState = getUniversityAllUserInfoUseCase().first()) {
             is ApiState.Success<*> -> {
                 val result = apiState.value as List<Map<Int, UniversityPerson>>
                 result[0].values.forEach {
                     _universityPerson.add(it)
                 }
-                Log.d(TAG, "getUniversityInfo() 성공")
+                Log.d(TAG, "getUniversityAllUserInfo() 성공")
             }
 
             is ApiState.Error -> {
-                Log.d("daeYoung", "getUniversityInfo() 실패: ${apiState.errMsg}")
+                Log.d("daeYoung", "getUniversityAllUserInfo() 실패: ${apiState.errMsg}")
             }
 
             ApiState.Loading -> TODO()
@@ -170,4 +176,22 @@ class MainViewModel @Inject constructor(
             ApiState.Loading -> TODO()
         }
     }
+
+    private suspend fun getTopHigherUniversities() {
+        when (val apiState = getHigherUniversities().first()) {
+            is ApiState.Success<*> -> {
+                (apiState.value as List<University>).forEach { university ->
+                    _higherUniversity.add(university)
+                }
+                Log.d(TAG, "getTopHigherUniversities() 성공: $higherUniversity")
+            }
+            is ApiState.Error -> {
+                Log.d("daeYoung", "getTopHigherUniversities() 실패: ${apiState.errMsg}")
+            }
+
+            ApiState.Loading -> TODO()
+        }
+    }
+
+
 }

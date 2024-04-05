@@ -8,6 +8,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -20,17 +21,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.example.planet.R
 
 @Composable
 fun UniversityGraph(
     visible: Boolean = false,
-    universityLogo: Painter,
+    universityLogo: String,
     score: String,
     graphHeight: Dp,
     colors: List<Color>,
@@ -49,10 +53,14 @@ fun UniversityGraph(
                 modifier = Modifier.wrapContentSize(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Image(
-                    painter = universityLogo,
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(universityLogo)
+                        .crossfade(true)
+                        .build(),
                     contentDescription = null,
-                    modifier = Modifier.size(50.dp)
+                    modifier = Modifier
+                        .size(50.dp)
                 )
                 Text(
                     modifier = Modifier.padding(vertical = 4.dp),

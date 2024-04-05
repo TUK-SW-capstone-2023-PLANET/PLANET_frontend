@@ -1,4 +1,4 @@
-package com.example.planet.data.dto
+package com.example.planet.data.dto.ranking
 
 data class UniversityPerson(
     val imageUrl: String,

@@ -118,8 +118,8 @@ fun MainScreen(navController: NavController, mainViewModel: MainViewModel = view
             HorizontalPager(count = tabItems.count(), state = pagerState) { page ->
                 when (page) {
                     0 -> PloggingHelpScreen()
-                    1 -> UniversityScreen(universityPersonList = mainViewModel.universityPerson)
-                    2 -> SeasonScreen(navController = navController, mainViewModel = mainViewModel)
+                    1 -> UniversityScreen(universityPersonList = mainViewModel.universityPerson, universityList = mainViewModel.higherUniversity)
+//                    2 -> SeasonScreen(navController = navController, mainViewModel = mainViewModel)
                     3 -> Text(text = "$page", modifier = Modifier.fillMaxSize())
                 }
             }

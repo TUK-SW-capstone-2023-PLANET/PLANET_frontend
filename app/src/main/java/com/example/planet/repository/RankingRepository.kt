@@ -8,11 +8,12 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
-class MainRepository @Inject constructor(private val apiService: ApiService) {
+class RankingRepository @Inject constructor(private val apiService: ApiService) {
 
-    suspend fun getTopBanner(): Flow<ApiState> = flow{
+    // 대학교 랭킹 3개 조회
+    suspend fun getHigherUniversities(): Flow<ApiState> = flow{
         kotlin.runCatching {
-            apiService.getTopBanner()
+            apiService.getHigherUniversities()
         }.onSuccess {
             emit(ApiState.Success(it))
         }.onFailure { error ->
@@ -20,6 +21,8 @@ class MainRepository @Inject constructor(private val apiService: ApiService) {
         }
     }.flowOn(Dispatchers.IO)
 
+
+    // 대학교 유저 랭킹 전체 조회
     suspend fun getUniversityAllUserInfo(userId: Int = 0): Flow<ApiState> = flow{
         kotlin.runCatching {
             apiService.getUniversityAllUserInfo(userId = userId)
@@ -30,9 +33,10 @@ class MainRepository @Inject constructor(private val apiService: ApiService) {
         }
     }.flowOn(Dispatchers.IO)
 
-    suspend fun getSeasonInfo(userId: Int = 0): Flow<ApiState> = flow{
+    // 대학교 유저 랭킹 4개 조회 - 상단 조회
+    suspend fun getUniversityPartUserInfo(userId: Int = 0): Flow<ApiState> = flow{
         kotlin.runCatching {
-            apiService.getSeasonInfo(userId = userId)
+            apiService.getUniversityAllUserInfo(userId = userId)
         }.onSuccess {
             emit(ApiState.Success(it))
         }.onFailure { error ->
@@ -40,14 +44,14 @@ class MainRepository @Inject constructor(private val apiService: ApiService) {
         }
     }.flowOn(Dispatchers.IO)
 
-    suspend fun getTierList(): Flow<ApiState> = flow{
+    // 대학교 유저 3개 조회
+    suspend fun getUniversityUserInfo(userId: Int = 0): Flow<ApiState> = flow{
         kotlin.runCatching {
-            apiService.getTierList()
+            apiService.getUniversityAllUserInfo(userId = userId)
         }.onSuccess {
             emit(ApiState.Success(it))
         }.onFailure { error ->
             error.message?.let { emit(ApiState.Error(it)) }
         }
     }.flowOn(Dispatchers.IO)
-
 }

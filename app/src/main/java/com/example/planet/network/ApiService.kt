@@ -8,7 +8,8 @@ import com.example.planet.data.dto.PloggingInfo
 import com.example.planet.data.dto.SeasonPerson
 import com.example.planet.data.dto.Tier
 import com.example.planet.data.dto.TrashCan
-import com.example.planet.data.dto.UniversityPerson
+import com.example.planet.data.dto.ranking.University
+import com.example.planet.data.dto.ranking.UniversityPerson
 import okhttp3.MultipartBody
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -37,8 +38,15 @@ interface ApiService {
     @GET("/advertisement")
     suspend fun getTopBanner(): List<Advertisement>
 
-    @GET("/user/{userId}/university")
-    suspend fun getUniversityInfo(@Path("userId") userId: Int): List<Map<Int, UniversityPerson>>
+    // 대학교 랭킹 3개 조회
+    @GET("/university/rank")
+    suspend fun getHigherUniversities(): List<University>
+// 대학교 유저 랭킹 전체 조회
+    @GET("/user/{userId}/rank/university/all")
+    suspend fun getUniversityAllUserInfo(@Path("userId") userId: Int): List<Map<Int, UniversityPerson>>
+    // 대학교 유저 랭킹 4개 조회 - 상단 조회
+    @GET("/user/{userId}/rank/university/4")
+    suspend fun getUniversityPartUserInfo(@Path("userId") userId: Int): List<Map<Int, UniversityPerson>>
 
     @GET("/season/user/{userId}")
     suspend fun getSeasonInfo(@Path("userId") userId: Int): List<Map<Int, SeasonPerson>>

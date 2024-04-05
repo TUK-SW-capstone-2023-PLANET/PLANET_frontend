@@ -33,7 +33,7 @@ import com.example.planet.component.main.plogging.UniversityIndividualTitleRow
 import com.example.planet.component.main.plogging.ranking.MiddleHead
 import com.example.planet.component.main.plogging.ranking.SearchTextField
 import com.example.planet.component.main.plogging.ranking.TrophyProfile
-import com.example.planet.data.dto.UniversityPerson
+import com.example.planet.data.dto.ranking.UniversityPerson
 import com.example.planet.util.noRippleClickable
 import com.example.planet.util.numberComma
 import com.example.planet.viewmodel.MainViewModel

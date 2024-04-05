@@ -48,14 +48,15 @@ import com.example.planet.component.main.SubTitleDescription
 import com.example.planet.component.main.plogging.UniversityGraph
 import com.example.planet.component.main.plogging.UniversityIndividualContentRow
 import com.example.planet.component.main.plogging.UniversityIndividualTitleRow
-import com.example.planet.data.dto.UniversityPerson
+import com.example.planet.data.dto.ranking.University
+import com.example.planet.data.dto.ranking.UniversityPerson
 import com.example.planet.util.numberComma
 import com.example.planet.util.round
 import kotlinx.coroutines.delay
 import kotlin.math.round
 
 @Composable
-fun UniversityScreen(universityPersonList: List<UniversityPerson>) {
+fun UniversityScreen(universityPersonList: List<UniversityPerson>, universityList: List<University>) {
 
     var visible by remember { mutableStateOf(false) }
     var scrollState = rememberScrollState()
@@ -63,7 +64,7 @@ fun UniversityScreen(universityPersonList: List<UniversityPerson>) {
     var GraphHeight3th: Int = round(120 / 1120921.0 * 218213.0).toInt()
 
     LaunchedEffect(Unit) {
-        delay(200)
+        delay(300)
         visible = true
     }
 
@@ -107,29 +108,29 @@ fun UniversityScreen(universityPersonList: List<UniversityPerson>) {
 
                 UniversityGraph(
                     visible = visible,
-                    universityLogo = painterResource(id = R.drawable.university1),
-                    score = "921,218",
+                    universityLogo = universityList[1].imageUrl,
+                    score = universityList[1].score.numberComma(),
                     graphHeight = GraphHeight2th.dp,
                     colors = listOf(Color(0XFFD1CFCF), Color(0XFFFFFFFF)),
-                    universityName = "연세대학교",
+                    universityName = universityList[1].name,
                     medal = painterResource(id = R.drawable.medal_2st)
                 )
                 UniversityGraph(
                     visible = visible,
-                    universityLogo = painterResource(id = R.drawable.university2),
-                    score = "1,120,921",
+                    universityLogo = universityList[0].imageUrl,
+                    score = universityList[0].score.numberComma(),
                     graphHeight = 120.dp,
                     colors = listOf(Color(0xFFFFCC31), Color(0XFFFFFFFF)),
-                    universityName = "한국공학대학교",
+                    universityName = universityList[0].name,
                     medal = painterResource(id = R.drawable.medal_1st)
                 )
                 UniversityGraph(
                     visible = visible,
-                    universityLogo = painterResource(id = R.drawable.university3),
-                    score = "218,213",
+                    universityLogo = universityList[2].imageUrl,
+                    score = universityList[2].score.numberComma(),
                     graphHeight = GraphHeight3th.dp,
                     colors = listOf(Color(0xFFE1B983), Color(0XFFFFFFFF)),
-                    universityName = "고려대학교",
+                    universityName = universityList[2].name,
                     medal = painterResource(id = R.drawable.medal_3st)
                 )
             }
