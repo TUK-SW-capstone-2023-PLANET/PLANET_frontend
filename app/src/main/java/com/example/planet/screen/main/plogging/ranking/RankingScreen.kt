@@ -21,6 +21,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -29,6 +31,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.example.planet.R
 import com.example.planet.component.common.TripleArrowIcon
 import com.example.planet.component.main.plogging.ranking.MiddleHead
@@ -36,6 +40,7 @@ import com.example.planet.component.main.plogging.ranking.TearProfile
 import com.example.planet.component.main.plogging.ranking.TrophyProfile
 import com.example.planet.component.main.plogging.ranking.UniversityProfile
 import com.example.planet.component.navigation.ScreenNav
+import com.example.planet.util.numberComma
 import com.example.planet.viewmodel.MainViewModel
 
 @Composable
@@ -179,14 +184,16 @@ fun RankingScreen(navController: NavController, mainViewModel: MainViewModel = h
             verticalAlignment = Alignment.Top
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Image(
-                    painter = painterResource(id = R.drawable.university2),
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(mainViewModel.expendedUniversityUserList[0].universityLogo)
+                        .crossfade(true).build(),
                     contentDescription = null,
                     modifier = Modifier.size(65.dp)
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 Text(
-                    text = "한국공학대학교",
+                    text = mainViewModel.expendedUniversityUserList[0].universityName,
                     color = colorResource(id = R.color.font_background_color1),
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Bold
@@ -194,44 +201,20 @@ fun RankingScreen(navController: NavController, mainViewModel: MainViewModel = h
             }
             Column(modifier = Modifier.fillMaxWidth(0.8f)) {
                 UniversityIndividualRankingTitle()
-                UniversityIndividualRankingContent(
-                    ranking = 1,
-                    name = "행복한 정대영",
-                    score = "371,357점"
-                ) {
-                    Divider(
-                        color = colorResource(id = R.color.ranking_color1),
-                        modifier = Modifier
-                            .fillMaxHeight()
-                            .width(2.dp)
-                    )
-                    Spacer(modifier = Modifier.width(13.dp))
-                }
-                UniversityIndividualRankingContent(
-                    ranking = 3,
-                    name = "고통받는 이승민",
-                    score = "268,589점"
-                ) {
-                    Divider(
-                        color = colorResource(id = R.color.ranking_color2),
-                        modifier = Modifier
-                            .fillMaxHeight()
-                            .width(2.dp)
-                    )
-                    Spacer(modifier = Modifier.width(13.dp))
-                }
-                UniversityIndividualRankingContent(
-                    ranking = 3,
-                    name = "컴공간판 강기환",
-                    score = "21,075점"
-                ) {
-                    Divider(
-                        color = colorResource(id = R.color.ranking_color3),
-                        modifier = Modifier
-                            .fillMaxHeight()
-                            .width(2.dp)
-                    )
-                    Spacer(modifier = Modifier.width(13.dp))
+                mainViewModel.universityTop3RankingUsers.forEachIndexed { index, user ->
+                    UniversityIndividualRankingContent(
+                        ranking = index + 1,
+                        name = user.nickName,
+                        score = user.score.numberComma()
+                    ) {
+                        Divider(
+                            color = colorResource(id = R.color.ranking_color1),
+                            modifier = Modifier
+                                .fillMaxHeight()
+                                .width(2.dp)
+                        )
+                        Spacer(modifier = Modifier.width(13.dp))
+                    }
                 }
             }
         }
@@ -297,7 +280,7 @@ fun UniversityIndividualRankingContent(
             modifier = Modifier.weight(1f)
         )
         Text(
-            text = score,
+            text = "$score 점",
             color = colorResource(id = R.color.font_background_color2),
             fontSize = 11.sp,
             modifier = Modifier.weight(1f)

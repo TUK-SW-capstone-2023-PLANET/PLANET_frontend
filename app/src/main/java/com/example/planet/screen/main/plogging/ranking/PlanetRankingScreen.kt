@@ -33,7 +33,7 @@ import com.example.planet.component.main.plogging.UniversityIndividualTitleRow
 import com.example.planet.component.main.plogging.ranking.MiddleHead
 import com.example.planet.component.main.plogging.ranking.SearchTextField
 import com.example.planet.component.main.plogging.ranking.TrophyProfile
-import com.example.planet.data.dto.ranking.UniversityPerson
+import com.example.planet.data.dto.ranking.ExpandedUniversityUser
 import com.example.planet.util.noRippleClickable
 import com.example.planet.util.numberComma
 import com.example.planet.viewmodel.MainViewModel
@@ -49,7 +49,7 @@ fun PlanetRankingScreen(
     }
 
     LaunchedEffect(Unit) {
-        Log.d("daeYoung","mainViewModel.universityPerson: ${mainViewModel.universityPerson}")
+        Log.d("daeYoung","mainViewModel.universityPerson: ${mainViewModel.expendedUniversityUserList}")
     }
 
     Column(
@@ -115,7 +115,7 @@ fun PlanetRankingScreen(
 
         UniversityIndividualTitleRow()
         /* TODO(api 연동해서 전체 플로깅 대상으로 된 리스트로 할 것)*/
-        mainViewModel.universityPerson.forEachIndexed { index, universityPerson ->
+        mainViewModel.expendedUniversityUserList.forEachIndexed { index, universityPerson ->
             when (index) {
                 0 -> {
                     UniversityIndividualContentRow(
@@ -199,7 +199,7 @@ fun PlanetRankingScreen(
 @Preview(showBackground = true)
 fun Test1() {
     val list = listOf(
-        UniversityPerson(
+        ExpandedUniversityUser(
             imageUrl = "https://mblogthumb-phinf.pstatic.net/MjAyMDExMDFfMTgy/MDAxNjA0MjI4ODc1NDMw.Ex906Mv9nnPEZGCh4SREknadZvzMO8LyDzGOHMKPdwAg.ZAmE6pU5lhEdeOUsPdxg8-gOuZrq_ipJ5VhqaViubI4g.JPEG.gambasg/%EC%9C%A0%ED%8A%9C%EB%B8%8C_%EA%B8%B0%EB%B3%B8%ED%94%84%EB%A1%9C%ED%95%84_%ED%95%98%EB%8A%98%EC%83%89.jpg?type=w800",
             universityName = "한국공학대학교",
             universityLogo = "https://tuk-planet.s3.ap-northeast-2.amazonaws.com/logo/image+58.png",
@@ -208,7 +208,7 @@ fun Test1() {
             rank = 2,
             contribution = 29.638009049773757
         ),
-        UniversityPerson(
+        ExpandedUniversityUser(
             imageUrl = "https://mblogthumb-phinf.pstatic.net/MjAyMDExMDFfMTgy/MDAxNjA0MjI4ODc1NDMw.Ex906Mv9nnPEZGCh4SREknadZvzMO8LyDzGOHMKPdwAg.ZAmE6pU5lhEdeOUsPdxg8-gOuZrq_ipJ5VhqaViubI4g.JPEG.gambasg/%EC%9C%A0%ED%8A%9C%EB%B8%8C_%EA%B8%B0%EB%B3%B8%ED%94%84%EB%A1%9C%ED%95%84_%ED%95%98%EB%8A%98%EC%83%89.jpg?type=w800",
             universityName = "한국공학대학교",
             universityLogo = "https://tuk-planet.s3.ap-northeast-2.amazonaws.com/logo/image+58.png",

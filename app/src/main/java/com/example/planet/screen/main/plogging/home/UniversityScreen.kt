@@ -49,14 +49,14 @@ import com.example.planet.component.main.plogging.UniversityGraph
 import com.example.planet.component.main.plogging.UniversityIndividualContentRow
 import com.example.planet.component.main.plogging.UniversityIndividualTitleRow
 import com.example.planet.data.dto.ranking.University
-import com.example.planet.data.dto.ranking.UniversityPerson
+import com.example.planet.data.dto.ranking.ExpandedUniversityUser
 import com.example.planet.util.numberComma
 import com.example.planet.util.round
 import kotlinx.coroutines.delay
 import kotlin.math.round
 
 @Composable
-fun UniversityScreen(universityPersonList: List<UniversityPerson>, universityList: List<University>) {
+fun UniversityScreen(expandedUniversityUserList: List<ExpandedUniversityUser>, universityList: List<University>) {
 
     var visible by remember { mutableStateOf(false) }
     var scrollState = rememberScrollState()
@@ -176,7 +176,7 @@ fun UniversityScreen(universityPersonList: List<UniversityPerson>, universityLis
                 ) {
                     AsyncImage(
                         model = ImageRequest.Builder(LocalContext.current)
-                            .data(universityPersonList[0].imageUrl).crossfade(true).build(),
+                            .data(expandedUniversityUserList[0].imageUrl).crossfade(true).build(),
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
                     )
@@ -191,27 +191,19 @@ fun UniversityScreen(universityPersonList: List<UniversityPerson>, universityLis
                     Row(modifier = Modifier, verticalAlignment = Alignment.Bottom) {
                         AsyncImage(
                             model = ImageRequest.Builder(LocalContext.current)
-                                .data(universityPersonList[0].universityLogo).crossfade(true)
+                                .data(expandedUniversityUserList[0].universityLogo).crossfade(true)
                                 .build(), contentDescription = null, modifier = Modifier.size(25.dp)
                         )
                         Text(
-                            text = universityPersonList[0].universityName,
+                            text = expandedUniversityUserList[0].universityName,
                             fontWeight = FontWeight.Bold,
                             fontSize = 15.sp,
                             color = colorResource(id = R.color.font_background_color1),
                             modifier = Modifier.padding(horizontal = 4.dp)
                         )
-//                        AsyncImage(
-//                            model = ImageRequest.Builder(LocalContext.current)
-//                                .data(universityPersonList[0].)
-//                                .crossfade(true)
-//                                .build(),
-//                            contentDescription = null,
-//                            modifier = Modifier.size(20.dp)
-//                        )
                     }
                     Text(
-                        text = universityPersonList[0].nickName,
+                        text = expandedUniversityUserList[0].nickName,
                         fontSize = 16.sp,
                         color = colorResource(id = R.color.font_background_color1)
                     )
@@ -222,7 +214,7 @@ fun UniversityScreen(universityPersonList: List<UniversityPerson>, universityLis
                                 color = colorResource(id = R.color.font_background_color1)
                             )
                         ) {
-                            append(universityPersonList[0].score.toString())
+                            append(expandedUniversityUserList[0].score.numberComma())
                             append("점")
                         }
                         withStyle(
@@ -232,7 +224,7 @@ fun UniversityScreen(universityPersonList: List<UniversityPerson>, universityLis
                             )
                         ) {
                             append(" (")
-                            append(universityPersonList[0].contribution.round())
+                            append(expandedUniversityUserList[0].contribution.round())
                             append("%)")
                         }
 
@@ -245,7 +237,7 @@ fun UniversityScreen(universityPersonList: List<UniversityPerson>, universityLis
                                 color = colorResource(id = R.color.font_background_color1)
                             )
                         ) {
-                            append(universityPersonList[0].rank.toString())
+                            append(expandedUniversityUserList[0].rank.toString())
                             append("등")
                         }
                     })
@@ -257,7 +249,7 @@ fun UniversityScreen(universityPersonList: List<UniversityPerson>, universityLis
                     .wrapContentHeight()
             ) {
                 UniversityIndividualTitleRow()
-                universityPersonList.forEachIndexed { index, universityPerson ->
+                expandedUniversityUserList.forEachIndexed { index, universityPerson ->
                     when (index) {
                         0 -> {}
                         1 -> {

@@ -9,7 +9,8 @@ import com.example.planet.data.dto.SeasonPerson
 import com.example.planet.data.dto.Tier
 import com.example.planet.data.dto.TrashCan
 import com.example.planet.data.dto.ranking.University
-import com.example.planet.data.dto.ranking.UniversityPerson
+import com.example.planet.data.dto.ranking.ExpandedUniversityUser
+import com.example.planet.data.dto.ranking.UniversityUser
 import okhttp3.MultipartBody
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -41,12 +42,16 @@ interface ApiService {
     // 대학교 랭킹 3개 조회
     @GET("/university/rank")
     suspend fun getHigherUniversities(): List<University>
-// 대학교 유저 랭킹 전체 조회
+    // 대학교 유저 랭킹 전체 조회
     @GET("/user/{userId}/rank/university/all")
-    suspend fun getUniversityAllUserInfo(@Path("userId") userId: Int): List<Map<Int, UniversityPerson>>
-    // 대학교 유저 랭킹 4개 조회 - 상단 조회
+    suspend fun getUniversityAllUserInfo(@Path("userId") userId: Int): List<Map<Int, ExpandedUniversityUser>>
+    // 자대 대학교 유저 랭킹 상위 4명 조회
     @GET("/user/{userId}/rank/university/4")
-    suspend fun getUniversityPartUserInfo(@Path("userId") userId: Int): List<Map<Int, UniversityPerson>>
+    suspend fun getUniversityTop4UserInfo(@Path("userId") userId: Int): List<Map<Int, ExpandedUniversityUser>>
+
+    // 자대 대학교 유저 랭킹 상위 3명 조회
+    @GET("/user/{userId}/rank/university")
+    suspend fun getUniversityTop3UserInfo(@Path("userId") userId: Int): List<UniversityUser>
 
     @GET("/season/user/{userId}")
     suspend fun getSeasonInfo(@Path("userId") userId: Int): List<Map<Int, SeasonPerson>>

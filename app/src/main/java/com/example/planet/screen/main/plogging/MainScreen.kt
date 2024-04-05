@@ -1,6 +1,5 @@
 package com.example.planet.screen.main.plogging
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,7 +20,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,8 +33,6 @@ import com.example.planet.R
 import com.example.planet.component.common.MyScrollableTabRow
 import com.example.planet.component.main.plogging.MainTopBanner
 import com.example.planet.screen.main.plogging.home.PloggingHelpScreen
-import com.example.planet.screen.main.plogging.home.SeasonScreen
-import com.example.planet.screen.main.plogging.home.TierScreen
 import com.example.planet.screen.main.plogging.home.UniversityScreen
 import com.example.planet.viewmodel.MainViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -118,7 +114,7 @@ fun MainScreen(navController: NavController, mainViewModel: MainViewModel = view
             HorizontalPager(count = tabItems.count(), state = pagerState) { page ->
                 when (page) {
                     0 -> PloggingHelpScreen()
-                    1 -> UniversityScreen(universityPersonList = mainViewModel.universityPerson, universityList = mainViewModel.higherUniversity)
+                    1 -> UniversityScreen(expandedUniversityUserList = mainViewModel.universityTop4RankingUsers, universityList = mainViewModel.higherUniversity)
 //                    2 -> SeasonScreen(navController = navController, mainViewModel = mainViewModel)
                     3 -> Text(text = "$page", modifier = Modifier.fillMaxSize())
                 }

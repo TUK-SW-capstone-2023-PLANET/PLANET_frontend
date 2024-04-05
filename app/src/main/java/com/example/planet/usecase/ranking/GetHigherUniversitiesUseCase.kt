@@ -9,4 +9,5 @@ class GetHigherUniversitiesUseCase @Inject constructor(private val rankingReposi
     suspend operator fun invoke(): Flow<ApiState> {
         return rankingRepository.getHigherUniversities()
     }
+
 }

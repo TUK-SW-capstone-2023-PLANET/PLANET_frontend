@@ -157,7 +157,7 @@ fun UniversityIndividualRankingScreen(
         }
 
         UniversityIndividualTitleRow()
-        mainViewModel.universityPerson.forEachIndexed { index, universityPerson ->
+        mainViewModel.expendedUniversityUserList.forEachIndexed { index, universityPerson ->
             when (index) {
                 0 -> {
                     UniversityIndividualContentRow(

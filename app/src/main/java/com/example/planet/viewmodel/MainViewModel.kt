@@ -15,12 +15,14 @@ import com.example.planet.data.dto.Advertisement
 import com.example.planet.data.dto.SeasonPerson
 import com.example.planet.data.dto.Tier
 import com.example.planet.data.dto.ranking.University
-import com.example.planet.data.dto.ranking.UniversityPerson
-import com.example.planet.usecase.GerTierListUseCase
+import com.example.planet.data.dto.ranking.ExpandedUniversityUser
+import com.example.planet.data.dto.ranking.UniversityUser
+import com.example.planet.usecase.GetTierListUseCase
 import com.example.planet.usecase.GetBannerUseCase
 import com.example.planet.usecase.GetSeasonInfoUseCase
 import com.example.planet.usecase.ranking.GetHigherUniversitiesUseCase
 import com.example.planet.usecase.ranking.GetUniversityAllUserInfoUseCase
+import com.example.planet.usecase.ranking.GetUniversityUserRankingUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -31,15 +33,18 @@ import kotlin.math.round
 class MainViewModel @Inject constructor(
     private val getBannerUseCase: GetBannerUseCase,
     private val getUniversityAllUserInfoUseCase: GetUniversityAllUserInfoUseCase,
-    private val getHigherUniversities: GetHigherUniversitiesUseCase,
+    private val getHigherUniversitiesUseCase: GetHigherUniversitiesUseCase,
+    private val getUniversityUserRankingUseCase: GetUniversityUserRankingUseCase,
     private val getSeasonInfoUseCase: GetSeasonInfoUseCase,
-    private val gerTierListUseCase: GerTierListUseCase,
+    private val getTierListUseCase: GetTierListUseCase,
 ) : ViewModel() {
     init {
         viewModelScope.launch {
             getTopHigherUniversities()
             getTopBanner()
             getUniversityAllUserInfo()
+            getUniversityUserTop4Ranking()
+            getUniversityUserTop3Ranking()
             getSeasonInfo()
         }
     }
@@ -50,8 +55,14 @@ class MainViewModel @Inject constructor(
     private val _imageUrlList = mutableStateListOf<String>()
     val imageUrlList: List<String> = _imageUrlList
 
-    private val _universityPerson = mutableStateListOf<UniversityPerson>()
-    val universityPerson: List<UniversityPerson> = _universityPerson
+    private val _expendedUniversityUserList = mutableStateListOf<ExpandedUniversityUser>()
+    val expendedUniversityUserList: List<ExpandedUniversityUser> = _expendedUniversityUserList
+
+    private val _universityTop4RankingUsers = mutableStateListOf<ExpandedUniversityUser>()
+    val universityTop4RankingUsers: List<ExpandedUniversityUser> = _universityTop4RankingUsers
+
+    private val _universityTop3RankingUsers = mutableStateListOf<UniversityUser>()
+    val universityTop3RankingUsers: List<UniversityUser> = _universityTop3RankingUsers
 
     private val _seasonPerson = mutableStateListOf<SeasonPerson>()
     val seasonPerson: List<SeasonPerson> = _seasonPerson
@@ -119,9 +130,11 @@ class MainViewModel @Inject constructor(
                 }
                 Log.d(TAG, "getTopBanner() 성공")
             }
+
             is ApiState.Error -> {
                 Log.d("daeYoung", "getTopBanner() 실패: ${apiState.errMsg}")
             }
+
             ApiState.Loading -> TODO()
         }
     }
@@ -130,9 +143,9 @@ class MainViewModel @Inject constructor(
     private suspend fun getUniversityAllUserInfo() {
         when (val apiState = getUniversityAllUserInfoUseCase().first()) {
             is ApiState.Success<*> -> {
-                val result = apiState.value as List<Map<Int, UniversityPerson>>
+                val result = apiState.value as List<Map<Int, ExpandedUniversityUser>>
                 result[0].values.forEach {
-                    _universityPerson.add(it)
+                    _expendedUniversityUserList.add(it)
                 }
                 Log.d(TAG, "getUniversityAllUserInfo() 성공")
             }
@@ -164,11 +177,12 @@ class MainViewModel @Inject constructor(
     }
 
     suspend fun getTierList() {
-        when (val apiState = gerTierListUseCase().first()) {
+        when (val apiState = getTierListUseCase().first()) {
             is ApiState.Success<*> -> {
                 _tierList.value = apiState.value as List<Tier>
                 Log.d(TAG, "getTierList() 성공")
             }
+
             is ApiState.Error -> {
                 Log.d("daeYoung", "getTierList() 실패: ${apiState.errMsg}")
             }
@@ -178,13 +192,14 @@ class MainViewModel @Inject constructor(
     }
 
     private suspend fun getTopHigherUniversities() {
-        when (val apiState = getHigherUniversities().first()) {
+        when (val apiState = getHigherUniversitiesUseCase().first()) {
             is ApiState.Success<*> -> {
                 (apiState.value as List<University>).forEach { university ->
                     _higherUniversity.add(university)
                 }
                 Log.d(TAG, "getTopHigherUniversities() 성공: $higherUniversity")
             }
+
             is ApiState.Error -> {
                 Log.d("daeYoung", "getTopHigherUniversities() 실패: ${apiState.errMsg}")
             }
@@ -193,5 +208,38 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    private suspend fun getUniversityUserTop4Ranking() {
+        when (val apiState = getUniversityUserRankingUseCase().first()) {
+            is ApiState.Success<*> -> {
+                val result = apiState.value as List<Map<Int, ExpandedUniversityUser>>
+                result[0].values.forEach { university ->
+                    _universityTop4RankingUsers.add(university)
+                }
+                Log.d(TAG, "getUniversityUserTop4Ranking() 성공: $higherUniversity")
+            }
 
+            is ApiState.Error -> {
+                Log.d("daeYoung", "getUniversityUserTop4Ranking() 실패: ${apiState.errMsg}")
+            }
+
+            ApiState.Loading -> TODO()
+        }
+    }
+
+    private suspend fun getUniversityUserTop3Ranking() {
+        when (val apiState = getUniversityUserRankingUseCase.top3().first()) {
+            is ApiState.Success<*> -> {
+                (apiState.value as List<UniversityUser>).forEach { university ->
+                    _universityTop3RankingUsers.add(university)
+                }
+                Log.d(TAG, "getUniversityUserTop4Ranking() 성공: $higherUniversity")
+            }
+
+            is ApiState.Error -> {
+                Log.d("daeYoung", "getUniversityUserTop4Ranking() 실패: ${apiState.errMsg}")
+            }
+
+            ApiState.Loading -> TODO()
+        }
+    }
 }
