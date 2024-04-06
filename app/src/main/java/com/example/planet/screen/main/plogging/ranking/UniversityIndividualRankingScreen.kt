@@ -36,6 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -45,6 +46,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.example.planet.R
 import com.example.planet.component.main.plogging.UniversityIndividualContentRow
 import com.example.planet.component.main.plogging.UniversityIndividualTitleRow
@@ -106,42 +109,44 @@ fun UniversityIndividualRankingScreen(
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.Bottom
         ) {
+
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Image(
-                    painter = painterResource(id = R.drawable.university2),
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(mainViewModel.myUniversityTop3RankingUsers[0].universityLogo)
+                        .crossfade(true).build(),
                     contentDescription = null,
                     modifier = Modifier.size(65.dp)
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 Text(
-                    text = "한국공학대학교",
+                    text = mainViewModel.myUniversityTop3RankingUsers[0].universityName,
                     color = colorResource(id = R.color.font_background_color1),
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Bold
                 )
             }
 
-
             UniversityIndividualGraph(
                 visible = visible,
-                score = "921,218",
-                graphHeight = mainViewModel.graphHeight2th,
+                score = mainViewModel.myUniversityTop3RankingUsers[1].score.numberComma(),
+                graphHeight = mainViewModel.rankingGraphHeightList[0].dp,
                 colors = listOf(Color(0XFFD1CFCF), Color(0XFFFFFFFF)),
-                userName = "고통받는 이승민",
+                userName = mainViewModel.myUniversityTop3RankingUsers[1].nickName,
             )
             UniversityIndividualGraph(
                 visible = visible,
-                score = "1,120,921",
-                graphHeight = mainViewModel.graphHeight1th.value.dp,
+                score = mainViewModel.myUniversityTop3RankingUsers[0].score.numberComma(),
+                graphHeight = mainViewModel.rankingGraphHeightList[1].dp,
                 colors = listOf(Color(0xFFFFCC31), Color(0XFFFFFFFF)),
-                userName = "행복한 정대영",
+                userName = mainViewModel.myUniversityTop3RankingUsers[0].nickName,
             )
             UniversityIndividualGraph(
                 visible = visible,
-                score = "218,213",
-                graphHeight = mainViewModel.graphHeight3th,
+                score = mainViewModel.myUniversityTop3RankingUsers[2].score.numberComma(),
+                graphHeight = mainViewModel.rankingGraphHeightList[2].dp,
                 colors = listOf(Color(0xFFE1B983), Color(0XFFFFFFFF)),
-                userName = "컴공간판 강기환",
+                userName = mainViewModel.myUniversityTop3RankingUsers[2].nickName,
             )
         }
 
@@ -157,7 +162,7 @@ fun UniversityIndividualRankingScreen(
         }
 
         UniversityIndividualTitleRow()
-        mainViewModel.expendedUniversityUserList.forEachIndexed { index, universityPerson ->
+        mainViewModel.myUniversityUserList.forEachIndexed { index, universityPerson ->
             when (index) {
                 0 -> {
                     UniversityIndividualContentRow(
@@ -250,7 +255,6 @@ fun Test3() {
 
     LaunchedEffect(Unit) {
         delay(200)
-        Log.d("daeYoung", "GraphHeight2th: $GraphHeight2th, GraphHeight3th: $GraphHeight3th")
         visible = true
     }
 

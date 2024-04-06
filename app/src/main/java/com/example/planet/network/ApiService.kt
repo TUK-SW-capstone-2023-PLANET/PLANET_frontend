@@ -42,7 +42,12 @@ interface ApiService {
     // 대학교 랭킹 3개 조회
     @GET("/university/rank")
     suspend fun getHigherUniversities(): List<University>
-    // 대학교 유저 랭킹 전체 조회
+
+    // 대학교 별로 랭킹 전체 조회
+    @GET("/university/rank/all")
+    suspend fun getUniversityRanking(): List<University>
+
+    // 자대 대학교 유저 랭킹 전체 조회
     @GET("/user/{userId}/rank/university/all")
     suspend fun getUniversityAllUserInfo(@Path("userId") userId: Int): List<Map<Int, ExpandedUniversityUser>>
     // 자대 대학교 유저 랭킹 상위 4명 조회

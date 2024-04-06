@@ -1,6 +1,5 @@
 package com.example.planet.screen.main.plogging.ranking
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -21,12 +20,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -186,14 +183,14 @@ fun RankingScreen(navController: NavController, mainViewModel: MainViewModel = h
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 AsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)
-                        .data(mainViewModel.expendedUniversityUserList[0].universityLogo)
+                        .data(mainViewModel.myUniversityUserList[0].universityLogo)
                         .crossfade(true).build(),
                     contentDescription = null,
                     modifier = Modifier.size(65.dp)
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 Text(
-                    text = mainViewModel.expendedUniversityUserList[0].universityName,
+                    text = mainViewModel.myUniversityUserList[0].universityName,
                     color = colorResource(id = R.color.font_background_color1),
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Bold
@@ -201,7 +198,7 @@ fun RankingScreen(navController: NavController, mainViewModel: MainViewModel = h
             }
             Column(modifier = Modifier.fillMaxWidth(0.8f)) {
                 UniversityIndividualRankingTitle()
-                mainViewModel.universityTop3RankingUsers.forEachIndexed { index, user ->
+                mainViewModel.myUniversityTop3RankingUsers.forEachIndexed { index, user ->
                     UniversityIndividualRankingContent(
                         ranking = index + 1,
                         name = user.nickName,

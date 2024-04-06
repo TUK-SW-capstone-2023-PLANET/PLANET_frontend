@@ -49,7 +49,7 @@ fun PlanetRankingScreen(
     }
 
     LaunchedEffect(Unit) {
-        Log.d("daeYoung","mainViewModel.universityPerson: ${mainViewModel.expendedUniversityUserList}")
+        Log.d("daeYoung","mainViewModel.universityPerson: ${mainViewModel.myUniversityUserList}")
     }
 
     Column(
@@ -115,7 +115,7 @@ fun PlanetRankingScreen(
 
         UniversityIndividualTitleRow()
         /* TODO(api 연동해서 전체 플로깅 대상으로 된 리스트로 할 것)*/
-        mainViewModel.expendedUniversityUserList.forEachIndexed { index, universityPerson ->
+        mainViewModel.myUniversityUserList.forEachIndexed { index, universityPerson ->
             when (index) {
                 0 -> {
                     UniversityIndividualContentRow(
