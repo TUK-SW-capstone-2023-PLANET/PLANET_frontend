@@ -12,18 +12,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.example.planet.R
 
 @Composable
-fun UniversityProfile(image: Painter, imageSize: Dp, medal: Painter, universityName: String) {
+fun UniversityProfile(imageUrl: String, imageSize: Dp, medal: Painter, universityName: String) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Image(
-            painter = image,
+        AsyncImage(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(imageUrl)
+                .crossfade(true).build(),
             contentDescription = null,
             modifier = Modifier.size(imageSize)
         )

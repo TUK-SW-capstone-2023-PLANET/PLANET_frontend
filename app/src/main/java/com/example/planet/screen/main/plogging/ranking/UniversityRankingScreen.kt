@@ -80,24 +80,24 @@ fun UniversityRankingScreen(
             verticalAlignment = Alignment.Bottom
         ) {
             UniversityProfile(
-                image = painterResource(id = R.drawable.university1),
+                imageUrl = mainViewModel.higherUniversity[1].imageUrl,
                 imageSize = 55.dp,
                 medal = painterResource(id = R.drawable.medal_2st),
-                universityName = "연세대학교"
+                universityName = mainViewModel.higherUniversity[1].name
             )
 
             UniversityProfile(
-                image = painterResource(id = R.drawable.university2),
+                imageUrl = mainViewModel.higherUniversity[0].imageUrl,
                 imageSize = 65.dp,
                 medal = painterResource(id = R.drawable.medal_1st),
-                universityName = "한국공학대학교"
+                universityName = mainViewModel.higherUniversity[0].name
             )
 
             UniversityProfile(
-                image = painterResource(id = R.drawable.university3),
+                imageUrl = mainViewModel.higherUniversity[2].imageUrl,
                 imageSize = 55.dp,
                 medal = painterResource(id = R.drawable.medal_3st),
-                universityName = "고려대학교"
+                universityName = mainViewModel.higherUniversity[2].name
             )
         }
 

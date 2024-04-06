@@ -196,7 +196,7 @@ class MainViewModel @Inject constructor(
     private suspend fun getTopHigherUniversities() {
         when (val apiState = getHigherUniversitiesUseCase().first()) {
             is ApiState.Success<*> -> {
-                Log.d(TAG, "getTopHigherUniversities() 성공")
+                Log.d(TAG, "getTopHigherUniversities() 성공: ${apiState.value as List<University>}")
                 (apiState.value as List<University>).forEach { university ->
                     _higherUniversity.add(university)
                 }
