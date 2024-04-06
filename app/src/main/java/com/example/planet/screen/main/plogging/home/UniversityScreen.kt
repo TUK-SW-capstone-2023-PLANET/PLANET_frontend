@@ -37,6 +37,7 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -56,7 +57,7 @@ import kotlinx.coroutines.delay
 import kotlin.math.round
 
 @Composable
-fun UniversityScreen(expandedUniversityUserList: List<ExpandedUniversityUser>, universityList: List<University>) {
+fun UniversityScreen(expandedUniversityUserList: List<ExpandedUniversityUser>, universityList: List<University>, graphHeightList: List<Dp>) {
 
     var visible by remember { mutableStateOf(false) }
     var scrollState = rememberScrollState()
@@ -110,7 +111,7 @@ fun UniversityScreen(expandedUniversityUserList: List<ExpandedUniversityUser>, u
                     visible = visible,
                     universityLogo = universityList[1].imageUrl,
                     score = universityList[1].score.numberComma(),
-                    graphHeight = GraphHeight2th.dp,
+                    graphHeight = graphHeightList[0],
                     colors = listOf(Color(0XFFD1CFCF), Color(0XFFFFFFFF)),
                     universityName = universityList[1].name,
                     medal = painterResource(id = R.drawable.medal_2st)
@@ -119,7 +120,7 @@ fun UniversityScreen(expandedUniversityUserList: List<ExpandedUniversityUser>, u
                     visible = visible,
                     universityLogo = universityList[0].imageUrl,
                     score = universityList[0].score.numberComma(),
-                    graphHeight = 120.dp,
+                    graphHeight = graphHeightList[1],
                     colors = listOf(Color(0xFFFFCC31), Color(0XFFFFFFFF)),
                     universityName = universityList[0].name,
                     medal = painterResource(id = R.drawable.medal_1st)
@@ -128,7 +129,7 @@ fun UniversityScreen(expandedUniversityUserList: List<ExpandedUniversityUser>, u
                     visible = visible,
                     universityLogo = universityList[2].imageUrl,
                     score = universityList[2].score.numberComma(),
-                    graphHeight = GraphHeight3th.dp,
+                    graphHeight = graphHeightList[2],
                     colors = listOf(Color(0xFFE1B983), Color(0XFFFFFFFF)),
                     universityName = universityList[2].name,
                     medal = painterResource(id = R.drawable.medal_3st)

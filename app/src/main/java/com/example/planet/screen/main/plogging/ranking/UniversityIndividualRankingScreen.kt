@@ -1,6 +1,5 @@
 package com.example.planet.screen.main.plogging.ranking
 
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
@@ -68,10 +67,6 @@ fun UniversityIndividualRankingScreen(
 
     LaunchedEffect(Unit) {
         delay(200)
-        Log.d(
-            "daeYoung",
-            "GraphHeight2th: ${mainViewModel.graphHeight2th}, GraphHeight3th: ${mainViewModel.graphHeight3th}"
-        )
         visible = true
     }
 
@@ -130,21 +125,21 @@ fun UniversityIndividualRankingScreen(
             UniversityIndividualGraph(
                 visible = visible,
                 score = mainViewModel.myUniversityTop3RankingUsers[1].score.numberComma(),
-                graphHeight = mainViewModel.rankingGraphHeightList[0].dp,
+                graphHeight = mainViewModel.universityUserGraphHeightList[0],
                 colors = listOf(Color(0XFFD1CFCF), Color(0XFFFFFFFF)),
                 userName = mainViewModel.myUniversityTop3RankingUsers[1].nickName,
             )
             UniversityIndividualGraph(
                 visible = visible,
                 score = mainViewModel.myUniversityTop3RankingUsers[0].score.numberComma(),
-                graphHeight = mainViewModel.rankingGraphHeightList[1].dp,
+                graphHeight = mainViewModel.universityUserGraphHeightList[1],
                 colors = listOf(Color(0xFFFFCC31), Color(0XFFFFFFFF)),
                 userName = mainViewModel.myUniversityTop3RankingUsers[0].nickName,
             )
             UniversityIndividualGraph(
                 visible = visible,
                 score = mainViewModel.myUniversityTop3RankingUsers[2].score.numberComma(),
-                graphHeight = mainViewModel.rankingGraphHeightList[2].dp,
+                graphHeight = mainViewModel.universityUserGraphHeightList[2],
                 colors = listOf(Color(0xFFE1B983), Color(0XFFFFFFFF)),
                 userName = mainViewModel.myUniversityTop3RankingUsers[2].nickName,
             )

@@ -2,10 +2,8 @@ package com.example.planet.viewmodel
 
 import android.util.Log
 import androidx.compose.runtime.State
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
@@ -28,7 +26,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.math.round
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
@@ -49,8 +46,10 @@ class MainViewModel @Inject constructor(
             getSeasonInfo()
         }
     }
-
-    var rankingGraphHeightList = emptyList<Int>()
+    // 자대 대학교 유저 TOP3 그래프 높이 list
+    var universityUserGraphHeightList = emptyList<Dp>()
+    // 대학교 TOP3 그래프 높이 list
+    var universityGraphHeightList = emptyList<Dp>()
 
     private val _ploggingOrRecordSwitch = mutableStateOf(true)
     val ploggingOrRecordSwitch: State<Boolean> = _ploggingOrRecordSwitch
@@ -78,23 +77,6 @@ class MainViewModel @Inject constructor(
 
     private val _searchText = mutableStateOf("")
     val searchText: State<String> = _searchText
-
-    private val _graphHeight1th = mutableStateOf(120)
-    val graphHeight1th: State<Int> = _graphHeight1th
-
-    private val _graphHeight2th = derivedStateOf {
-        Log.d("daeYoung", "_graphHeight2th 실행")
-        round(graphHeight1th.value / 1120921.0 * 921218.0).toInt()
-        // 371357이 1등 점수, 268589.0에 2등 점수
-    }
-    val graphHeight2th: Dp = _graphHeight2th.value.dp
-
-    private val _graphHeight3th = derivedStateOf {
-        Log.d("daeYoung", "_graphHeight3th 실행")
-        round(graphHeight1th.value / 1120921.0 * 218213.0).toInt()
-        // 371357이 1등 점수, 268589.0에 3등 점수
-    }
-    val graphHeight3th: Dp = _graphHeight3th.value.dp
 
     private val _higherUniversity = mutableStateListOf<University>()
     val higherUniversity: List<University> = _higherUniversity
@@ -124,12 +106,20 @@ class MainViewModel @Inject constructor(
     }
 
     // 자대 대학교 유저 기준, 1등 ~ 3등까지 score list를 반환
-    private fun getGraphHeightList(): List<Int> {
-        val graphHeight1th = 120
-        val graphHeight2th = (graphHeight1th * myUniversityTop3RankingUsers[1].score) / myUniversityTop3RankingUsers[0].score
-        val graphHeight3th = (graphHeight1th * myUniversityTop3RankingUsers[2].score) / myUniversityTop3RankingUsers[0].score
+    private fun getGraphHeightList(list: List<UniversityUser>): List<Dp> {
+        val graphHeight1th = 120 // 기준을 120dp로 잡음
+        val graphHeight2th = (graphHeight1th * list[1].score) / list[0].score
+        val graphHeight3th = (graphHeight1th * list[2].score) / list[0].score
         // 2등, 1등, 3등 순서대로 저장
-        return listOf(graphHeight2th, graphHeight1th, graphHeight3th)
+        return listOf(graphHeight2th.dp, graphHeight1th.dp, graphHeight3th.dp)
+    }
+
+    private fun getGraphHeightList1(list: List<University>): List<Dp> {
+        val graphHeight1th = 120 // 기준을 120dp로 잡음
+        val graphHeight2th = (graphHeight1th * list[1].score) / list[0].score
+        val graphHeight3th = (graphHeight1th * list[2].score) / list[0].score
+        // 2등, 1등, 3등 순서대로 저장
+        return listOf(graphHeight2th.dp, graphHeight1th.dp, graphHeight3th.dp)
     }
 
     private suspend fun getTopBanner() {
@@ -206,12 +196,12 @@ class MainViewModel @Inject constructor(
     private suspend fun getTopHigherUniversities() {
         when (val apiState = getHigherUniversitiesUseCase().first()) {
             is ApiState.Success<*> -> {
+                Log.d(TAG, "getTopHigherUniversities() 성공")
                 (apiState.value as List<University>).forEach { university ->
                     _higherUniversity.add(university)
                 }
-                Log.d(TAG, "getTopHigherUniversities() 성공: $higherUniversity")
+                universityGraphHeightList = getGraphHeightList1(list = higherUniversity)
             }
-
             is ApiState.Error -> {
                 Log.d("daeYoung", "getTopHigherUniversities() 실패: ${apiState.errMsg}")
             }
@@ -245,7 +235,7 @@ class MainViewModel @Inject constructor(
                 (apiState.value as List<UniversityUser>).forEach { university ->
                     _myUniversityTop3RankingUsers.add(university)
                 }
-                rankingGraphHeightList = getGraphHeightList()
+                universityUserGraphHeightList = getGraphHeightList(list = myUniversityTop3RankingUsers)
 
             }
 
