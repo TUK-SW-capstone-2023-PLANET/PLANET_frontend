@@ -10,6 +10,18 @@ import javax.inject.Inject
 
 class RankingRepository @Inject constructor(private val apiService: ApiService) {
 
+    // Planet User 관련 ----------------------------------------------------------------------------
+    // 플래넷 유저 랭킹 Top3 조회
+    suspend fun getTop3PlanetUser(): Flow<ApiState> = flow{
+        kotlin.runCatching {
+            apiService.getTop3PlanetUser()
+        }.onSuccess {
+            emit(ApiState.Success(it))
+        }.onFailure { error ->
+            error.message?.let { emit(ApiState.Error(it)) }
+        }
+    }.flowOn(Dispatchers.IO)
+
     // Season 관련 ---------------------------------------------------------------------------------
     // 시즌 유저 랭킹 5명 조회
     suspend fun getSeasonTop5UserInfo(userId: Int = 0): Flow<ApiState> = flow{

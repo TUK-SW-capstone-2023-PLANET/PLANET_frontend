@@ -10,6 +10,7 @@ import com.example.planet.data.dto.Tier
 import com.example.planet.data.dto.TrashCan
 import com.example.planet.data.dto.ranking.University
 import com.example.planet.data.dto.ranking.ExpandedUniversityUser
+import com.example.planet.data.dto.ranking.HigherPlanetUser
 import com.example.planet.data.dto.ranking.UniversityUser
 import okhttp3.MultipartBody
 import retrofit2.http.Body
@@ -48,7 +49,7 @@ interface ApiService {
     @GET("/university/rank/all")
     suspend fun getAllUniversityRanking(): List<Map<Int, University>>
 
-    // UniversityUser 관련 -------------------------------------------------------------------------
+    // University User 관련 -------------------------------------------------------------------------
     // 자대 대학교 유저 랭킹 전체 조회
     @GET("/user/{userId}/rank/university/all")
     suspend fun getUniversityAllUserInfo(@Path("userId") userId: Int): List<Map<Int, ExpandedUniversityUser>>
@@ -65,8 +66,15 @@ interface ApiService {
     @GET("/season/rank/5/user/{userId}")
     suspend fun getSeasonTop5UserInfo(@Path("userId") userId: Int): List<Map<Int, SeasonUser>>
 
+    // 시즌 유저 랭킹 전체 조회
     @GET("/season/rank/all/user/{userId}")
     suspend fun getAllSeasonUserInfo(@Path("userId") userId: Int): List<Map<Int, SeasonUser>>
+
+
+    // Planet User 관련 ----------------------------------------------------------------------------
+    // 플래넷 유저 랭킹 상위 3명 조회
+    @GET("/user/rank")
+    suspend fun getTop3PlanetUser(): List<HigherPlanetUser>
     @GET("/tier")
     suspend fun getTierList(): List<Tier>
 

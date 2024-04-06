@@ -70,22 +70,22 @@ fun RankingScreen(navController: NavController, mainViewModel: MainViewModel = h
             TrophyProfile(
                 image = painterResource(id = R.drawable.plogging_ranking_2st_trophy),
                 imageSize = 50.dp,
-                userIcon = painterResource(id = R.drawable.temporary_user_icon),
-                userName = "HappyBean"
+                userIconUrl = mainViewModel.higherPlanetUser[1].imageUrl,
+                userName = mainViewModel.higherPlanetUser[1].nickName
             )
 
             TrophyProfile(
                 image = painterResource(id = R.drawable.plogging_ranking_1st_trophy),
                 imageSize = 60.dp,
-                userIcon = painterResource(id = R.drawable.temporary_user_icon),
-                userName = "행복한 정대영"
+                userIconUrl = mainViewModel.higherPlanetUser[0].imageUrl,
+                userName = mainViewModel.higherPlanetUser[0].nickName
             )
 
             TrophyProfile(
                 image = painterResource(id = R.drawable.plogging_ranking_3st_trophy),
                 imageSize = 40.dp,
-                userIcon = painterResource(id = R.drawable.temporary_user_icon),
-                userName = "고통받는 이승민"
+                userIconUrl = mainViewModel.higherPlanetUser[2].imageUrl,
+                userName = mainViewModel.higherPlanetUser[2].nickName
             )
         }
 

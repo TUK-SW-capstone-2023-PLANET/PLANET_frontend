@@ -13,12 +13,14 @@ import com.example.planet.data.ApiState
 import com.example.planet.data.dto.Advertisement
 import com.example.planet.data.dto.Tier
 import com.example.planet.data.dto.ranking.ExpandedUniversityUser
+import com.example.planet.data.dto.ranking.HigherPlanetUser
 import com.example.planet.data.dto.ranking.SeasonUser
 import com.example.planet.data.dto.ranking.University
 import com.example.planet.data.dto.ranking.UniversityUser
 import com.example.planet.usecase.GetBannerUseCase
 import com.example.planet.usecase.GetTierListUseCase
 import com.example.planet.usecase.ranking.GetHigherUniversityUserRankingUseCase
+import com.example.planet.usecase.ranking.GetPlanetUserUseCase
 import com.example.planet.usecase.ranking.GetSeasonUserUseCase
 import com.example.planet.usecase.ranking.GetUniversitiesUseCase
 import com.example.planet.usecase.ranking.GetUniversityAllUserInfoUseCase
@@ -34,11 +36,13 @@ class MainViewModel @Inject constructor(
     private val getUniversitiesUseCase: GetUniversitiesUseCase,
     private val getHigherUniversityUserRankingUseCase: GetHigherUniversityUserRankingUseCase,
     private val getSeasonUserUseCase: GetSeasonUserUseCase,
+    private val getPlanetUserUseCase: GetPlanetUserUseCase,
     private val getTierListUseCase: GetTierListUseCase,
 ) : ViewModel() {
     init {
         viewModelScope.launch {
             getTopBanner()
+            getTop3PlanetUser()
             getTop5SeasonUser()
             getAllSeasonUser()
             getTopHigherUniversities()
@@ -57,6 +61,7 @@ class MainViewModel @Inject constructor(
     private val _ploggingOrRecordSwitch = mutableStateOf(true)
     val ploggingOrRecordSwitch: State<Boolean> = _ploggingOrRecordSwitch
 
+    // 상단배너 이미지 리스트
     private val _imageUrlList = mutableStateListOf<String>()
     val imageUrlList: List<String> = _imageUrlList
 
@@ -69,11 +74,20 @@ class MainViewModel @Inject constructor(
     private val _myUniversityTop3RankingUsers = mutableStateListOf<UniversityUser>()
     val myUniversityTop3RankingUsers: List<UniversityUser> = _myUniversityTop3RankingUsers
 
+    private val _higherUniversity = mutableStateListOf<University>()
+    val higherUniversity: List<University> = _higherUniversity
+
+    private val _totalUniversity = mutableStateListOf<University>()
+    val totalUniversity: List<University> = _totalUniversity
+
     private val _higherSeasonUsers = mutableStateListOf<SeasonUser>()
     val higherSeasonUsers: List<SeasonUser> = _higherSeasonUsers
 
     private val _totalSeasonUser = mutableStateListOf<SeasonUser>()
     val totalSeasonUser: List<SeasonUser> = _totalSeasonUser
+
+    private val _higherPlanetUser = mutableStateListOf<HigherPlanetUser>()
+    val higherPlanetUser: List<HigherPlanetUser> = _higherPlanetUser
 
     private val _tierList = mutableStateOf(emptyList<Tier>())
     val tierList: State<List<Tier>> = _tierList
@@ -84,11 +98,7 @@ class MainViewModel @Inject constructor(
     private val _searchText = mutableStateOf("")
     val searchText: State<String> = _searchText
 
-    private val _higherUniversity = mutableStateListOf<University>()
-    val higherUniversity: List<University> = _higherUniversity
 
-    private val _totalUniversity = mutableStateListOf<University>()
-    val totalUniversity: List<University> = _totalUniversity
 
     fun changePloggingScreen() {
         _ploggingOrRecordSwitch.value = false
@@ -150,6 +160,24 @@ class MainViewModel @Inject constructor(
         }
     }
 
+
+    private suspend fun getTop3PlanetUser() {
+        when (val apiState = getPlanetUserUseCase.top3PlanetUser().first()) {
+            is ApiState.Success<*> -> {
+                val result = apiState.value as List<HigherPlanetUser>
+                result.forEach {
+                    _higherPlanetUser.add(it)
+                }
+                Log.d(TAG, "getTop3PlanetUser() 성공")
+            }
+
+            is ApiState.Error -> {
+                Log.d("daeYoung", "getTop3PlanetUser() 실패: ${apiState.errMsg}")
+            }
+
+            ApiState.Loading -> TODO()
+        }
+    }
     private suspend fun getTop5SeasonUser() {
         when (val apiState = getSeasonUserUseCase.getTop5SeasonUser().first()) {
             is ApiState.Success<*> -> {
