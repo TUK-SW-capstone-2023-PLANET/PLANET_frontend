@@ -11,17 +11,17 @@ import androidx.lifecycle.viewModelScope
 import com.example.planet.TAG
 import com.example.planet.data.ApiState
 import com.example.planet.data.dto.Advertisement
-import com.example.planet.data.dto.ranking.SeasonUser
 import com.example.planet.data.dto.Tier
-import com.example.planet.data.dto.ranking.University
 import com.example.planet.data.dto.ranking.ExpandedUniversityUser
+import com.example.planet.data.dto.ranking.SeasonUser
+import com.example.planet.data.dto.ranking.University
 import com.example.planet.data.dto.ranking.UniversityUser
-import com.example.planet.usecase.GetTierListUseCase
 import com.example.planet.usecase.GetBannerUseCase
-import com.example.planet.usecase.ranking.GetUniversitiesUseCase
-import com.example.planet.usecase.ranking.GetUniversityAllUserInfoUseCase
+import com.example.planet.usecase.GetTierListUseCase
 import com.example.planet.usecase.ranking.GetHigherUniversityUserRankingUseCase
 import com.example.planet.usecase.ranking.GetSeasonUserUseCase
+import com.example.planet.usecase.ranking.GetUniversitiesUseCase
+import com.example.planet.usecase.ranking.GetUniversityAllUserInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -40,6 +40,7 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             getTopBanner()
             getTop5SeasonUser()
+            getAllSeasonUser()
             getTopHigherUniversities()
             // trying to draw too large(105922560bytes) bitmap. 오류 해결 하고 주석 풀 것
             // getAllUniversities()
@@ -68,8 +69,11 @@ class MainViewModel @Inject constructor(
     private val _myUniversityTop3RankingUsers = mutableStateListOf<UniversityUser>()
     val myUniversityTop3RankingUsers: List<UniversityUser> = _myUniversityTop3RankingUsers
 
-    private val _seasonUsers = mutableStateListOf<SeasonUser>()
-    val seasonUsers: List<SeasonUser> = _seasonUsers
+    private val _higherSeasonUsers = mutableStateListOf<SeasonUser>()
+    val higherSeasonUsers: List<SeasonUser> = _higherSeasonUsers
+
+    private val _totalSeasonUser = mutableStateListOf<SeasonUser>()
+    val totalSeasonUser: List<SeasonUser> = _totalSeasonUser
 
     private val _tierList = mutableStateOf(emptyList<Tier>())
     val tierList: State<List<Tier>> = _tierList
@@ -151,7 +155,7 @@ class MainViewModel @Inject constructor(
             is ApiState.Success<*> -> {
                 val result = apiState.value as List<Map<Int, SeasonUser>>
                 result[0].values.forEach {
-                    _seasonUsers.add(it)
+                    _higherSeasonUsers.add(it)
                 }
                 Log.d(TAG, "getTop5SeasonUser() 성공")
             }
@@ -163,6 +167,25 @@ class MainViewModel @Inject constructor(
             ApiState.Loading -> TODO()
         }
     }
+
+    private suspend fun getAllSeasonUser() {
+        when (val apiState = getSeasonUserUseCase().first()) {
+            is ApiState.Success<*> -> {
+                val result = apiState.value as List<Map<Int, SeasonUser>>
+                result[0].values.forEach {
+                    _totalSeasonUser.add(it)
+                }
+                Log.d(TAG, "getAllSeasonUser() 성공")
+            }
+
+            is ApiState.Error -> {
+                Log.d("daeYoung", "getAllSeasonUser() 실패: ${apiState.errMsg}")
+            }
+
+            ApiState.Loading -> TODO()
+        }
+    }
+
 
     suspend fun getTierList() {
         when (val apiState = getTierListUseCase().first()) {

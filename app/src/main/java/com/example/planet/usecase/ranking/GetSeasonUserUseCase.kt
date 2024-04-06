@@ -7,7 +7,7 @@ import javax.inject.Inject
 
 class GetSeasonUserUseCase@Inject constructor(private val rankingRepository: RankingRepository) {
     suspend operator fun invoke(): Flow<ApiState> {
-        return rankingRepository.getAllUniversity()
+        return rankingRepository.getAllSeasonUserInfo()
     }
 
     suspend fun getTop5SeasonUser(): Flow<ApiState> {

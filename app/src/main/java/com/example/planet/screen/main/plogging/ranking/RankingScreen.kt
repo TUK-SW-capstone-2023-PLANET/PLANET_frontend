@@ -106,22 +106,22 @@ fun RankingScreen(navController: NavController, mainViewModel: MainViewModel = h
             verticalAlignment = Alignment.Bottom
         ) {
             TearProfile(
-                image = painterResource(id = R.drawable.temporary_tear2),
+                imageUrl = mainViewModel.higherSeasonUsers[2].tierImageUrl,
                 imageSize = 80.dp,
-                userName = "미미미누",
-                userScore = "3,201점"
+                userName = mainViewModel.higherSeasonUsers[2].userName,
+                userScore = mainViewModel.higherSeasonUsers[2].score.numberComma()
             )
             TearProfile(
-                image = painterResource(id = R.drawable.temporary_tear1),
+                imageUrl = mainViewModel.higherSeasonUsers[1].tierImageUrl,
                 imageSize = 95.dp,
-                userName = "행복한 정대영",
-                userScore = "3,201점"
+                userName = mainViewModel.higherSeasonUsers[1].userName,
+                userScore = mainViewModel.higherSeasonUsers[1].score.numberComma()
             )
             TearProfile(
-                image = painterResource(id = R.drawable.temporary_tear2),
+                imageUrl = mainViewModel.higherSeasonUsers[3].tierImageUrl,
                 imageSize = 80.dp,
-                userName = "컴공 간판 강기환",
-                userScore = "3,201점"
+                userName = mainViewModel.higherSeasonUsers[3].userName,
+                userScore = mainViewModel.higherSeasonUsers[3].score.numberComma()
             )
         }
 

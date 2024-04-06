@@ -27,7 +27,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -145,7 +144,7 @@ fun SeasonScreen(navController: NavController, mainViewModel: MainViewModel) {
             ) {
                 AsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)
-                        .data(mainViewModel.seasonUsers[0].tierImageUrl)
+                        .data(mainViewModel.higherSeasonUsers[0].tierImageUrl)
                         .crossfade(true)
                         .build(),
                     contentDescription = null,
@@ -165,7 +164,7 @@ fun SeasonScreen(navController: NavController, mainViewModel: MainViewModel) {
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = mainViewModel.seasonUsers[0].userName,
+                    text = mainViewModel.higherSeasonUsers[0].userName,
                     color = colorResource(id = R.color.font_background_color1),
                     fontSize = 15.sp,
                     modifier = Modifier.padding(start = 8.dp, bottom = 8.dp)
@@ -192,12 +191,12 @@ fun SeasonScreen(navController: NavController, mainViewModel: MainViewModel) {
                         Text(text = "점수", fontSize = 11.sp)
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             Text(
-                                text = "${mainViewModel.seasonUsers[0].score.numberComma()}점",
+                                text = "${mainViewModel.higherSeasonUsers[0].score.numberComma()}점",
                                 fontSize = 11.sp,
                                 fontWeight = FontWeight.SemiBold
                             )
                             Text(
-                                text = "상위 0.01%",
+                                text = "상위 0.01%", /* TODO(승민이가 api 수정하면 바꿀 것)*/
                                 fontSize = 9.sp,
                                 color = colorResource(id = R.color.font_background_color2)
                             )
@@ -254,7 +253,7 @@ fun SeasonScreen(navController: NavController, mainViewModel: MainViewModel) {
         }
 
         SeasonTitleRow()
-        mainViewModel.seasonUsers.forEachIndexed { index, user ->
+        mainViewModel.higherSeasonUsers.forEachIndexed { index, user ->
             when (index) {
                 0 -> {}
                 1 -> {

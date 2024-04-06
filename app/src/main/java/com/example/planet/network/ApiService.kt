@@ -65,6 +65,8 @@ interface ApiService {
     @GET("/season/rank/5/user/{userId}")
     suspend fun getSeasonTop5UserInfo(@Path("userId") userId: Int): List<Map<Int, SeasonUser>>
 
+    @GET("/season/rank/all/user/{userId}")
+    suspend fun getAllSeasonUserInfo(@Path("userId") userId: Int): List<Map<Int, SeasonUser>>
     @GET("/tier")
     suspend fun getTierList(): List<Tier>
 
