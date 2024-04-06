@@ -5,8 +5,13 @@ import com.example.planet.repository.RankingRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class GetHigherUniversitiesUseCase @Inject constructor(private val rankingRepository: RankingRepository) {
+class GetUniversitiesUseCase @Inject constructor(private val rankingRepository: RankingRepository) {
     suspend operator fun invoke(): Flow<ApiState> {
+        return rankingRepository.getAllUniversity()
+
+    }
+
+    suspend fun getHigherUniversity(): Flow<ApiState> {
         return rankingRepository.getHigherUniversities()
     }
 

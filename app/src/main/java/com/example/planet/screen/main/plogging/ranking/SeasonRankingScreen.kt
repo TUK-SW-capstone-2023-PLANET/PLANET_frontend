@@ -34,7 +34,7 @@ import com.example.planet.component.main.plogging.SeasonTitleRow
 import com.example.planet.component.main.plogging.ranking.MiddleHead
 import com.example.planet.component.main.plogging.ranking.SearchTextField
 import com.example.planet.component.main.plogging.ranking.TearProfile
-import com.example.planet.data.dto.SeasonPerson
+import com.example.planet.data.dto.ranking.SeasonUser
 import com.example.planet.util.noRippleClickable
 import com.example.planet.util.numberComma
 import com.example.planet.viewmodel.MainViewModel
@@ -49,7 +49,7 @@ fun SeasonRankingScreen(
     }
 
     LaunchedEffect(Unit) {
-        Log.d("daeyoung", "mainViewModel.seasonPerson: ${mainViewModel.seasonPerson}")
+        Log.d("daeyoung", "mainViewModel.seasonPerson: ${mainViewModel.seasonUsers}")
     }
 
     Column(
@@ -109,7 +109,7 @@ fun SeasonRankingScreen(
         }
 
         SeasonTitleRow()/* TODO(api 연동해서 시즌 대상으로 된 리스트로 할 것)*/
-        mainViewModel.seasonPerson.forEachIndexed { index, user ->
+        mainViewModel.seasonUsers.forEachIndexed { index, user ->
             when (index) {
                 0 -> {
                     SeasonContentRow(
@@ -258,15 +258,15 @@ fun SeasonRankingScreen(
 @Composable
 @Preview(showBackground = true)
 fun Test() {
-    val list: List<SeasonPerson> = listOf(
-        SeasonPerson(
+    val list: List<SeasonUser> = listOf(
+        SeasonUser(
             userName = "행복한 정대영",
             universityLogo = "https://tuk-planet.s3.ap-northeast-2.amazonaws.com/logo/image+58.png",
             score = 240,
             rank = 2,
             tierImageUrl = "https://tuk-planet.s3.ap-northeast-2.amazonaws.com/tier/image+70.png"
         ),
-        SeasonPerson(
+        SeasonUser(
             userName = "이승민",
             universityLogo = "https://tuk-planet.s3.ap-northeast-2.amazonaws.com/logo/image+58.png",
             score = 440,

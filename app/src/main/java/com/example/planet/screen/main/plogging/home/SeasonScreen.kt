@@ -24,7 +24,6 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,7 +33,6 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -46,7 +44,6 @@ import com.example.planet.component.main.SubTitleDescription
 import com.example.planet.component.main.plogging.SeasonContentRow
 import com.example.planet.component.main.plogging.SeasonTitleRow
 import com.example.planet.component.navigation.ScreenNav
-import com.example.planet.data.dto.SeasonPerson
 import com.example.planet.util.noRippleClickable
 import com.example.planet.util.numberComma
 import com.example.planet.viewmodel.MainViewModel
@@ -148,14 +145,14 @@ fun SeasonScreen(navController: NavController, mainViewModel: MainViewModel) {
             ) {
                 AsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)
-                        .data(mainViewModel.seasonPerson[0].tierImageUrl)
+                        .data(mainViewModel.seasonUsers[0].tierImageUrl)
                         .crossfade(true)
                         .build(),
                     contentDescription = null,
                     modifier = Modifier.padding(bottom = 4.dp)
                 )
                 Text(
-                    text = "Challenger",
+                    text = "Challenger", /* TODO(승민이가 api 수정하면 바꿀 것)*/
                     color = colorResource(id = R.color.font_background_color1),
                     fontSize = 10.sp
                 )
@@ -168,7 +165,7 @@ fun SeasonScreen(navController: NavController, mainViewModel: MainViewModel) {
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = mainViewModel.seasonPerson[0].userName,
+                    text = mainViewModel.seasonUsers[0].userName,
                     color = colorResource(id = R.color.font_background_color1),
                     fontSize = 15.sp,
                     modifier = Modifier.padding(start = 8.dp, bottom = 8.dp)
@@ -195,7 +192,7 @@ fun SeasonScreen(navController: NavController, mainViewModel: MainViewModel) {
                         Text(text = "점수", fontSize = 11.sp)
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             Text(
-                                text = "${mainViewModel.seasonPerson[0].score.numberComma()}점",
+                                text = "${mainViewModel.seasonUsers[0].score.numberComma()}점",
                                 fontSize = 11.sp,
                                 fontWeight = FontWeight.SemiBold
                             )
@@ -257,7 +254,7 @@ fun SeasonScreen(navController: NavController, mainViewModel: MainViewModel) {
         }
 
         SeasonTitleRow()
-        mainViewModel.seasonPerson.forEachIndexed { index, user ->
+        mainViewModel.seasonUsers.forEachIndexed { index, user ->
             when (index) {
                 0 -> {}
                 1 -> {
@@ -352,24 +349,24 @@ fun SeasonScreen(navController: NavController, mainViewModel: MainViewModel) {
                         universityLogo = user.universityLogo
                     )
                 }
-                6 -> {
-                    SeasonContentRow(
-                        medal = {
-                            Divider(
-                                color = Color(0xFFBED7EE).copy(alpha = 0.4f),
-                                modifier = Modifier
-                                    .fillMaxHeight()
-                                    .width(4.dp)
-                            )
-                            Spacer(modifier = Modifier.width(20.dp))
-                        },
-                        rank = user.rank,
-                        tier = user.tierImageUrl,
-                        nickname = user.userName,
-                        score = user.score.numberComma(),
-                        universityLogo = user.universityLogo
-                    )
-                }
+//                6 -> {
+//                    SeasonContentRow(
+//                        medal = {
+//                            Divider(
+//                                color = Color(0xFFBED7EE).copy(alpha = 0.4f),
+//                                modifier = Modifier
+//                                    .fillMaxHeight()
+//                                    .width(4.dp)
+//                            )
+//                            Spacer(modifier = Modifier.width(20.dp))
+//                        },
+//                        rank = user.rank,
+//                        tier = user.tierImageUrl,
+//                        nickname = user.userName,
+//                        score = user.score.numberComma(),
+//                        universityLogo = user.universityLogo
+//                    )
+//                }
                 else -> {
                     SeasonContentRow(
                         medal = {

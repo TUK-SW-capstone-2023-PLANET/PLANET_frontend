@@ -1,6 +1,6 @@
-package com.example.planet.data.dto
+package com.example.planet.data.dto.ranking
 
-data class SeasonPerson(
+data class SeasonUser(
     val userName: String,
     val universityLogo: String,
     val score: Int,

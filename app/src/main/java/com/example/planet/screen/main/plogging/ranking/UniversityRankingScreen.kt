@@ -111,15 +111,15 @@ fun UniversityRankingScreen(
         }
 
         UniversityTitleRow()
-        mainViewModel.seasonPerson.forEachIndexed { index, universityPerson ->
+        mainViewModel.totalUniversity.forEachIndexed { index, university ->
             when (index) {
                 0 -> {
                     UniversityContentRow(
                         medal = { Spacer(modifier = Modifier.width(24.dp)) },
-                        rank = universityPerson.rank,
-                        universityName = universityPerson.userName,
-                        score = universityPerson.score.numberComma(),
-                        universityLogo = universityPerson.universityLogo,
+                        rank = university.rank,
+                        universityName = university.name,
+                        score = university.score.numberComma(),
+                        universityLogo = university.imageUrl,
                         color = colorResource(id = R.color.main_color4)
                     )
                 }
@@ -135,10 +135,10 @@ fun UniversityRankingScreen(
                             )
                             Spacer(modifier = Modifier.width(20.dp))
                         },
-                        rank = universityPerson.rank,
-                        universityName = universityPerson.userName,
-                        score = universityPerson.score.numberComma(),
-                        universityLogo = universityPerson.universityLogo
+                        rank = university.rank,
+                        universityName = university.name,
+                        score = university.score.numberComma(),
+                        universityLogo = university.imageUrl
                     )
                 }
 
@@ -153,10 +153,10 @@ fun UniversityRankingScreen(
                             )
                             Spacer(modifier = Modifier.width(20.dp))
                         },
-                        rank = universityPerson.rank,
-                        universityName = universityPerson.userName,
-                        score = universityPerson.score.numberComma(),
-                        universityLogo = universityPerson.universityLogo
+                        rank = university.rank,
+                        universityName = university.name,
+                        score = university.score.numberComma(),
+                        universityLogo = university.imageUrl
                     )
                 }
 
@@ -171,20 +171,20 @@ fun UniversityRankingScreen(
                             )
                             Spacer(modifier = Modifier.width(20.dp))
                         },
-                        rank = universityPerson.rank,
-                        universityName = universityPerson.userName,
-                        score = universityPerson.score.numberComma(),
-                        universityLogo = universityPerson.universityLogo
+                        rank = university.rank,
+                        universityName = university.name,
+                        score = university.score.numberComma(),
+                        universityLogo = university.imageUrl
                     )
                 }
 
                 else -> {
                     UniversityContentRow(
                         medal = { Spacer(modifier = Modifier.width(24.dp)) },
-                        rank = universityPerson.rank,
-                        universityName = universityPerson.userName,
-                        score = universityPerson.score.numberComma(),
-                        universityLogo = universityPerson.universityLogo
+                        rank = university.rank,
+                        universityName = university.name,
+                        score = university.score.numberComma(),
+                        universityLogo = university.imageUrl
                     )
                 }
             }

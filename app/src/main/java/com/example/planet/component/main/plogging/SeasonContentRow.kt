@@ -57,21 +57,16 @@ fun SeasonContentRow(
                 fontSize = 12.sp,
                 modifier = Modifier.weight(1f)
             )
-            Box(
+
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(tier)
+                    .crossfade(true)
+                    .build(),
+                contentDescription = null,
                 modifier = Modifier
-                    .weight(1f)
-            ) {
-                AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(tier)
-                        .crossfade(true)
-                        .build(),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .fillMaxSize(0.8f)
-//                        .align(Alignment.CenterStart)
-                )
-            }
+                    .fillMaxSize(0.8f)
+            )
         }
         Text(
             text = nickname,

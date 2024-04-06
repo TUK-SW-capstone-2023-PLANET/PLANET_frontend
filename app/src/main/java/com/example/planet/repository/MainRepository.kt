@@ -32,7 +32,7 @@ class MainRepository @Inject constructor(private val apiService: ApiService) {
 
     suspend fun getSeasonInfo(userId: Int = 0): Flow<ApiState> = flow{
         kotlin.runCatching {
-            apiService.getSeasonInfo(userId = userId)
+            apiService.getSeasonTop5UserInfo(userId = userId)
         }.onSuccess {
             emit(ApiState.Success(it))
         }.onFailure { error ->

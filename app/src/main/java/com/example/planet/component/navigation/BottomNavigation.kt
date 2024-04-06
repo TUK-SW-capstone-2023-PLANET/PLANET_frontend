@@ -48,7 +48,7 @@ fun BottomNavigation(navController: NavHostController) {
             .clip(shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)),
         containerColor = Color.White,
         contentColor = Color.Black,
-        tonalElevation = 100.dp
+        tonalElevation = 10.dp
     ) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = navBackStackEntry?.destination?.route
