@@ -61,8 +61,7 @@ fun NavigationGraph(
                 }
                 composable(BottomNavItem.UserScreen.screenRoute) {
 
-//                    UserScreen(navController = navController, mainViewModel = mainViewModel)
-                    UserScreen()
+                    UserScreen(navController = navController, mainViewModel = mainViewModel)
 
                 }
                 composable(BottomNavItem.MessageScreen.screenRoute) {

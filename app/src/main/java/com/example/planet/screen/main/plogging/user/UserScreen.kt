@@ -38,11 +38,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.planet.R
+import com.example.planet.component.main.MainTopSwitch
+import com.example.planet.viewmodel.MainViewModel
 
 @Composable
-@Preview(showBackground = true)
-fun UserScreen() {
+fun UserScreen(navController: NavController, mainViewModel: MainViewModel) {
     val scrollState = rememberScrollState()
     Column(
         modifier = Modifier
@@ -50,7 +52,7 @@ fun UserScreen() {
             .verticalScroll(scrollState),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-//        MainTopSwitch(mainViewModel = mainViewModel)
+        MainTopSwitch(mainViewModel = mainViewModel)
         Column(
             modifier = Modifier
                 .fillMaxSize()
