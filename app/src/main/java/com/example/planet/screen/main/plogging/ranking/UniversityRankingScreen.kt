@@ -3,7 +3,6 @@ package com.example.planet.screen.main.plogging.ranking
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
@@ -39,7 +38,6 @@ import com.example.planet.component.main.plogging.ranking.SearchTextField
 import com.example.planet.component.main.plogging.ranking.UniversityProfile
 import com.example.planet.util.noRippleClickable
 import com.example.planet.util.numberComma
-import com.example.planet.util.round
 import com.example.planet.viewmodel.MainViewModel
 
 @Composable
@@ -69,7 +67,7 @@ fun UniversityRankingScreen(
                 })
         }
         MiddleHead(
-            image = painterResource(id = R.drawable.plogging_ranking_university),
+            image = painterResource(id = R.drawable.plogging_ranking_universitylogo),
             title = "대학교 랭킹",
             description = "학교를 인증하여, 학교의 위상을 높히세요!!",
         )

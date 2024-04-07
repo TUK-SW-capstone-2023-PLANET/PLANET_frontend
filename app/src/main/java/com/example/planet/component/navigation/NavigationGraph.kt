@@ -60,8 +60,10 @@ fun NavigationGraph(
                     RankingScreen(navController = navController, mainViewModel = mainViewModel)
                 }
                 composable(BottomNavItem.UserScreen.screenRoute) {
-                    MainTopSwitch(mainViewModel = mainViewModel)
+
+//                    UserScreen(navController = navController, mainViewModel = mainViewModel)
                     UserScreen()
+
                 }
                 composable(BottomNavItem.MessageScreen.screenRoute) {
                     MainTopSwitch(mainViewModel = mainViewModel)

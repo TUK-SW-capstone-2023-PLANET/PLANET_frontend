@@ -91,7 +91,7 @@ fun UniversityIndividualRankingScreen(
                 })
         }
         MiddleHead(
-            image = painterResource(id = R.drawable.plogging_ranking_university),
+            image = painterResource(id = R.drawable.plogging_ranking_universitylogo),
             title = "대학교 개인 랭킹",
             description = "대학교 랭킹의 나의 기여도는?"
         )
@@ -267,7 +267,7 @@ fun Test3() {
                 modifier = Modifier.noRippleClickable {})
         }
         MiddleHead(
-            image = painterResource(id = R.drawable.plogging_ranking_university),
+            image = painterResource(id = R.drawable.plogging_ranking_universitylogo),
             title = "대학교 개인 랭킹",
             description = "대학교 랭킹의 나의 기여도는?"
         )
