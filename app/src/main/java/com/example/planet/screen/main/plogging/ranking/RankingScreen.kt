@@ -32,6 +32,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.planet.R
 import com.example.planet.component.common.TripleArrowIcon
+import com.example.planet.component.main.MainTopSwitch
 import com.example.planet.component.main.plogging.ranking.MiddleHead
 import com.example.planet.component.main.plogging.ranking.TearProfile
 import com.example.planet.component.main.plogging.ranking.TrophyProfile
@@ -47,9 +48,10 @@ fun RankingScreen(navController: NavController, mainViewModel: MainViewModel = h
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 16.dp)
-            .verticalScroll(scrollState)
+            .verticalScroll(scrollState),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
+        MainTopSwitch(mainViewModel = mainViewModel)
         MiddleHead(
             image = painterResource(id = R.drawable.plogging_ranking_planet),
             title = "플래닛 랭킹",

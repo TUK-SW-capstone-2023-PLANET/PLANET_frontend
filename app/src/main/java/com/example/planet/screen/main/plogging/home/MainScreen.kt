@@ -1,5 +1,6 @@
-package com.example.planet.screen.main.plogging
+package com.example.planet.screen.main.plogging.home
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -30,11 +31,10 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.planet.R
+import com.example.planet.TAG
 import com.example.planet.component.common.MyScrollableTabRow
+import com.example.planet.component.main.MainTopSwitch
 import com.example.planet.component.main.plogging.MainTopBanner
-import com.example.planet.screen.main.plogging.home.PloggingHelpScreen
-import com.example.planet.screen.main.plogging.home.SeasonScreen
-import com.example.planet.screen.main.plogging.home.UniversityScreen
 import com.example.planet.viewmodel.MainViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -71,8 +71,10 @@ fun MainScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(it), horizontalAlignment = Alignment.CenterHorizontally
+                .padding(it),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            MainTopSwitch(mainViewModel = mainViewModel)
             /* TODO("스켈레톤 ui 적용할 것") */
             if (mainViewModel.imageUrlList.isNotEmpty()) {
                 MainTopBanner(imageUrlList = mainViewModel.imageUrlList)
@@ -122,13 +124,13 @@ fun MainScreen(
                     1 -> UniversityScreen(
                         expandedUniversityUserList = mainViewModel.myUniversityTop4RankingUsers,
                         universityList = mainViewModel.higherUniversity,
-                        graphHeightList = mainViewModel.universityGraphHeightList
+                        graphHeightList = mainViewModel.universityGraphHeightList,
+                        navController = navController,
                     )
                     2 -> SeasonScreen(navController = navController, mainViewModel = mainViewModel)
                     3 -> SeasonScreen(navController = navController, mainViewModel = mainViewModel)
                 }
             }
-
         }
     }
 }

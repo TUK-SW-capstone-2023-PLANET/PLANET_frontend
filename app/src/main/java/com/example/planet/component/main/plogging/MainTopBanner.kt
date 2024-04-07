@@ -1,6 +1,8 @@
 package com.example.planet.component.main.plogging
 
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.interaction.collectIsDraggedAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -14,7 +16,10 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,7 +31,9 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.planet.R
+import com.example.planet.TAG
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 
@@ -40,15 +47,28 @@ fun MainTopBanner(imageUrlList: List<String>) {
     val coroutineScope = rememberCoroutineScope()
     val painterList = mutableListOf<ImageRequest>()
 
-    DisposableEffect(Unit) {
-        val job = coroutineScope.launch {
-            while (true) {
-                delay(4000)
-                pagerState.animateScrollToPage((pagerState.currentPage + 1) % 4)
+    // 드래그 도중 자동 스와이프가 안되기 위함
+    val isDraggedState: State<Boolean> =
+        pagerState.interactionSource.collectIsDraggedAsState()
+    LaunchedEffect(key1 = isDraggedState) {
+        snapshotFlow { isDraggedState.value }
+            .collectLatest { isDragged ->
+                if (isDragged) return@collectLatest
+                while (true) {
+                    delay(3_000)
+                    pagerState.animateScrollToPage((pagerState.currentPage.inc()) % 4)
+                }
             }
-        }
-        onDispose { job.cancel() }
     }
+//    DisposableEffect(Unit) {
+//        val job = coroutineScope.launch {
+//            while (true) {
+//                delay(2000)
+//                pagerState.animateScrollToPage((pagerState.currentPage + 1) % 4)
+//            }
+//        }
+//        onDispose { job.cancel() }
+//    }
     imageUrlList.forEach {
         painterList.add(
             ImageRequest.Builder(LocalContext.current)

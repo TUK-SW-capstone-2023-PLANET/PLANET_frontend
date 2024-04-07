@@ -40,6 +40,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.planet.R
@@ -49,6 +50,7 @@ import com.example.planet.component.main.SubTitleDescription
 import com.example.planet.component.main.plogging.UniversityGraph
 import com.example.planet.component.main.plogging.UniversityIndividualContentRow
 import com.example.planet.component.main.plogging.UniversityIndividualTitleRow
+import com.example.planet.component.navigation.ScreenNav
 import com.example.planet.data.dto.ranking.University
 import com.example.planet.data.dto.ranking.ExpandedUniversityUser
 import com.example.planet.util.numberComma
@@ -57,12 +59,15 @@ import kotlinx.coroutines.delay
 import kotlin.math.round
 
 @Composable
-fun UniversityScreen(expandedUniversityUserList: List<ExpandedUniversityUser>, universityList: List<University>, graphHeightList: List<Dp>) {
+fun UniversityScreen(
+    expandedUniversityUserList: List<ExpandedUniversityUser>,
+    universityList: List<University>,
+    graphHeightList: List<Dp>,
+    navController: NavController
+) {
 
     var visible by remember { mutableStateOf(false) }
     var scrollState = rememberScrollState()
-    var GraphHeight2th: Int = round(120 / 1120921.0 * 921218.0).toInt()
-    var GraphHeight3th: Int = round(120 / 1120921.0 * 218213.0).toInt()
 
     LaunchedEffect(Unit) {
         delay(300)
@@ -90,7 +95,7 @@ fun UniversityScreen(expandedUniversityUserList: List<ExpandedUniversityUser>, u
                 SubTitle(title = "대학교 순위", modifier = Modifier.padding(end = 8.dp))
                 SubTitleDescription("학교를 인증하여, 학교의 위상을 높히세요!!")
             }
-            TripleArrowIcon {}
+            TripleArrowIcon {navController.navigate(ScreenNav.UniversityRankingScreen.screenRoute)}
         }
         Column(
             modifier = Modifier
@@ -162,7 +167,7 @@ fun UniversityScreen(expandedUniversityUserList: List<ExpandedUniversityUser>, u
                         fontSize = 9.sp
                     )
                 }
-                TripleArrowIcon {}
+                TripleArrowIcon {navController.navigate(ScreenNav.UniversityIndividualRankingScreen.screenRoute)}
             }
             Row(
                 modifier = Modifier
