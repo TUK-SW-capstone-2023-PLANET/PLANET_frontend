@@ -31,7 +31,8 @@ import com.example.planet.viewmodel.MainViewModel
 fun NavigationGraph(
     navController: NavHostController,
     mainViewModel: MainViewModel = viewModel(),
-    onClick: () -> Unit
+    startMapActivity: () -> Unit,
+    startUserActivity: () -> Unit
 ) {
 
     Scaffold(
@@ -54,14 +55,14 @@ fun NavigationGraph(
                 startDestination = BottomNavItem.HomeScreen.screenRoute
             ) {
                 composable(BottomNavItem.HomeScreen.screenRoute) {
-                    MainScreen(navController = navController, mainViewModel = mainViewModel) { onClick() }
+                    MainScreen(navController = navController, mainViewModel = mainViewModel) { startMapActivity() }
                 }
                 composable(BottomNavItem.RankingScreen.screenRoute) {
                     RankingScreen(navController = navController, mainViewModel = mainViewModel)
                 }
                 composable(BottomNavItem.UserScreen.screenRoute) {
 
-                    UserScreen(navController = navController, mainViewModel = mainViewModel)
+                    UserScreen(navController = navController, mainViewModel = mainViewModel) { startUserActivity() }
 
                 }
                 composable(BottomNavItem.MessageScreen.screenRoute) {

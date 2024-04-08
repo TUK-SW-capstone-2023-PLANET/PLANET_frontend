@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,10 +23,12 @@ import com.example.planet.component.main.plogging.PloggingHelpCard
 @Preview(showBackground = true)
 @Composable
 fun PloggingHelpScreen() {
+    val verticalScroll = rememberScrollState()
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 16.dp, vertical = 8.dp),
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .verticalScroll(verticalScroll),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(

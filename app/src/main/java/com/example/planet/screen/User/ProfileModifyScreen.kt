@@ -1,8 +1,12 @@
 package com.example.planet.screen.User
 
+import android.util.Log
+import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
@@ -11,41 +15,58 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
-import androidx.compose.material3.Surface
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
 import com.example.planet.R
+import com.example.planet.TAG
+import com.example.planet.component.common.RedTextButton
+import com.example.planet.component.user.UserIdTextField
+import com.example.planet.component.user.UserPwTextField
 import com.example.planet.util.noRippleClickable
+import com.example.planet.viewmodel.UserViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-@Preview(showBackground = true)
-fun ProfileModifyScreen() {
+fun ProfileModifyScreen(userViewModel: UserViewModel, onClick: () -> Unit) {
+
+    BackHandler {
+        onClick()
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -58,6 +79,7 @@ fun ProfileModifyScreen() {
             modifier = Modifier
                 .align(Alignment.TopStart)
                 .noRippleClickable {
+                    onClick()
                 }
         )
     }
@@ -122,7 +144,14 @@ fun ProfileModifyScreen() {
 
         Box(modifier = Modifier.fillMaxWidth()) {
             Text(text = "Happy Been", fontSize = 16.sp, modifier = Modifier.align(Alignment.Center))
-            Icon(imageVector = Icons.Outlined.Edit, contentDescription = null, modifier = Modifier.align(Alignment.CenterEnd))
+            Image(
+                painter = painterResource(id = R.drawable.edit_icon),
+                contentDescription = null,
+                modifier = Modifier
+                    .align(Alignment.CenterEnd)
+                    .size(20.dp)
+            )
+
         }
 
         Divider(
@@ -134,15 +163,87 @@ fun ProfileModifyScreen() {
         )
 
         Box(modifier = Modifier.fillMaxWidth()) {
-            Text(text = "나랑 같이 플로깅 할 사람", fontSize = 11.sp, modifier = Modifier.align(Alignment.Center))
-            Icon(imageVector = Icons.Outlined.Edit, contentDescription = null, modifier = Modifier.align(Alignment.CenterEnd))
+            Text(
+                text = "나랑 같이 플로깅 할 사람",
+                fontSize = 11.sp,
+                modifier = Modifier.align(Alignment.Center)
+            )
+            Image(
+                painter = painterResource(id = R.drawable.edit_icon),
+                contentDescription = null,
+                modifier = Modifier
+                    .align(Alignment.CenterEnd)
+                    .size(20.dp)
+            )
         }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
         Divider(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 5.dp, bottom = 8.dp),
-            thickness = 1.dp,
+            thickness = 2.dp,
             color = colorResource(id = R.color.font_background_color3)
+        )
+
+        Spacer(modifier = Modifier.height(9.dp))
+
+        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+            Image(
+                painter = painterResource(id = R.drawable.exclamation_mark_logo),
+                contentDescription = null,
+                modifier = Modifier.size(14.dp)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(text = "회원정보", fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
+        }
+
+        Spacer(modifier = Modifier.height(9.dp))
+
+        UserIdTextField(
+            headerText = "아이디",
+            textValue = userViewModel.idTextValue.value,
+            onValueChange = { userViewModel.idTextValue.value = it },
+            enabled = userViewModel.duplicateCheck,
+            placeholder = "TukoreaUniv0921"
+        ) {
+            Text(
+                text = "*아이디는 특수문자 사용이 불가능합니다.",
+                fontSize = 8.sp,
+                color = colorResource(id = R.color.font_background_color2)
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+
+        UserPwTextField(
+            headerText = "비밀번호",
+            textValue = userViewModel.pwTextValue.value,
+            onValueChange = { userViewModel.pwTextValue.value = it },
+            placeholder = "******"
+        ) {
+            Text(
+                text = "* 특수문자, 숫자, 대문자를 포함하여 8자 이상",
+                fontSize = 8.sp,
+                color = colorResource(id = R.color.font_background_color2)
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+
+        Divider(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 8.dp),
+            thickness = 2.dp,
+            color = colorResource(id = R.color.font_background_color3)
+        )
+
+        Text(
+            text = "회원정보 삭제",
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 10.sp,
+            style = TextStyle(textDecoration = TextDecoration.Underline),
+            color = colorResource(id = R.color.red)
         )
     }
 }

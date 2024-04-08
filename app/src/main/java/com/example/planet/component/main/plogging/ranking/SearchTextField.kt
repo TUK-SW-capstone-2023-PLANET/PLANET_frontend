@@ -60,21 +60,4 @@ fun SearchTextField(
             }
         }
     )
-//    TextField(
-//        value = mainViewModel.searchText.value,
-//        onValueChange = { mainViewModel.changeSearchText(it) },
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .height(60.dp)
-//            .padding(top = 8.dp),
-//        shape = CircleShape,
-//        singleLine = true,
-//        colors = TextFieldDefaults.colors(
-//            unfocusedContainerColor = colorResource(id = R.color.font_background_color4),
-//            focusedIndicatorColor = Color.Transparent,
-//            unfocusedIndicatorColor = Color.Transparent,
-//        ),
-//        trailingIcon = { Icon(imageVector = Icons.Default.Search, contentDescription = null) },
-//        textStyle = TextStyle.Default.copy(fontSize = 10.sp)
-//    )
 }

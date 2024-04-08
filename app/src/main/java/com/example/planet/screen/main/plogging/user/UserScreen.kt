@@ -40,11 +40,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.planet.R
+import com.example.planet.component.common.RedTextButton
 import com.example.planet.component.main.MainTopSwitch
 import com.example.planet.viewmodel.MainViewModel
 
 @Composable
-fun UserScreen(navController: NavController, mainViewModel: MainViewModel) {
+fun UserScreen(navController: NavController, mainViewModel: MainViewModel, onClick: () -> Unit) {
     val scrollState = rememberScrollState()
     Column(
         modifier = Modifier
@@ -101,16 +102,7 @@ fun UserScreen(navController: NavController, mainViewModel: MainViewModel) {
                         )
                     }
                 }
-                TextButton(
-                    shape = RoundedCornerShape(5.dp),
-                    border = BorderStroke(
-                        width = 1.dp,
-                        color = colorResource(id = R.color.font_background_color4)
-                    ),
-                    onClick = { /*TODO*/ }
-                ) {
-                    Text(text = "로그아웃", color = colorResource(id = R.color.red), fontSize = 10.sp)
-                }
+                RedTextButton(text = "로그아웃")
             }
 
             Spacer(modifier = Modifier.height(9.dp))
@@ -122,7 +114,7 @@ fun UserScreen(navController: NavController, mainViewModel: MainViewModel) {
                     contentColor = colorResource(id = R.color.font_background_color2)
                 ),
                 shape = RoundedCornerShape(5.dp),
-                onClick = { /*TODO*/ },
+                onClick = { onClick() },
             ) {
                 Text(text = "프로필 수정", fontSize = 10.sp)
             }

@@ -1,6 +1,5 @@
 package com.example.planet.screen.main.plogging.home
 
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -31,7 +30,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.planet.R
-import com.example.planet.TAG
 import com.example.planet.component.common.MyScrollableTabRow
 import com.example.planet.component.main.MainTopSwitch
 import com.example.planet.component.main.plogging.MainTopBanner
@@ -76,9 +74,7 @@ fun MainScreen(
         ) {
             MainTopSwitch(mainViewModel = mainViewModel)
             /* TODO("스켈레톤 ui 적용할 것") */
-            if (mainViewModel.imageUrlList.isNotEmpty()) {
-                MainTopBanner(imageUrlList = mainViewModel.imageUrlList)
-            }
+            MainTopBanner(imageUrlList = mainViewModel.imageUrlList)
             MyScrollableTabRow(
                 modifier = Modifier
                     .height(45.dp)

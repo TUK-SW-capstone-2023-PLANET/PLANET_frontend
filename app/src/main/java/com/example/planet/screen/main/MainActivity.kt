@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.example.planet.component.navigation.NavigationGraph
+import com.example.planet.screen.User.UserActivity
 import com.example.planet.screen.map.MapActivity
 import com.example.planet.ui.theme.MyApplicationTheme
 import com.example.planet.viewmodel.MainViewModel
@@ -40,8 +41,8 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             MyApplicationTheme {
 //                RequestPermission()
-                NavigationGraph(navController = navController, mainViewModel = mainViewModel) {
-                    startMapActivity()
+                NavigationGraph(navController = navController, mainViewModel = mainViewModel, startMapActivity = { startMapActivity() }) {
+                    startUserActivity()
                 }
             }
         }
@@ -49,6 +50,11 @@ class MainActivity : ComponentActivity() {
 
     private fun startMapActivity() {
         val intent = Intent(this, MapActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun startUserActivity() {
+        val intent = Intent(this, UserActivity::class.java)
         startActivity(intent)
     }
 }

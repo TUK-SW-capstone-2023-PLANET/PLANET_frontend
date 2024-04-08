@@ -2,8 +2,11 @@ package com.example.planet.viewmodel
 
 import android.util.Log
 import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
@@ -62,8 +65,7 @@ class MainViewModel @Inject constructor(
     val ploggingOrRecordSwitch: State<Boolean> = _ploggingOrRecordSwitch
 
     // 상단배너 이미지 리스트
-    private val _imageUrlList = mutableStateListOf<String>()
-    val imageUrlList: List<String> = _imageUrlList
+    var imageUrlList by mutableStateOf(listOf<String>())
 
     private val _myUniversityUserList = mutableStateListOf<ExpandedUniversityUser>()
     val myUniversityUserList: List<ExpandedUniversityUser> = _myUniversityUserList
@@ -147,7 +149,8 @@ class MainViewModel @Inject constructor(
             is ApiState.Success<*> -> {
                 val result = apiState.value as List<Advertisement>
                 result.forEach {
-                    _imageUrlList.add(it.imageUrl)
+//                    _imageUrlList.add(it.imageUrl)
+                    imageUrlList = imageUrlList.toList() + it.imageUrl
                 }
                 Log.d(TAG, "getTopBanner() 성공")
             }
