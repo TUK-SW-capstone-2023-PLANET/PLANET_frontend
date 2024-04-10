@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.LocalTextStyle
@@ -19,17 +21,26 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.planet.R
 import com.example.planet.component.common.RedTextButton
+import kotlinx.coroutines.delay
 
 @Composable
 fun UserIdTextField(
@@ -141,13 +152,23 @@ fun UserPwTextField(
 
 @Composable
 fun UserNicknameTextField(
-    text: String,
-    onValueChange: (String) -> Unit,
+    text: TextFieldValue,
+    onValueChange: (TextFieldValue) -> Unit,
     modifier: Modifier = Modifier,
-    trailingText: String
+    trailingText: String,
+    updateText: () -> Unit
 ) {
+    val focusRequester = remember {
+        FocusRequester()
+    }
+    LaunchedEffect(Unit) {
+        delay(300)
+        focusRequester.requestFocus()
+    }
+
+
     BasicTextField(
-        modifier = modifier.background(Color.Blue),
+        modifier = modifier.focusRequester(focusRequester),
         value = text,
         onValueChange = {
             onValueChange(it)
@@ -161,6 +182,11 @@ fun UserNicknameTextField(
             color = Color.White,
             fontWeight = FontWeight.SemiBold
         ),
+        keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Text,
+            imeAction = ImeAction.Done
+        ),
+        keyboardActions = KeyboardActions(onDone = { updateText() }),
         decorationBox = { innerTextField ->
             innerTextField()
             Column(modifier = Modifier.fillMaxWidth()) {
@@ -171,7 +197,7 @@ fun UserNicknameTextField(
                 ) {
                     Text(
                         text = trailingText,
-                        modifier = Modifier.align(Alignment.CenterEnd).background(Color.Red),
+                        modifier = Modifier.align(Alignment.CenterEnd),
                         style = LocalTextStyle.current.copy(
                             fontSize = 16.sp,
                             textAlign = TextAlign.End,
@@ -183,7 +209,9 @@ fun UserNicknameTextField(
                 Divider(
                     thickness = 1.dp,
                     color = Color.White,
-                    modifier = Modifier.fillMaxWidth().padding(top = 2.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 2.dp)
                 )
             }
         }

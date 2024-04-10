@@ -23,7 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.example.planet.component.navigation.NavigationGraph
-import com.example.planet.screen.User.UserActivity
+import com.example.planet.screen.user.UserActivity
 import com.example.planet.screen.map.MapActivity
 import com.example.planet.ui.theme.MyApplicationTheme
 import com.example.planet.viewmodel.MainViewModel

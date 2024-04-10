@@ -1,14 +1,10 @@
-package com.example.planet.screen.User
+package com.example.planet.screen.user
 
-import android.util.Log
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
@@ -20,45 +16,32 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.CameraAlt
-import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.example.planet.R
-import com.example.planet.TAG
-import com.example.planet.component.common.RedTextButton
 import com.example.planet.component.user.UserIdTextField
 import com.example.planet.component.user.UserNicknameTextField
 import com.example.planet.component.user.UserPwTextField
@@ -69,10 +52,18 @@ import com.example.planet.viewmodel.UserViewModel
 fun ProfileModifyScreen(userViewModel: UserViewModel, onClick: () -> Unit) {
 
     BackHandler {
-        onClick()
+        if (userViewModel.editNicknameState || userViewModel.editDescribeState) {
+            if (userViewModel.editNicknameState) {
+                userViewModel.changeEditNicknameScreen()
+            } else {
+                userViewModel.changeEditDescribeScreen()
+            }
+        } else {
+            onClick()
+        }
     }
 
-    if (userViewModel.editState) {
+    if (userViewModel.editNicknameState || userViewModel.editDescribeState) {
         Surface(
             modifier = Modifier
                 .fillMaxSize()
@@ -90,34 +81,67 @@ fun ProfileModifyScreen(userViewModel: UserViewModel, onClick: () -> Unit) {
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 16.sp,
                     modifier = Modifier.noRippleClickable {
-                        userViewModel.changeEditScreen()
+                        if (userViewModel.editNicknameState) {
+                            userViewModel.changeEditNicknameScreen()
+                        } else {
+                            userViewModel.changeEditDescribeScreen()
+                        }
                     })
-                UserNicknameTextField(
-                    text = userViewModel.nicknameTextValue,
-                    onValueChange = { userViewModel.nicknameTextValue = it },
-                    trailingText = "9 / 20",
-                    modifier = Modifier.align(Alignment.Center).fillMaxWidth()
-                )
-//                TextField(
-//                    value = userViewModel.nicknameTextValue,
-//                    onValueChange = { userViewModel.nicknameTextValue = it },
-//                    maxLines = 1,
-//                    singleLine = true,
-//                    modifier = Modifier
-//                        .align(Alignment.Center),
-//                    textStyle = TextStyle.Default.copy(
-//                        fontSize = 16.sp,
-//                        textAlign = TextAlign.Center,
-//                        color = Color.White,
-//                        fontWeight = FontWeight.SemiBold
-//                    ),
-//                    colors = TextFieldDefaults.colors(
-//                        unfocusedContainerColor = Color.Transparent,
-//                        focusedContainerColor = Color.Transparent,
-//                        focusedIndicatorColor = Color.White,
-//                        unfocusedIndicatorColor = Color.White,
-//                    ),
-//                )
+
+                Text(
+                    text = "완료",
+                    color = Color.White,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 16.sp,
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .noRippleClickable {
+                            if (userViewModel.editNicknameState) {
+                                userViewModel.changeEditNicknameScreen()
+                            } else {
+                                userViewModel.changeEditDescribeScreen()
+                            }
+                        })
+                if (userViewModel.editNicknameState) {
+                    UserNicknameTextField(
+                        text = userViewModel.nicknameTextValue,
+                        onValueChange = {
+                            if (it.text.length <= userViewModel.maxNicknameTextLength) {
+                                userViewModel.nicknameTextValue = it
+                            }
+                        },
+                        trailingText = userViewModel.nicknameTextLength,
+                        modifier = Modifier
+                            .align(Alignment.Center)
+                            .fillMaxWidth()
+                    ) {
+                        if (userViewModel.editNicknameState) {
+                            userViewModel.changeEditNicknameScreen()
+                        } else {
+                            userViewModel.changeEditDescribeScreen()
+                        }
+                    }
+                } else if (userViewModel.editDescribeState) {
+                    UserNicknameTextField(
+                        text = userViewModel.describeTextValue,
+                        onValueChange = {
+                            if (it.text.length <= userViewModel.maxDescribeTextLength) {
+                                userViewModel.describeTextValue = it
+                            }
+                        },
+                        trailingText = userViewModel.describeTextLength,
+                        modifier = Modifier
+                            .align(Alignment.Center)
+                            .fillMaxWidth()
+                    ) {
+                        if (userViewModel.editNicknameState) {
+                            userViewModel.changeEditNicknameScreen()
+                        } else {
+                            userViewModel.changeEditDescribeScreen()
+                        }
+                    }
+                }
+
             }
         }
     }
@@ -208,7 +232,7 @@ fun ProfileModifyScreen(userViewModel: UserViewModel, onClick: () -> Unit) {
                     .align(Alignment.CenterEnd)
                     .size(20.dp)
                     .clickable {
-                        userViewModel.changeEditScreen()
+                        userViewModel.changeEditNicknameScreen()
                     }
             )
 
@@ -235,7 +259,7 @@ fun ProfileModifyScreen(userViewModel: UserViewModel, onClick: () -> Unit) {
                     .align(Alignment.CenterEnd)
                     .size(20.dp)
                     .noRippleClickable {
-                        userViewModel.changeEditScreen()
+                        userViewModel.changeEditDescribeScreen()
                     }
             )
         }

@@ -24,10 +24,11 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".screen.User.UserActivity"
+            android:name=".screen.user.UserActivity"
             android:exported="false"
             android:label="@string/title_activity_user"
-            android:theme="@style/Theme.MyApplication" />
+            android:theme="@style/Theme.MyApplication"
+            android:windowSoftInputMode="adjustResize" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

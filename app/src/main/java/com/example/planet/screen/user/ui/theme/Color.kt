@@ -1,4 +1,4 @@
-package com.example.planet.screen.User.ui.theme
+package com.example.planet.screen.user.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
