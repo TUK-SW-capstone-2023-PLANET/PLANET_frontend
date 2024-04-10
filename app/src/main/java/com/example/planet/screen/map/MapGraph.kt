@@ -172,18 +172,6 @@ fun MapGraph(mapViewModel: MapViewModel = viewModel(), onClick: () -> Unit) {
                     2 -> TrashListScreen(trashList = mapViewModel.trashs)
                 }
             }
-
-//            HorizontalPager(state = pagerState, modifier = Modifier.fillMaxSize()) { index ->
-//                when (index) {
-//                    0 -> MapScreen(mapViewModel = mapViewModel, cameraLauncher = cameraLauncher)
-//                    1 -> RecordScreen(
-//                        mapViewModel = mapViewModel,
-//                        cameraLauncher = cameraLauncher
-//                    )
-//
-//                    2 -> TrashListScreen()
-//                }
-//            }
         }
         if (mapViewModel.lockScreenState.value) {
             Surface(

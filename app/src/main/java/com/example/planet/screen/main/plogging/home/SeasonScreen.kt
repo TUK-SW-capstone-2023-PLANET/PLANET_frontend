@@ -367,17 +367,17 @@ fun SeasonScreen(navController: NavController, mainViewModel: MainViewModel) {
 //                    )
 //                }
                 else -> {
-                    SeasonContentRow(
-                        medal = {
+//                    SeasonContentRow(
+//                        medal = {
+////                            Spacer(modifier = Modifier.width(24.dp))
 //                            Spacer(modifier = Modifier.width(24.dp))
-                            Spacer(modifier = Modifier.width(24.dp))
-                        },
-                        rank = user.rank,
-                        tier = user.tierImageUrl,
-                        nickname = user.userName,
-                        score = user.score.numberComma(),
-                        universityLogo = user.universityLogo
-                    )
+//                        },
+//                        rank = user.rank,
+//                        tier = user.tierImageUrl,
+//                        nickname = user.userName,
+//                        score = user.score.numberComma(),
+//                        universityLogo = user.universityLogo
+//                    )
                 }
             }
         }

@@ -13,9 +13,15 @@ import javax.inject.Inject
 class UserViewModel @Inject constructor() : ViewModel() {
     val idTextValue = mutableStateOf("")
     val pwTextValue = mutableStateOf("")
+    var nicknameTextValue by mutableStateOf("Happy Bean")
+    var editState by mutableStateOf(false)
 
     val duplicateCheck by derivedStateOf {
         idTextValue.value.isNotEmpty()
+    }
+
+    fun changeEditScreen() {
+        editState = !editState
     }
 
 }

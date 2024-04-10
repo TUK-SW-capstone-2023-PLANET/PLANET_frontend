@@ -4,6 +4,8 @@ import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -34,6 +36,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -47,24 +50,76 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import com.example.planet.R
 import com.example.planet.TAG
 import com.example.planet.component.common.RedTextButton
 import com.example.planet.component.user.UserIdTextField
+import com.example.planet.component.user.UserNicknameTextField
 import com.example.planet.component.user.UserPwTextField
 import com.example.planet.util.noRippleClickable
 import com.example.planet.viewmodel.UserViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileModifyScreen(userViewModel: UserViewModel, onClick: () -> Unit) {
 
     BackHandler {
         onClick()
+    }
+
+    if (userViewModel.editState) {
+        Surface(
+            modifier = Modifier
+                .fillMaxSize()
+                .zIndex(1f),
+            color = Color.Black.copy(alpha = 0.5f)
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp)
+            ) {
+                Text(
+                    text = "취소",
+                    color = Color.White,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 16.sp,
+                    modifier = Modifier.noRippleClickable {
+                        userViewModel.changeEditScreen()
+                    })
+                UserNicknameTextField(
+                    text = userViewModel.nicknameTextValue,
+                    onValueChange = { userViewModel.nicknameTextValue = it },
+                    trailingText = "9 / 20",
+                    modifier = Modifier.align(Alignment.Center).fillMaxWidth()
+                )
+//                TextField(
+//                    value = userViewModel.nicknameTextValue,
+//                    onValueChange = { userViewModel.nicknameTextValue = it },
+//                    maxLines = 1,
+//                    singleLine = true,
+//                    modifier = Modifier
+//                        .align(Alignment.Center),
+//                    textStyle = TextStyle.Default.copy(
+//                        fontSize = 16.sp,
+//                        textAlign = TextAlign.Center,
+//                        color = Color.White,
+//                        fontWeight = FontWeight.SemiBold
+//                    ),
+//                    colors = TextFieldDefaults.colors(
+//                        unfocusedContainerColor = Color.Transparent,
+//                        focusedContainerColor = Color.Transparent,
+//                        focusedIndicatorColor = Color.White,
+//                        unfocusedIndicatorColor = Color.White,
+//                    ),
+//                )
+            }
+        }
     }
 
     Box(
@@ -83,6 +138,8 @@ fun ProfileModifyScreen(userViewModel: UserViewModel, onClick: () -> Unit) {
                 }
         )
     }
+
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -150,6 +207,9 @@ fun ProfileModifyScreen(userViewModel: UserViewModel, onClick: () -> Unit) {
                 modifier = Modifier
                     .align(Alignment.CenterEnd)
                     .size(20.dp)
+                    .clickable {
+                        userViewModel.changeEditScreen()
+                    }
             )
 
         }
@@ -174,6 +234,9 @@ fun ProfileModifyScreen(userViewModel: UserViewModel, onClick: () -> Unit) {
                 modifier = Modifier
                     .align(Alignment.CenterEnd)
                     .size(20.dp)
+                    .noRippleClickable {
+                        userViewModel.changeEditScreen()
+                    }
             )
         }
 

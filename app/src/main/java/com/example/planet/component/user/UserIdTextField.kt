@@ -1,27 +1,31 @@
 package com.example.planet.component.user
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Divider
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.planet.R
@@ -36,8 +40,6 @@ fun UserIdTextField(
     placeholder: String,
     supportingText: @Composable () -> Unit,
 ) {
-
-
     Row(verticalAlignment = Alignment.CenterVertically) {
         Text(
             text = headerText,
@@ -48,7 +50,7 @@ fun UserIdTextField(
         )
         OutlinedTextField(
             value = textValue,
-            onValueChange = {onValueChange(it)},
+            onValueChange = { onValueChange(it) },
             colors = OutlinedTextFieldDefaults.colors(
                 unfocusedBorderColor = Color.Transparent,
                 focusedBorderColor = colorResource(id = R.color.main_color2),
@@ -110,7 +112,7 @@ fun UserPwTextField(
         )
         OutlinedTextField(
             value = textValue,
-            onValueChange = {onValueChange(it)},
+            onValueChange = { onValueChange(it) },
             colors = OutlinedTextFieldDefaults.colors(
                 unfocusedBorderColor = Color.Transparent,
                 focusedBorderColor = colorResource(id = R.color.main_color2),
@@ -137,3 +139,53 @@ fun UserPwTextField(
     supportingText()
 }
 
+@Composable
+fun UserNicknameTextField(
+    text: String,
+    onValueChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    trailingText: String
+) {
+    BasicTextField(
+        modifier = modifier.background(Color.Blue),
+        value = text,
+        onValueChange = {
+            onValueChange(it)
+        },
+        singleLine = true,
+        maxLines = 1,
+//        cursorBrush = SolidColor(MaterialTheme.colors.primary),
+        textStyle = LocalTextStyle.current.copy(
+            fontSize = 16.sp,
+            textAlign = TextAlign.Center,
+            color = Color.White,
+            fontWeight = FontWeight.SemiBold
+        ),
+        decorationBox = { innerTextField ->
+            innerTextField()
+            Column(modifier = Modifier.fillMaxWidth()) {
+                Box(
+                    modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                ) {
+                    Text(
+                        text = trailingText,
+                        modifier = Modifier.align(Alignment.CenterEnd).background(Color.Red),
+                        style = LocalTextStyle.current.copy(
+                            fontSize = 16.sp,
+                            textAlign = TextAlign.End,
+                            color = Color.White,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    )
+                }
+                Divider(
+                    thickness = 1.dp,
+                    color = Color.White,
+                    modifier = Modifier.fillMaxWidth().padding(top = 2.dp)
+                )
+            }
+        }
+    )
+}

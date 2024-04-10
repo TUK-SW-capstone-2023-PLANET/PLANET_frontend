@@ -21,6 +21,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object RetrofitModule {
     private const val URL = "http://3.37.87.60:8080/"
+    // 스웨거 주소: http://3.37.87.60:8080/swagger-ui/index.html
     private const val NAVER_URL = "https://naveropenapi.apigw.ntruss.com"
     val gson : Gson = GsonBuilder()
         .setLenient()

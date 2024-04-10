@@ -188,7 +188,7 @@ class MainViewModel @Inject constructor(
                 result[0].values.forEach {
                     _higherSeasonUsers.add(it)
                 }
-                Log.d(TAG, "getTop5SeasonUser() 성공")
+                Log.d(TAG, "getTop5SeasonUser() 성공: ${higherSeasonUsers}")
             }
 
             is ApiState.Error -> {
