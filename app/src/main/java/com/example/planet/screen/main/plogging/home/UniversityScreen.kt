@@ -1,5 +1,6 @@
 package com.example.planet.screen.main.plogging.home
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -44,6 +45,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.planet.R
+import com.example.planet.TAG
 import com.example.planet.component.common.TripleArrowIcon
 import com.example.planet.component.main.SubTitle
 import com.example.planet.component.main.SubTitleDescription
@@ -52,15 +54,16 @@ import com.example.planet.component.main.plogging.UniversityIndividualContentRow
 import com.example.planet.component.main.plogging.UniversityIndividualTitleRow
 import com.example.planet.component.navigation.ScreenNav
 import com.example.planet.data.dto.ranking.University
-import com.example.planet.data.dto.ranking.ExpandedUniversityUser
+import com.example.planet.data.dto.response.user.ranking.MyRankingInfo
+import com.example.planet.data.dto.response.user.ranking.UniversityUser
 import com.example.planet.util.numberComma
 import com.example.planet.util.round
 import kotlinx.coroutines.delay
-import kotlin.math.round
 
 @Composable
 fun UniversityScreen(
-    expandedUniversityUserList: List<ExpandedUniversityUser>,
+    universityUserList: List<UniversityUser>,
+    myUniversityUserRanking: MyRankingInfo?,
     universityList: List<University>,
     graphHeightList: List<Dp>,
     navController: NavController
@@ -169,93 +172,98 @@ fun UniversityScreen(
                 }
                 TripleArrowIcon {navController.navigate(ScreenNav.UniversityIndividualRankingScreen.screenRoute)}
             }
-            Row(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .fillMaxWidth()
-                    .padding(vertical = 16.dp)
-            ) {
-                Card(
+            myUniversityUserRanking?.let { myRankingInfo ->
+                Row(
                     modifier = Modifier
-                        .fillMaxWidth(0.3f)
-                        .aspectRatio(1f), shape = CircleShape
+                        .fillMaxHeight()
+                        .fillMaxWidth()
+                        .padding(vertical = 16.dp)
                 ) {
-                    AsyncImage(
-                        model = ImageRequest.Builder(LocalContext.current)
-                            .data(expandedUniversityUserList[0].imageUrl).crossfade(true).build(),
-                        contentDescription = null,
-                        contentScale = ContentScale.Crop,
-                    )
-                }
-                Column(
-                    modifier = Modifier
-                        .weight(1f)
-                        .height(108.dp)
-                        .padding(start = 32.dp),
-                    verticalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    Row(modifier = Modifier, verticalAlignment = Alignment.Bottom) {
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth(0.3f)
+                            .aspectRatio(1f), shape = CircleShape
+                    ) {
                         AsyncImage(
                             model = ImageRequest.Builder(LocalContext.current)
-                                .data(expandedUniversityUserList[0].universityLogo).crossfade(true)
-                                .build(), contentDescription = null, modifier = Modifier.size(25.dp)
-                        )
-                        Text(
-                            text = expandedUniversityUserList[0].universityName,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 15.sp,
-                            color = colorResource(id = R.color.font_background_color1),
-                            modifier = Modifier.padding(horizontal = 4.dp)
+                                .data(myRankingInfo.imageUrl).crossfade(true).build(),
+                            contentDescription = null,
+                            contentScale = ContentScale.Crop,
                         )
                     }
-                    Text(
-                        text = expandedUniversityUserList[0].nickName,
-                        fontSize = 16.sp,
-                        color = colorResource(id = R.color.font_background_color1)
-                    )
-                    Text(text = buildAnnotatedString {
-                        withStyle(
-                            style = SpanStyle(
-                                fontSize = 14.sp,
-                                color = colorResource(id = R.color.font_background_color1)
+                    Column(
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(108.dp)
+                            .padding(start = 32.dp),
+                        verticalArrangement = Arrangement.SpaceEvenly
+                    ) {
+                        Row(modifier = Modifier, verticalAlignment = Alignment.Bottom) {
+                            AsyncImage(
+                                model = ImageRequest.Builder(LocalContext.current)
+                                    .data(myRankingInfo.universityLogo).crossfade(true)
+                                    .build(), contentDescription = null, modifier = Modifier.size(25.dp)
                             )
-                        ) {
-                            append(expandedUniversityUserList[0].score.numberComma())
-                            append("점")
-                        }
-                        withStyle(
-                            style = SpanStyle(
-                                fontSize = 12.sp,
-                                color = colorResource(id = R.color.font_background_color3)
+                            Text(
+                                //text = myRankingInfo.universityName, TODO(승민이한테 수정요청할 것)
+                                text = "한국공학대학교",
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 15.sp,
+                                color = colorResource(id = R.color.font_background_color1),
+                                modifier = Modifier.padding(horizontal = 4.dp)
                             )
-                        ) {
-                            append(" (")
-                            append(expandedUniversityUserList[0].contribution.round())
-                            append("%)")
                         }
+                        Text(
+                            text = myRankingInfo.nickName,
+                            fontSize = 16.sp,
+                            color = colorResource(id = R.color.font_background_color1)
+                        )
+                        Text(text = buildAnnotatedString {
+                            withStyle(
+                                style = SpanStyle(
+                                    fontSize = 14.sp,
+                                    color = colorResource(id = R.color.font_background_color1)
+                                )
+                            ) {
+                                append(myRankingInfo.score.numberComma())
+                                append("점")
+                            }
+                            withStyle(
+                                style = SpanStyle(
+                                    fontSize = 12.sp,
+                                    color = colorResource(id = R.color.font_background_color3)
+                                )
+                            ) {
+                                append(" (")
+//                                append(universityUserList[0].contribution.round())  TODO(승민이한테 수정요청할 것)
+                                append("0.09")
+                                append("%)")
+                            }
 
 
-                    })
-                    Text(text = buildAnnotatedString {
-                        withStyle(
-                            style = SpanStyle(
-                                fontSize = 12.sp,
-                                color = colorResource(id = R.color.font_background_color1)
-                            )
-                        ) {
-                            append(expandedUniversityUserList[0].rank.toString())
-                            append("등")
-                        }
-                    })
+                        })
+                        Text(text = buildAnnotatedString {
+                            withStyle(
+                                style = SpanStyle(
+                                    fontSize = 12.sp,
+                                    color = colorResource(id = R.color.font_background_color1)
+                                )
+                            ) {
+                                append(universityUserList[0].rank.toString())
+                                append("등")
+                            }
+                        })
+                    }
                 }
             }
+
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentHeight()
             ) {
                 UniversityIndividualTitleRow()
-                expandedUniversityUserList.forEachIndexed { index, universityPerson ->
+                universityUserList.forEachIndexed { index, universityPerson ->
                     when (index) {
                         0 -> {}
                         1 -> {

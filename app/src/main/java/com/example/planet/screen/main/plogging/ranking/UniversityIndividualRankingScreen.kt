@@ -105,22 +105,22 @@ fun UniversityIndividualRankingScreen(
             verticalAlignment = Alignment.Bottom
         ) {
 
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(mainViewModel.myUniversityTop3RankingUsers[0].universityLogo)
-                        .crossfade(true).build(),
-                    contentDescription = null,
-                    modifier = Modifier.size(65.dp)
-                )
-                Spacer(modifier = Modifier.height(12.dp))
-                Text(
-                    text = mainViewModel.myUniversityTop3RankingUsers[0].universityName,
-                    color = colorResource(id = R.color.font_background_color1),
-                    fontSize = 11.sp,
-                    fontWeight = FontWeight.Bold
-                )
-            }
+//            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+//                AsyncImage(
+//                    model = ImageRequest.Builder(LocalContext.current)
+//                        .data(mainViewModel.myUniversityTop3RankingUsers[0].universityLogo)
+//                        .crossfade(true).build(),
+//                    contentDescription = null,
+//                    modifier = Modifier.size(65.dp)
+//                )
+//                Spacer(modifier = Modifier.height(12.dp))
+//                Text(
+//                    text = mainViewModel.myUniversityTop3RankingUsers[0].universityName,
+//                    color = colorResource(id = R.color.font_background_color1),
+//                    fontSize = 11.sp,
+//                    fontWeight = FontWeight.Bold
+//                )
+//            }
 
             UniversityIndividualGraph(
                 visible = visible,

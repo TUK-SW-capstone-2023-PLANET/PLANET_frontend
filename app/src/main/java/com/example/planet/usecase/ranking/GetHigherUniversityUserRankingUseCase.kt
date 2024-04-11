@@ -10,7 +10,4 @@ class GetHigherUniversityUserRankingUseCase @Inject constructor(private val rank
         return rankingRepository.getUniversityTop4UserInfo()
     }
 
-    suspend fun top3(): Flow<ApiState> {
-        return rankingRepository.getUniversityTop3UserInfo()
-    }
 }

@@ -90,14 +90,25 @@ class RankingRepository @Inject constructor(private val apiService: ApiService) 
         }
     }.flowOn(Dispatchers.IO)
 
-    // 대학교 유저 3개 조회
-    suspend fun getUniversityTop3UserInfo(userId: Int = 0): Flow<ApiState> = flow{
+    // 자대 대학교 나의 랭킹 정보 조회
+    suspend fun getUniversityMyRanking(userId: Int = 0): Flow<ApiState> = flow{
         kotlin.runCatching {
-            apiService.getUniversityTop3UserInfo(userId = userId)
+            apiService.getUniversityMyRanking(userId = userId)
         }.onSuccess {
             emit(ApiState.Success(it))
         }.onFailure { error ->
             error.message?.let { emit(ApiState.Error(it)) }
         }
     }.flowOn(Dispatchers.IO)
+
+    // 대학교 유저 3개 조회
+//    suspend fun getUniversityTop3UserInfo(userId: Int = 0): Flow<ApiState> = flow{
+//        kotlin.runCatching {
+//            apiService.getUniversityTop3UserInfo(userId = userId)
+//        }.onSuccess {
+//            emit(ApiState.Success(it))
+//        }.onFailure { error ->
+//            error.message?.let { emit(ApiState.Error(it)) }
+//        }
+//    }.flowOn(Dispatchers.IO)
 }

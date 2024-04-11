@@ -1,5 +1,6 @@
 package com.example.planet.screen.main.plogging.home
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,6 +21,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,6 +32,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.planet.R
+import com.example.planet.TAG
 import com.example.planet.component.common.MyScrollableTabRow
 import com.example.planet.component.main.MainTopSwitch
 import com.example.planet.component.main.plogging.MainTopBanner
@@ -118,13 +121,16 @@ fun MainScreen(
                 when (page) {
                     0 -> PloggingHelpScreen()
                     1 -> UniversityScreen(
-                        expandedUniversityUserList = mainViewModel.myUniversityTop4RankingUsers,
+                        universityUserList = mainViewModel.myUniversityTop4RankingUsers,
+                        myUniversityUserRanking = mainViewModel.myUniversityUserInfo.value,
                         universityList = mainViewModel.higherUniversity,
                         graphHeightList = mainViewModel.universityGraphHeightList,
                         navController = navController,
                     )
-                    2 -> SeasonScreen(navController = navController, mainViewModel = mainViewModel)
-                    3 -> SeasonScreen(navController = navController, mainViewModel = mainViewModel)
+                    2 -> Text(text = "a")
+                    3 -> Text(text = "a")
+//                    2 -> SeasonScreen(navController = navController, mainViewModel = mainViewModel)
+//                    3 -> SeasonScreen(navController = navController, mainViewModel = mainViewModel)
                 }
             }
         }

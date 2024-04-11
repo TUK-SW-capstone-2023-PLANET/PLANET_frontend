@@ -179,46 +179,46 @@ fun RankingScreen(navController: NavController, mainViewModel: MainViewModel = h
                 }
             )
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                verticalAlignment = Alignment.Top
-            ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    AsyncImage(
-                        model = ImageRequest.Builder(LocalContext.current)
-                            .data(mainViewModel.myUniversityTop3RankingUsers[0].universityLogo)
-                            .crossfade(true).build(),
-                        contentDescription = null,
-                        modifier = Modifier.size(65.dp)
-                    )
-                    Spacer(modifier = Modifier.height(12.dp))
-                    Text(
-                        text = mainViewModel.myUniversityTop3RankingUsers[0].universityName,
-                        color = colorResource(id = R.color.font_background_color1),
-                        fontSize = 11.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-                Column(modifier = Modifier.fillMaxWidth(0.8f)) {
-                    UniversityIndividualRankingTitle()
-                    mainViewModel.myUniversityTop3RankingUsers.forEachIndexed { index, user ->
-                        UniversityIndividualRankingContent(
-                            ranking = index + 1,
-                            name = user.nickName,
-                            score = user.score.numberComma()
-                        ) {
-                            Divider(
-                                color = colorResource(id = R.color.ranking_color1),
-                                modifier = Modifier
-                                    .fillMaxHeight()
-                                    .width(2.dp)
-                            )
-                            Spacer(modifier = Modifier.width(13.dp))
-                        }
-                    }
-                }
-            }
+//            Row(
+//                modifier = Modifier.fillMaxWidth(),
+//                horizontalArrangement = Arrangement.SpaceEvenly,
+//                verticalAlignment = Alignment.Top
+//            ) {
+//                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+//                    AsyncImage(
+//                        model = ImageRequest.Builder(LocalContext.current)
+//                            .data(mainViewModel.myUniversityTop3RankingUsers[0].universityLogo)
+//                            .crossfade(true).build(),
+//                        contentDescription = null,
+//                        modifier = Modifier.size(65.dp)
+//                    )
+//                    Spacer(modifier = Modifier.height(12.dp))
+//                    Text(
+//                        text = mainViewModel.myUniversityTop3RankingUsers[0].universityName,
+//                        color = colorResource(id = R.color.font_background_color1),
+//                        fontSize = 11.sp,
+//                        fontWeight = FontWeight.Bold
+//                    )
+//                }
+//                Column(modifier = Modifier.fillMaxWidth(0.8f)) {
+//                    UniversityIndividualRankingTitle()
+//                    mainViewModel.myUniversityTop3RankingUsers.forEachIndexed { index, user ->
+//                        UniversityIndividualRankingContent(
+//                            ranking = index + 1,
+//                            name = user.nickName,
+//                            score = user.score.numberComma()
+//                        ) {
+//                            Divider(
+//                                color = colorResource(id = R.color.ranking_color1),
+//                                modifier = Modifier
+//                                    .fillMaxHeight()
+//                                    .width(2.dp)
+//                            )
+//                            Spacer(modifier = Modifier.width(13.dp))
+//                        }
+//                    }
+//                }
+//            }
         }
 
 
