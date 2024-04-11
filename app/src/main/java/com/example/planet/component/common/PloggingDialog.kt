@@ -34,7 +34,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.planet.R
-import com.example.planet.viewmodel.MapViewModel
+import com.example.planet.presentation.viewmodel.MapViewModel
 
 @Composable
 fun PloggingDialog(mapViewModel: MapViewModel = viewModel(), onClick: () -> Unit) {

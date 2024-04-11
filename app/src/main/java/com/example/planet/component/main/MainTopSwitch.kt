@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.planet.R
-import com.example.planet.viewmodel.MainViewModel
+import com.example.planet.presentation.viewmodel.MainViewModel
 
 @Composable
 fun MainTopSwitch(mainViewModel: MainViewModel = viewModel()) {

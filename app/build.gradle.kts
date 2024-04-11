@@ -117,13 +117,6 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.6.0")
 
-    // retrofit xml parsing
-//    implementation ("com.tickaroo.tikxml:annotation:0.8.13")
-//    implementation ("com.tickaroo.tikxml:core:0.8.13")
-//    implementation ("com.tickaroo.tikxml:retrofit-converter:0.8.13")
-//    kapt ("com.tickaroo.tikxml:processor:0.8.13'")
-//    kapt("groupId:artifactId:1.9.22")
-
     // okhttp
     implementation("com.squareup.okhttp3:okhttp:4.8.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.8.0")
@@ -134,8 +127,6 @@ dependencies {
     implementation("com.google.android.gms:play-services-location:21.0.1")
     implementation("io.github.fornewid:naver-map-location:21.0.1")
 
-//    implementation("com.google.android.material:material:1.11.0")
-
     // Naver Map clustering
     implementation("io.github.ParkSangGwon:tedclustering-naver:1.0.2")
 
@@ -144,4 +135,8 @@ dependencies {
 
     // coil
     implementation("io.coil-kt:coil-compose:2.6.0")
+
+    //paging 3
+    implementation ( "androidx.paging:paging-runtime-ktx:3.2.1")
+    implementation ("androidx.paging:paging-compose:3.3.0-alpha02")
 }

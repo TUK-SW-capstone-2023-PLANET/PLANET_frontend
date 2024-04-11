@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -14,17 +15,17 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.planet.TAG
 import com.example.planet.component.main.MainTopSwitch
-import com.example.planet.screen.main.plogging.community.CommunityScreen
-import com.example.planet.screen.main.plogging.home.MainScreen
-import com.example.planet.screen.main.plogging.home.TierScreen
-import com.example.planet.screen.main.plogging.message.MessageScreen
-import com.example.planet.screen.main.plogging.ranking.PlanetRankingScreen
-import com.example.planet.screen.main.plogging.ranking.RankingScreen
-import com.example.planet.screen.main.plogging.ranking.SeasonRankingScreen
-import com.example.planet.screen.main.plogging.ranking.UniversityIndividualRankingScreen
-import com.example.planet.screen.main.plogging.ranking.UniversityRankingScreen
-import com.example.planet.screen.main.plogging.user.UserScreen
-import com.example.planet.viewmodel.MainViewModel
+import com.example.planet.presentation.ui.main.plogging.community.CommunityScreen
+import com.example.planet.presentation.ui.main.plogging.home.MainScreen
+import com.example.planet.presentation.ui.main.plogging.home.TierScreen
+import com.example.planet.presentation.ui.main.plogging.message.MessageScreen
+import com.example.planet.presentation.ui.main.plogging.ranking.PlanetRankingScreen
+import com.example.planet.presentation.ui.main.plogging.ranking.RankingScreen
+import com.example.planet.presentation.ui.main.plogging.ranking.SeasonRankingScreen
+import com.example.planet.presentation.ui.main.plogging.ranking.UniversityIndividualRankingScreen
+import com.example.planet.presentation.ui.main.plogging.ranking.UniversityRankingScreen
+import com.example.planet.presentation.ui.main.plogging.user.UserScreen
+import com.example.planet.presentation.viewmodel.MainViewModel
 
 
 @Composable
