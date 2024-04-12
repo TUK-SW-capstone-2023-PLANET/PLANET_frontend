@@ -1,4 +1,4 @@
-package com.example.planet.network
+package com.example.planet.di
 
 import com.example.planet.data.remote.api.ApiService
 import com.google.gson.Gson
