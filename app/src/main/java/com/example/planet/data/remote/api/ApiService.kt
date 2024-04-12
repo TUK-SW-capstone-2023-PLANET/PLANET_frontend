@@ -70,7 +70,7 @@ interface ApiService {
     // Season 관련 ---------------------------------------------------------------------------------
     // 나의 시즌 랭킹 정보 조회
     @GET("/season/user/{userId}/rank")
-    suspend fun getMySeasonRanking(@Path("userId") userId: Int): MySeasonRankingInfo
+    suspend fun getMySeasonRanking(@Path("userId") userId: Int): SeasonUser
 
     // 시즌 유저 랭킹 5명 조회
     @GET("/season/user/{userId}/rank/5")

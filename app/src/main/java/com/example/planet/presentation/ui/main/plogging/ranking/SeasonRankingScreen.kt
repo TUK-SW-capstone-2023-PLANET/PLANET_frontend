@@ -113,6 +113,19 @@ fun SeasonRankingScreen(
         }
 
         SeasonTitleRow()
+        mainViewModel.mySeasonRank.value?.let { myRank ->
+            SeasonContentRow(
+                medal = { Spacer(modifier = Modifier.width(24.dp)) },
+                rank = myRank.rank,
+                nickname = myRank.userName,
+                tier = myRank.tierImageUrl,
+                score = myRank.score.numberComma(),
+                universityLogo = myRank.universityLogo,
+                color = colorResource(id = R.color.main_color4)
+            )
+        }
+
+
         LazyColumn(modifier = Modifier.fillMaxSize()) {
             items(seasonUserList.itemCount) { index ->
                 seasonUserList[index]?.let {
@@ -123,7 +136,6 @@ fun SeasonRankingScreen(
                         tier = it.tierImageUrl,
                         score = it.score.numberComma(),
                         universityLogo = it.universityLogo,
-                        color = colorResource(id = R.color.main_color4)
                     )
                 }
             }

@@ -20,7 +20,6 @@ import com.example.planet.data.remote.dto.response.ranking.planet.HigherPlanetUs
 import com.example.planet.data.remote.dto.response.ranking.season.SeasonUser
 import com.example.planet.data.remote.dto.response.ranking.university.University
 import com.example.planet.data.remote.dto.response.ranking.planet.PlanetRankingUser
-import com.example.planet.data.remote.dto.response.ranking.season.MySeasonRankingInfo
 import com.example.planet.data.remote.dto.response.ranking.universityuser.ExpandedUniversityUser
 import com.example.planet.data.remote.dto.response.ranking.universityuser.MyRankingInfo
 import com.example.planet.data.remote.dto.response.ranking.universityuser.UniversityUser
@@ -95,8 +94,8 @@ class MainViewModel @Inject constructor(
     private val _myUniversityRankingInfo = mutableStateOf<MyRankingInfo?>(null)
     val myUniversityRankingInfo: State<MyRankingInfo?> = _myUniversityRankingInfo
 
-    private val _mySeasonRankingInfo = mutableStateOf<MySeasonRankingInfo?>(null)
-    val mySeasonRankingInfo: State<MySeasonRankingInfo?> = _mySeasonRankingInfo
+    private val _mySeasonRank = mutableStateOf<SeasonUser?>(null)
+    val mySeasonRank: State<SeasonUser?> = _mySeasonRank
 
     private val _higherUniversity = mutableStateListOf<University>()
     val higherUniversity: List<University> = _higherUniversity
@@ -226,8 +225,8 @@ class MainViewModel @Inject constructor(
     private suspend fun getMySeasonRanking() {
         when (val apiState = getMySeasonRankUseCase().first()) {
             is ApiState.Success<*> -> {
-                _mySeasonRankingInfo.value = apiState.value as MySeasonRankingInfo
-                Log.d(TAG, "getMySeasonRanking() 성공: ${mySeasonRankingInfo.value}")
+                _mySeasonRank.value = apiState.value as SeasonUser
+                Log.d(TAG, "getMySeasonRanking() 성공: ${mySeasonRank.value}")
             }
 
             is ApiState.Error -> {
