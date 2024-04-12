@@ -51,10 +51,8 @@ import com.example.planet.component.main.plogging.UniversityGraph
 import com.example.planet.component.main.plogging.UniversityIndividualContentRow
 import com.example.planet.component.main.plogging.UniversityIndividualTitleRow
 import com.example.planet.component.navigation.ScreenNav
-import com.example.planet.data.remote.dto.ranking.University
-import com.example.planet.data.remote.dto.response.ranking.university.user.ExpandedUniversityUser
-import com.example.planet.data.remote.dto.response.ranking.university.user.MyRankingInfo
-import com.example.planet.data.remote.dto.response.ranking.university.user.UniversityUser
+import com.example.planet.data.remote.dto.response.ranking.university.University
+import com.example.planet.data.remote.dto.response.ranking.universityuser.ExpandedUniversityUser
 import com.example.planet.util.numberComma
 import com.example.planet.util.round
 import kotlinx.coroutines.delay

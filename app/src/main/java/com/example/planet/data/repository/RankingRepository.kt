@@ -5,8 +5,10 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.example.planet.data.ApiState
 import com.example.planet.data.dataSource.PlanetUserPagingSource
+import com.example.planet.data.dataSource.SeasonUserPagingSource
 import com.example.planet.data.remote.api.ApiService
-import com.example.planet.data.remote.dto.ranking.University
+import com.example.planet.data.remote.dto.response.ranking.university.University
+import com.example.planet.data.remote.dto.response.ranking.season.SeasonUser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -61,15 +63,11 @@ class RankingRepository @Inject constructor(private val apiService: ApiService) 
         }
     }.flowOn(Dispatchers.IO)
 
-    suspend fun getAllSeasonUserInfo(userId: Int = 0): Flow<ApiState> = flow {
-        kotlin.runCatching {
-            apiService.getAllSeasonUserInfo(userId = userId)
-        }.onSuccess {
-            emit(ApiState.Success(it))
-        }.onFailure { error ->
-            error.message?.let { emit(ApiState.Error(it)) }
-        }
-    }.flowOn(Dispatchers.IO)
+    fun getAllSeasonUser(): Flow<PagingData<SeasonUser>> {
+        return Pager(
+            config = PagingConfig(pageSize = 20, prefetchDistance = 2),
+            pagingSourceFactory = { SeasonUserPagingSource(apiService) }).flow
+    }
 
     // University 관련 -----------------------------------------------------------------------------
     // 대학교 랭킹 3개 조회
@@ -84,7 +82,7 @@ class RankingRepository @Inject constructor(private val apiService: ApiService) 
     }.flowOn(Dispatchers.IO)
 
     // 대학교 랭킹 전체 조회
-    suspend fun getAllUniversity(): Flow<PagingData<University>> {
+    fun getAllUniversity(): Flow<PagingData<University>> {
         return Pager(
             config = PagingConfig(pageSize = 20, prefetchDistance = 2),
             pagingSourceFactory = { PlanetUserPagingSource(apiService) }).flow

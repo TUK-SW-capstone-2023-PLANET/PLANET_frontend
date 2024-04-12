@@ -16,24 +16,26 @@ import com.example.planet.TAG
 import com.example.planet.data.ApiState
 import com.example.planet.data.remote.dto.Advertisement
 import com.example.planet.data.remote.dto.Tier
-import com.example.planet.data.remote.dto.ranking.HigherPlanetUser
+import com.example.planet.data.remote.dto.response.ranking.planet.HigherPlanetUser
 import com.example.planet.data.remote.dto.response.ranking.season.SeasonUser
-import com.example.planet.data.remote.dto.ranking.University
+import com.example.planet.data.remote.dto.response.ranking.university.University
 import com.example.planet.data.remote.dto.response.ranking.planet.PlanetRankingUser
 import com.example.planet.data.remote.dto.response.ranking.season.MySeasonRankingInfo
-import com.example.planet.data.remote.dto.response.ranking.university.user.ExpandedUniversityUser
-import com.example.planet.data.remote.dto.response.ranking.university.user.MyRankingInfo
-import com.example.planet.data.remote.dto.response.ranking.university.user.UniversityUser
+import com.example.planet.data.remote.dto.response.ranking.universityuser.ExpandedUniversityUser
+import com.example.planet.data.remote.dto.response.ranking.universityuser.MyRankingInfo
+import com.example.planet.data.remote.dto.response.ranking.universityuser.UniversityUser
 import com.example.planet.domain.usecase.GetBannerUseCase
 import com.example.planet.domain.usecase.GetTierListUseCase
 import com.example.planet.domain.usecase.ranking.GetHigherUniversityUserRankingUseCase
 import com.example.planet.domain.usecase.ranking.GetPlanetUserUseCase
-import com.example.planet.domain.usecase.ranking.GetSeasonUserUseCase
+import com.example.planet.domain.usecase.ranking.season.GetHigherSeasonRankUseCase
 import com.example.planet.domain.usecase.ranking.GetUniversitiesUseCase
 import com.example.planet.domain.usecase.ranking.GetAllUniversityUserInfoUseCase
-import com.example.planet.domain.usecase.ranking.season.GetMySeasonRankingUseCase
+import com.example.planet.domain.usecase.ranking.season.GetAllSeasonRankUseCase
+import com.example.planet.domain.usecase.ranking.season.GetMySeasonRankUseCase
 import com.example.planet.domain.usecase.ranking.user.GetMyUniversityRankingUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
@@ -47,8 +49,9 @@ class MainViewModel @Inject constructor(
     private val getUniversitiesUseCase: GetUniversitiesUseCase,
     private val getHigherUniversityUserRankingUseCase: GetHigherUniversityUserRankingUseCase,
     private val getMyUniversityRankingUseCase: GetMyUniversityRankingUseCase,
-    private val getMySeasonRankingUseCase: GetMySeasonRankingUseCase,
-    private val getSeasonUserUseCase: GetSeasonUserUseCase,
+    private val getMySeasonRankUseCase: GetMySeasonRankUseCase,
+    private val getHigherSeasonRankUseCase: GetHigherSeasonRankUseCase,
+    private val getAllSeasonRankUseCase: GetAllSeasonRankUseCase,
     private val getPlanetUserUseCase: GetPlanetUserUseCase,
     private val getTierListUseCase: GetTierListUseCase,
 ) : ViewModel() {
@@ -57,19 +60,19 @@ class MainViewModel @Inject constructor(
             getTopHigherUniversities()
             getTopBanner()
             getTop3PlanetUser()
-            getAllPlanetUserRanking()
-            getTop5SeasonUser()
-            getAllSeasonUser()
 
+            getTop5SeasonUser()
 
             // trying to draw too large(105922560bytes) bitmap. 오류 해결 하고 주석 풀 것
-            // getAllUniversities()
-            getUniversityAllUserInfo()
+//            getUniversityAllUserInfo()
             getUniversityUserTop4Ranking()
             getMyUniversityRanking()
             getMySeasonRanking()
 
-            getAllUniversities()
+            launch(Dispatchers.IO) {  getAllSeasonUser() }
+            launch(Dispatchers.IO) {  getAllUniversities() }
+//            getAllPlanetUserRanking()
+
         }
     }
     // 자대 대학교 유저 TOP3 그래프 높이 list
@@ -104,8 +107,8 @@ class MainViewModel @Inject constructor(
     private val _higherSeasonUsers = mutableStateListOf<SeasonUser>()
     val higherSeasonUsers: List<SeasonUser> = _higherSeasonUsers
 
-    private val _totalSeasonUser = mutableStateListOf<SeasonUser>()
-    val totalSeasonUser: List<SeasonUser> = _totalSeasonUser
+    private val _totalSeasonUser = MutableStateFlow<PagingData<SeasonUser>>(PagingData.empty())
+    val totalSeasonUser: MutableStateFlow<PagingData<SeasonUser>> = _totalSeasonUser
 
     private val _higherPlanetUser = mutableStateListOf<HigherPlanetUser>()
     val higherPlanetUser: List<HigherPlanetUser> = _higherPlanetUser
@@ -221,7 +224,7 @@ class MainViewModel @Inject constructor(
         }
     }
     private suspend fun getMySeasonRanking() {
-        when (val apiState = getMySeasonRankingUseCase().first()) {
+        when (val apiState = getMySeasonRankUseCase().first()) {
             is ApiState.Success<*> -> {
                 _mySeasonRankingInfo.value = apiState.value as MySeasonRankingInfo
                 Log.d(TAG, "getMySeasonRanking() 성공: ${mySeasonRankingInfo.value}")
@@ -235,7 +238,7 @@ class MainViewModel @Inject constructor(
         }
     }
     private suspend fun getTop5SeasonUser() {
-        when (val apiState = getSeasonUserUseCase.getTop5SeasonUser().first()) {
+        when (val apiState = getHigherSeasonRankUseCase().first()) {
             is ApiState.Success<*> -> {
                 val result = apiState.value as List<Map<Int, SeasonUser>>
                 result[0].values.forEach {
@@ -253,22 +256,12 @@ class MainViewModel @Inject constructor(
     }
 
     private suspend fun getAllSeasonUser() {
-        when (val apiState = getSeasonUserUseCase().first()) {
-            is ApiState.Success<*> -> {
-                val result = apiState.value as List<Map<Int, SeasonUser>>
-                result[0].values.forEach {
-                    _totalSeasonUser.add(it)
-                }
-                Log.d(TAG, "getAllSeasonUser() 성공")
-            }
-
-            is ApiState.Error -> {
-                Log.d("daeYoung", "getAllSeasonUser() 실패: ${apiState.errMsg}")
-            }
-
-            ApiState.Loading -> TODO()
+        getAllSeasonRankUseCase().distinctUntilChanged().cachedIn(viewModelScope).collect {
+            _totalSeasonUser.value = it
         }
     }
+
+
 
 
     suspend fun getTierList() {
@@ -309,8 +302,6 @@ class MainViewModel @Inject constructor(
         getUniversitiesUseCase().distinctUntilChanged().cachedIn(viewModelScope).collect {
             _totalUniversity.value = it
         }
-
-        Log.d(TAG, "getAllUniversities(): ${totalUniversity}")
 
 //        when (val apiState = getUniversitiesUseCase().first()) {
 

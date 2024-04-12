@@ -1,7 +1,6 @@
 package com.example.planet.presentation.ui.main.plogging.ranking
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -40,7 +39,7 @@ import com.example.planet.R
 import com.example.planet.component.main.plogging.ranking.MiddleHead
 import com.example.planet.component.main.plogging.ranking.SearchTextField
 import com.example.planet.component.main.plogging.ranking.UniversityProfile
-import com.example.planet.data.remote.dto.ranking.University
+import com.example.planet.data.remote.dto.response.ranking.university.University
 import com.example.planet.presentation.viewmodel.MainViewModel
 import com.example.planet.util.noRippleClickable
 import com.example.planet.util.numberComma
@@ -50,7 +49,7 @@ fun UniversityRankingScreen(
     navController: NavController,
     mainViewModel: MainViewModel = hiltViewModel()
 ) {
-    val planetUserList: LazyPagingItems<University> =
+    val universityList: LazyPagingItems<University> =
         mainViewModel.totalUniversity.collectAsLazyPagingItems()
 
     BackHandler {
@@ -118,8 +117,8 @@ fun UniversityRankingScreen(
 
         UniversityTitleRow()
         LazyColumn(modifier = Modifier.fillMaxSize()) {
-            items(planetUserList.itemCount) { index ->
-                planetUserList[index]?.let {
+            items(universityList.itemCount) { index ->
+                universityList[index]?.let {
                     UniversityContentRow(
                         medal = { Spacer(modifier = Modifier.width(24.dp)) },
                         rank = it.rank,

@@ -5,16 +5,17 @@ import com.example.planet.data.remote.dto.ImageUrl
 import com.example.planet.data.remote.dto.PloggingComplete
 import com.example.planet.data.remote.dto.PloggingImage
 import com.example.planet.data.remote.dto.PloggingInfo
-import com.example.planet.data.remote.dto.response.ranking.season.SeasonUser
 import com.example.planet.data.remote.dto.Tier
 import com.example.planet.data.remote.dto.TrashCan
-import com.example.planet.data.remote.dto.ranking.University
-import com.example.planet.data.remote.dto.ranking.HigherPlanetUser
-import com.example.planet.data.remote.dto.ranking.PagingUniversity
+import com.example.planet.data.remote.dto.response.ranking.planet.HigherPlanetUser
 import com.example.planet.data.remote.dto.response.ranking.season.MySeasonRankingInfo
-import com.example.planet.data.remote.dto.response.ranking.university.user.ExpandedUniversityUser
-import com.example.planet.data.remote.dto.response.ranking.university.user.MyRankingInfo
-import com.example.planet.data.remote.dto.response.ranking.university.user.UniversityUser
+import com.example.planet.data.remote.dto.response.ranking.season.PagingSeasonUser
+import com.example.planet.data.remote.dto.response.ranking.season.SeasonUser
+import com.example.planet.data.remote.dto.response.ranking.university.PagingUniversity
+import com.example.planet.data.remote.dto.response.ranking.university.University
+import com.example.planet.data.remote.dto.response.ranking.universityuser.ExpandedUniversityUser
+import com.example.planet.data.remote.dto.response.ranking.universityuser.MyRankingInfo
+import com.example.planet.data.remote.dto.response.ranking.universityuser.UniversityUser
 import okhttp3.MultipartBody
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -76,8 +77,8 @@ interface ApiService {
     suspend fun getSeasonTop5UserInfo(@Path("userId") userId: Int): List<Map<Int, SeasonUser>>
 
     // 시즌 유저 랭킹 전체 조회
-    @GET("/season/rank/all/user/{userId}")
-    suspend fun getAllSeasonUserInfo(@Path("userId") userId: Int): List<Map<Int, SeasonUser>>
+    @GET("/season/rank/all")
+    suspend fun getAllSeasonUserInfo(@Query("page") page: Int): PagingSeasonUser
 
 
     // Planet User 관련 ----------------------------------------------------------------------------

@@ -1,4 +1,4 @@
-package com.example.planet.data.remote.dto.response.ranking.university.user
+package com.example.planet.data.remote.dto.response.ranking.universityuser
 
 data class MyRankingInfo(
     val imageUrl: String,

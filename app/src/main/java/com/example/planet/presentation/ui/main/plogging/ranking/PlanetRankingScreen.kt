@@ -26,15 +26,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.planet.R
 import com.example.planet.component.main.plogging.UniversityIndividualContentRow
 import com.example.planet.component.main.plogging.UniversityIndividualTitleRow
 import com.example.planet.component.main.plogging.ranking.MiddleHead
 import com.example.planet.component.main.plogging.ranking.SearchTextField
 import com.example.planet.component.main.plogging.ranking.TrophyProfile
-import com.example.planet.data.remote.dto.ranking.University
 import com.example.planet.util.noRippleClickable
 import com.example.planet.util.numberComma
 import com.example.planet.presentation.viewmodel.MainViewModel
