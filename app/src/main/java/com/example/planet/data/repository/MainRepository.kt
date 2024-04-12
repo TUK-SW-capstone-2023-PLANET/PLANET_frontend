@@ -20,26 +20,6 @@ class MainRepository @Inject constructor(private val apiService: ApiService) {
         }
     }.flowOn(Dispatchers.IO)
 
-    suspend fun getUniversityAllUserInfo(userId: Int = 0): Flow<ApiState> = flow{
-        kotlin.runCatching {
-            apiService.getAllUniversityUserInfo(userId = userId)
-        }.onSuccess {
-            emit(ApiState.Success(it))
-        }.onFailure { error ->
-            error.message?.let { emit(ApiState.Error(it)) }
-        }
-    }.flowOn(Dispatchers.IO)
-
-    suspend fun getSeasonInfo(userId: Int = 0): Flow<ApiState> = flow{
-        kotlin.runCatching {
-            apiService.getSeasonTop5UserInfo(userId = userId)
-        }.onSuccess {
-            emit(ApiState.Success(it))
-        }.onFailure { error ->
-            error.message?.let { emit(ApiState.Error(it)) }
-        }
-    }.flowOn(Dispatchers.IO)
-
     suspend fun getTierList(): Flow<ApiState> = flow{
         kotlin.runCatching {
             apiService.getTierList()

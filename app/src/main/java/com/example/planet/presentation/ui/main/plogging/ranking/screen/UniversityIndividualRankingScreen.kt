@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.Search
@@ -41,11 +42,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.planet.R
+import com.example.planet.data.remote.dto.response.ranking.planet.PlanetRankingUser
+import com.example.planet.data.remote.dto.response.ranking.universityuser.UniversityUser
 import com.example.planet.presentation.ui.main.plogging.ranking.component.MiddleHead
 import com.example.planet.presentation.ui.main.plogging.ranking.component.SearchTextField
+import com.example.planet.presentation.ui.main.plogging.ranking.component.UniversityIndividualContentRow
+import com.example.planet.presentation.ui.main.plogging.ranking.component.UniversityIndividualTitleRow
 import com.example.planet.util.noRippleClickable
 import com.example.planet.util.numberComma
 import com.example.planet.presentation.viewmodel.MainViewModel
@@ -56,6 +63,9 @@ fun UniversityIndividualRankingScreen(
     navController: NavController,
     mainViewModel: MainViewModel = hiltViewModel()
 ) {
+    val universityUserList: LazyPagingItems<UniversityUser> =
+        mainViewModel.totalUniversityUser.collectAsLazyPagingItems()
+
     var visible by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
@@ -149,7 +159,19 @@ fun UniversityIndividualRankingScreen(
             Icon(imageVector = Icons.Default.Search, contentDescription = null)
         }
 
-//        UniversityIndividualTitleRow()
+        UniversityIndividualTitleRow()
+        LazyColumn(modifier = Modifier.fillMaxSize()) {
+            items(universityUserList.itemCount) { index ->
+                universityUserList[index]?.let {
+                    UniversityIndividualContentRow(
+                        rank = it.rank,
+                        nickname = it.nickName,
+                        score = it.score.numberComma(),
+                        contribution = it.contribution,
+                    )
+                }
+            }
+        }
 //        mainViewModel.myUniversityTop4RankingUsers.forEachIndexed { index, universityPerson ->
 //            UniversityIndividualContentRow(
 //                rank = universityPerson.rank,

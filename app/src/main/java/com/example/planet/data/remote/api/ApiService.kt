@@ -16,7 +16,7 @@ import com.example.planet.data.remote.dto.response.ranking.university.PagingUniv
 import com.example.planet.data.remote.dto.response.ranking.university.University
 import com.example.planet.data.remote.dto.response.ranking.universityuser.ExpandedUniversityUser
 import com.example.planet.data.remote.dto.response.ranking.universityuser.MyRankingInfo
-import com.example.planet.data.remote.dto.response.ranking.universityuser.UniversityUser
+import com.example.planet.data.remote.dto.response.ranking.universityuser.PagingUniversityUser
 import okhttp3.MultipartBody
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -57,11 +57,11 @@ interface ApiService {
 
     // University User 관련 -------------------------------------------------------------------------
     // 자대 대학교 유저 랭킹 전체 조회
-    @GET("/user/{userId}/rank/university/all")
-    suspend fun getAllUniversityUserInfo(@Path("userId") userId: Int): List<Map<Int, UniversityUser>>
+    @GET("/user/{userId}/rank/all/university")
+    suspend fun getAllUniversityUserRanking(@Path("userId") userId: Int = 0, @Query("page") page: Int): PagingUniversityUser
     // 자대 대학교 유저 랭킹 상위 4명 조회
     @GET("/user/{userId}/rank/university/4")
-    suspend fun getUniversityTop4UserInfo(@Path("userId") userId: Int): List<Map<Int, ExpandedUniversityUser>>
+    suspend fun getUniversityTop4UserRanking(@Path("userId") userId: Int): List<Map<Int, ExpandedUniversityUser>>
 
     // 자대 대학교 나의 랭킹 정보 조회
     @GET("/user/{userId}/rank")

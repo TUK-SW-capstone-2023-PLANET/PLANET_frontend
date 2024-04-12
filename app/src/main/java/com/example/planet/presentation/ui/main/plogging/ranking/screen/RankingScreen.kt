@@ -76,22 +76,22 @@ fun RankingScreen(navController: NavController, mainViewModel: MainViewModel = h
                 TrophyProfile(
                     image = painterResource(id = R.drawable.plogging_ranking_2st_trophy),
                     imageSize = 50.dp,
-                    userIconUrl = mainViewModel.higherPlanetUser[1].imageUrl,
-                    userName = mainViewModel.higherPlanetUser[1].nickName
+                    userIconUrl = mainViewModel.higherPlanetUsers[1].imageUrl,
+                    userName = mainViewModel.higherPlanetUsers[1].nickName
                 )
 
                 TrophyProfile(
                     image = painterResource(id = R.drawable.plogging_ranking_1st_trophy),
                     imageSize = 60.dp,
-                    userIconUrl = mainViewModel.higherPlanetUser[0].imageUrl,
-                    userName = mainViewModel.higherPlanetUser[0].nickName
+                    userIconUrl = mainViewModel.higherPlanetUsers[0].imageUrl,
+                    userName = mainViewModel.higherPlanetUsers[0].nickName
                 )
 
                 TrophyProfile(
                     image = painterResource(id = R.drawable.plogging_ranking_3st_trophy),
                     imageSize = 40.dp,
-                    userIconUrl = mainViewModel.higherPlanetUser[2].imageUrl,
-                    userName = mainViewModel.higherPlanetUser[2].nickName
+                    userIconUrl = mainViewModel.higherPlanetUsers[2].imageUrl,
+                    userName = mainViewModel.higherPlanetUsers[2].nickName
                 )
             }
 

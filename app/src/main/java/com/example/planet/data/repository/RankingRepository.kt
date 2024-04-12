@@ -7,10 +7,12 @@ import com.example.planet.data.ApiState
 import com.example.planet.data.dataSource.PlanetPagingSource
 import com.example.planet.data.dataSource.UniversityPagingSource
 import com.example.planet.data.dataSource.SeasonUserPagingSource
+import com.example.planet.data.dataSource.UniversityUserPagingSource
 import com.example.planet.data.remote.api.ApiService
 import com.example.planet.data.remote.dto.response.ranking.planet.PlanetRankingUser
 import com.example.planet.data.remote.dto.response.ranking.university.University
 import com.example.planet.data.remote.dto.response.ranking.season.SeasonUser
+import com.example.planet.data.remote.dto.response.ranking.universityuser.UniversityUser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -100,20 +102,16 @@ class RankingRepository @Inject constructor(private val apiService: ApiService) 
 
     // UniversityUser 관련 -------------------------------------------------------------------------
     // 대학교 유저 랭킹 전체 조회
-    suspend fun getAllUniversityUserInfo(userId: Int = 0): Flow<ApiState> = flow {
-        kotlin.runCatching {
-            apiService.getAllUniversityUserInfo(userId = userId)
-        }.onSuccess {
-            emit(ApiState.Success(it))
-        }.onFailure { error ->
-            error.message?.let { emit(ApiState.Error(it)) }
-        }
-    }.flowOn(Dispatchers.IO)
+    fun getAllUniversityUser(): Flow<PagingData<UniversityUser>> {
+        return Pager(
+            config = PagingConfig(pageSize = 20, prefetchDistance = 2),
+            pagingSourceFactory = { UniversityUserPagingSource(apiService) }).flow
+    }
 
     // 대학교 유저 랭킹 4개 조회
-    suspend fun getUniversityTop4UserInfo(userId: Int = 0): Flow<ApiState> = flow {
+    suspend fun getUniversityTop4User(userId: Int = 0): Flow<ApiState> = flow {
         kotlin.runCatching {
-            apiService.getUniversityTop4UserInfo(userId = userId)
+            apiService.getUniversityTop4UserRanking(userId = userId)
         }.onSuccess {
             emit(ApiState.Success(it))
         }.onFailure { error ->

@@ -25,8 +25,8 @@ import com.example.planet.data.remote.dto.response.ranking.universityuser.MyRank
 import com.example.planet.data.remote.dto.response.ranking.universityuser.UniversityUser
 import com.example.planet.domain.usecase.GetBannerUseCase
 import com.example.planet.domain.usecase.GetTierListUseCase
-import com.example.planet.domain.usecase.ranking.user.GetAllUniversityUserRankUseCase
-import com.example.planet.domain.usecase.ranking.user.GetHigherUniversityUserRankUseCase
+import com.example.planet.domain.usecase.ranking.universityuser.GetAllUniversityUserRankUseCase
+import com.example.planet.domain.usecase.ranking.universityuser.GetHigherUniversityUserRankUseCase
 import com.example.planet.domain.usecase.ranking.university.GetUniversitiesUseCase
 import com.example.planet.domain.usecase.ranking.planet.GetAllPlanetUserRankUseCase
 import com.example.planet.domain.usecase.ranking.planet.GetHigherPlanetUserUseCase
@@ -46,7 +46,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val getBannerUseCase: GetBannerUseCase,
-    private val getAllUniversityUserRankingUseCase: GetAllUniversityUserRankUseCase,
+    private val getAllUniversityUserRankUseCase: GetAllUniversityUserRankUseCase,
     private val getUniversitiesUseCase: GetUniversitiesUseCase,
     private val getHigherUniversityUserRankUseCase: GetHigherUniversityUserRankUseCase,
     private val getMyUniversityRankingUseCase: GetMyUniversityRankingUseCase,
@@ -75,7 +75,7 @@ class MainViewModel @Inject constructor(
             launch(Dispatchers.IO) {  getAllSeasonUser() }
             launch(Dispatchers.IO) {  getAllUniversities() }
             launch(Dispatchers.IO) {  getAllPlanetUserRanking() }
-            //            getUniversityAllUserInfo()
+            launch(Dispatchers.IO) {  getAllUniversityUser() }
 
         }
     }
@@ -90,11 +90,9 @@ class MainViewModel @Inject constructor(
     // 상단배너 이미지 리스트
     var imageUrlList by mutableStateOf(listOf<String>())
 
-    private val _myUniversityUserList = mutableStateListOf<UniversityUser>()
-    val myUniversityUserList: List<UniversityUser> = _myUniversityUserList
 
-    private val _higherMyUniversityUsers = mutableStateOf(emptyList<ExpandedUniversityUser>())
-    val higherMyUniversityUsers: State<List<ExpandedUniversityUser>> = _higherMyUniversityUsers
+
+
 
     private val _myUniversityRankingInfo = mutableStateOf<MyRankingInfo?>(null)
     val myUniversityRankingInfo: State<MyRankingInfo?> = _myUniversityRankingInfo
@@ -105,23 +103,31 @@ class MainViewModel @Inject constructor(
     private val _myPlanetRank = mutableStateOf<PlanetRankingUser?>(null)
     val myPlanetRank: State<PlanetRankingUser?> = _myPlanetRank
 
+    private val _higherMyUniversityUsers = mutableStateOf(emptyList<ExpandedUniversityUser>())
+    val higherMyUniversityUsers: State<List<ExpandedUniversityUser>> = _higherMyUniversityUsers
+
     private val _higherUniversity = mutableStateListOf<University>()
     val higherUniversity: List<University> = _higherUniversity
-
-    private val _totalUniversity = MutableStateFlow<PagingData<University>>(PagingData.empty())
-    val totalUniversity: MutableStateFlow<PagingData<University>> = _totalUniversity
 
     private val _higherSeasonUsers = mutableStateListOf<SeasonUser>()
     val higherSeasonUsers: List<SeasonUser> = _higherSeasonUsers
 
+    private val _higherPlanetUsers = mutableStateListOf<HigherPlanetUser>()
+    val higherPlanetUsers: List<HigherPlanetUser> = _higherPlanetUsers
+
+    private val _totalUniversityUser = MutableStateFlow<PagingData<UniversityUser>>(PagingData.empty())
+    val totalUniversityUser: MutableStateFlow<PagingData<UniversityUser>> = _totalUniversityUser
+
+    private val _totalUniversity = MutableStateFlow<PagingData<University>>(PagingData.empty())
+    val totalUniversity: MutableStateFlow<PagingData<University>> = _totalUniversity
+
     private val _totalSeasonUser = MutableStateFlow<PagingData<SeasonUser>>(PagingData.empty())
     val totalSeasonUser: MutableStateFlow<PagingData<SeasonUser>> = _totalSeasonUser
 
-    private val _higherPlanetUser = mutableStateListOf<HigherPlanetUser>()
-    val higherPlanetUser: List<HigherPlanetUser> = _higherPlanetUser
-
     private val _totalPlanetRankingUser = MutableStateFlow<PagingData<PlanetRankingUser>>(PagingData.empty())
     val totalPlanetRankingUser: MutableStateFlow<PagingData<PlanetRankingUser>> = _totalPlanetRankingUser
+
+
 
     private val _tierList = mutableStateOf(emptyList<Tier>())
     val tierList: State<List<Tier>> = _tierList
@@ -201,9 +207,9 @@ class MainViewModel @Inject constructor(
             is ApiState.Success<*> -> {
                 val result = apiState.value as List<HigherPlanetUser>
                 result.forEach {
-                    _higherPlanetUser.add(it)
+                    _higherPlanetUsers.add(it)
                 }
-                Log.d(TAG, "getTop3PlanetUser() 성공: ${higherPlanetUser}")
+                Log.d(TAG, "getTop3PlanetUser() 성공: ${higherPlanetUsers}")
             }
 
             is ApiState.Error -> {
@@ -317,21 +323,9 @@ class MainViewModel @Inject constructor(
     }
 
     // 자대 대학교 유저 랭킹 전체 조회
-    private suspend fun getUniversityAllUserInfo() {
-        when (val apiState = getAllUniversityUserRankingUseCase().first()) {
-            is ApiState.Success<*> -> {
-                val result = apiState.value as List<Map<Int, UniversityUser>>
-                result[0].values.forEach {
-                    _myUniversityUserList.add(it)
-                }
-                Log.d(TAG, "getUniversityAllUserInfo() 성공")
-            }
-
-            is ApiState.Error -> {
-                Log.d("daeYoung", "getUniversityAllUserInfo() 실패: ${apiState.errMsg}")
-            }
-
-            ApiState.Loading -> TODO()
+    private suspend fun getAllUniversityUser() {
+        getAllUniversityUserRankUseCase().distinctUntilChanged().cachedIn(viewModelScope).collect {
+            _totalUniversityUser.value = it
         }
     }
     private suspend fun getTop4UniversityUser() {
