@@ -4,9 +4,11 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.example.planet.data.ApiState
-import com.example.planet.data.dataSource.PlanetUserPagingSource
+import com.example.planet.data.dataSource.PlanetPagingSource
+import com.example.planet.data.dataSource.UniversityPagingSource
 import com.example.planet.data.dataSource.SeasonUserPagingSource
 import com.example.planet.data.remote.api.ApiService
+import com.example.planet.data.remote.dto.response.ranking.planet.PlanetRankingUser
 import com.example.planet.data.remote.dto.response.ranking.university.University
 import com.example.planet.data.remote.dto.response.ranking.season.SeasonUser
 import kotlinx.coroutines.Dispatchers
@@ -30,15 +32,11 @@ class RankingRepository @Inject constructor(private val apiService: ApiService) 
     }.flowOn(Dispatchers.IO)
 
     // 플래넷 유저 랭킹 전체 조회
-    suspend fun getAllPlanetUserRanking(): Flow<ApiState> = flow {
-        kotlin.runCatching {
-            apiService.getAllPlanetUserRanking()
-        }.onSuccess {
-            emit(ApiState.Success(it))
-        }.onFailure { error ->
-            error.message?.let { emit(ApiState.Error(it)) }
-        }
-    }.flowOn(Dispatchers.IO)
+    fun getAllPlanetUserRanking(): Flow<PagingData<PlanetRankingUser>> {
+        return Pager(
+            config = PagingConfig(pageSize = 20, prefetchDistance = 2),
+            pagingSourceFactory = { PlanetPagingSource(apiService) }).flow
+    }
 
     // Season 관련 ---------------------------------------------------------------------------------
     // 자대 대학교 나의 랭킹 정보 조회
@@ -85,7 +83,7 @@ class RankingRepository @Inject constructor(private val apiService: ApiService) 
     fun getAllUniversity(): Flow<PagingData<University>> {
         return Pager(
             config = PagingConfig(pageSize = 20, prefetchDistance = 2),
-            pagingSourceFactory = { PlanetUserPagingSource(apiService) }).flow
+            pagingSourceFactory = { UniversityPagingSource(apiService) }).flow
     }
 
 

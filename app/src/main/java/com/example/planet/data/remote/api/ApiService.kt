@@ -8,7 +8,7 @@ import com.example.planet.data.remote.dto.PloggingInfo
 import com.example.planet.data.remote.dto.Tier
 import com.example.planet.data.remote.dto.TrashCan
 import com.example.planet.data.remote.dto.response.ranking.planet.HigherPlanetUser
-import com.example.planet.data.remote.dto.response.ranking.season.MySeasonRankingInfo
+import com.example.planet.data.remote.dto.response.ranking.planet.PagingPlanetUser
 import com.example.planet.data.remote.dto.response.ranking.season.PagingSeasonUser
 import com.example.planet.data.remote.dto.response.ranking.season.SeasonUser
 import com.example.planet.data.remote.dto.response.ranking.university.PagingUniversity
@@ -78,7 +78,7 @@ interface ApiService {
 
     // 시즌 유저 랭킹 전체 조회
     @GET("/season/rank/all")
-    suspend fun getAllSeasonUserInfo(@Query("page") page: Int): PagingSeasonUser
+    suspend fun getAllSeasonRanking(@Query("page") page: Int): PagingSeasonUser
 
 
     // Planet User 관련 ----------------------------------------------------------------------------
@@ -86,9 +86,9 @@ interface ApiService {
     @GET("/user/rank")
     suspend fun getTop3PlanetUser(): List<HigherPlanetUser>
 
-    // 플래넷 유저 랭킹 상위 전체 조회
+    // 플래넷 유저 랭킹 전체 조회
     @GET("/user/rank/all")
-    suspend fun getAllPlanetUserRanking(): List<HigherPlanetUser>
+    suspend fun getAllPlanetUserRanking(@Query("page") page: Int): PagingPlanetUser
 
     @GET("/tier")
     suspend fun getTierList(): List<Tier>

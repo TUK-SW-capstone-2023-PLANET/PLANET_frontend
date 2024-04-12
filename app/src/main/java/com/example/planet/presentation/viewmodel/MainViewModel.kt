@@ -17,20 +17,21 @@ import com.example.planet.data.ApiState
 import com.example.planet.data.remote.dto.Advertisement
 import com.example.planet.data.remote.dto.Tier
 import com.example.planet.data.remote.dto.response.ranking.planet.HigherPlanetUser
+import com.example.planet.data.remote.dto.response.ranking.planet.PlanetRankingUser
 import com.example.planet.data.remote.dto.response.ranking.season.SeasonUser
 import com.example.planet.data.remote.dto.response.ranking.university.University
-import com.example.planet.data.remote.dto.response.ranking.planet.PlanetRankingUser
 import com.example.planet.data.remote.dto.response.ranking.universityuser.ExpandedUniversityUser
 import com.example.planet.data.remote.dto.response.ranking.universityuser.MyRankingInfo
 import com.example.planet.data.remote.dto.response.ranking.universityuser.UniversityUser
 import com.example.planet.domain.usecase.GetBannerUseCase
 import com.example.planet.domain.usecase.GetTierListUseCase
-import com.example.planet.domain.usecase.ranking.GetHigherUniversityUserRankingUseCase
-import com.example.planet.domain.usecase.ranking.GetPlanetUserUseCase
-import com.example.planet.domain.usecase.ranking.season.GetHigherSeasonRankUseCase
-import com.example.planet.domain.usecase.ranking.GetUniversitiesUseCase
 import com.example.planet.domain.usecase.ranking.GetAllUniversityUserInfoUseCase
+import com.example.planet.domain.usecase.ranking.GetHigherUniversityUserRankingUseCase
+import com.example.planet.domain.usecase.ranking.planet.GetHigherPlanetUserUseCase
+import com.example.planet.domain.usecase.ranking.GetUniversitiesUseCase
+import com.example.planet.domain.usecase.ranking.planet.GetAllPlanetUserRankUseCase
 import com.example.planet.domain.usecase.ranking.season.GetAllSeasonRankUseCase
+import com.example.planet.domain.usecase.ranking.season.GetHigherSeasonRankUseCase
 import com.example.planet.domain.usecase.ranking.season.GetMySeasonRankUseCase
 import com.example.planet.domain.usecase.ranking.user.GetMyUniversityRankingUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -51,7 +52,8 @@ class MainViewModel @Inject constructor(
     private val getMySeasonRankUseCase: GetMySeasonRankUseCase,
     private val getHigherSeasonRankUseCase: GetHigherSeasonRankUseCase,
     private val getAllSeasonRankUseCase: GetAllSeasonRankUseCase,
-    private val getPlanetUserUseCase: GetPlanetUserUseCase,
+    private val getAllPlanetUserRankUseCase: GetAllPlanetUserRankUseCase,
+    private val getHigherPlanetUserUseCase: GetHigherPlanetUserUseCase,
     private val getTierListUseCase: GetTierListUseCase,
 ) : ViewModel() {
     init {
@@ -70,7 +72,7 @@ class MainViewModel @Inject constructor(
 
             launch(Dispatchers.IO) {  getAllSeasonUser() }
             launch(Dispatchers.IO) {  getAllUniversities() }
-//            getAllPlanetUserRanking()
+            launch(Dispatchers.IO) {  getAllPlanetUserRanking() }
 
         }
     }
@@ -112,8 +114,8 @@ class MainViewModel @Inject constructor(
     private val _higherPlanetUser = mutableStateListOf<HigherPlanetUser>()
     val higherPlanetUser: List<HigherPlanetUser> = _higherPlanetUser
 
-    private val _planetRankingUser = mutableStateListOf<PlanetRankingUser>()
-    val planetRankingUser: List<PlanetRankingUser> = _planetRankingUser
+    private val _totalPlanetRankingUser = MutableStateFlow<PagingData<PlanetRankingUser>>(PagingData.empty())
+    val totalPlanetRankingUser: MutableStateFlow<PagingData<PlanetRankingUser>> = _totalPlanetRankingUser
 
     private val _tierList = mutableStateOf(emptyList<Tier>())
     val tierList: State<List<Tier>> = _tierList
@@ -189,7 +191,7 @@ class MainViewModel @Inject constructor(
 
 
     private suspend fun getTop3PlanetUser() {
-        when (val apiState = getPlanetUserUseCase.top3PlanetUser().first()) {
+        when (val apiState = getHigherPlanetUserUseCase().first()) {
             is ApiState.Success<*> -> {
                 val result = apiState.value as List<HigherPlanetUser>
                 result.forEach {
@@ -207,20 +209,10 @@ class MainViewModel @Inject constructor(
     }
 
     private suspend fun getAllPlanetUserRanking() {
-        when (val apiState = getPlanetUserUseCase().first()) {
-            is ApiState.Success<*> -> {
-                (apiState.value as List<PlanetRankingUser>).forEach {
-                    _planetRankingUser.add(it)
-                }
-                Log.d(TAG, "getAllPlanetUserRanking() 성공: ${planetRankingUser}")
-            }
-
-            is ApiState.Error -> {
-                Log.d("daeYoung", "getAllPlanetUserRanking() 실패: ${apiState.errMsg}")
-            }
-
-            ApiState.Loading -> TODO()
+        getAllPlanetUserRankUseCase().distinctUntilChanged().cachedIn(viewModelScope).collect {
+            _totalPlanetRankingUser.value = it
         }
+
     }
     private suspend fun getMySeasonRanking() {
         when (val apiState = getMySeasonRankUseCase().first()) {
@@ -301,22 +293,6 @@ class MainViewModel @Inject constructor(
         getUniversitiesUseCase().distinctUntilChanged().cachedIn(viewModelScope).collect {
             _totalUniversity.value = it
         }
-
-//        when (val apiState = getUniversitiesUseCase().first()) {
-
-//            is ApiState.Success<*> -> {
-//                (apiState.value as List<University>).forEach {
-//                    _totalUniversity.add(it)
-//                }
-//                Log.d(TAG, "getAllUniversities() 성공: ${totalUniversity}")
-//
-//            }
-//            is ApiState.Error -> {
-//                Log.d("daeYoung", "getAllUniversities() 실패: ${apiState.errMsg}")
-//            }
-//
-//            ApiState.Loading -> TODO()
-//        }
     }
 
     // 자대 대학교 유저 랭킹 전체 조회
