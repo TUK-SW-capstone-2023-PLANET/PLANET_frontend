@@ -27,9 +27,10 @@ import com.example.planet.domain.usecase.GetBannerUseCase
 import com.example.planet.domain.usecase.GetTierListUseCase
 import com.example.planet.domain.usecase.ranking.GetAllUniversityUserInfoUseCase
 import com.example.planet.domain.usecase.ranking.GetHigherUniversityUserRankingUseCase
-import com.example.planet.domain.usecase.ranking.planet.GetHigherPlanetUserUseCase
 import com.example.planet.domain.usecase.ranking.GetUniversitiesUseCase
 import com.example.planet.domain.usecase.ranking.planet.GetAllPlanetUserRankUseCase
+import com.example.planet.domain.usecase.ranking.planet.GetHigherPlanetUserUseCase
+import com.example.planet.domain.usecase.ranking.planet.GetMyPlanetRankUseCase
 import com.example.planet.domain.usecase.ranking.season.GetAllSeasonRankUseCase
 import com.example.planet.domain.usecase.ranking.season.GetHigherSeasonRankUseCase
 import com.example.planet.domain.usecase.ranking.season.GetMySeasonRankUseCase
@@ -50,6 +51,7 @@ class MainViewModel @Inject constructor(
     private val getHigherUniversityUserRankingUseCase: GetHigherUniversityUserRankingUseCase,
     private val getMyUniversityRankingUseCase: GetMyUniversityRankingUseCase,
     private val getMySeasonRankUseCase: GetMySeasonRankUseCase,
+    private val getMyPlanetRankUseCase: GetMyPlanetRankUseCase,
     private val getHigherSeasonRankUseCase: GetHigherSeasonRankUseCase,
     private val getAllSeasonRankUseCase: GetAllSeasonRankUseCase,
     private val getAllPlanetUserRankUseCase: GetAllPlanetUserRankUseCase,
@@ -69,6 +71,7 @@ class MainViewModel @Inject constructor(
             getUniversityUserTop4Ranking()
             getMyUniversityRanking()
             getMySeasonRanking()
+            getMyPlanetRanking()
 
             launch(Dispatchers.IO) {  getAllSeasonUser() }
             launch(Dispatchers.IO) {  getAllUniversities() }
@@ -98,6 +101,9 @@ class MainViewModel @Inject constructor(
 
     private val _mySeasonRank = mutableStateOf<SeasonUser?>(null)
     val mySeasonRank: State<SeasonUser?> = _mySeasonRank
+
+    private val _myPlanetRank = mutableStateOf<PlanetRankingUser?>(null)
+    val myPlanetRank: State<PlanetRankingUser?> = _myPlanetRank
 
     private val _higherUniversity = mutableStateListOf<University>()
     val higherUniversity: List<University> = _higherUniversity
@@ -228,6 +234,24 @@ class MainViewModel @Inject constructor(
             ApiState.Loading -> TODO()
         }
     }
+
+    private suspend fun getMyPlanetRanking() {
+        when (val apiState = getMyPlanetRankUseCase().first()) {
+            is ApiState.Success<*> -> {
+                _myPlanetRank.value = apiState.value as PlanetRankingUser
+                Log.d(TAG, "getMyPlanetRanking() 성공: ${myPlanetRank.value}")
+            }
+
+            is ApiState.Error -> {
+                Log.d("daeYoung", "getMyPlanetRanking() 실패: ${apiState.errMsg}")
+            }
+
+            ApiState.Loading -> TODO()
+        }
+    }
+
+
+
     private suspend fun getTop5SeasonUser() {
         when (val apiState = getHigherSeasonRankUseCase().first()) {
             is ApiState.Success<*> -> {

@@ -123,18 +123,16 @@ fun PlanetRankingScreen(
         }
 
         UniversityIndividualTitleRow()
-//        mainViewModel.mySeasonRank.value?.let { myRank ->
-//            SeasonContentRow(
-//                medal = { Spacer(modifier = Modifier.width(24.dp)) },
-//                rank = myRank.rank,
-//                nickname = myRank.userName,
-//                tier = myRank.tierImageUrl,
-//                score = myRank.score.numberComma(),
-//                universityLogo = myRank.universityLogo,
-//                color = colorResource(id = R.color.main_color4)
-//            )
-//        }
-
+        mainViewModel.myPlanetRank.value?.let { myRank ->
+            UniversityIndividualContentRow(
+                medal = { Spacer(modifier = Modifier.width(24.dp)) },
+                rank = myRank.rank,
+                nickname = myRank.nickName,
+                score = myRank.score.numberComma(),
+                contribution = 1.7,  /* TODO(기여도 대학교 로고로 바꿀 것)*/
+                color = colorResource(id = R.color.main_color4)
+            )
+        }
 
         LazyColumn(modifier = Modifier.fillMaxSize()) {
             items(planetUserList.itemCount) { index ->
@@ -145,7 +143,6 @@ fun PlanetRankingScreen(
                         nickname = it.nickName,
                         score = it.score.numberComma(),
                         contribution = 1.7,  /* TODO(기여도 대학교 로고로 바꿀 것)*/
-//                        color = colorResource(id = R.color.main_color4)
                     )
                 }
             }

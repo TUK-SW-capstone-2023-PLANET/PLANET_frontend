@@ -9,6 +9,7 @@ import com.example.planet.data.remote.dto.Tier
 import com.example.planet.data.remote.dto.TrashCan
 import com.example.planet.data.remote.dto.response.ranking.planet.HigherPlanetUser
 import com.example.planet.data.remote.dto.response.ranking.planet.PagingPlanetUser
+import com.example.planet.data.remote.dto.response.ranking.planet.PlanetRankingUser
 import com.example.planet.data.remote.dto.response.ranking.season.PagingSeasonUser
 import com.example.planet.data.remote.dto.response.ranking.season.SeasonUser
 import com.example.planet.data.remote.dto.response.ranking.university.PagingUniversity
@@ -85,6 +86,10 @@ interface ApiService {
     // 플래넷 유저 랭킹 상위 3명 조회
     @GET("/user/rank")
     suspend fun getTop3PlanetUser(): List<HigherPlanetUser>
+
+    // 나의 시즌 랭킹 정보 조회
+    @GET("/user/{userId}/rank")
+    suspend fun getMyPlanetRanking(@Path("userId") userId: Int): PlanetRankingUser
 
     // 플래넷 유저 랭킹 전체 조회
     @GET("/user/rank/all")

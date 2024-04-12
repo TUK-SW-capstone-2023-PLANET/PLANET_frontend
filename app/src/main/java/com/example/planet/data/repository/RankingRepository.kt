@@ -31,6 +31,17 @@ class RankingRepository @Inject constructor(private val apiService: ApiService) 
         }
     }.flowOn(Dispatchers.IO)
 
+    suspend fun getMyPlanetRanking(userId: Int = 0): Flow<ApiState> = flow {
+        kotlin.runCatching {
+            apiService.getMyPlanetRanking(userId = userId)
+        }.onSuccess {
+            emit(ApiState.Success(it))
+        }.onFailure { error ->
+            error.message?.let { emit(ApiState.Error(it)) }
+        }
+    }.flowOn(Dispatchers.IO)
+
+
     // 플래넷 유저 랭킹 전체 조회
     fun getAllPlanetUserRanking(): Flow<PagingData<PlanetRankingUser>> {
         return Pager(
