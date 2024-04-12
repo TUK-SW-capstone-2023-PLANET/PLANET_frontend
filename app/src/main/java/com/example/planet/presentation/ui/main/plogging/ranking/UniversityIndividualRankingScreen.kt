@@ -48,8 +48,8 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.planet.R
-import com.example.planet.component.main.plogging.UniversityIndividualContentRow
-import com.example.planet.component.main.plogging.UniversityIndividualTitleRow
+import com.example.planet.presentation.ui.main.plogging.ranking.component.UniversityIndividualContentRow
+import com.example.planet.presentation.ui.main.plogging.ranking.component.UniversityIndividualTitleRow
 import com.example.planet.component.main.plogging.ranking.MiddleHead
 import com.example.planet.component.main.plogging.ranking.SearchTextField
 import com.example.planet.util.noRippleClickable
@@ -158,82 +158,12 @@ fun UniversityIndividualRankingScreen(
 
         UniversityIndividualTitleRow()
         mainViewModel.myUniversityTop4RankingUsers.forEachIndexed { index, universityPerson ->
-            when (index) {
-                0 -> {
-                    UniversityIndividualContentRow(
-                        medal = { Spacer(modifier = Modifier.width(24.dp)) },
-                        rank = universityPerson.rank,
-                        nickname = universityPerson.nickName,
-                        score = universityPerson.score.numberComma(),
-                        contribution = universityPerson.contribution,
-                        color = colorResource(id = R.color.main_color4)
-                    )
-                }
-
-                1 -> {
-                    UniversityIndividualContentRow(
-                        medal = {
-                            Divider(
-                                color = colorResource(id = R.color.ranking_color1),
-                                modifier = Modifier
-                                    .fillMaxHeight()
-                                    .width(4.dp)
-                            )
-                            Spacer(modifier = Modifier.width(20.dp))
-                        },
-                        rank = universityPerson.rank,
-                        nickname = universityPerson.nickName,
-                        score = universityPerson.score.numberComma(),
-                        contribution = universityPerson.contribution,
-                    )
-                }
-
-                2 -> {
-                    UniversityIndividualContentRow(
-                        medal = {
-                            Divider(
-                                color = colorResource(id = R.color.ranking_color2),
-                                modifier = Modifier
-                                    .fillMaxHeight()
-                                    .width(4.dp)
-                            )
-                            Spacer(modifier = Modifier.width(20.dp))
-                        },
-                        rank = universityPerson.rank,
-                        nickname = universityPerson.nickName,
-                        score = universityPerson.score.numberComma(),
-                        contribution = universityPerson.contribution,
-                    )
-                }
-
-                3 -> {
-                    UniversityIndividualContentRow(
-                        medal = {
-                            Divider(
-                                color = colorResource(id = R.color.ranking_color3),
-                                modifier = Modifier
-                                    .fillMaxHeight()
-                                    .width(4.dp)
-                            )
-                            Spacer(modifier = Modifier.width(20.dp))
-                        },
-                        rank = universityPerson.rank,
-                        nickname = universityPerson.nickName,
-                        score = universityPerson.score.numberComma(),
-                        contribution = universityPerson.contribution,
-                    )
-                }
-
-                else -> {
-                    UniversityIndividualContentRow(
-                        medal = { Spacer(modifier = Modifier.width(24.dp)) },
-                        rank = universityPerson.rank,
-                        nickname = universityPerson.nickName,
-                        score = universityPerson.score.numberComma(),
-                        contribution = universityPerson.contribution,
-                    )
-                }
-            }
+            UniversityIndividualContentRow(
+                rank = universityPerson.rank,
+                nickname = universityPerson.nickName,
+                score = universityPerson.score.numberComma(),
+                contribution = universityPerson.contribution,
+            )
         }
     }
 }

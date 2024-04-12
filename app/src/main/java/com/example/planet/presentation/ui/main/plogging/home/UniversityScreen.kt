@@ -48,8 +48,8 @@ import com.example.planet.component.common.TripleArrowIcon
 import com.example.planet.component.main.SubTitle
 import com.example.planet.component.main.SubTitleDescription
 import com.example.planet.component.main.plogging.UniversityGraph
-import com.example.planet.component.main.plogging.UniversityIndividualContentRow
-import com.example.planet.component.main.plogging.UniversityIndividualTitleRow
+import com.example.planet.presentation.ui.main.plogging.ranking.component.UniversityIndividualContentRow
+import com.example.planet.presentation.ui.main.plogging.ranking.component.UniversityIndividualTitleRow
 import com.example.planet.component.navigation.ScreenNav
 import com.example.planet.data.remote.dto.response.ranking.university.University
 import com.example.planet.data.remote.dto.response.ranking.universityuser.ExpandedUniversityUser
@@ -258,72 +258,12 @@ fun UniversityScreen(
             ) {
                 UniversityIndividualTitleRow()
                 universityUserList.forEachIndexed { index, universityUser ->
-                    when (index) {
-                        0 -> {}
-                        1 -> {
-                            UniversityIndividualContentRow(
-                                medal = {
-                                    Divider(
-                                        color = colorResource(id = R.color.ranking_color1),
-                                        modifier = Modifier
-                                            .fillMaxHeight()
-                                            .width(4.dp)
-                                    )
-                                    Spacer(modifier = Modifier.width(20.dp))
-                                },
-                                rank = universityUser.rank,
-                                nickname = universityUser.nickName,
-                                score = universityUser.score.numberComma(),
-                                contribution = universityUser.contribution
-                            )
-                        }
-
-                        2 -> {
-                            UniversityIndividualContentRow(
-                                medal = {
-                                    Divider(
-                                        color = colorResource(id = R.color.ranking_color2),
-                                        modifier = Modifier
-                                            .fillMaxHeight()
-                                            .width(4.dp)
-                                    )
-                                    Spacer(modifier = Modifier.width(20.dp))
-                                },
-                                rank = universityUser.rank,
-                                nickname = universityUser.nickName,
-                                score = universityUser.score.numberComma(),
-                                contribution = universityUser.contribution
-                            )
-                        }
-
-                        3 -> {
-                            UniversityIndividualContentRow(
-                                medal = {
-                                    Divider(
-                                        color = colorResource(id = R.color.ranking_color3),
-                                        modifier = Modifier
-                                            .fillMaxHeight()
-                                            .width(4.dp)
-                                    )
-                                    Spacer(modifier = Modifier.width(20.dp))
-                                },
-                                rank = universityUser.rank,
-                                nickname = universityUser.nickName,
-                                score = universityUser.score.numberComma(),
-                                contribution = universityUser.contribution
-                            )
-                        }
-
-                        else -> {
-                            UniversityIndividualContentRow(
-                                medal = { Spacer(modifier = Modifier.width(24.dp)) },
-                                rank = universityUser.rank,
-                                nickname = universityUser.nickName,
-                                score = universityUser.score.numberComma(),
-                                contribution = universityUser.contribution
-                            )
-                        }
-                    }
+                    UniversityIndividualContentRow(
+                        rank = universityUser.rank,
+                        nickname = universityUser.nickName,
+                        score = universityUser.score.numberComma(),
+                        contribution = universityUser.contribution
+                    )
                 }
             }
         }

@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -15,7 +14,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -30,17 +28,15 @@ import androidx.navigation.NavController
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.planet.R
-import com.example.planet.component.main.plogging.SeasonContentRow
-import com.example.planet.component.main.plogging.UniversityIndividualContentRow
-import com.example.planet.component.main.plogging.UniversityIndividualTitleRow
+import com.example.planet.presentation.ui.main.plogging.ranking.component.UniversityIndividualContentRow
+import com.example.planet.presentation.ui.main.plogging.ranking.component.UniversityIndividualTitleRow
 import com.example.planet.component.main.plogging.ranking.MiddleHead
 import com.example.planet.component.main.plogging.ranking.SearchTextField
 import com.example.planet.component.main.plogging.ranking.TrophyProfile
 import com.example.planet.data.remote.dto.response.ranking.planet.PlanetRankingUser
-import com.example.planet.data.remote.dto.response.ranking.university.University
+import com.example.planet.presentation.viewmodel.MainViewModel
 import com.example.planet.util.noRippleClickable
 import com.example.planet.util.numberComma
-import com.example.planet.presentation.viewmodel.MainViewModel
 
 @Composable
 fun PlanetRankingScreen(
@@ -125,7 +121,6 @@ fun PlanetRankingScreen(
         UniversityIndividualTitleRow()
         mainViewModel.myPlanetRank.value?.let { myRank ->
             UniversityIndividualContentRow(
-                medal = { Spacer(modifier = Modifier.width(24.dp)) },
                 rank = myRank.rank,
                 nickname = myRank.nickName,
                 score = myRank.score.numberComma(),
@@ -138,7 +133,6 @@ fun PlanetRankingScreen(
             items(planetUserList.itemCount) { index ->
                 planetUserList[index]?.let {
                     UniversityIndividualContentRow(
-                        medal = { Spacer(modifier = Modifier.width(24.dp)) },
                         rank = it.rank,
                         nickname = it.nickName,
                         score = it.score.numberComma(),

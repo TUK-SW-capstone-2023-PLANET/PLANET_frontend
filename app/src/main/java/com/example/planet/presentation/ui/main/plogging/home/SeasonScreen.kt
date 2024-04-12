@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -40,12 +39,12 @@ import coil.request.ImageRequest
 import com.example.planet.R
 import com.example.planet.component.main.SubTitle
 import com.example.planet.component.main.SubTitleDescription
-import com.example.planet.component.main.plogging.SeasonContentRow
-import com.example.planet.component.main.plogging.SeasonTitleRow
 import com.example.planet.component.navigation.ScreenNav
+import com.example.planet.presentation.ui.main.plogging.ranking.component.SeasonContentRow
+import com.example.planet.presentation.ui.main.plogging.ranking.component.SeasonTitleRow
+import com.example.planet.presentation.viewmodel.MainViewModel
 import com.example.planet.util.noRippleClickable
 import com.example.planet.util.numberComma
-import com.example.planet.presentation.viewmodel.MainViewModel
 import kotlinx.coroutines.launch
 
 @Composable
@@ -66,7 +65,9 @@ fun SeasonScreen(navController: NavController, mainViewModel: MainViewModel) {
             verticalAlignment = Alignment.Top,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Column(modifier = Modifier.wrapContentSize().padding(bottom = 16.dp)) {
+            Column(modifier = Modifier
+                .wrapContentSize()
+                .padding(bottom = 16.dp)) {
                 SubTitle(title = "대학교 순위", modifier = Modifier.padding(end = 8.dp))
                 Text(
                     text = "PLANET TIER SYSTEM",
@@ -254,132 +255,13 @@ fun SeasonScreen(navController: NavController, mainViewModel: MainViewModel) {
 
         SeasonTitleRow()
         mainViewModel.higherSeasonUsers.forEachIndexed { index, user ->
-            when (index) {
-                0 -> {}
-                1 -> {
-                    SeasonContentRow(
-                        medal = {
-                            Divider(
-                                color = colorResource(id = R.color.main_color1),
-                                modifier = Modifier
-                                    .fillMaxHeight()
-                                    .width(4.dp)
-                            )
-                            Spacer(modifier = Modifier.width(20.dp))
-                        },
-                        rank = user.rank,
-                        tier = user.tierImageUrl,
-                        nickname = user.userName,
-                        score = user.score.numberComma(),
-                        universityLogo = user.universityLogo
-                    )
-                }
-
-                2 -> {
-                    SeasonContentRow(
-                        medal = {
-                            Divider(
-                                color = colorResource(id = R.color.main_color2),
-                                modifier = Modifier
-                                    .fillMaxHeight()
-                                    .width(4.dp)
-                            )
-                            Spacer(modifier = Modifier.width(20.dp))
-                        },
-                        rank = user.rank,
-                        tier = user.tierImageUrl,
-                        nickname = user.userName,
-                        score = user.score.numberComma(),
-                        universityLogo = user.universityLogo
-                    )
-                }
-
-                3 -> {
-                    SeasonContentRow(
-                        medal = {
-                            Divider(
-                                color = colorResource(id = R.color.main_color2),
-                                modifier = Modifier
-                                    .fillMaxHeight()
-                                    .width(4.dp)
-                            )
-                            Spacer(modifier = Modifier.width(20.dp))
-                        },
-                        rank = user.rank,
-                        tier = user.tierImageUrl,
-                        nickname = user.userName,
-                        score = user.score.numberComma(),
-                        universityLogo = user.universityLogo
-                    )
-                }
-                4 -> {
-                    SeasonContentRow(
-                        medal = {
-                            Divider(
-                                color = colorResource(id = R.color.main_color2).copy(alpha = 0.8f),
-                                modifier = Modifier
-                                    .fillMaxHeight()
-                                    .width(4.dp)
-                            )
-                            Spacer(modifier = Modifier.width(20.dp))
-                        },
-                        rank = user.rank,
-                        tier = user.tierImageUrl,
-                        nickname = user.userName,
-                        score = user.score.numberComma(),
-                        universityLogo = user.universityLogo
-                    )
-                }
-                5 -> {
-                    SeasonContentRow(
-                        medal = {
-                            Divider(
-                                color = colorResource(id = R.color.main_color2).copy(alpha = 0.6f),
-                                modifier = Modifier
-                                    .fillMaxHeight()
-                                    .width(4.dp)
-                            )
-                            Spacer(modifier = Modifier.width(20.dp))
-                        },
-                        rank = user.rank,
-                        tier = user.tierImageUrl,
-                        nickname = user.userName,
-                        score = user.score.numberComma(),
-                        universityLogo = user.universityLogo
-                    )
-                }
-//                6 -> {
-//                    SeasonContentRow(
-//                        medal = {
-//                            Divider(
-//                                color = Color(0xFFBED7EE).copy(alpha = 0.4f),
-//                                modifier = Modifier
-//                                    .fillMaxHeight()
-//                                    .width(4.dp)
-//                            )
-//                            Spacer(modifier = Modifier.width(20.dp))
-//                        },
-//                        rank = user.rank,
-//                        tier = user.tierImageUrl,
-//                        nickname = user.userName,
-//                        score = user.score.numberComma(),
-//                        universityLogo = user.universityLogo
-//                    )
-//                }
-                else -> {
-//                    SeasonContentRow(
-//                        medal = {
-////                            Spacer(modifier = Modifier.width(24.dp))
-//                            Spacer(modifier = Modifier.width(24.dp))
-//                        },
-//                        rank = user.rank,
-//                        tier = user.tierImageUrl,
-//                        nickname = user.userName,
-//                        score = user.score.numberComma(),
-//                        universityLogo = user.universityLogo
-//                    )
-                }
-            }
+            SeasonContentRow(
+                rank = user.rank,
+                tier = user.tierImageUrl,
+                nickname = user.userName,
+                score = user.score.numberComma(),
+                universityLogo = user.universityLogo
+            )
         }
     }
 }

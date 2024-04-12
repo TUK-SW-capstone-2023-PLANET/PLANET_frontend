@@ -4,11 +4,9 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
@@ -26,12 +24,12 @@ import androidx.navigation.NavController
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.planet.R
-import com.example.planet.component.main.plogging.SeasonContentRow
-import com.example.planet.component.main.plogging.SeasonTitleRow
 import com.example.planet.component.main.plogging.ranking.MiddleHead
 import com.example.planet.component.main.plogging.ranking.SearchTextField
 import com.example.planet.component.main.plogging.ranking.TearProfile
 import com.example.planet.data.remote.dto.response.ranking.season.SeasonUser
+import com.example.planet.presentation.ui.main.plogging.ranking.component.SeasonContentRow
+import com.example.planet.presentation.ui.main.plogging.ranking.component.SeasonTitleRow
 import com.example.planet.presentation.viewmodel.MainViewModel
 import com.example.planet.util.noRippleClickable
 import com.example.planet.util.numberComma
@@ -108,7 +106,6 @@ fun SeasonRankingScreen(
         SeasonTitleRow()
         mainViewModel.mySeasonRank.value?.let { myRank ->
             SeasonContentRow(
-                medal = { Spacer(modifier = Modifier.width(24.dp)) },
                 rank = myRank.rank,
                 nickname = myRank.userName,
                 tier = myRank.tierImageUrl,
@@ -123,7 +120,6 @@ fun SeasonRankingScreen(
             items(seasonUserList.itemCount) { index ->
                 seasonUserList[index]?.let {
                     SeasonContentRow(
-                        medal = { Spacer(modifier = Modifier.width(24.dp)) },
                         rank = it.rank,
                         nickname = it.userName,
                         tier = it.tierImageUrl,
@@ -133,149 +129,6 @@ fun SeasonRankingScreen(
                 }
             }
         }
-//        mainViewModel.totalSeasonUser.forEachIndexed { index, user ->
-//            when (index) {
-//                0 -> {
-//                    SeasonContentRow(
-//                        medal = { Spacer(modifier = Modifier.width(24.dp)) },
-//                        rank = user.rank,
-//                        tier = user.tierImageUrl,
-//                        nickname = user.userName,
-//                        score = user.score.numberComma(),
-//                        universityLogo = user.universityLogo,
-//                        color = colorResource(id = R.color.main_color4)
-//                    )
-//                }
-//
-//                1 -> {
-//                    SeasonContentRow(
-//                        medal = {
-//                            Divider(
-//                                color = colorResource(id = R.color.main_color1),
-//                                modifier = Modifier
-//                                    .fillMaxHeight()
-//                                    .width(4.dp)
-//                            )
-//                            Spacer(modifier = Modifier.width(20.dp))
-//                        },
-//                        rank = user.rank,
-//                        tier = user.tierImageUrl,
-//                        nickname = user.userName,
-//                        score = user.score.numberComma(),
-//                        universityLogo = user.universityLogo
-//                    )
-//                }
-//
-//                2 -> {
-//                    SeasonContentRow(
-//                        medal = {
-//                            Divider(
-//                                color = colorResource(id = R.color.main_color2),
-//                                modifier = Modifier
-//                                    .fillMaxHeight()
-//                                    .width(4.dp)
-//                            )
-//                            Spacer(modifier = Modifier.width(20.dp))
-//                        },
-//                        rank = user.rank,
-//                        tier = user.tierImageUrl,
-//                        nickname = user.userName,
-//                        score = user.score.numberComma(),
-//                        universityLogo = user.universityLogo
-//                    )
-//                }
-//
-//                3 -> {
-//                    SeasonContentRow(
-//                        medal = {
-//                            Divider(
-//                                color = colorResource(id = R.color.main_color2),
-//                                modifier = Modifier
-//                                    .fillMaxHeight()
-//                                    .width(4.dp)
-//                            )
-//                            Spacer(modifier = Modifier.width(20.dp))
-//                        },
-//                        rank = user.rank,
-//                        tier = user.tierImageUrl,
-//                        nickname = user.userName,
-//                        score = user.score.numberComma(),
-//                        universityLogo = user.universityLogo
-//                    )
-//                }
-//
-//                4 -> {
-//                    SeasonContentRow(
-//                        medal = {
-//                            Divider(
-//                                color = colorResource(id = R.color.main_color2).copy(alpha = 0.8f),
-//                                modifier = Modifier
-//                                    .fillMaxHeight()
-//                                    .width(4.dp)
-//                            )
-//                            Spacer(modifier = Modifier.width(20.dp))
-//                        },
-//                        rank = user.rank,
-//                        tier = user.tierImageUrl,
-//                        nickname = user.userName,
-//                        score = user.score.numberComma(),
-//                        universityLogo = user.universityLogo
-//                    )
-//                }
-//
-//                5 -> {
-//                    SeasonContentRow(
-//                        medal = {
-//                            Divider(
-//                                color = colorResource(id = R.color.main_color2).copy(alpha = 0.6f),
-//                                modifier = Modifier
-//                                    .fillMaxHeight()
-//                                    .width(4.dp)
-//                            )
-//                            Spacer(modifier = Modifier.width(20.dp))
-//                        },
-//                        rank = user.rank,
-//                        tier = user.tierImageUrl,
-//                        nickname = user.userName,
-//                        score = user.score.numberComma(),
-//                        universityLogo = user.universityLogo
-//                    )
-//                }
-//
-//                6 -> {
-//                    SeasonContentRow(
-//                        medal = {
-//                            Divider(
-//                                color = Color(0xFFBED7EE).copy(alpha = 0.4f),
-//                                modifier = Modifier
-//                                    .fillMaxHeight()
-//                                    .width(4.dp)
-//                            )
-//                            Spacer(modifier = Modifier.width(20.dp))
-//                        },
-//                        rank = user.rank,
-//                        tier = user.tierImageUrl,
-//                        nickname = user.userName,
-//                        score = user.score.numberComma(),
-//                        universityLogo = user.universityLogo
-//                    )
-//                }
-//
-//                else -> {
-//                    SeasonContentRow(
-//                        medal = {
-////                            Spacer(modifier = Modifier.width(24.dp))
-//                            Spacer(modifier = Modifier.width(24.dp))
-//                        },
-//                        rank = user.rank,
-//                        tier = user.tierImageUrl,
-//                        nickname = user.userName,
-//                        score = user.score.numberComma(),
-//                        universityLogo = user.universityLogo
-//                    )
-//                }
-//            }
-//        }
     }
 }
 
