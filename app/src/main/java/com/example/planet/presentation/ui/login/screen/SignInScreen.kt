@@ -10,8 +10,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -31,15 +35,21 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.example.planet.R
+import com.example.planet.presentation.ui.login.navigation.SignInNavItem
+import com.example.planet.presentation.viewmodel.SignInViewModel
+import com.example.planet.util.noRippleClickable
 
 @Composable
-@Preview(showBackground = true)
-fun SignInScreen() {
+fun SignInScreen(signInViewModel: SignInViewModel, navController: NavHostController) {
+    val scrollState = rememberScrollState()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 72.dp),
+            .padding(horizontal = 72.dp)
+            .verticalScroll(scrollState),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -75,9 +85,16 @@ fun SignInScreen() {
         Spacer(modifier = Modifier.height(12.dp))
         Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             Icon(
-                imageVector = Icons.Outlined.CheckCircle,
+                imageVector = if (signInViewModel.autoLoginState.value) {
+                    Icons.Default.CheckCircle
+                } else {
+                    Icons.Outlined.CheckCircle
+                },
                 contentDescription = null,
-                tint = colorResource(id = R.color.main_color2)
+                tint = colorResource(id = R.color.main_color2),
+                modifier = Modifier.noRippleClickable {
+                    signInViewModel.changeAutoLoginState()
+                }
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(text = "로그인 상태 유지", color = colorResource(id = R.color.font_background_color2))
@@ -97,12 +114,19 @@ fun SignInScreen() {
             Text(text = "로그인", fontSize = 14.sp)
         }
 
-        Text(text = buildAnnotatedString {
-            append("플래닛이 처음인가요? ")
-            withStyle(SpanStyle(color = colorResource(id = R.color.main_color1))) {
-                append("회원가입")
-            }
-        }, color = colorResource(id = R.color.font_background_color2), fontSize = 12.sp)
+        Spacer(modifier = Modifier.height(16.dp))
 
+        Row(modifier = Modifier.wrapContentSize()) {
+            Text(
+                text = "플래닛이 처음인가요? ",
+                color = colorResource(id = R.color.font_background_color2),
+                fontSize = 12.sp
+            )
+            Text(
+                text = "회원가입",
+                fontSize = 12.sp,
+                color = colorResource(id = R.color.main_color1),
+                modifier = Modifier.noRippleClickable { navController.navigate(SignInNavItem.AuthScreen.screenRoute) })
+        }
     }
 }

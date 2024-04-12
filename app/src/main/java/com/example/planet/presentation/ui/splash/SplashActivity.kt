@@ -6,7 +6,7 @@ import android.os.Handler
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import com.example.planet.presentation.ui.main.MainActivity
+import com.example.planet.presentation.ui.main.plogging.screen.MainActivity
 import com.example.planet.presentation.ui.splash.ui.theme.PLANETTheme
 import com.example.planet.presentation.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint

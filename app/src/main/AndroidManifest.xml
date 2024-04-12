@@ -25,10 +25,17 @@
         tools:targetApi="31">
         <activity
             android:name=".presentation.ui.login.screen.SignInActivity"
-            android:exported="false"
-            android:label="@string/title_activity_sign_in"
+            android:exported="true"
+            android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.MyApplication" />
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/Theme.MyApplication">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".presentation.ui.user.UserActivity"
             android:exported="false"
@@ -49,16 +56,10 @@
 
         <activity
             android:name=".presentation.ui.splash.SplashActivity"
-            android:exported="true"
+            android:exported="false"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.MyApplication">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:theme="@style/Theme.MyApplication" />
 
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"
@@ -71,7 +72,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MyApplication" />
         <activity
-            android:name=".presentation.ui.main.MainActivity"
+            android:name=".presentation.ui.main.plogging.screen.MainActivity"
             android:exported="false"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
