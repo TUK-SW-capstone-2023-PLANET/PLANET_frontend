@@ -15,7 +15,6 @@ import com.example.planet.data.remote.dto.response.ranking.season.SeasonUser
 import com.example.planet.data.remote.dto.response.ranking.university.PagingUniversity
 import com.example.planet.data.remote.dto.response.ranking.university.University
 import com.example.planet.data.remote.dto.response.ranking.universityuser.ExpandedUniversityUser
-import com.example.planet.data.remote.dto.response.ranking.universityuser.MyRankingInfo
 import com.example.planet.data.remote.dto.response.ranking.universityuser.PagingUniversityUser
 import com.example.planet.data.remote.dto.response.ranking.universityuser.UniversityUser
 import okhttp3.MultipartBody
@@ -65,8 +64,8 @@ interface ApiService {
     suspend fun getUniversityTop4UserRanking(@Path("userId") userId: Int): List<Map<Int, ExpandedUniversityUser>>
 
     // 자대 대학교 나의 랭킹 정보 조회
-    @GET("/user/{userId}/rank")
-    suspend fun getUniversityMyRanking(@Path("userId") userId: Int): MyRankingInfo
+    @GET("/user/{userId}/rank/university")
+    suspend fun getUniversityMyRanking(@Path("userId") userId: Int): UniversityUser
 
 
     // Season 관련 ---------------------------------------------------------------------------------

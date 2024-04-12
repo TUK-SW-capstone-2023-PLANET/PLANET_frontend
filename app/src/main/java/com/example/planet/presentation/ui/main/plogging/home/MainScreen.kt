@@ -1,5 +1,6 @@
 package com.example.planet.presentation.ui.main.plogging.home
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -30,6 +31,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.planet.R
+import com.example.planet.TAG
 import com.example.planet.component.common.MyScrollableTabRow
 import com.example.planet.component.main.MainTopSwitch
 import com.example.planet.component.main.plogging.MainTopBanner
@@ -46,6 +48,8 @@ fun MainScreen(
     mainViewModel: MainViewModel = viewModel(),
     onClick: () -> Unit
 ) {
+    Log.d(TAG, "MainScreen 실행")
+
     val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
     val tabItems = listOf("나의 플로깅", "대학교", "시즌", "이벤트")

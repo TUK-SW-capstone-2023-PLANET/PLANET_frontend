@@ -24,11 +24,17 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".presentation.ui.login.screen.SignInActivity"
+            android:exported="false"
+            android:label="@string/title_activity_sign_in"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.MyApplication" />
+        <activity
             android:name=".presentation.ui.user.UserActivity"
             android:exported="false"
             android:label="@string/title_activity_user"
-            android:theme="@style/Theme.MyApplication"
             android:screenOrientation="portrait"
+            android:theme="@style/Theme.MyApplication"
             android:windowSoftInputMode="adjustResize" />
 
         <provider

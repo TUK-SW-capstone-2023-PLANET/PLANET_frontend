@@ -10,4 +10,5 @@
          높은 티어를 받아 세상을 위한 자신의 플로깅 활동을 보여주세요!
     </string>
     <string name="title_activity_user">UserActivity</string>
+    <string name="title_activity_sign_in">SignInActivity</string>
 </resources>

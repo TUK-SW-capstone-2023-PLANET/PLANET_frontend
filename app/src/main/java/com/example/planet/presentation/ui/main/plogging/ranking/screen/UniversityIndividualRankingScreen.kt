@@ -156,7 +156,7 @@ fun UniversityIndividualRankingScreen(
                 rank = myRank.rank,
                 nickname = myRank.nickName,
                 score = myRank.score.numberComma(),
-                contribution = 1.7,  /* TODO(기여도 대학교 로고로 바꿀 것)*/
+                contribution = myRank.contribution,  /* TODO(기여도 대학교 로고로 바꿀 것)*/
                 color = colorResource(id = R.color.main_color4)
             )
         }

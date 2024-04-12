@@ -1,5 +1,6 @@
 package com.example.planet.component.main.plogging
 
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.interaction.collectIsDraggedAsState
 import androidx.compose.foundation.layout.Box
@@ -33,6 +34,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.planet.R
+import com.example.planet.TAG
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 
@@ -40,6 +42,8 @@ import kotlinx.coroutines.flow.collectLatest
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MainTopBanner(imageUrlList: List<String>) {
+    Log.d(TAG, "MainTopBanner 실행")
+
     val pagerState = rememberPagerState {
         imageUrlList.size
     }

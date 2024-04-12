@@ -21,7 +21,6 @@ import com.example.planet.data.remote.dto.response.ranking.planet.PlanetRankingU
 import com.example.planet.data.remote.dto.response.ranking.season.SeasonUser
 import com.example.planet.data.remote.dto.response.ranking.university.University
 import com.example.planet.data.remote.dto.response.ranking.universityuser.ExpandedUniversityUser
-import com.example.planet.data.remote.dto.response.ranking.universityuser.MyRankingInfo
 import com.example.planet.data.remote.dto.response.ranking.universityuser.UniversityUser
 import com.example.planet.domain.usecase.GetBannerUseCase
 import com.example.planet.domain.usecase.GetTierListUseCase
@@ -94,8 +93,8 @@ class MainViewModel @Inject constructor(
 
 
 
-    private val _myUniversityRank = mutableStateOf<MyRankingInfo?>(null)
-    val myUniversityRank: State<MyRankingInfo?> = _myUniversityRank
+    private val _myUniversityRank = mutableStateOf<UniversityUser?>(null)
+    val myUniversityRank: State<UniversityUser?> = _myUniversityRank
 
     private val _mySeasonRank = mutableStateOf<SeasonUser?>(null)
     val mySeasonRank: State<SeasonUser?> = _mySeasonRank
@@ -349,7 +348,7 @@ class MainViewModel @Inject constructor(
     private suspend fun getMyUniversityRanking() {
         when (val apiState = getMyUniversityRankUseCase().first()) {
             is ApiState.Success<*> -> {
-                _myUniversityRank.value = (apiState.value as MyRankingInfo)
+                _myUniversityRank.value = (apiState.value as UniversityUser)
                 Log.d(TAG, "getUniversityMyRankingUseCase() 성공: $_myUniversityRank")
 
             }
