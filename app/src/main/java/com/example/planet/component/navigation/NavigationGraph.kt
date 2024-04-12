@@ -19,11 +19,11 @@ import com.example.planet.presentation.ui.main.plogging.community.CommunityScree
 import com.example.planet.presentation.ui.main.plogging.home.MainScreen
 import com.example.planet.presentation.ui.main.plogging.home.TierScreen
 import com.example.planet.presentation.ui.main.plogging.message.MessageScreen
-import com.example.planet.presentation.ui.main.plogging.ranking.PlanetRankingScreen
-import com.example.planet.presentation.ui.main.plogging.ranking.RankingScreen
-import com.example.planet.presentation.ui.main.plogging.ranking.SeasonRankingScreen
-import com.example.planet.presentation.ui.main.plogging.ranking.UniversityIndividualRankingScreen
-import com.example.planet.presentation.ui.main.plogging.ranking.UniversityRankingScreen
+import com.example.planet.presentation.ui.main.plogging.ranking.screen.PlanetRankingScreen
+import com.example.planet.presentation.ui.main.plogging.ranking.screen.RankingScreen
+import com.example.planet.presentation.ui.main.plogging.ranking.screen.SeasonRankingScreen
+import com.example.planet.presentation.ui.main.plogging.ranking.screen.UniversityIndividualRankingScreen
+import com.example.planet.presentation.ui.main.plogging.ranking.screen.UniversityRankingScreen
 import com.example.planet.presentation.ui.main.plogging.user.UserScreen
 import com.example.planet.presentation.viewmodel.MainViewModel
 

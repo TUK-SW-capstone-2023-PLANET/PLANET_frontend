@@ -118,7 +118,7 @@ fun MainScreen(
                 when (page) {
                     0 -> PloggingHelpScreen()
                     1 -> UniversityScreen(
-                        universityUserList = mainViewModel.myUniversityTop4RankingUsers,
+                        universityUserList = mainViewModel.higherMyUniversityUsers.value,
                         universityList = mainViewModel.higherUniversity,
                         graphHeightList = mainViewModel.universityGraphHeightList,
                         navController = navController,

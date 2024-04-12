@@ -1,4 +1,4 @@
-package com.example.planet.presentation.ui.main.plogging.ranking
+package com.example.planet.presentation.ui.main.plogging.ranking.screen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -33,10 +33,10 @@ import coil.request.ImageRequest
 import com.example.planet.R
 import com.example.planet.component.common.TripleArrowIcon
 import com.example.planet.component.main.MainTopSwitch
-import com.example.planet.component.main.plogging.ranking.MiddleHead
-import com.example.planet.component.main.plogging.ranking.TearProfile
-import com.example.planet.component.main.plogging.ranking.TrophyProfile
-import com.example.planet.component.main.plogging.ranking.UniversityProfile
+import com.example.planet.presentation.ui.main.plogging.ranking.component.MiddleHead
+import com.example.planet.presentation.ui.main.plogging.ranking.component.TearProfile
+import com.example.planet.presentation.ui.main.plogging.ranking.component.TrophyProfile
+import com.example.planet.presentation.ui.main.plogging.ranking.component.UniversityProfile
 import com.example.planet.component.navigation.ScreenNav
 import com.example.planet.util.numberComma
 import com.example.planet.presentation.viewmodel.MainViewModel
@@ -188,14 +188,14 @@ fun RankingScreen(navController: NavController, mainViewModel: MainViewModel = h
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     AsyncImage(
                         model = ImageRequest.Builder(LocalContext.current)
-                            .data(mainViewModel.myUniversityTop4RankingUsers[0].universityLogo)
+                            .data(mainViewModel.higherMyUniversityUsers.value[0].universityLogo)
                             .crossfade(true).build(),
                         contentDescription = null,
                         modifier = Modifier.size(65.dp)
                     )
                     Spacer(modifier = Modifier.height(12.dp))
                     Text(
-                        text = mainViewModel.myUniversityTop4RankingUsers[0].universityName,
+                        text = mainViewModel.higherMyUniversityUsers.value[0].universityName,
                         color = colorResource(id = R.color.font_background_color1),
                         fontSize = 11.sp,
                         fontWeight = FontWeight.Bold
@@ -203,7 +203,7 @@ fun RankingScreen(navController: NavController, mainViewModel: MainViewModel = h
                 }
                 Column(modifier = Modifier.fillMaxWidth(0.8f)) {
                     UniversityIndividualRankingTitle()
-                    mainViewModel.myUniversityTop4RankingUsers.subList(1, 4)
+                    mainViewModel.higherMyUniversityUsers.value.subList(1, 4)
                         .forEachIndexed { index, user ->
                             when (index) {
                                 0 -> {

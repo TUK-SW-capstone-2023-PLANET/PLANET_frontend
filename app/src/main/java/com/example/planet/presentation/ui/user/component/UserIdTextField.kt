@@ -1,4 +1,4 @@
-package com.example.planet.component.user
+package com.example.planet.presentation.ui.user.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

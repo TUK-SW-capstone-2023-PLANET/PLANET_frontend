@@ -1,4 +1,4 @@
-package com.example.planet.presentation.ui.main.plogging.ranking
+package com.example.planet.presentation.ui.main.plogging.ranking.screen
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
@@ -24,23 +24,23 @@ import androidx.navigation.NavController
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.planet.R
-import com.example.planet.component.main.plogging.ranking.MiddleHead
-import com.example.planet.component.main.plogging.ranking.SearchTextField
-import com.example.planet.component.main.plogging.ranking.TearProfile
-import com.example.planet.data.remote.dto.response.ranking.season.SeasonUser
-import com.example.planet.presentation.ui.main.plogging.ranking.component.SeasonContentRow
-import com.example.planet.presentation.ui.main.plogging.ranking.component.SeasonTitleRow
+import com.example.planet.presentation.ui.main.plogging.ranking.component.MiddleHead
+import com.example.planet.presentation.ui.main.plogging.ranking.component.SearchTextField
+import com.example.planet.presentation.ui.main.plogging.ranking.component.UniversityProfile
+import com.example.planet.data.remote.dto.response.ranking.university.University
+import com.example.planet.presentation.ui.main.plogging.ranking.component.UniversityContentRow
+import com.example.planet.presentation.ui.main.plogging.ranking.component.UniversityTitleRow
 import com.example.planet.presentation.viewmodel.MainViewModel
 import com.example.planet.util.noRippleClickable
 import com.example.planet.util.numberComma
 
 @Composable
-fun SeasonRankingScreen(
-    navController: NavController, mainViewModel: MainViewModel = hiltViewModel()
+fun UniversityRankingScreen(
+    navController: NavController,
+    mainViewModel: MainViewModel = hiltViewModel()
 ) {
-    val seasonUserList: LazyPagingItems<SeasonUser> =
-        mainViewModel.totalSeasonUser.collectAsLazyPagingItems()
-
+    val universityList: LazyPagingItems<University> =
+        mainViewModel.totalUniversity.collectAsLazyPagingItems()
 
     BackHandler {
         mainViewModel.mainTopSwitchOnShow()
@@ -64,9 +64,9 @@ fun SeasonRankingScreen(
                 })
         }
         MiddleHead(
-            image = painterResource(id = R.drawable.plogging_ranking_season),
-            title = "Spring Season IV",
-            description = "아름다운 자연과 함께 봄의 주인공이 되어 보세요!",
+            image = painterResource(id = R.drawable.plogging_ranking_universitylogo),
+            title = "대학교 랭킹",
+            description = "학교를 인증하여, 학교의 위상을 높히세요!!",
         )
 
         Row(
@@ -74,23 +74,25 @@ fun SeasonRankingScreen(
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.Bottom
         ) {
-            TearProfile(
-                imageUrl = mainViewModel.higherSeasonUsers[2].tierImageUrl,
-                imageSize = 80.dp,
-                userName = mainViewModel.higherSeasonUsers[2].userName,
-                userScore = mainViewModel.higherSeasonUsers[2].score.numberComma()
+            UniversityProfile(
+                imageUrl = mainViewModel.higherUniversity[1].imageUrl,
+                imageSize = 55.dp,
+                medal = painterResource(id = R.drawable.medal_2st),
+                universityName = mainViewModel.higherUniversity[1].name
             )
-            TearProfile(
-                imageUrl = mainViewModel.higherSeasonUsers[1].tierImageUrl,
-                imageSize = 95.dp,
-                userName = mainViewModel.higherSeasonUsers[1].userName,
-                userScore = mainViewModel.higherSeasonUsers[1].score.numberComma()
+
+            UniversityProfile(
+                imageUrl = mainViewModel.higherUniversity[0].imageUrl,
+                imageSize = 65.dp,
+                medal = painterResource(id = R.drawable.medal_1st),
+                universityName = mainViewModel.higherUniversity[0].name
             )
-            TearProfile(
-                imageUrl = mainViewModel.higherSeasonUsers[3].tierImageUrl,
-                imageSize = 80.dp,
-                userName = mainViewModel.higherSeasonUsers[3].userName,
-                userScore = mainViewModel.higherSeasonUsers[3].score.numberComma()
+
+            UniversityProfile(
+                imageUrl = mainViewModel.higherUniversity[2].imageUrl,
+                imageSize = 55.dp,
+                medal = painterResource(id = R.drawable.medal_3st),
+                universityName = mainViewModel.higherUniversity[2].name
             )
         }
 
@@ -103,28 +105,15 @@ fun SeasonRankingScreen(
             Icon(imageVector = Icons.Default.Search, contentDescription = null)
         }
 
-        SeasonTitleRow()
-        mainViewModel.mySeasonRank.value?.let { myRank ->
-            SeasonContentRow(
-                rank = myRank.rank,
-                nickname = myRank.userName,
-                tier = myRank.tierImageUrl,
-                score = myRank.score.numberComma(),
-                universityLogo = myRank.universityLogo,
-                color = colorResource(id = R.color.main_color4)
-            )
-        }
-
-
+        UniversityTitleRow()
         LazyColumn(modifier = Modifier.fillMaxSize()) {
-            items(seasonUserList.itemCount) { index ->
-                seasonUserList[index]?.let {
-                    SeasonContentRow(
+            items(universityList.itemCount) { index ->
+                universityList[index]?.let {
+                    UniversityContentRow(
                         rank = it.rank,
-                        nickname = it.userName,
-                        tier = it.tierImageUrl,
+                        universityName = it.name,
                         score = it.score.numberComma(),
-                        universityLogo = it.universityLogo,
+                        universityLogo = it.imageUrl,
                     )
                 }
             }

@@ -1,4 +1,4 @@
-package com.example.planet.component.main.plogging.ranking
+package com.example.planet.presentation.ui.main.plogging.ranking.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column

@@ -1,4 +1,4 @@
-package com.example.planet.domain.usecase.ranking
+package com.example.planet.domain.usecase.ranking.university
 
 import androidx.paging.PagingData
 import com.example.planet.data.ApiState

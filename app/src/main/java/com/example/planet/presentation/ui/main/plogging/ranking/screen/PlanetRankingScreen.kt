@@ -1,15 +1,13 @@
-package com.example.planet.presentation.ui.main.plogging.ranking
+package com.example.planet.presentation.ui.main.plogging.ranking.screen
 
 import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
@@ -30,9 +28,9 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.planet.R
 import com.example.planet.presentation.ui.main.plogging.ranking.component.UniversityIndividualContentRow
 import com.example.planet.presentation.ui.main.plogging.ranking.component.UniversityIndividualTitleRow
-import com.example.planet.component.main.plogging.ranking.MiddleHead
-import com.example.planet.component.main.plogging.ranking.SearchTextField
-import com.example.planet.component.main.plogging.ranking.TrophyProfile
+import com.example.planet.presentation.ui.main.plogging.ranking.component.MiddleHead
+import com.example.planet.presentation.ui.main.plogging.ranking.component.SearchTextField
+import com.example.planet.presentation.ui.main.plogging.ranking.component.TrophyProfile
 import com.example.planet.data.remote.dto.response.ranking.planet.PlanetRankingUser
 import com.example.planet.presentation.viewmodel.MainViewModel
 import com.example.planet.util.noRippleClickable
