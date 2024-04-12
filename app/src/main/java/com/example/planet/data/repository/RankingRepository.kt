@@ -119,7 +119,7 @@ class RankingRepository @Inject constructor(private val apiService: ApiService) 
         }
     }.flowOn(Dispatchers.IO)
 
-    // 자대 대학교 나의 랭킹 정보 조회  TODO(페이징 적용할 것)
+    // 자대 대학교 나의 랭킹 정보 조회
     suspend fun getUniversityMyRanking(userId: Int = 0): Flow<ApiState> = flow {
         kotlin.runCatching {
             apiService.getUniversityMyRanking(userId = userId)

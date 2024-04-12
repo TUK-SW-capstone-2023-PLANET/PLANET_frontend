@@ -1,11 +1,6 @@
 package com.example.planet.presentation.ui.main.plogging.ranking.screen
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.scaleIn
-import androidx.compose.animation.slideInVertically
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,8 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
@@ -31,13 +24,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -47,15 +38,15 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.planet.R
-import com.example.planet.data.remote.dto.response.ranking.planet.PlanetRankingUser
 import com.example.planet.data.remote.dto.response.ranking.universityuser.UniversityUser
 import com.example.planet.presentation.ui.main.plogging.ranking.component.MiddleHead
 import com.example.planet.presentation.ui.main.plogging.ranking.component.SearchTextField
 import com.example.planet.presentation.ui.main.plogging.ranking.component.UniversityIndividualContentRow
+import com.example.planet.presentation.ui.main.plogging.ranking.component.UniversityIndividualGraph
 import com.example.planet.presentation.ui.main.plogging.ranking.component.UniversityIndividualTitleRow
+import com.example.planet.presentation.viewmodel.MainViewModel
 import com.example.planet.util.noRippleClickable
 import com.example.planet.util.numberComma
-import com.example.planet.presentation.viewmodel.MainViewModel
 import kotlinx.coroutines.delay
 
 @Composable
@@ -160,6 +151,16 @@ fun UniversityIndividualRankingScreen(
         }
 
         UniversityIndividualTitleRow()
+        mainViewModel.myUniversityRank.value?.let { myRank ->
+            UniversityIndividualContentRow(
+                rank = myRank.rank,
+                nickname = myRank.nickName,
+                score = myRank.score.numberComma(),
+                contribution = 1.7,  /* TODO(기여도 대학교 로고로 바꿀 것)*/
+                color = colorResource(id = R.color.main_color4)
+            )
+        }
+
         LazyColumn(modifier = Modifier.fillMaxSize()) {
             items(universityUserList.itemCount) { index ->
                 universityUserList[index]?.let {
@@ -171,65 +172,6 @@ fun UniversityIndividualRankingScreen(
                     )
                 }
             }
-        }
-//        mainViewModel.myUniversityTop4RankingUsers.forEachIndexed { index, universityPerson ->
-//            UniversityIndividualContentRow(
-//                rank = universityPerson.rank,
-//                nickname = universityPerson.nickName,
-//                score = universityPerson.score.numberComma(),
-//                contribution = universityPerson.contribution,
-//            )
-//        }
-    }
-}
-
-@Composable
-fun UniversityIndividualGraph(
-    visible: Boolean = false,
-    score: String,
-    graphHeight: Dp,
-    colors: List<Color>,
-    userName: String,
-) {
-    Column(
-        modifier = Modifier.wrapContentSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        AnimatedVisibility(
-            visible = visible,
-            enter = scaleIn()
-        ) {
-            Text(
-                modifier = Modifier.padding(vertical = 4.dp),
-                text = score,
-                color = colorResource(id = R.color.font_background_color1),
-                fontSize = 9.sp
-            )
-        }
-        AnimatedVisibility(visible = visible,
-            enter = slideInVertically { it }) {
-            Canvas(
-                modifier = Modifier
-                    .height(graphHeight)
-                    .width(40.dp)
-                    .animateContentSize()
-            ) {
-                drawRect(
-                    brush = Brush.verticalGradient(
-                        colors = colors
-                    )
-                )
-            }
-        }
-        AnimatedVisibility(
-            visible = visible,
-            enter = scaleIn()
-        ) {
-            Text(
-                text = userName,
-                color = colorResource(id = R.color.font_background_color1),
-                fontSize = 10.sp
-            )
         }
     }
 }

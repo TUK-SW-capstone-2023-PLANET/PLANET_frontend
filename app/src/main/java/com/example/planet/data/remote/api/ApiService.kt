@@ -17,6 +17,7 @@ import com.example.planet.data.remote.dto.response.ranking.university.University
 import com.example.planet.data.remote.dto.response.ranking.universityuser.ExpandedUniversityUser
 import com.example.planet.data.remote.dto.response.ranking.universityuser.MyRankingInfo
 import com.example.planet.data.remote.dto.response.ranking.universityuser.PagingUniversityUser
+import com.example.planet.data.remote.dto.response.ranking.universityuser.UniversityUser
 import okhttp3.MultipartBody
 import retrofit2.http.Body
 import retrofit2.http.GET

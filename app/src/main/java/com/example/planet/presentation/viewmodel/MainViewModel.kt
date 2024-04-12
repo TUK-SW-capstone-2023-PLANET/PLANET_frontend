@@ -34,7 +34,7 @@ import com.example.planet.domain.usecase.ranking.planet.GetMyPlanetRankUseCase
 import com.example.planet.domain.usecase.ranking.season.GetAllSeasonRankUseCase
 import com.example.planet.domain.usecase.ranking.season.GetHigherSeasonRankUseCase
 import com.example.planet.domain.usecase.ranking.season.GetMySeasonRankUseCase
-import com.example.planet.domain.usecase.ranking.university.GetMyUniversityRankingUseCase
+import com.example.planet.domain.usecase.ranking.university.GetMyUniversityRankUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -49,7 +49,7 @@ class MainViewModel @Inject constructor(
     private val getAllUniversityUserRankUseCase: GetAllUniversityUserRankUseCase,
     private val getUniversitiesUseCase: GetUniversitiesUseCase,
     private val getHigherUniversityUserRankUseCase: GetHigherUniversityUserRankUseCase,
-    private val getMyUniversityRankingUseCase: GetMyUniversityRankingUseCase,
+    private val getMyUniversityRankUseCase: GetMyUniversityRankUseCase,
     private val getMySeasonRankUseCase: GetMySeasonRankUseCase,
     private val getMyPlanetRankUseCase: GetMyPlanetRankUseCase,
     private val getHigherSeasonRankUseCase: GetHigherSeasonRankUseCase,
@@ -94,8 +94,8 @@ class MainViewModel @Inject constructor(
 
 
 
-    private val _myUniversityRankingInfo = mutableStateOf<MyRankingInfo?>(null)
-    val myUniversityRankingInfo: State<MyRankingInfo?> = _myUniversityRankingInfo
+    private val _myUniversityRank = mutableStateOf<MyRankingInfo?>(null)
+    val myUniversityRank: State<MyRankingInfo?> = _myUniversityRank
 
     private val _mySeasonRank = mutableStateOf<SeasonUser?>(null)
     val mySeasonRank: State<SeasonUser?> = _mySeasonRank
@@ -347,10 +347,10 @@ class MainViewModel @Inject constructor(
     }
 
     private suspend fun getMyUniversityRanking() {
-        when (val apiState = getMyUniversityRankingUseCase().first()) {
+        when (val apiState = getMyUniversityRankUseCase().first()) {
             is ApiState.Success<*> -> {
-                _myUniversityRankingInfo.value = (apiState.value as MyRankingInfo)
-                Log.d(TAG, "getUniversityMyRankingUseCase() 성공: $_myUniversityRankingInfo")
+                _myUniversityRank.value = (apiState.value as MyRankingInfo)
+                Log.d(TAG, "getUniversityMyRankingUseCase() 성공: $_myUniversityRank")
 
             }
             is ApiState.Error -> {
