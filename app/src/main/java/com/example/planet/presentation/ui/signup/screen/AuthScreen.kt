@@ -75,6 +75,8 @@ fun AuthScreen(navController: NavHostController, signUpViewModel: SignUpViewMode
                     focusedContainerColor = Color.Transparent,
                     unfocusedContainerColor = Color.Transparent
                 ),
+                singleLine = true,
+                maxLines = 1,
                 textStyle = LocalTextStyle.current.copy(
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Medium
@@ -106,7 +108,7 @@ fun AuthScreen(navController: NavHostController, signUpViewModel: SignUpViewMode
                 enabled = signUpViewModel.emailIsNotEmpty,
                 shape = RoundedCornerShape(5.dp)
             ) {
-                Text(text = "인증번호 발급")
+                Text(text = "인증하기")
             }
 
 
@@ -123,6 +125,8 @@ fun AuthScreen(navController: NavHostController, signUpViewModel: SignUpViewMode
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Medium
                 ),
+                singleLine = true,
+                maxLines = 1,
                 trailingIcon = {
                     Text(
                         text = timerValue.formatTime(),
@@ -131,25 +135,6 @@ fun AuthScreen(navController: NavHostController, signUpViewModel: SignUpViewMode
                     )
                 }
             )
-
-            OutlinedButton(
-                onClick = { /*TODO*/ },
-                modifier = Modifier.align(alignment = Alignment.End),
-                border = if (signUpViewModel.authNumberIsNotEmpty) BorderStroke(
-                    width = 1.dp,
-                    color = colorResource(id = R.color.main_color1)
-                ) else null,
-                colors = ButtonDefaults.outlinedButtonColors(
-                    contentColor = colorResource(id = R.color.main_color1),
-                    containerColor = Color.Transparent,
-                    disabledContainerColor = colorResource(id = R.color.font_background_color2),
-                    disabledContentColor = Color.White,
-                ),
-                enabled = signUpViewModel.authNumberIsNotEmpty,
-                shape = RoundedCornerShape(5.dp)
-            ) {
-                Text(text = "인증하기")
-            }
         }
         OutlinedButton(
             onClick = { signUpViewModel.onNextPage(navController) },
