@@ -1,4 +1,4 @@
-package com.example.planet.presentation.ui.login.ui.theme
+package com.example.planet.presentation.ui.signup.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

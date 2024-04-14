@@ -1,5 +1,6 @@
 package com.example.planet.presentation.ui.user.component
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -39,6 +40,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.planet.R
+import com.example.planet.TAG
 import com.example.planet.component.common.RedTextButton
 import kotlinx.coroutines.delay
 
@@ -51,6 +53,7 @@ fun UserIdTextField(
     placeholder: String,
     supportingText: @Composable () -> Unit,
 ) {
+    Log.d(TAG, "enabled: $enabled")
     Row(verticalAlignment = Alignment.CenterVertically) {
         Text(
             text = headerText,
@@ -81,23 +84,22 @@ fun UserIdTextField(
                     color = colorResource(id = R.color.font_background_color2)
                 )
             },
-            trailingIcon = {
-                TextButton(
-                    shape = RoundedCornerShape(5.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = colorResource(id = R.color.main_color2),
-                        contentColor = Color.White,
-                        disabledContainerColor = colorResource(id = R.color.font_background_color4),
-                        disabledContentColor = colorResource(id = R.color.font_background_color2),
-                    ),
-                    modifier = Modifier.padding(4.dp),
-                    enabled = enabled,
-                    onClick = { /*TODO*/ }
-                ) {
-                    Text(text = "중복검사", fontSize = 10.sp)
-                }
-
-            },
+//            trailingIcon = {
+//                TextButton(
+//                    shape = RoundedCornerShape(5.dp),
+//                    colors = ButtonDefaults.buttonColors(
+//                        containerColor = colorResource(id = R.color.main_color2),
+//                        contentColor = Color.White,
+//                        disabledContainerColor = colorResource(id = R.color.font_background_color4),
+//                        disabledContentColor = colorResource(id = R.color.font_background_color2),
+//                    ),
+//                    modifier = Modifier.padding(4.dp),
+//                    enabled = enabled,
+//                    onClick = { /*TODO*/ }
+//                ) {
+//                    Text(text = "중복검사", fontSize = 10.sp)
+//                }
+//            },
         )
         Spacer(modifier = Modifier.width(8.dp))
         RedTextButton(text = "변경", modifier = Modifier.weight(0.2f))

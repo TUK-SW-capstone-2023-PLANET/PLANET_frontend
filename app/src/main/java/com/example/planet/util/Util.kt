@@ -20,6 +20,7 @@ import java.io.File
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.concurrent.TimeUnit
 import kotlin.math.round
 
 fun Modifier.noRippleClickable(onClick: () -> Unit): Modifier = composed {
@@ -71,6 +72,13 @@ fun Int.numberComma(): String {
 fun Double.round(): String {
     val formatDistance = round(this * 100) / 100
     return formatDistance.toString()
+}
+
+fun Long.formatTime(): String {
+    val minutes = TimeUnit.MILLISECONDS.toMinutes(this) % 60
+    val seconds = TimeUnit.MILLISECONDS.toSeconds(this) % 60
+    val formatter = String.format("%02d : %02d", minutes, seconds)
+    return formatter
 }
 
 @OptIn(ExperimentalPermissionsApi::class)

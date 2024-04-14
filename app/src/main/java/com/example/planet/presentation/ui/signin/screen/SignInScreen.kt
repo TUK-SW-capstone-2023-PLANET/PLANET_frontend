@@ -1,4 +1,4 @@
-package com.example.planet.presentation.ui.login.screen
+package com.example.planet.presentation.ui.signin.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -29,20 +29,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
 import com.example.planet.R
-import com.example.planet.presentation.ui.login.navigation.SignInNavItem
 import com.example.planet.presentation.viewmodel.SignInViewModel
+import com.example.planet.presentation.viewmodel.SignUpViewModel
 import com.example.planet.util.noRippleClickable
 
 @Composable
-fun SignInScreen(signInViewModel: SignInViewModel, navController: NavHostController) {
+fun SignInScreen(signInViewModel: SignInViewModel, startSignUpActivity: () -> Unit, startMainActivity: () -> Unit) {
     val scrollState = rememberScrollState()
 
     Column(
@@ -102,7 +97,7 @@ fun SignInScreen(signInViewModel: SignInViewModel, navController: NavHostControl
         Spacer(modifier = Modifier.height(12.dp))
 
         Button(
-            onClick = { /*TODO*/ },
+            onClick = { startMainActivity() },
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(
                 contentColor = Color.White,
@@ -126,7 +121,7 @@ fun SignInScreen(signInViewModel: SignInViewModel, navController: NavHostControl
                 text = "회원가입",
                 fontSize = 12.sp,
                 color = colorResource(id = R.color.main_color1),
-                modifier = Modifier.noRippleClickable { navController.navigate(SignInNavItem.AuthScreen.screenRoute) })
+                modifier = Modifier.noRippleClickable { startSignUpActivity() })
         }
     }
 }
