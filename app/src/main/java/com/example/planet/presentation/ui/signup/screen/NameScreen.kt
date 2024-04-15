@@ -27,6 +27,7 @@ import com.example.planet.presentation.viewmodel.SignUpViewModel
 
 @Composable
 fun NameScreen(navController: NavHostController, signUpViewModel: SignUpViewModel) {
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -93,3 +94,4 @@ fun NameScreen(navController: NavHostController, signUpViewModel: SignUpViewMode
     }
 
 }
+

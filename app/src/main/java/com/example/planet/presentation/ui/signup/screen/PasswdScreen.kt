@@ -3,8 +3,10 @@ package com.example.planet.presentation.ui.signup.screen
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
@@ -24,6 +26,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.planet.R
+import com.example.planet.presentation.ui.signup.component.PasswdTextField
+import com.example.planet.presentation.ui.signup.component.RealPasswdTextField
 import com.example.planet.presentation.ui.signup.component.TitleText
 import com.example.planet.presentation.ui.signup.component.UserNameTextField
 import com.example.planet.presentation.viewmodel.SignUpViewModel
@@ -42,26 +46,21 @@ fun PasswdScreen(navController: NavHostController, signUpViewModel: SignUpViewMo
             generalText2 = "해주세요."
         )
         Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.Center) {
-            UserNameTextField(
+            PasswdTextField(
                 title = "8자리 이상 비밀번호를 입력해주세요.",
                 text = { signUpViewModel.passwd },
                 onValueChange = {
                     signUpViewModel.passwd = it
                 },
-                trailingText = { "" },
-                supportingText = ""
             )
-            UserNameTextField(
-                title = "8자리 이상 비밀번호를 입력해주세요.",
-                text = { signUpViewModel.realPasswd },
+            RealPasswdTextField(
+                title = "한 번 더 입력해주세요.",
+                passwd = { signUpViewModel.realPasswd },
+                previousPw = { signUpViewModel.passwd },
                 onValueChange = {
                     signUpViewModel.realPasswd = it
                 },
-                trailingText = { "" },
-                supportingText = ""
             )
-
-
         }
         OutlinedButton(
             onClick = { signUpViewModel.onNextPage(navController) },
