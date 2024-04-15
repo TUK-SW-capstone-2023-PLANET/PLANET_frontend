@@ -39,21 +39,12 @@ fun AuthScreen(navController: NavHostController, signUpViewModel: SignUpViewMode
 
     val timerValue by signUpViewModel.authTime.collectAsState()
     val verticalScroll = rememberScrollState()
-//    val keyboardHeight = WindowInsets.ime.getBottom(LocalDensity.current)
-//    val coroutineScope = rememberCoroutineScope()
 
-
-//    LaunchedEffect(key1 = keyboardHeight) {
-//        coroutineScope.launch {
-//            verticalScroll.scrollBy(keyboardHeight.toFloat())
-//        }
-//    }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .imePadding()
-//            .verticalScroll(verticalScroll)
     ) {
         TitleText(
             accentText = "대학",
@@ -69,13 +60,16 @@ fun AuthScreen(navController: NavHostController, signUpViewModel: SignUpViewMode
             append("은 서로 즐거운 플로깅을 위해 사용자의 대학교를 인증받아요.")
         }, fontSize = 10.sp, fontWeight = FontWeight.SemiBold, color = textColor)
 
-        Column(modifier = Modifier.weight(1f).verticalScroll(verticalScroll), verticalArrangement = Arrangement.Center) {
+        Column(modifier = Modifier
+            .weight(1f)
+            .verticalScroll(verticalScroll), verticalArrangement = Arrangement.Center) {
 
             SignUpTextField(
-                title = "대학교명을 입력해주세요 :)",
+                title = "대학교명을 입력해주세요.",
                 text = { signUpViewModel.university },
                 onValueChange = { signUpViewModel.university = it },
-                enable = signUpViewModel.universityIsNotEmpty
+                enable = { signUpViewModel.universityIsNotEmpty },
+                supportingText = "",
             )
             OutlinedButton(
                 onClick = {  },
@@ -98,10 +92,11 @@ fun AuthScreen(navController: NavHostController, signUpViewModel: SignUpViewMode
 
 
             SignUpTextField(
-                title = "대학교 이메일을 입력해주세요 :)",
+                title = "대학교 이메일을 입력해주세요.",
                 text = { signUpViewModel.email },
                 onValueChange = { signUpViewModel.email = it },
-                enable = signUpViewModel.emailIsNotEmpty
+                enable = { signUpViewModel.emailIsNotEmpty },
+                supportingText = "",
             )
 
 
@@ -128,7 +123,8 @@ fun AuthScreen(navController: NavHostController, signUpViewModel: SignUpViewMode
                 title = "메일로 받은 인증번호를 입력해주세요.",
                 text = { signUpViewModel.authNumber },
                 onValueChange = { signUpViewModel.authNumber = it },
-                enable = signUpViewModel.authNumberIsNotEmpty
+                enable = { signUpViewModel.authNumberIsNotEmpty },
+                supportingText = "",
             )
 
         }

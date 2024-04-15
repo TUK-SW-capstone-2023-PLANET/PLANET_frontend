@@ -33,6 +33,7 @@ import com.example.planet.R
 import com.example.planet.presentation.ui.signup.component.TopIndicator
 import com.example.planet.presentation.ui.signup.screen.AuthScreen
 import com.example.planet.presentation.ui.signup.screen.NameScreen
+import com.example.planet.presentation.ui.signup.screen.PasswdScreen
 import com.example.planet.presentation.viewmodel.SignUpViewModel
 import com.example.planet.presentation.viewmodel.navRouteList
 
@@ -74,9 +75,10 @@ fun SignUpNavGraph(navController: NavHostController, signUpViewModel: SignUpView
                     AuthScreen(navController = navController, signUpViewModel = signUpViewModel)
                 }
                 composable(SignUpNavItem.NameScreen.screenRoute) {
-                    NameScreen()
+                    NameScreen(navController = navController, signUpViewModel = signUpViewModel)
                 }
                 composable(SignUpNavItem.PasswdScreen.screenRoute) {
+                    PasswdScreen(navController = navController, signUpViewModel = signUpViewModel)
                 }
                 composable(SignUpNavItem.HeightScreen.screenRoute) {
                 }

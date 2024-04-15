@@ -84,22 +84,6 @@ fun UserIdTextField(
                     color = colorResource(id = R.color.font_background_color2)
                 )
             },
-//            trailingIcon = {
-//                TextButton(
-//                    shape = RoundedCornerShape(5.dp),
-//                    colors = ButtonDefaults.buttonColors(
-//                        containerColor = colorResource(id = R.color.main_color2),
-//                        contentColor = Color.White,
-//                        disabledContainerColor = colorResource(id = R.color.font_background_color4),
-//                        disabledContentColor = colorResource(id = R.color.font_background_color2),
-//                    ),
-//                    modifier = Modifier.padding(4.dp),
-//                    enabled = enabled,
-//                    onClick = { /*TODO*/ }
-//                ) {
-//                    Text(text = "중복검사", fontSize = 10.sp)
-//                }
-//            },
         )
         Spacer(modifier = Modifier.width(8.dp))
         RedTextButton(text = "변경", modifier = Modifier.weight(0.2f))

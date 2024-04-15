@@ -19,6 +19,9 @@ import javax.inject.Inject
 class SignUpViewModel @Inject constructor() : ViewModel() {
     private var authTimeLimit = 180_000L
     private var timerJob: Job? = null
+    val maxUsernameTextLength = 20
+
+
 
     private val _authTime = MutableStateFlow(authTimeLimit)
     val authTime: StateFlow<Long> = _authTime
@@ -43,6 +46,18 @@ class SignUpViewModel @Inject constructor() : ViewModel() {
     val universityIsNotEmpty by derivedStateOf {
         university.isNotEmpty()
     }
+
+    var userName by mutableStateOf("")
+    val userNameIsNotEmpty by derivedStateOf {
+        userName.isNotEmpty()
+    }
+
+    val usernameTextLength by derivedStateOf {
+        "${userName.length} / $maxUsernameTextLength"
+    }
+
+    var passwd by mutableStateOf("")
+    var realPasswd by mutableStateOf("")
 
     fun onNextPage(navController: NavHostController) {
         navController.navigate(navRouteList[(++_currentPage.value - 1)])
