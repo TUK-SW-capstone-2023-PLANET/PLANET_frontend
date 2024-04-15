@@ -52,7 +52,7 @@ fun SignUpNavGraph(navController: NavHostController, signUpViewModel: SignUpView
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.SpaceBetween) {
+        Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.Top) {
             Icon(
                 imageVector = Icons.Default.Close,
                 contentDescription = null,

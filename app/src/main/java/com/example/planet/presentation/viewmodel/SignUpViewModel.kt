@@ -39,6 +39,11 @@ class SignUpViewModel @Inject constructor() : ViewModel() {
         authNumber.isNotEmpty()
     }
 
+    var university by mutableStateOf("")
+    val universityIsNotEmpty by derivedStateOf {
+        university.isNotEmpty()
+    }
+
     fun onNextPage(navController: NavHostController) {
         navController.navigate(navRouteList[(++_currentPage.value - 1)])
     }
