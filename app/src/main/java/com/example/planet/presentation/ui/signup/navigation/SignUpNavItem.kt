@@ -21,7 +21,7 @@ sealed class SignUpNavItem(val screenRoute: String) {
         screenRoute = PASSWD,
     )
 
-    data object HeightScreen : SignUpNavItem(
+    data object MyInfoScreen : SignUpNavItem(
         screenRoute = HEIGHT,
     )
 

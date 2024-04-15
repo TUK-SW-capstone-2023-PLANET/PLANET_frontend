@@ -1,7 +1,6 @@
 package com.example.planet.presentation.ui.signup.navigation
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,39 +10,39 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.planet.R
 import com.example.planet.presentation.ui.signup.component.TopIndicator
 import com.example.planet.presentation.ui.signup.screen.AuthScreen
+import com.example.planet.presentation.ui.signup.screen.FinalScreen
 import com.example.planet.presentation.ui.signup.screen.MyInfoScreen
 import com.example.planet.presentation.ui.signup.screen.NameScreen
 import com.example.planet.presentation.ui.signup.screen.PasswdScreen
 import com.example.planet.presentation.viewmodel.SignUpViewModel
 import com.example.planet.presentation.viewmodel.navRouteList
+import com.example.planet.util.noRippleClickable
 
 @Composable
-fun SignUpNavGraph(navController: NavHostController, signUpViewModel: SignUpViewModel, goBack: () -> Unit) {
+fun SignUpNavGraph(
+    navController: NavHostController,
+    signUpViewModel: SignUpViewModel,
+    goLoginActivity: () -> Unit
+) {
 
     BackHandler {
-        if(signUpViewModel.currentPage.value == 1) {
-            goBack()
+        if (signUpViewModel.currentPage.value == 1) {
+            goLoginActivity()
         } else {
             signUpViewModel.onPreviousPage(navController)
         }
@@ -56,11 +55,17 @@ fun SignUpNavGraph(navController: NavHostController, signUpViewModel: SignUpView
     ) {
         Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.Top) {
             Icon(
-                imageVector = Icons.Default.Close,
+                imageVector = Icons.Default.ArrowBack,
                 contentDescription = null,
                 modifier = Modifier
-                    .size(23.dp)
-                    .align(Alignment.Start),
+                    .size(24.dp)
+                    .align(Alignment.Start)
+                    .noRippleClickable {
+                        if (signUpViewModel.currentPage.value == 1) goLoginActivity()
+                        else {
+                            signUpViewModel.onPreviousPage(navController)
+                        }
+                    },
                 tint = colorResource(id = R.color.font_background_color1)
             )
             Spacer(modifier = Modifier.height(14.5.dp))
@@ -81,10 +86,13 @@ fun SignUpNavGraph(navController: NavHostController, signUpViewModel: SignUpView
                 composable(SignUpNavItem.PasswdScreen.screenRoute) {
                     PasswdScreen(navController = navController, signUpViewModel = signUpViewModel)
                 }
-                composable(SignUpNavItem.HeightScreen.screenRoute) {
+                composable(SignUpNavItem.MyInfoScreen.screenRoute) {
                     MyInfoScreen(navController = navController, signUpViewModel = signUpViewModel)
                 }
                 composable(SignUpNavItem.FinalScreen.screenRoute) {
+                    FinalScreen {
+                        goLoginActivity()
+                    }
                 }
             }
         }

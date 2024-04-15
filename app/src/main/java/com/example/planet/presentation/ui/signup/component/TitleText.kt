@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.sp
 import com.example.planet.R
 
 @Composable
-fun TitleText(accentText: String, generalText1: String, generalText2: String) {
+fun TitleText(accentText: String, generalText1: String = "", generalText2: String = "") {
     Text(text = buildAnnotatedString {
         append(generalText1)
         withStyle(SpanStyle(color = colorResource(id = R.color.main_color1))) {

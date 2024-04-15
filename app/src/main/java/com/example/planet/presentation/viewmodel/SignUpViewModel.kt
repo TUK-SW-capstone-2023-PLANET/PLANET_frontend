@@ -106,6 +106,6 @@ val navRouteList = listOf(
     SignUpNavItem.AuthScreen.screenRoute,
     SignUpNavItem.NameScreen.screenRoute,
     SignUpNavItem.PasswdScreen.screenRoute,
-    SignUpNavItem.HeightScreen.screenRoute,
+    SignUpNavItem.MyInfoScreen.screenRoute,
     SignUpNavItem.FinalScreen.screenRoute
 )
