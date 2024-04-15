@@ -8,7 +8,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.OutlinedButton
@@ -35,6 +37,8 @@ import com.example.planet.presentation.viewmodel.SignUpViewModel
 
 @Composable
 fun PasswdScreen(navController: NavHostController, signUpViewModel: SignUpViewModel) {
+    val verticalScroll = rememberScrollState()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -45,7 +49,12 @@ fun PasswdScreen(navController: NavHostController, signUpViewModel: SignUpViewMo
             generalText1 = "",
             generalText2 = "해주세요."
         )
-        Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.Center) {
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .verticalScroll(verticalScroll),
+            verticalArrangement = Arrangement.Center
+        ) {
             PasswdTextField(
                 title = "8자리 이상 비밀번호를 입력해주세요.",
                 text = { signUpViewModel.passwd },

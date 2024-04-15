@@ -32,6 +32,7 @@ import androidx.navigation.compose.composable
 import com.example.planet.R
 import com.example.planet.presentation.ui.signup.component.TopIndicator
 import com.example.planet.presentation.ui.signup.screen.AuthScreen
+import com.example.planet.presentation.ui.signup.screen.MyInfoScreen
 import com.example.planet.presentation.ui.signup.screen.NameScreen
 import com.example.planet.presentation.ui.signup.screen.PasswdScreen
 import com.example.planet.presentation.viewmodel.SignUpViewModel
@@ -81,6 +82,7 @@ fun SignUpNavGraph(navController: NavHostController, signUpViewModel: SignUpView
                     PasswdScreen(navController = navController, signUpViewModel = signUpViewModel)
                 }
                 composable(SignUpNavItem.HeightScreen.screenRoute) {
+                    MyInfoScreen(navController = navController, signUpViewModel = signUpViewModel)
                 }
                 composable(SignUpNavItem.FinalScreen.screenRoute) {
                 }

@@ -59,6 +59,13 @@ class SignUpViewModel @Inject constructor() : ViewModel() {
     var passwd by mutableStateOf("")
     var realPasswd by mutableStateOf("")
 
+    var gender by mutableStateOf(true)
+
+    var height by mutableStateOf("")
+    var weight by mutableStateOf("")
+
+
+
     fun onNextPage(navController: NavHostController) {
         navController.navigate(navRouteList[(++_currentPage.value - 1)])
     }
@@ -77,6 +84,17 @@ class SignUpViewModel @Inject constructor() : ViewModel() {
                 delay(1000)
             }
         }
+    }
+
+    fun standardHeightAndWeight() {
+        if (gender) {
+            height = "173.5"
+            weight = "66"
+        } else {
+            height = "160.9"
+            weight = "51.5"
+        }
+
     }
 
     fun changeAutoLoginState() {
