@@ -11,12 +11,15 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import com.example.planet.TAG
 import com.example.planet.data.remote.dto.ApiState
+import com.example.planet.data.remote.dto.request.signup.PlanetUser
 import com.example.planet.data.remote.dto.response.signup.LoginAuthState
 import com.example.planet.data.remote.dto.response.signup.SignUpResponse
+import com.example.planet.data.remote.dto.response.signup.UserId
 import com.example.planet.domain.usecase.login.GetAuthCodeCheckUseCase
 import com.example.planet.domain.usecase.login.GetAuthCodeUseCase
 import com.example.planet.domain.usecase.login.GetDuplicatedNameCheckUseCase
 import com.example.planet.domain.usecase.login.GetUniversityCheckUseCase
+import com.example.planet.domain.usecase.login.PostCreateUserUseCase
 import com.example.planet.presentation.ui.signup.navigation.SignUpNavItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -32,11 +35,13 @@ class SignUpViewModel @Inject constructor(
     private val getUniversityCheckUseCase: GetUniversityCheckUseCase,
     private val getAuthCodeUseCase: GetAuthCodeUseCase,
     private val getAuthCodeCheckUseCase: GetAuthCodeCheckUseCase,
-    private val getDuplicatedNameCheckUseCase: GetDuplicatedNameCheckUseCase
+    private val getDuplicatedNameCheckUseCase: GetDuplicatedNameCheckUseCase,
+    private val postCreateUserUseCase: PostCreateUserUseCase
 ) : ViewModel() {
     private var authTimeLimit = 180_000L
     private var timerJob: Job? = null
     val maxUsernameTextLength = 20
+    var userId = ""
 
 
     private val _authTime = MutableStateFlow(authTimeLimit)
@@ -181,10 +186,35 @@ class SignUpViewModel @Inject constructor(
                 Log.d(TAG, "getAuthCodeCheck() 성공: ${apiState.value}")
                 isAuthCodeCheck =
                     (apiState.value as SignUpResponse).success.apiStateParseLoginAuthState()
+                timerJob?.cancel()
             }
 
             is ApiState.Error -> {
                 Log.d("daeYoung", "getAuthCodeCheck() 실패: ${apiState.errMsg}")
+            }
+
+            ApiState.Loading -> TODO()
+        }
+    }
+
+    suspend fun postCreateUser() {
+        val user = PlanetUser(
+            email = email,
+            nickName = userName,
+            password = passwd,
+            gender = if (gender) "남성" else "여성",
+            weight = weight.toDouble(),
+            height = height.toDouble()
+        )
+
+        when (val apiState = postCreateUserUseCase(user = user).first()) {
+            is ApiState.Success<*> -> {
+                Log.d(TAG, "postCreateUser() 성공: ${apiState.value}")
+                userId = (apiState.value as UserId).userId.toString()
+            }
+
+            is ApiState.Error -> {
+                Log.d("daeYoung", "postCreateUser() 실패: ${apiState.errMsg}")
             }
 
             ApiState.Loading -> TODO()

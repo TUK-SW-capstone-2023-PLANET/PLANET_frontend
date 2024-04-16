@@ -125,14 +125,16 @@ fun AuthScreen(navController: NavHostController, signUpViewModel: SignUpViewMode
             ) {
                 Text(text = "인증하기")
             }
+            if (signUpViewModel.isEmailCheck == LoginAuthState.Success) {
+                AuthCodeTextField(
+                    title = "메일로 받은 인증번호를 입력해주세요.",
+                    text = { signUpViewModel.authCode },
+                    onValueChange = { signUpViewModel.authCode = it },
+                    suffix = {signUpViewModel.authTime},
+                    isAuthCode = { signUpViewModel.isAuthCodeCheck },
+                )
+            }
 
-            AuthCodeTextField(
-                title = "메일로 받은 인증번호를 입력해주세요.",
-                text = { signUpViewModel.authCode },
-                onValueChange = { signUpViewModel.authCode = it },
-                enable = { signUpViewModel.authCodeIsNotEmpty },
-                isAuthCode = { signUpViewModel.isAuthCodeCheck },
-            )
         }
         OutlinedButton(
             onClick = {

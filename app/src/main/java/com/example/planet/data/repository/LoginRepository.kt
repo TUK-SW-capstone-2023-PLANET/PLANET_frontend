@@ -2,6 +2,7 @@ package com.example.planet.data.repository
 
 import com.example.planet.data.remote.dto.ApiState
 import com.example.planet.data.remote.api.ApiService
+import com.example.planet.data.remote.dto.request.signup.PlanetUser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -49,6 +50,18 @@ class LoginRepository @Inject constructor(private val apiService: ApiService) {
             error.message?.let { emit(ApiState.Error(it)) }
         }
     }.flowOn(Dispatchers.IO)
+
+    suspend fun postCreateUser(user: PlanetUser): Flow<ApiState> = flow{
+        kotlin.runCatching {
+            apiService.postUserInfo(user = user)
+        }.onSuccess {
+            emit(ApiState.Success(it))
+        }.onFailure { error ->
+            error.message?.let { emit(ApiState.Error(it)) }
+        }
+    }.flowOn(Dispatchers.IO)
+
+
 
 
 

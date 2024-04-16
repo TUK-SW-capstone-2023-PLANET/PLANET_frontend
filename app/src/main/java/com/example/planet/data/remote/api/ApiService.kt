@@ -7,6 +7,7 @@ import com.example.planet.data.remote.dto.PloggingImage
 import com.example.planet.data.remote.dto.PloggingInfo
 import com.example.planet.data.remote.dto.Tier
 import com.example.planet.data.remote.dto.TrashCan
+import com.example.planet.data.remote.dto.request.signup.PlanetUser
 import com.example.planet.data.remote.dto.response.signup.SignUpResponse
 import com.example.planet.data.remote.dto.response.ranking.planet.HigherPlanetUser
 import com.example.planet.data.remote.dto.response.ranking.planet.PagingPlanetUser
@@ -18,6 +19,7 @@ import com.example.planet.data.remote.dto.response.ranking.university.University
 import com.example.planet.data.remote.dto.response.ranking.universityuser.ExpandedUniversityUser
 import com.example.planet.data.remote.dto.response.ranking.universityuser.PagingUniversityUser
 import com.example.planet.data.remote.dto.response.ranking.universityuser.UniversityUser
+import com.example.planet.data.remote.dto.response.signup.UserId
 import okhttp3.MultipartBody
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -59,7 +61,11 @@ interface ApiService {
     // University User 관련 -------------------------------------------------------------------------
     // 자대 대학교 유저 랭킹 전체 조회
     @GET("/user/{userId}/rank/all/university")
-    suspend fun getAllUniversityUserRanking(@Path("userId") userId: Int = 0, @Query("page") page: Int): PagingUniversityUser
+    suspend fun getAllUniversityUserRanking(
+        @Path("userId") userId: Int = 0,
+        @Query("page") page: Int
+    ): PagingUniversityUser
+
     // 자대 대학교 유저 랭킹 상위 4명 조회
     @GET("/user/{userId}/rank/university/4")
     suspend fun getUniversityTop4UserRanking(@Path("userId") userId: Int): List<Map<Int, ExpandedUniversityUser>>
@@ -104,11 +110,21 @@ interface ApiService {
     suspend fun getUniversityCheck(@Query("name") name: String): SignUpResponse
 
     @GET("/login")
-    suspend fun getAuthCode(@Query("name") name: String, @Query("email") email: String): SignUpResponse
+    suspend fun getAuthCode(
+        @Query("name") name: String,
+        @Query("email") email: String
+    ): SignUpResponse
 
     @GET("/login/code")
-    suspend fun getAuthCodeCheck(@Query("code") code: String, @Query("name") name: String, @Query("email") email: String): SignUpResponse
+    suspend fun getAuthCodeCheck(
+        @Query("code") code: String,
+        @Query("name") name: String,
+        @Query("email") email: String
+    ): SignUpResponse
 
     @GET("/user/name")
     suspend fun getDuplicatedNameCheck(@Query("name") name: String): Boolean
+
+    @POST("/user")
+    suspend fun postUserInfo(@Body user: PlanetUser): UserId
 }

@@ -16,6 +16,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
@@ -28,11 +29,14 @@ import com.example.planet.presentation.ui.signup.component.GenderSwitch
 import com.example.planet.presentation.ui.signup.component.MyInfoTextField
 import com.example.planet.presentation.ui.signup.component.TitleText
 import com.example.planet.presentation.viewmodel.SignUpViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun MyInfoScreen(navController: NavHostController, signUpViewModel: SignUpViewModel) {
     val verticalScroll = rememberScrollState()
     val textColor = Color(0XFFC2C2C2)
+
+    val scope = rememberCoroutineScope()
 
     Column(
         modifier = Modifier
@@ -95,7 +99,13 @@ fun MyInfoScreen(navController: NavHostController, signUpViewModel: SignUpViewMo
             Text(text = "정확한 키, 몸무게는 정확한 칼로리를 알려줘요!", fontSize = 12.sp, color = textColor)
         }
         OutlinedButton(
-            onClick = { signUpViewModel.onNextPage(navController) },
+            onClick = {
+                scope.launch {
+                    signUpViewModel.postCreateUser()
+                    if (signUpViewModel.userId.isNotEmpty()) {
+                        signUpViewModel.onNextPage(navController)
+                    }
+                } },
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.outlinedButtonColors(
                 containerColor = Color.Transparent,
