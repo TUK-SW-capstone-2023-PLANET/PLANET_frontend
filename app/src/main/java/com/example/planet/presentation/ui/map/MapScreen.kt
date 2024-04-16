@@ -1,7 +1,6 @@
 package com.example.planet.presentation.ui.map
 
 import android.graphics.PointF
-import android.location.Location
 import android.net.Uri
 import android.util.Log
 import androidx.activity.compose.ManagedActivityResultLauncher
@@ -10,15 +9,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,14 +23,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.planet.TAG
 import com.example.planet.component.map.common.CameraButton
 import com.example.planet.component.map.map.MyLocationButton
 import com.example.planet.component.map.map.NaverMapClustering
-import com.example.planet.util.DistanceManager
 import com.example.planet.presentation.viewmodel.MapViewModel
+import com.example.planet.util.getImageUri
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraAnimation
 import com.naver.maps.map.CameraPosition
@@ -47,7 +44,6 @@ import com.naver.maps.map.compose.NaverMap
 import com.naver.maps.map.compose.PathOverlay
 import com.naver.maps.map.compose.rememberCameraPositionState
 import com.naver.maps.map.compose.rememberFusedLocationSource
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalNaverMapApi::class)
@@ -57,6 +53,7 @@ fun MapScreen(
     cameraLauncher: ManagedActivityResultLauncher<Uri, Boolean>
 ) {
     val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
 
     val list = listOf(
         LatLng(37.5660645, 126.9826732),
@@ -205,7 +202,7 @@ fun MapScreen(
                 .padding(bottom = 112.dp, end = 16.dp)
                 .align(Alignment.BottomEnd)
         ) {
-            cameraLauncher.launch(mapViewModel.getImageUri())
+            cameraLauncher.launch(getImageUri(context))
         }
     }
 }

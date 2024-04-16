@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.planet.R
+import com.example.planet.presentation.ui.signup.component.NextButton
 import com.example.planet.presentation.ui.signup.component.PasswdTextField
 import com.example.planet.presentation.ui.signup.component.RealPasswdTextField
 import com.example.planet.presentation.ui.signup.component.TitleText
@@ -38,6 +39,8 @@ import com.example.planet.presentation.viewmodel.SignUpViewModel
 @Composable
 fun PasswdScreen(navController: NavHostController, signUpViewModel: SignUpViewModel) {
     val verticalScroll = rememberScrollState()
+
+//    val buttonEnabled = (signUpViewModel.passwd.length >= 8) && (signUpViewModel.realPasswd == signUpViewModel.passwd)
 
     Column(
         modifier = Modifier
@@ -71,63 +74,8 @@ fun PasswdScreen(navController: NavHostController, signUpViewModel: SignUpViewMo
                 },
             )
         }
-        OutlinedButton(
-            onClick = { signUpViewModel.onNextPage(navController) },
-            modifier = Modifier.fillMaxWidth(),
-            colors = ButtonDefaults.outlinedButtonColors(
-                containerColor = Color.Transparent,
-                contentColor = colorResource(id = R.color.main_color1),
-                disabledContentColor = colorResource(id = R.color.font_background_color2),
-                disabledContainerColor = Color.Transparent
-            ),
-            enabled = signUpViewModel.userNameIsNotEmpty,
-            shape = RoundedCornerShape(9.dp),
-            border = if (signUpViewModel.userNameIsNotEmpty) {
-                BorderStroke(width = 1.dp, color = colorResource(id = R.color.main_color1))
-            } else {
-                BorderStroke(
-                    width = 1.dp,
-                    color = colorResource(id = R.color.font_background_color2)
-                )
-            }
-        ) {
-            Text(text = "다음으로", fontWeight = FontWeight.SemiBold, fontSize = 20.sp)
+        NextButton(enable = { (signUpViewModel.passwd.length >= 8) && (signUpViewModel.realPasswd == signUpViewModel.passwd) }) {
+            signUpViewModel.onNextPage(navController)
         }
-    }
-}
-
-@Composable
-fun Test1(
-    title: String,
-    text: String,
-    onValueChange: (String) -> Unit,
-    supportingText: String
-) {
-    val textColor = Color(0XFFC2C2C2)
-    Column(modifier = Modifier.fillMaxWidth()) {
-        Text(text = title, color = textColor, fontSize = 12.sp)
-        TextField(
-            value = text,
-            onValueChange = { onValueChange(it) },
-            modifier = Modifier
-                .fillMaxWidth(),
-            colors = TextFieldDefaults.colors(
-                focusedContainerColor = Color.Transparent,
-                unfocusedContainerColor = Color.Transparent
-            ),
-            singleLine = true,
-            maxLines = 1,
-            textStyle = LocalTextStyle.current.copy(
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Medium
-            ),
-            supportingText = {
-                Text(
-                    text = supportingText,
-                    color = colorResource(id = R.color.red),
-                    fontSize = 10.sp
-                )
-            }
-        )
     }
 }

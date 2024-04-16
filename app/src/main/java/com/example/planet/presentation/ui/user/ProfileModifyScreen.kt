@@ -17,11 +17,14 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.CameraAlt
@@ -47,35 +50,19 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.example.planet.R
 import com.example.planet.TAG
+import com.example.planet.presentation.ui.user.component.MyProfileImage
 import com.example.planet.presentation.ui.user.component.UserIdTextField
 import com.example.planet.presentation.ui.user.component.UserNicknameTextField
 import com.example.planet.presentation.ui.user.component.UserPwTextField
 import com.example.planet.util.noRippleClickable
 import com.example.planet.presentation.viewmodel.UserViewModel
+import com.example.planet.util.getImageUri
+import com.example.planet.util.parseBitmap
 
 @Composable
 fun ProfileModifyScreen(userViewModel: UserViewModel, onClick: () -> Unit) {
 
-    val takePhotoFromAlbumLauncher = // 갤러리에서 사진 가져오기
-        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                result.data?.data?.let { uri ->
-                    Log.d(TAG, "uri: $uri")
-                }
-            } else if (result.resultCode != Activity.RESULT_CANCELED) {
-//                toast(context, StringAsset.Toast.ErrorTakenPhoto)
-            }
-        }
-    val takePhotoFromAlbumIntent =
-        Intent(Intent.ACTION_GET_CONTENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI).apply {
-            type = "image/*"
-            action = Intent.ACTION_GET_CONTENT
-            putExtra(
-                Intent.EXTRA_MIME_TYPES,
-                arrayOf("image/jpeg", "image/png", "image/bmp", "image/webp")
-            )
-            putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false)
-        }
+    val scrollState = rememberScrollState()
 
     BackHandler {
         if (userViewModel.editNicknameState || userViewModel.editDescribeState) {
@@ -172,29 +159,24 @@ fun ProfileModifyScreen(userViewModel: UserViewModel, onClick: () -> Unit) {
         }
     }
 
-    Box(
+    Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
+            .verticalScroll(scrollState)
+            .imePadding(),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Icon(
             imageVector = Icons.Default.ArrowBackIosNew,
             contentDescription = null,
             tint = colorResource(id = R.color.font_background_color1),
             modifier = Modifier
-                .align(Alignment.TopStart)
+                .align(Alignment.Start)
                 .noRippleClickable {
                     onClick()
                 }
         )
-    }
-
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally
-    ) {
         Text(
             text = "프로필 수정",
             fontWeight = FontWeight.Bold,
@@ -207,44 +189,7 @@ fun ProfileModifyScreen(userViewModel: UserViewModel, onClick: () -> Unit) {
             thickness = 1.dp,
             color = colorResource(id = R.color.font_background_color3)
         )
-        Box(modifier = Modifier.wrapContentSize()) {
-            Card(
-                modifier = Modifier
-                    .size(115.dp)
-                    .aspectRatio(1f), shape = CircleShape
-            ) {
-//                AsyncImage(
-//                    model = ImageRequest.Builder(LocalContext.current)
-//                        .data(userIconUrl)
-//                        .crossfade(true).build(),
-//                    contentDescription = null,
-//                    modifier = Modifier
-//                )
-                Image(
-                    painter = painterResource(id = R.drawable.temporary_user_icon),
-                    contentDescription = null,
-                )
-            }
-            Card(
-                shape = CircleShape,
-                modifier = Modifier
-                    .size(28.dp)
-                    .align(Alignment.BottomEnd),
-                elevation = CardDefaults.elevatedCardElevation(2.dp)
-            ) {
-                IconButton(
-                    onClick = { takePhotoFromAlbumLauncher.launch(takePhotoFromAlbumIntent) },
-                    modifier = Modifier.fillMaxSize(),
-                    colors = IconButtonDefaults.iconButtonColors(containerColor = Color.White)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.CameraAlt,
-                        contentDescription = null,
-                        modifier = Modifier.size(14.dp)
-                    )
-                }
-            }
-        }
+        MyProfileImage(setProfileImage = { userViewModel.myProfileImage = it }, profileImage = { userViewModel.myProfileImage })
 
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -316,32 +261,17 @@ fun ProfileModifyScreen(userViewModel: UserViewModel, onClick: () -> Unit) {
 
         UserIdTextField(
             headerText = "아이디",
-            textValue = userViewModel.idTextValue.value,
-            onValueChange = { userViewModel.idTextValue.value = it },
-            enabled = userViewModel.duplicateCheck,
+            textValue = { userViewModel.idTextValue },
+            onValueChange = { userViewModel.idTextValue = it },
             placeholder = "TukoreaUniv0921"
-        ) {
-            Text(
-                text = "*아이디는 특수문자 사용이 불가능합니다.",
-                fontSize = 8.sp,
-                color = colorResource(id = R.color.font_background_color2)
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-        }
+        )
 
         UserPwTextField(
             headerText = "비밀번호",
-            textValue = userViewModel.pwTextValue.value,
-            onValueChange = { userViewModel.pwTextValue.value = it },
+            textValue = { userViewModel.pwTextValue },
+            onValueChange = { userViewModel.pwTextValue = it },
             placeholder = "******"
-        ) {
-            Text(
-                text = "* 특수문자, 숫자, 대문자를 포함하여 8자 이상",
-                fontSize = 8.sp,
-                color = colorResource(id = R.color.font_background_color2)
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-        }
+        )
 
         Divider(
             modifier = Modifier

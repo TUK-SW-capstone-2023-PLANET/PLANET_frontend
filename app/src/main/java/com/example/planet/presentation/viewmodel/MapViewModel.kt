@@ -140,14 +140,7 @@ class MapViewModel @Inject constructor(
     var trashItems = mutableStateListOf<Map<String, Int>>()
     var trashs = mutableStateListOf<Trash>()
 
-    fun getImageUri(): Uri {
-//        Log.d(TAG, "externalCashDir: ${context.externalCacheDir}")
-        val file = context.createImageFile()
-        return FileProvider.getUriForFile(
-            Objects.requireNonNull(context),
-            BuildConfig.APPLICATION_ID + ".provider", file
-        )
-    }
+
 
     // dialog display or close
     fun displayOnDialog() {
@@ -303,6 +296,8 @@ class MapViewModel @Inject constructor(
     fun postImage() {
         viewModelScope.launch {
             val path = context.externalCacheDir
+            Log.d(TAG, "path?.listFiles(): ${path}")
+            Log.d(TAG, "path?.listFiles()?.first(): ${path?.listFiles()?.first()}")
             val imageFile = path?.listFiles()?.first()
             val requestBody = imageFile?.asRequestBody("image/jpeg".toMediaTypeOrNull())
             requestBody?.let {
@@ -313,8 +308,8 @@ class MapViewModel @Inject constructor(
                 )
                 when (val apiState = mapRepository.postImage(file = multipart).first()) {
                     is ApiState.Success<*> -> {
-                        val result = apiState.value as ImageUrl
-                        Log.d("daeYoung", "postImage() 성공: $result")
+                        imageUrl = (apiState.value as ImageUrl).imageUrl
+                        Log.d("daeYoung", "postImage() 성공: $imageUrl")
                         trashCanLatLng = currentLatLng
                         Log.d("daeYoung", "currentLatLng: $trashCanLatLng")
                         imageFile.delete()
@@ -341,6 +336,7 @@ class MapViewModel @Inject constructor(
                 latitude = it.latitude,
                 longitude = it.longitude
             )
+
             when (val apiState =
                 mapRepository.postPloggingLive(ploggingData = ploggingImage).first()) {
                 is ApiState.Success<*> -> {
@@ -348,6 +344,8 @@ class MapViewModel @Inject constructor(
 //                        trashItems.add(trash)
 //                        _totalTrashCount.value += trash.values.toList()[0]
 //                    }
+                    Log.d("daeYoung", "postPloggingImageUrl() 성공: ${apiState.value as List<Map<String, Int>>}")
+
                     (apiState.value as List<Map<String, Int>>).forEach { trash ->
                         trashItems.add(trash)  // 플로깅 저장 api 수정되면 삭제할 것
                         val trashCount = trash.values.toList()[0]

@@ -62,7 +62,6 @@ fun MapGraph(mapViewModel: MapViewModel = viewModel(), onClick: () -> Unit) {
 
     val cameraLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { success ->
-//            if (success) capturedImageUri = mapViewModel.uri.value
             if (success) Log.d(TAG, "take picture 성공")
             // 사진 저장하는 API 호출
             mapViewModel.postImage()

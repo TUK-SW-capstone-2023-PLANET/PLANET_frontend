@@ -50,11 +50,10 @@ import com.example.planet.TAG
 import com.example.planet.component.map.common.CameraButton
 import com.example.planet.component.map.common.LockButton
 import com.example.planet.component.map.record.RoundCornerCard
-import com.example.planet.util.noRippleClickable
 import com.example.planet.presentation.viewmodel.MapViewModel
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.example.planet.util.getImageUri
+import com.example.planet.util.noRippleClickable
 
-@OptIn(ExperimentalPermissionsApi::class)
 //@Preview(showBackground = true)
 @Composable
 fun RecordScreen(mapViewModel: MapViewModel = viewModel(), cameraLauncher: ManagedActivityResultLauncher<Uri, Boolean>) {
@@ -273,10 +272,9 @@ fun RecordScreen(mapViewModel: MapViewModel = viewModel(), cameraLauncher: Manag
             if (!mapViewModel.lockScreenState.value) {
                 LockButton(imgaeVector = Icons.Default.Lock, lock = { mapViewModel.lockScreen() })
             }
-            CameraButton { cameraLauncher.launch(mapViewModel.getImageUri()) }
+            CameraButton { cameraLauncher.launch(getImageUri(context)) }
         }
     }
-
 }
 
 

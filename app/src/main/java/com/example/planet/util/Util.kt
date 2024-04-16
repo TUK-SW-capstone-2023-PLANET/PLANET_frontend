@@ -1,6 +1,11 @@
 package com.example.planet.util
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.ImageDecoder
+import android.net.Uri
+import android.os.Build
+import android.provider.MediaStore
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -11,6 +16,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
+import androidx.core.content.FileProvider
+import com.example.planet.BuildConfig
 import com.example.planet.TAG
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
@@ -20,6 +27,7 @@ import java.io.File
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Objects
 import java.util.concurrent.TimeUnit
 import kotlin.math.round
 
@@ -36,11 +44,32 @@ fun Context.createImageFile(): File {
     val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
     val imageFileName = "JPEG_" + timeStamp + "_"
     val image = File.createTempFile(
-        imageFileName, /* prefix */
-        ".jpg", /* suffix */
-        externalCacheDir      /* directory */
+        imageFileName,          /* prefix */
+        ".jpg",          /* suffix */
+        externalCacheDir        /* directory */
     )
     return image
+}
+
+fun getImageUri(context: Context): Uri {
+    val file = context.createImageFile()
+    return FileProvider.getUriForFile(
+        Objects.requireNonNull(context),
+        BuildConfig.APPLICATION_ID + ".provider", file
+    )
+}
+
+@Suppress("DEPRECATION", "NewApi")
+fun Uri.parseBitmap(context: Context): Bitmap {
+    return when (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) { // 28
+        true -> {
+            val source = ImageDecoder.createSource(context.contentResolver, this)
+            ImageDecoder.decodeBitmap(source)
+        }
+        else -> {
+            MediaStore.Images.Media.getBitmap(context.contentResolver, this)
+        }
+    }
 }
 
 fun File.allDelete():Boolean? {

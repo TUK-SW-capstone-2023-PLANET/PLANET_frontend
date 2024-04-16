@@ -1,5 +1,7 @@
 package com.example.planet.presentation.viewmodel
 
+import android.graphics.Bitmap
+import android.net.Uri
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -16,15 +18,15 @@ class UserViewModel @Inject constructor() : ViewModel() {
     val maxNicknameTextLength = 20
     val maxDescribeTextLength = 20
 
-    val idTextValue = mutableStateOf("")
-    val pwTextValue = mutableStateOf("")
+    var idTextValue by  mutableStateOf("")
+    var pwTextValue by mutableStateOf("")
     var nicknameTextValue by mutableStateOf(TextFieldValue(text = "Happy Bean", selection = TextRange("Happy Bean".length)))
     var describeTextValue by mutableStateOf(TextFieldValue(text = "나랑 같이 플로깅 할 사람", selection = TextRange("나랑 같이 플로깅 할 사람".length)))
     var editNicknameState by mutableStateOf(false)
     var editDescribeState by mutableStateOf(false)
 
     val duplicateCheck by derivedStateOf {
-        idTextValue.value.isNotEmpty()
+        idTextValue.isNotEmpty()
     }
 
     val nicknameTextLength by derivedStateOf {
@@ -35,6 +37,8 @@ class UserViewModel @Inject constructor() : ViewModel() {
         "${describeTextValue.text.length} / $maxDescribeTextLength"
     }
 
+    var myProfileImage by mutableStateOf<Uri>(Uri.EMPTY)
+    var myProfileImageBitmap by mutableStateOf<Bitmap?>(null)
     fun changeEditNicknameScreen() {
         editNicknameState = !editNicknameState
     }

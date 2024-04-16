@@ -47,13 +47,10 @@ import kotlinx.coroutines.delay
 @Composable
 fun UserIdTextField(
     headerText: String,
-    textValue: String,
-    enabled: Boolean = false,
+    textValue: () -> String,
     onValueChange: (String) -> Unit,
     placeholder: String,
-    supportingText: @Composable () -> Unit,
 ) {
-    Log.d(TAG, "enabled: $enabled")
     Row(verticalAlignment = Alignment.CenterVertically) {
         Text(
             text = headerText,
@@ -63,7 +60,7 @@ fun UserIdTextField(
             color = colorResource(id = R.color.font_background_color1),
         )
         OutlinedTextField(
-            value = textValue,
+            value = textValue(),
             onValueChange = { onValueChange(it) },
             colors = OutlinedTextFieldDefaults.colors(
                 unfocusedBorderColor = Color.Transparent,
@@ -86,18 +83,26 @@ fun UserIdTextField(
             },
         )
         Spacer(modifier = Modifier.width(8.dp))
-        RedTextButton(text = "변경", modifier = Modifier.weight(0.2f))
+        Box(
+            modifier = Modifier
+                .weight(0.2f)
+                .background(color = Color.Transparent)
+        )
     }
-    supportingText()
+    Text(
+        text = "*아이디는 특수문자 사용이 불가능합니다.",
+        fontSize = 8.sp,
+        color = colorResource(id = R.color.font_background_color2)
+    )
+    Spacer(modifier = Modifier.height(16.dp))
 }
 
 @Composable
 fun UserPwTextField(
     headerText: String,
-    textValue: String,
+    textValue: () -> String,
     onValueChange: (String) -> Unit,
     placeholder: String,
-    supportingText: @Composable () -> Unit,
 ) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Text(
@@ -108,7 +113,7 @@ fun UserPwTextField(
             color = colorResource(id = R.color.font_background_color1),
         )
         OutlinedTextField(
-            value = textValue,
+            value = textValue(),
             onValueChange = { onValueChange(it) },
             colors = OutlinedTextFieldDefaults.colors(
                 unfocusedBorderColor = Color.Transparent,
@@ -133,7 +138,12 @@ fun UserPwTextField(
         Spacer(modifier = Modifier.width(8.dp))
         RedTextButton(text = "변경", modifier = Modifier.weight(0.2f))
     }
-    supportingText()
+    Text(
+        text = "* 특수문자, 숫자, 대문자를 포함하여 8자 이상",
+        fontSize = 8.sp,
+        color = colorResource(id = R.color.font_background_color2)
+    )
+    Spacer(modifier = Modifier.height(16.dp))
 }
 
 @Composable
