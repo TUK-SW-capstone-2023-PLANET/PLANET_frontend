@@ -1,7 +1,7 @@
 package com.example.planet.domain.usecase.ranking.university
 
 import androidx.paging.PagingData
-import com.example.planet.data.ApiState
+import com.example.planet.data.remote.dto.ApiState
 import com.example.planet.data.remote.dto.response.ranking.university.University
 import com.example.planet.data.repository.RankingRepository
 import kotlinx.coroutines.flow.Flow

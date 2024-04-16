@@ -11,6 +11,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -20,13 +21,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.planet.R
-import com.example.planet.presentation.ui.signup.component.SignUpTextField
+import com.example.planet.data.remote.dto.response.signup.LoginAuthState
 import com.example.planet.presentation.ui.signup.component.TitleText
 import com.example.planet.presentation.ui.signup.component.UserNameTextField
 import com.example.planet.presentation.viewmodel.SignUpViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun NameScreen(navController: NavHostController, signUpViewModel: SignUpViewModel) {
+
+    val scope = rememberCoroutineScope()
 
     Column(
         modifier = Modifier
@@ -40,7 +44,6 @@ fun NameScreen(navController: NavHostController, signUpViewModel: SignUpViewMode
         )
         Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.Center) {
             UserNameTextField(
-
                 title = "원하는 이름을 정해주세요!",
                 text = { signUpViewModel.userName },
                 onValueChange = {
@@ -48,10 +51,14 @@ fun NameScreen(navController: NavHostController, signUpViewModel: SignUpViewMode
                         signUpViewModel.userName = it
                 },
                 trailingText = { signUpViewModel.usernameTextLength },
-                supportingText = ""
+                isNameDuplicated = { signUpViewModel.isUserNameCheck }
             )
             OutlinedButton(
-                onClick = { },
+                onClick = {
+                    scope.launch {
+                        signUpViewModel.getDuplicatedNameCheck()
+                    }
+                },
                 modifier = Modifier.align(alignment = Alignment.End),
                 border = if (signUpViewModel.userNameIsNotEmpty) BorderStroke(
                     width = 1.dp,
@@ -70,7 +77,11 @@ fun NameScreen(navController: NavHostController, signUpViewModel: SignUpViewMode
             }
         }
         OutlinedButton(
-            onClick = { signUpViewModel.onNextPage(navController) },
+            onClick = {
+                if (signUpViewModel.isUserNameCheck == LoginAuthState.Success) {
+                    signUpViewModel.onNextPage(navController)
+                }
+            },
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.outlinedButtonColors(
                 containerColor = Color.Transparent,

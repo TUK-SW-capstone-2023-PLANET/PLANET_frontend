@@ -10,11 +10,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import com.example.planet.TAG
-import com.example.planet.data.ApiState
+import com.example.planet.data.remote.dto.ApiState
 import com.example.planet.data.remote.dto.response.signup.LoginAuthState
 import com.example.planet.data.remote.dto.response.signup.SignUpResponse
 import com.example.planet.domain.usecase.login.GetAuthCodeCheckUseCase
 import com.example.planet.domain.usecase.login.GetAuthCodeUseCase
+import com.example.planet.domain.usecase.login.GetDuplicatedNameCheckUseCase
 import com.example.planet.domain.usecase.login.GetUniversityCheckUseCase
 import com.example.planet.presentation.ui.signup.navigation.SignUpNavItem
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,7 +31,8 @@ import javax.inject.Inject
 class SignUpViewModel @Inject constructor(
     private val getUniversityCheckUseCase: GetUniversityCheckUseCase,
     private val getAuthCodeUseCase: GetAuthCodeUseCase,
-    private val getAuthCodeCheckUseCase: GetAuthCodeCheckUseCase
+    private val getAuthCodeCheckUseCase: GetAuthCodeCheckUseCase,
+    private val getDuplicatedNameCheckUseCase: GetDuplicatedNameCheckUseCase
 ) : ViewModel() {
     private var authTimeLimit = 180_000L
     private var timerJob: Job? = null
@@ -70,6 +72,8 @@ class SignUpViewModel @Inject constructor(
     val userNameIsNotEmpty by derivedStateOf {
         userName.isNotEmpty()
     }
+    var isUserNameCheck: LoginAuthState by mutableStateOf(LoginAuthState.Empty)
+
 
     val usernameTextLength by derivedStateOf {
         "${userName.length} / $maxUsernameTextLength"
@@ -119,11 +123,17 @@ class SignUpViewModel @Inject constructor(
         _autoLoginState.value = !autoLoginState.value
     }
 
-    private fun apiStateParseLoginAuthState(state: String): LoginAuthState =
-        when (state) {
+    private fun String.apiStateParseLoginAuthState(): LoginAuthState =
+        when (this) {
             "true" -> LoginAuthState.Success
             "false" -> LoginAuthState.Fail
             else -> LoginAuthState.Empty
+        }
+
+    private fun Boolean.apiStateParseLoginAuthState(): LoginAuthState =
+        when (this) {
+            true -> LoginAuthState.Success
+            false -> LoginAuthState.Fail
         }
 
 
@@ -132,7 +142,7 @@ class SignUpViewModel @Inject constructor(
             is ApiState.Success<*> -> {
                 Log.d(TAG, "universityCheck() 성공: ${apiState.value}")
                 isUniversityCheck =
-                    apiStateParseLoginAuthState((apiState.value as SignUpResponse).success)
+                    (apiState.value as SignUpResponse).success.apiStateParseLoginAuthState()
 
             }
 
@@ -149,7 +159,7 @@ class SignUpViewModel @Inject constructor(
             is ApiState.Success<*> -> {
                 Log.d(TAG, "getAuthCode() 성공: ${apiState.value}")
                 isEmailCheck =
-                    apiStateParseLoginAuthState((apiState.value as SignUpResponse).success)
+                    (apiState.value as SignUpResponse).success.apiStateParseLoginAuthState()
                 startAuthTimer()
             }
 
@@ -170,7 +180,7 @@ class SignUpViewModel @Inject constructor(
             is ApiState.Success<*> -> {
                 Log.d(TAG, "getAuthCodeCheck() 성공: ${apiState.value}")
                 isAuthCodeCheck =
-                    apiStateParseLoginAuthState((apiState.value as SignUpResponse).success)
+                    (apiState.value as SignUpResponse).success.apiStateParseLoginAuthState()
             }
 
             is ApiState.Error -> {
@@ -181,6 +191,21 @@ class SignUpViewModel @Inject constructor(
         }
     }
 
+
+    suspend fun getDuplicatedNameCheck() {
+        when (val apiState = getDuplicatedNameCheckUseCase(userName).first()) {
+            is ApiState.Success<*> -> {
+                Log.d(TAG, "getDuplicatedNameCheck() 성공: ${apiState.value}")
+                isUserNameCheck = (apiState.value as Boolean).apiStateParseLoginAuthState()
+            }
+
+            is ApiState.Error -> {
+                Log.d("daeYoung", "getDuplicatedNameCheck() 실패: ${apiState.errMsg}")
+            }
+
+            ApiState.Loading -> TODO()
+        }
+    }
 
 }
 

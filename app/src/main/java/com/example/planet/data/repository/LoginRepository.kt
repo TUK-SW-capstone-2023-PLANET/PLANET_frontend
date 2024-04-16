@@ -1,6 +1,6 @@
 package com.example.planet.data.repository
 
-import com.example.planet.data.ApiState
+import com.example.planet.data.remote.dto.ApiState
 import com.example.planet.data.remote.api.ApiService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -40,7 +40,15 @@ class LoginRepository @Inject constructor(private val apiService: ApiService) {
         }
     }.flowOn(Dispatchers.IO)
 
-
+    suspend fun getDuplicatedNameCheck(name: String): Flow<ApiState> = flow{
+        kotlin.runCatching {
+            apiService.getDuplicatedNameCheck(name = name)
+        }.onSuccess {
+            emit(ApiState.Success(it))
+        }.onFailure { error ->
+            error.message?.let { emit(ApiState.Error(it)) }
+        }
+    }.flowOn(Dispatchers.IO)
 
 
 

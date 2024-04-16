@@ -14,6 +14,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import com.example.planet.R
+import com.example.planet.data.remote.dto.response.signup.LoginAuthState
 
 @Composable
 fun UserNameTextField(
@@ -21,9 +22,17 @@ fun UserNameTextField(
     text: () -> String,
     onValueChange: (String) -> Unit,
     trailingText: () -> String,
-    supportingText: String
+    isNameDuplicated: () -> LoginAuthState
 ) {
     val textColor = Color(0XFFC2C2C2)
+
+    val (supportingText, supportingTextColor) = if (isNameDuplicated() == LoginAuthState.Success) {
+        Pair("사용 가능한 이름입니다.", colorResource(id = R.color.main_color1))
+    } else if (isNameDuplicated() == LoginAuthState.Fail) {
+        Pair("이미 사용중인 이름입니다.", colorResource(id = R.color.red))
+    } else {
+        Pair("", Color.Transparent)
+    }
 
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(text = title, color = textColor, fontSize = 12.sp)
@@ -55,7 +64,7 @@ fun UserNameTextField(
                 )
             },
             supportingText = {
-                Text(text = supportingText, color = colorResource(id = R.color.red), fontSize = 10.sp)
+                Text(text = supportingText, color = supportingTextColor, fontSize = 10.sp)
             }
         )
     }

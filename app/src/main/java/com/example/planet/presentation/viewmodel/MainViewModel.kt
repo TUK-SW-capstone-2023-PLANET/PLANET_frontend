@@ -13,7 +13,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.example.planet.TAG
-import com.example.planet.data.ApiState
+import com.example.planet.data.remote.dto.ApiState
 import com.example.planet.data.remote.dto.Advertisement
 import com.example.planet.data.remote.dto.Tier
 import com.example.planet.data.remote.dto.response.ranking.planet.HigherPlanetUser

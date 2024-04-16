@@ -1,6 +1,6 @@
 package com.example.planet.domain.usecase.ranking.season
 
-import com.example.planet.data.ApiState
+import com.example.planet.data.remote.dto.ApiState
 import com.example.planet.data.repository.RankingRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject

@@ -1,6 +1,6 @@
 package com.example.planet.data.repository
 
-import com.example.planet.data.ApiState
+import com.example.planet.data.remote.dto.ApiState
 import com.example.planet.data.remote.dto.PloggingImage
 import com.example.planet.data.remote.dto.PloggingInfo
 import com.example.planet.data.remote.api.ApiService

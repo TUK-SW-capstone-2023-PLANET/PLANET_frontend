@@ -3,7 +3,7 @@ package com.example.planet.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.example.planet.data.ApiState
+import com.example.planet.data.remote.dto.ApiState
 import com.example.planet.data.dataSource.PlanetPagingSource
 import com.example.planet.data.dataSource.UniversityPagingSource
 import com.example.planet.data.dataSource.SeasonUserPagingSource

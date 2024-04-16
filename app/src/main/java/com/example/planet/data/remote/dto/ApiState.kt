@@ -1,4 +1,4 @@
-package com.example.planet.data
+package com.example.planet.data.remote.dto
 
 sealed class ApiState {
     data class Success<T>(val value: T): ApiState()

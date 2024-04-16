@@ -19,19 +19,25 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.example.planet.R
 import com.example.planet.TAG
+import com.example.planet.data.remote.dto.response.signup.LoginAuthState
 import com.example.planet.util.noRippleClickable
 
 @Composable
-fun SignUpTextField(
+fun AuthCodeTextField(
     title: String,
     text: () -> String,
     onValueChange: (String) -> Unit,
-    enable: () -> Boolean,
-    supportingText: () -> String
+    suffix: () -> String,
+    isAuthCode: () -> LoginAuthState
 ) {
     val textColor = Color(0XFFC2C2C2)
 
-//    val bringIntoViewRequester = remember { BringIntoViewRequester() }
+    val (supportingText, supportingTextColor) = if (isAuthCode() == LoginAuthState.Fail) {
+        Pair("올바른 인증코드가 아닙니다.", colorResource(id = R.color.red))
+    } else {
+        Pair("", Color.Transparent)
+    }
+
 
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(text = title, color = textColor, fontSize = 12.sp)
@@ -40,14 +46,6 @@ fun SignUpTextField(
             onValueChange = { onValueChange(it) },
             modifier = Modifier
                 .fillMaxWidth(),
-//                .bringIntoViewRequester(bringIntoViewRequester)
-//                .onFocusEvent { focusState ->
-//                    if (focusState.isFocused) {
-//                        coroutineScope.launch {
-//                            bringIntoViewRequester.bringIntoView()
-//                        }
-//                    }
-//                },
             colors = TextFieldDefaults.colors(
                 focusedContainerColor = Color.Transparent,
                 unfocusedContainerColor = Color.Transparent
@@ -58,17 +56,11 @@ fun SignUpTextField(
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Medium
             ),
-            trailingIcon = {
-                if (enable()) {
-                    Log.d(TAG, "signUpViewModel.email: $enable")
-                    Icon(
-                        imageVector = Icons.Default.Close,
-                        contentDescription = null,
-                        modifier = Modifier.noRippleClickable { onValueChange("") })
-                }
+            suffix = {
+                Text(text = suffix())
             },
             supportingText = {
-                Text(text = supportingText(), color = colorResource(id = R.color.red), fontSize = 10.sp)
+                Text(text = supportingText, color = supportingTextColor, fontSize = 10.sp)
             }
         )
     }

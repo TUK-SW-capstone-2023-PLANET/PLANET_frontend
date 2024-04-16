@@ -31,12 +31,11 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.planet.R
 import com.example.planet.data.remote.dto.response.signup.LoginAuthState
+import com.example.planet.presentation.ui.signup.component.AuthCodeTextField
 import com.example.planet.presentation.ui.signup.component.EmailTextField
-import com.example.planet.presentation.ui.signup.component.SignUpTextField
 import com.example.planet.presentation.ui.signup.component.TitleText
 import com.example.planet.presentation.ui.signup.component.UniversityTextField
 import com.example.planet.presentation.viewmodel.SignUpViewModel
-import com.example.planet.presentation.viewmodel.navRouteList
 import kotlinx.coroutines.launch
 
 @Composable
@@ -127,14 +126,13 @@ fun AuthScreen(navController: NavHostController, signUpViewModel: SignUpViewMode
                 Text(text = "인증하기")
             }
 
-            SignUpTextField(
+            AuthCodeTextField(
                 title = "메일로 받은 인증번호를 입력해주세요.",
                 text = { signUpViewModel.authCode },
                 onValueChange = { signUpViewModel.authCode = it },
                 enable = { signUpViewModel.authCodeIsNotEmpty },
-                supportingText = { "" },
+                isAuthCode = { signUpViewModel.isAuthCodeCheck },
             )
-
         }
         OutlinedButton(
             onClick = {

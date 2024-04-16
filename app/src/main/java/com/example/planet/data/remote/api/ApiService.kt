@@ -108,4 +108,7 @@ interface ApiService {
 
     @GET("/login/code")
     suspend fun getAuthCodeCheck(@Query("code") code: String, @Query("name") name: String, @Query("email") email: String): SignUpResponse
+
+    @GET("/user/name")
+    suspend fun getDuplicatedNameCheck(@Query("name") name: String): Boolean
 }
