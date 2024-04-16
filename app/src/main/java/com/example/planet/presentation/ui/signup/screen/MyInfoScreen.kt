@@ -16,7 +16,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
@@ -104,9 +103,9 @@ fun MyInfoScreen(navController: NavHostController, signUpViewModel: SignUpViewMo
                 disabledContentColor = colorResource(id = R.color.font_background_color2),
                 disabledContainerColor = Color.Transparent
             ),
-            enabled = signUpViewModel.authNumberIsNotEmpty,
+            enabled = signUpViewModel.authCodeIsNotEmpty,
             shape = RoundedCornerShape(9.dp),
-            border = if (signUpViewModel.authNumberIsNotEmpty) {
+            border = if (signUpViewModel.authCodeIsNotEmpty) {
                 BorderStroke(width = 1.dp, color = colorResource(id = R.color.main_color1))
             } else {
                 BorderStroke(

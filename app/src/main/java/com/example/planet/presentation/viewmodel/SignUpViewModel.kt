@@ -13,6 +13,7 @@ import com.example.planet.TAG
 import com.example.planet.data.ApiState
 import com.example.planet.data.remote.dto.response.signup.LoginAuthState
 import com.example.planet.data.remote.dto.response.signup.SignUpResponse
+import com.example.planet.domain.usecase.login.GetAuthCodeCheckUseCase
 import com.example.planet.domain.usecase.login.GetAuthCodeUseCase
 import com.example.planet.domain.usecase.login.GetUniversityCheckUseCase
 import com.example.planet.presentation.ui.signup.navigation.SignUpNavItem
@@ -29,6 +30,7 @@ import javax.inject.Inject
 class SignUpViewModel @Inject constructor(
     private val getUniversityCheckUseCase: GetUniversityCheckUseCase,
     private val getAuthCodeUseCase: GetAuthCodeUseCase,
+    private val getAuthCodeCheckUseCase: GetAuthCodeCheckUseCase
 ) : ViewModel() {
     private var authTimeLimit = 180_000L
     private var timerJob: Job? = null
@@ -51,10 +53,12 @@ class SignUpViewModel @Inject constructor(
     var isEmailCheck: LoginAuthState by mutableStateOf(LoginAuthState.Empty)
 
 
-    var authNumber by mutableStateOf("")
-    val authNumberIsNotEmpty by derivedStateOf {
-        authNumber.isNotEmpty()
+    var authCode by mutableStateOf("")
+    val authCodeIsNotEmpty by derivedStateOf {
+        authCode.isNotEmpty()
     }
+    var isAuthCodeCheck: LoginAuthState by mutableStateOf(LoginAuthState.Empty)
+
 
     var university by mutableStateOf("")
     val universityIsNotEmpty by derivedStateOf {
@@ -127,7 +131,8 @@ class SignUpViewModel @Inject constructor(
         when (val apiState = getUniversityCheckUseCase(university).first()) {
             is ApiState.Success<*> -> {
                 Log.d(TAG, "universityCheck() 성공: ${apiState.value}")
-                isUniversityCheck = apiStateParseLoginAuthState((apiState.value as SignUpResponse).success)
+                isUniversityCheck =
+                    apiStateParseLoginAuthState((apiState.value as SignUpResponse).success)
 
             }
 
@@ -140,15 +145,36 @@ class SignUpViewModel @Inject constructor(
     }
 
     suspend fun getAuthCode() {
-        when (val apiState = getAuthCodeUseCase(university = university , email = email).first()) {
+        when (val apiState = getAuthCodeUseCase(university = university, email = email).first()) {
             is ApiState.Success<*> -> {
                 Log.d(TAG, "getAuthCode() 성공: ${apiState.value}")
-                isEmailCheck = apiStateParseLoginAuthState((apiState.value as SignUpResponse).success)
+                isEmailCheck =
+                    apiStateParseLoginAuthState((apiState.value as SignUpResponse).success)
                 startAuthTimer()
             }
 
             is ApiState.Error -> {
                 Log.d("daeYoung", "getAuthCode() 실패: ${apiState.errMsg}")
+            }
+
+            ApiState.Loading -> TODO()
+        }
+    }
+
+    suspend fun getAuthCodeCheck() {
+        when (val apiState = getAuthCodeCheckUseCase(
+            code = authCode,
+            university = university,
+            email = email
+        ).first()) {
+            is ApiState.Success<*> -> {
+                Log.d(TAG, "getAuthCodeCheck() 성공: ${apiState.value}")
+                isAuthCodeCheck =
+                    apiStateParseLoginAuthState((apiState.value as SignUpResponse).success)
+            }
+
+            is ApiState.Error -> {
+                Log.d("daeYoung", "getAuthCodeCheck() 실패: ${apiState.errMsg}")
             }
 
             ApiState.Loading -> TODO()

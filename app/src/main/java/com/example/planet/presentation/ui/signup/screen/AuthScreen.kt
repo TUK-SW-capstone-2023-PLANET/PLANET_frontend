@@ -30,11 +30,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.planet.R
+import com.example.planet.data.remote.dto.response.signup.LoginAuthState
 import com.example.planet.presentation.ui.signup.component.EmailTextField
 import com.example.planet.presentation.ui.signup.component.SignUpTextField
 import com.example.planet.presentation.ui.signup.component.TitleText
 import com.example.planet.presentation.ui.signup.component.UniversityTextField
 import com.example.planet.presentation.viewmodel.SignUpViewModel
+import com.example.planet.presentation.viewmodel.navRouteList
 import kotlinx.coroutines.launch
 
 @Composable
@@ -65,19 +67,21 @@ fun AuthScreen(navController: NavHostController, signUpViewModel: SignUpViewMode
             append("은 서로 즐거운 플로깅을 위해 사용자의 대학교를 인증받아요.")
         }, fontSize = 10.sp, fontWeight = FontWeight.SemiBold, color = textColor)
 
-        Column(modifier = Modifier
-            .weight(1f)
-            .verticalScroll(verticalScroll), verticalArrangement = Arrangement.Center) {
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .verticalScroll(verticalScroll), verticalArrangement = Arrangement.Center
+        ) {
 
             UniversityTextField(
                 title = "대학교명을 입력해주세요.",
                 text = { signUpViewModel.university },
                 onValueChange = { signUpViewModel.university = it },
                 enable = { signUpViewModel.universityIsNotEmpty },
-                isUniversity = { signUpViewModel.isUniversityCheck},
+                isUniversity = { signUpViewModel.isUniversityCheck },
             )
             OutlinedButton(
-                onClick = { scope.launch{ signUpViewModel.universityCheck() } },
+                onClick = { scope.launch { signUpViewModel.universityCheck() } },
                 modifier = Modifier.align(alignment = Alignment.End),
                 border = if (signUpViewModel.universityIsNotEmpty) BorderStroke(
                     width = 1.dp,
@@ -125,15 +129,22 @@ fun AuthScreen(navController: NavHostController, signUpViewModel: SignUpViewMode
 
             SignUpTextField(
                 title = "메일로 받은 인증번호를 입력해주세요.",
-                text = { signUpViewModel.authNumber },
-                onValueChange = { signUpViewModel.authNumber = it },
-                enable = { signUpViewModel.authNumberIsNotEmpty },
+                text = { signUpViewModel.authCode },
+                onValueChange = { signUpViewModel.authCode = it },
+                enable = { signUpViewModel.authCodeIsNotEmpty },
                 supportingText = { "" },
             )
 
         }
         OutlinedButton(
-            onClick = { signUpViewModel.onNextPage(navController) },
+            onClick = {
+                scope.launch {
+                    signUpViewModel.getAuthCodeCheck()
+                    if (signUpViewModel.isAuthCodeCheck == LoginAuthState.Success) {
+                        signUpViewModel.onNextPage(navController)
+                    }
+                }
+            },
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.outlinedButtonColors(
                 containerColor = Color.Transparent,
@@ -141,9 +152,9 @@ fun AuthScreen(navController: NavHostController, signUpViewModel: SignUpViewMode
                 disabledContentColor = colorResource(id = R.color.font_background_color2),
                 disabledContainerColor = Color.Transparent
             ),
-            enabled = signUpViewModel.authNumberIsNotEmpty,
+            enabled = signUpViewModel.authCodeIsNotEmpty,
             shape = RoundedCornerShape(9.dp),
-            border = if (signUpViewModel.authNumberIsNotEmpty) {
+            border = if (signUpViewModel.authCodeIsNotEmpty) {
                 BorderStroke(width = 1.dp, color = colorResource(id = R.color.main_color1))
             } else {
                 BorderStroke(

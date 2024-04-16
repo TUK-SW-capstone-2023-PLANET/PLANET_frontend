@@ -30,6 +30,17 @@ class LoginRepository @Inject constructor(private val apiService: ApiService) {
         }
     }.flowOn(Dispatchers.IO)
 
+    suspend fun getAuthCodeCheck(code: String, name: String, email: String): Flow<ApiState> = flow{
+        kotlin.runCatching {
+            apiService.getAuthCodeCheck(code = code, name = name, email = email)
+        }.onSuccess {
+            emit(ApiState.Success(it))
+        }.onFailure { error ->
+            error.message?.let { emit(ApiState.Error(it)) }
+        }
+    }.flowOn(Dispatchers.IO)
+
+
 
 
 
