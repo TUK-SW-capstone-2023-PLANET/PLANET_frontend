@@ -102,4 +102,7 @@ interface ApiService {
     // SignUpActivity 관련  ------------------------------------------------------------------------
     @GET("/login/check")
     suspend fun getUniversityCheck(@Query("name") name: String): SignUpResponse
+
+    @GET("/login")
+    suspend fun getAuthCode(@Query("name") name: String, @Query("email") email: String): SignUpResponse
 }

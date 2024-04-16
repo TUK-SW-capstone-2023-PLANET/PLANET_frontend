@@ -11,7 +11,9 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import com.example.planet.TAG
 import com.example.planet.data.ApiState
+import com.example.planet.data.remote.dto.response.signup.LoginAuthState
 import com.example.planet.data.remote.dto.response.signup.SignUpResponse
+import com.example.planet.domain.usecase.login.GetAuthCodeUseCase
 import com.example.planet.domain.usecase.login.GetUniversityCheckUseCase
 import com.example.planet.presentation.ui.signup.navigation.SignUpNavItem
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,7 +27,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
-    private val getUniversityCheckUseCase: GetUniversityCheckUseCase
+    private val getUniversityCheckUseCase: GetUniversityCheckUseCase,
+    private val getAuthCodeUseCase: GetAuthCodeUseCase,
 ) : ViewModel() {
     private var authTimeLimit = 180_000L
     private var timerJob: Job? = null
@@ -45,6 +48,8 @@ class SignUpViewModel @Inject constructor(
     val emailIsNotEmpty by derivedStateOf {
         email.isNotEmpty()
     }
+    var isEmailCheck: LoginAuthState by mutableStateOf(LoginAuthState.Empty)
+
 
     var authNumber by mutableStateOf("")
     val authNumberIsNotEmpty by derivedStateOf {
@@ -55,7 +60,7 @@ class SignUpViewModel @Inject constructor(
     val universityIsNotEmpty by derivedStateOf {
         university.isNotEmpty()
     }
-    var isUniversityCheck by mutableStateOf("")
+    var isUniversityCheck: LoginAuthState by mutableStateOf(LoginAuthState.Empty)
 
     var userName by mutableStateOf("")
     val userNameIsNotEmpty by derivedStateOf {
@@ -84,10 +89,10 @@ class SignUpViewModel @Inject constructor(
         navController.popBackStack()
     }
 
-    fun startAuthTimer() {
+    private fun startAuthTimer() {
         timerJob?.cancel()
 
-        viewModelScope.launch {
+        timerJob = viewModelScope.launch {
             while (true) {
                 _authTime.value -= 1000
                 delay(1000)
@@ -110,20 +115,47 @@ class SignUpViewModel @Inject constructor(
         _autoLoginState.value = !autoLoginState.value
     }
 
+    private fun apiStateParseLoginAuthState(state: String): LoginAuthState =
+        when (state) {
+            "true" -> LoginAuthState.Success
+            "false" -> LoginAuthState.Fail
+            else -> LoginAuthState.Empty
+        }
+
+
     suspend fun universityCheck() {
-        when (val apiState = getUniversityCheckUseCase.invoke(university).first()) {
+        when (val apiState = getUniversityCheckUseCase(university).first()) {
             is ApiState.Success<*> -> {
                 Log.d(TAG, "universityCheck() 성공: ${apiState.value}")
-                isUniversityCheck = (apiState.value as SignUpResponse).success
+                isUniversityCheck = apiStateParseLoginAuthState((apiState.value as SignUpResponse).success)
+
             }
 
             is ApiState.Error -> {
-                Log.d("daeYoung", "getTopBanner() 실패: ${apiState.errMsg}")
+                Log.d("daeYoung", "universityCheck() 실패: ${apiState.errMsg}")
             }
 
             ApiState.Loading -> TODO()
         }
     }
+
+    suspend fun getAuthCode() {
+        when (val apiState = getAuthCodeUseCase(university = university , email = email).first()) {
+            is ApiState.Success<*> -> {
+                Log.d(TAG, "getAuthCode() 성공: ${apiState.value}")
+                isEmailCheck = apiStateParseLoginAuthState((apiState.value as SignUpResponse).success)
+                startAuthTimer()
+            }
+
+            is ApiState.Error -> {
+                Log.d("daeYoung", "getAuthCode() 실패: ${apiState.errMsg}")
+            }
+
+            ApiState.Loading -> TODO()
+        }
+    }
+
+
 }
 
 val navRouteList = listOf(

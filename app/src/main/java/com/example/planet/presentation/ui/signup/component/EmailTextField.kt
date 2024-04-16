@@ -22,7 +22,7 @@ import com.example.planet.data.remote.dto.response.signup.LoginAuthState
 import com.example.planet.util.noRippleClickable
 
 @Composable
-fun UniversityTextField(
+fun EmailTextField(
     title: String,
     text: () -> String,
     onValueChange: (String) -> Unit,
@@ -32,9 +32,9 @@ fun UniversityTextField(
     val textColor = Color(0XFFC2C2C2)
 
     val (supportingText, supportingTextColor) = if (isUniversity() == LoginAuthState.Success) {
-        Pair("대학교가 인증되었습니다.", colorResource(id = R.color.main_color1))
+        Pair("인증번호 전송 완료", colorResource(id = R.color.main_color1))
     } else if (isUniversity() == LoginAuthState.Fail) {
-        Pair("대학교 인증이 실패했습니다.", colorResource(id = R.color.red))
+        Pair("올바른 이메일이 아닙니다.", colorResource(id = R.color.red))
     } else {
         Pair("", Color.Transparent)
     }

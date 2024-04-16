@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.planet.R
+import com.example.planet.presentation.ui.signup.component.EmailTextField
 import com.example.planet.presentation.ui.signup.component.SignUpTextField
 import com.example.planet.presentation.ui.signup.component.TitleText
 import com.example.planet.presentation.ui.signup.component.UniversityTextField
@@ -95,17 +96,16 @@ fun AuthScreen(navController: NavHostController, signUpViewModel: SignUpViewMode
             }
 
 
-            SignUpTextField(
+            EmailTextField(
                 title = "대학교 이메일을 입력해주세요.",
                 text = { signUpViewModel.email },
                 onValueChange = { signUpViewModel.email = it },
                 enable = { signUpViewModel.emailIsNotEmpty },
-                supportingText = { "" },
+                isUniversity = { signUpViewModel.isEmailCheck }
             )
 
-
             OutlinedButton(
-                onClick = { signUpViewModel.startAuthTimer() },
+                onClick = { scope.launch { signUpViewModel.getAuthCode() } },
                 modifier = Modifier.align(alignment = Alignment.End),
                 border = if (signUpViewModel.emailIsNotEmpty) BorderStroke(
                     width = 1.dp,
