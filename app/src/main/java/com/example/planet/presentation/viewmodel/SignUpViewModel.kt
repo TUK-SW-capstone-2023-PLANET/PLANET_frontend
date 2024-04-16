@@ -1,5 +1,6 @@
 package com.example.planet.presentation.viewmodel
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -8,19 +9,27 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
+import com.example.planet.TAG
+import com.example.planet.data.ApiState
+import com.example.planet.data.remote.dto.response.signup.SignUpResponse
+import com.example.planet.domain.usecase.login.GetUniversityCheckUseCase
 import com.example.planet.presentation.ui.signup.navigation.SignUpNavItem
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class SignUpViewModel @Inject constructor() : ViewModel() {
+@HiltViewModel
+class SignUpViewModel @Inject constructor(
+    private val getUniversityCheckUseCase: GetUniversityCheckUseCase
+) : ViewModel() {
     private var authTimeLimit = 180_000L
     private var timerJob: Job? = null
     val maxUsernameTextLength = 20
-
 
 
     private val _authTime = MutableStateFlow(authTimeLimit)
@@ -46,6 +55,7 @@ class SignUpViewModel @Inject constructor() : ViewModel() {
     val universityIsNotEmpty by derivedStateOf {
         university.isNotEmpty()
     }
+    var isUniversityCheck by mutableStateOf("")
 
     var userName by mutableStateOf("")
     val userNameIsNotEmpty by derivedStateOf {
@@ -63,7 +73,6 @@ class SignUpViewModel @Inject constructor() : ViewModel() {
 
     var height by mutableStateOf("")
     var weight by mutableStateOf("")
-
 
 
     fun onNextPage(navController: NavHostController) {
@@ -99,6 +108,21 @@ class SignUpViewModel @Inject constructor() : ViewModel() {
 
     fun changeAutoLoginState() {
         _autoLoginState.value = !autoLoginState.value
+    }
+
+    suspend fun universityCheck() {
+        when (val apiState = getUniversityCheckUseCase.invoke(university).first()) {
+            is ApiState.Success<*> -> {
+                Log.d(TAG, "universityCheck() 성공: ${apiState.value}")
+                isUniversityCheck = (apiState.value as SignUpResponse).success
+            }
+
+            is ApiState.Error -> {
+                Log.d("daeYoung", "getTopBanner() 실패: ${apiState.errMsg}")
+            }
+
+            ApiState.Loading -> TODO()
+        }
     }
 }
 

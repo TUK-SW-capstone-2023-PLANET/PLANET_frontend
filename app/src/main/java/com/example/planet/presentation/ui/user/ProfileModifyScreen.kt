@@ -51,6 +51,7 @@ import androidx.compose.ui.zIndex
 import com.example.planet.R
 import com.example.planet.TAG
 import com.example.planet.presentation.ui.user.component.MyProfileImage
+import com.example.planet.presentation.ui.user.component.ProfileModifyTopAppBar
 import com.example.planet.presentation.ui.user.component.UserIdTextField
 import com.example.planet.presentation.ui.user.component.UserNicknameTextField
 import com.example.planet.presentation.ui.user.component.UserPwTextField
@@ -99,7 +100,8 @@ fun ProfileModifyScreen(userViewModel: UserViewModel, onClick: () -> Unit) {
                         } else {
                             userViewModel.changeEditDescribeScreen()
                         }
-                    })
+                    }
+                )
 
                 Text(
                     text = "완료",
@@ -167,21 +169,9 @@ fun ProfileModifyScreen(userViewModel: UserViewModel, onClick: () -> Unit) {
             .imePadding(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Icon(
-            imageVector = Icons.Default.ArrowBackIosNew,
-            contentDescription = null,
-            tint = colorResource(id = R.color.font_background_color1),
-            modifier = Modifier
-                .align(Alignment.Start)
-                .noRippleClickable {
-                    onClick()
-                }
-        )
-        Text(
-            text = "프로필 수정",
-            fontWeight = FontWeight.Bold,
-            fontSize = 18.sp
-        )
+        ProfileModifyTopAppBar {
+            onClick()
+        }
         Divider(
             modifier = Modifier
                 .fillMaxWidth()

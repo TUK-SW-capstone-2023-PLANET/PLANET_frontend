@@ -17,6 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -31,7 +32,9 @@ import androidx.navigation.NavHostController
 import com.example.planet.R
 import com.example.planet.presentation.ui.signup.component.SignUpTextField
 import com.example.planet.presentation.ui.signup.component.TitleText
+import com.example.planet.presentation.ui.signup.component.UniversityTextField
 import com.example.planet.presentation.viewmodel.SignUpViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun AuthScreen(navController: NavHostController, signUpViewModel: SignUpViewModel) {
@@ -39,6 +42,7 @@ fun AuthScreen(navController: NavHostController, signUpViewModel: SignUpViewMode
 
     val timerValue by signUpViewModel.authTime.collectAsState()
     val verticalScroll = rememberScrollState()
+    val scope = rememberCoroutineScope()
 
 
     Column(
@@ -64,15 +68,15 @@ fun AuthScreen(navController: NavHostController, signUpViewModel: SignUpViewMode
             .weight(1f)
             .verticalScroll(verticalScroll), verticalArrangement = Arrangement.Center) {
 
-            SignUpTextField(
+            UniversityTextField(
                 title = "대학교명을 입력해주세요.",
                 text = { signUpViewModel.university },
                 onValueChange = { signUpViewModel.university = it },
                 enable = { signUpViewModel.universityIsNotEmpty },
-                supportingText = "",
+                isUniversity = { signUpViewModel.isUniversityCheck},
             )
             OutlinedButton(
-                onClick = {  },
+                onClick = { scope.launch{ signUpViewModel.universityCheck() } },
                 modifier = Modifier.align(alignment = Alignment.End),
                 border = if (signUpViewModel.universityIsNotEmpty) BorderStroke(
                     width = 1.dp,
@@ -96,7 +100,7 @@ fun AuthScreen(navController: NavHostController, signUpViewModel: SignUpViewMode
                 text = { signUpViewModel.email },
                 onValueChange = { signUpViewModel.email = it },
                 enable = { signUpViewModel.emailIsNotEmpty },
-                supportingText = "",
+                supportingText = { "" },
             )
 
 
@@ -124,7 +128,7 @@ fun AuthScreen(navController: NavHostController, signUpViewModel: SignUpViewMode
                 text = { signUpViewModel.authNumber },
                 onValueChange = { signUpViewModel.authNumber = it },
                 enable = { signUpViewModel.authNumberIsNotEmpty },
-                supportingText = "",
+                supportingText = { "" },
             )
 
         }

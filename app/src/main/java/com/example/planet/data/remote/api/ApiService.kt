@@ -7,6 +7,7 @@ import com.example.planet.data.remote.dto.PloggingImage
 import com.example.planet.data.remote.dto.PloggingInfo
 import com.example.planet.data.remote.dto.Tier
 import com.example.planet.data.remote.dto.TrashCan
+import com.example.planet.data.remote.dto.response.signup.SignUpResponse
 import com.example.planet.data.remote.dto.response.ranking.planet.HigherPlanetUser
 import com.example.planet.data.remote.dto.response.ranking.planet.PagingPlanetUser
 import com.example.planet.data.remote.dto.response.ranking.planet.PlanetRankingUser
@@ -98,4 +99,7 @@ interface ApiService {
     @GET("/tier")
     suspend fun getTierList(): List<Tier>
 
+    // SignUpActivity 관련  ------------------------------------------------------------------------
+    @GET("/login/check")
+    suspend fun getUniversityCheck(@Query("name") name: String): SignUpResponse
 }

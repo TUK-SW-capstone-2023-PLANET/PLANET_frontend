@@ -1,7 +1,6 @@
 package com.example.planet.presentation.ui.signup.component
 
 import android.util.Log
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
@@ -22,16 +21,23 @@ import com.example.planet.TAG
 import com.example.planet.util.noRippleClickable
 
 @Composable
-fun SignUpTextField(
+fun UniversityTextField(
     title: String,
     text: () -> String,
     onValueChange: (String) -> Unit,
     enable: () -> Boolean,
-    supportingText: () -> String
+    isUniversity: () -> String
 ) {
     val textColor = Color(0XFFC2C2C2)
 
-//    val bringIntoViewRequester = remember { BringIntoViewRequester() }
+    val (supportingText, supportingTextColor) = if (isUniversity() == "true") {
+        Pair("대학교가 인증되었습니다.", colorResource(id = R.color.main_color1))
+    } else if (isUniversity() == "false") {
+        Pair("대학교 인증이 실패했습니다.", colorResource(id = R.color.red))
+    } else {
+        Pair("", Color.Transparent)
+    }
+
 
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(text = title, color = textColor, fontSize = 12.sp)
@@ -40,14 +46,6 @@ fun SignUpTextField(
             onValueChange = { onValueChange(it) },
             modifier = Modifier
                 .fillMaxWidth(),
-//                .bringIntoViewRequester(bringIntoViewRequester)
-//                .onFocusEvent { focusState ->
-//                    if (focusState.isFocused) {
-//                        coroutineScope.launch {
-//                            bringIntoViewRequester.bringIntoView()
-//                        }
-//                    }
-//                },
             colors = TextFieldDefaults.colors(
                 focusedContainerColor = Color.Transparent,
                 unfocusedContainerColor = Color.Transparent
@@ -68,7 +66,7 @@ fun SignUpTextField(
                 }
             },
             supportingText = {
-                Text(text = supportingText(), color = colorResource(id = R.color.red), fontSize = 10.sp)
+                Text(text = supportingText, color = supportingTextColor, fontSize = 10.sp)
             }
         )
     }

@@ -90,9 +90,7 @@ fun SignUpNavGraph(
                     MyInfoScreen(navController = navController, signUpViewModel = signUpViewModel)
                 }
                 composable(SignUpNavItem.FinalScreen.screenRoute) {
-                    FinalScreen {
-                        goLoginActivity()
-                    }
+                    FinalScreen { goLoginActivity() }
                 }
             }
         }
