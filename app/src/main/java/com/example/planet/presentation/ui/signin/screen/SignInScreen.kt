@@ -21,9 +21,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -32,13 +31,19 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.planet.R
+import com.example.planet.presentation.ui.signin.component.EmailTextField
 import com.example.planet.presentation.viewmodel.SignInViewModel
-import com.example.planet.presentation.viewmodel.SignUpViewModel
 import com.example.planet.util.noRippleClickable
+import kotlinx.coroutines.launch
 
 @Composable
-fun SignInScreen(signInViewModel: SignInViewModel, startSignUpActivity: () -> Unit, startMainActivity: () -> Unit) {
+fun SignInScreen(
+    signInViewModel: SignInViewModel,
+    startSignUpActivity: () -> Unit,
+    startMainActivity: () -> Unit
+) {
     val scrollState = rememberScrollState()
+    val scope = rememberCoroutineScope()
 
     Column(
         modifier = Modifier
@@ -49,34 +54,18 @@ fun SignInScreen(signInViewModel: SignInViewModel, startSignUpActivity: () -> Un
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(painter = painterResource(id = R.drawable.planet_logo), contentDescription = null)
-        TextField(
-            value = "",
-            onValueChange = {},
-            modifier = Modifier.fillMaxWidth(),
-            colors = TextFieldDefaults.colors(
-                unfocusedContainerColor = Color.Transparent,
-                focusedContainerColor = Color.Transparent,
-                focusedIndicatorColor = colorResource(id = R.color.main_color3),
-                unfocusedIndicatorColor = colorResource(id = R.color.main_color3),
-            ),
-            placeholder = {
-                Text(text = "Username", color = colorResource(id = R.color.font_background_color2))
-            }
+        EmailTextField(
+            value = { signInViewModel.email },
+            onValueChange = { signInViewModel.email = it },
+            placeHolder = "email"
         )
-        TextField(
-            value = "",
-            onValueChange = {},
-            modifier = Modifier.fillMaxWidth(),
-            colors = TextFieldDefaults.colors(
-                unfocusedContainerColor = Color.Transparent,
-                focusedContainerColor = Color.Transparent,
-                focusedIndicatorColor = colorResource(id = R.color.main_color3),
-                unfocusedIndicatorColor = colorResource(id = R.color.main_color3),
-            ),
-            placeholder = {
-                Text(text = "Password", color = colorResource(id = R.color.font_background_color2))
-            }
+
+        EmailTextField(
+            value = { signInViewModel.password },
+            onValueChange = { signInViewModel.password = it },
+            placeHolder = "password"
         )
+
         Spacer(modifier = Modifier.height(12.dp))
         Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             Icon(
@@ -97,7 +86,11 @@ fun SignInScreen(signInViewModel: SignInViewModel, startSignUpActivity: () -> Un
         Spacer(modifier = Modifier.height(12.dp))
 
         Button(
-            onClick = { startMainActivity() },
+            onClick = {
+                scope.launch {
+                    signInViewModel.login { startMainActivity() }
+                }
+            },
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(
                 contentColor = Color.White,

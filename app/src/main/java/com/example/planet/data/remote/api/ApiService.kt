@@ -7,6 +7,7 @@ import com.example.planet.data.remote.dto.PloggingImage
 import com.example.planet.data.remote.dto.PloggingInfo
 import com.example.planet.data.remote.dto.Tier
 import com.example.planet.data.remote.dto.TrashCan
+import com.example.planet.data.remote.dto.request.signin.LoginInfo
 import com.example.planet.data.remote.dto.request.signup.PlanetUser
 import com.example.planet.data.remote.dto.response.signup.SignUpResponse
 import com.example.planet.data.remote.dto.response.ranking.planet.HigherPlanetUser
@@ -19,6 +20,7 @@ import com.example.planet.data.remote.dto.response.ranking.university.University
 import com.example.planet.data.remote.dto.response.ranking.universityuser.ExpandedUniversityUser
 import com.example.planet.data.remote.dto.response.ranking.universityuser.PagingUniversityUser
 import com.example.planet.data.remote.dto.response.ranking.universityuser.UniversityUser
+import com.example.planet.data.remote.dto.response.signin.LoginResponse
 import com.example.planet.data.remote.dto.response.signup.UserId
 import okhttp3.MultipartBody
 import retrofit2.http.Body
@@ -127,4 +129,7 @@ interface ApiService {
 
     @POST("/user")
     suspend fun postUserInfo(@Body user: PlanetUser): UserId
+
+    @POST("/login/user")
+    suspend fun postLogin(@Body loginInfo: LoginInfo): LoginResponse
 }

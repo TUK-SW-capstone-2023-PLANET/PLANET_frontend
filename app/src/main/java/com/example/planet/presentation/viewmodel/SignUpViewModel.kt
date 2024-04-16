@@ -20,6 +20,7 @@ import com.example.planet.domain.usecase.login.GetAuthCodeUseCase
 import com.example.planet.domain.usecase.login.GetDuplicatedNameCheckUseCase
 import com.example.planet.domain.usecase.login.GetUniversityCheckUseCase
 import com.example.planet.domain.usecase.login.PostCreateUserUseCase
+import com.example.planet.domain.usecase.login.PostLoginUseCase
 import com.example.planet.presentation.ui.signup.navigation.SignUpNavItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -36,7 +37,7 @@ class SignUpViewModel @Inject constructor(
     private val getAuthCodeUseCase: GetAuthCodeUseCase,
     private val getAuthCodeCheckUseCase: GetAuthCodeCheckUseCase,
     private val getDuplicatedNameCheckUseCase: GetDuplicatedNameCheckUseCase,
-    private val postCreateUserUseCase: PostCreateUserUseCase
+    private val postCreateUserUseCase: PostCreateUserUseCase,
 ) : ViewModel() {
     private var authTimeLimit = 180_000L
     private var timerJob: Job? = null
@@ -236,7 +237,6 @@ class SignUpViewModel @Inject constructor(
             ApiState.Loading -> TODO()
         }
     }
-
 }
 
 val navRouteList = listOf(

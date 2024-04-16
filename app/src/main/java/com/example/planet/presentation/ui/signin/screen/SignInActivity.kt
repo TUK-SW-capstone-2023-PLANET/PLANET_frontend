@@ -9,7 +9,9 @@ import com.example.planet.presentation.ui.main.plogging.screen.MainActivity
 import com.example.planet.presentation.ui.signup.screen.SignUpActivity
 import com.example.planet.presentation.viewmodel.SignInViewModel
 import com.example.planet.ui.theme.MyApplicationTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SignInActivity : ComponentActivity() {
     private val signInViewModel by viewModels<SignInViewModel>()
 
