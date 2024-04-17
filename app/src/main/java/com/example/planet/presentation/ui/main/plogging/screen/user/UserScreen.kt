@@ -100,7 +100,7 @@ fun UserScreen(
                             fontSize = 16.sp
                         )
                         Text(
-                            text = "나랑 같이 플로깅 할 사람", /* TODO(승민이가 상태메시지 추가하면 변경할 것)*/
+                            text = userInfo.message,
                             color = colorResource(id = R.color.font_background_color2),
                             fontSize = 10.sp
                         )

@@ -389,8 +389,7 @@ class MainViewModel @Inject constructor(
         when (val apiState = getUserInfoUseCase().first()) {
             is ApiState.Success<*> -> {
                 _userInfo.value = (apiState.value as UserInfo)
-                Log.d(TAG, "getUserInfo() 성공: $_myUniversityRank")
-
+                Log.d(TAG, "getUserInfo() 성공: ${userInfo.value}")
             }
             is ApiState.Error -> {
                 Log.d("daeYoung", "getUserInfo() 실패: ${apiState.errMsg}")

@@ -8,12 +8,13 @@ data class UserInfo(
     val imageUrl: String,
     val weight: Int,
     val height: Int,
-    val gender: String,
-    val address: String,
-    val ploggingCount: Int,
-    val trashCount: Int,
-    val totalDistance: Int,
-    val universityName: String,
-    val universityLogo: String,
-    val score: Int
+    val message: String
+//    val gender: String,
+//    val address: String,
+//    val ploggingCount: Int,
+//    val trashCount: Int,
+//    val totalDistance: Int,
+//    val universityName: String,
+//    val universityLogo: String,
+//    val score: Int
 )
