@@ -22,6 +22,7 @@ import com.example.planet.data.remote.dto.response.ranking.universityuser.Paging
 import com.example.planet.data.remote.dto.response.ranking.universityuser.UniversityUser
 import com.example.planet.data.remote.dto.response.signin.LoginResponse
 import com.example.planet.data.remote.dto.response.signup.UserId
+import com.example.planet.data.remote.dto.response.user.UserInfo
 import okhttp3.MultipartBody
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -111,6 +112,10 @@ interface ApiService {
 
     @GET("/tier")
     suspend fun getTierList(): List<Tier>
+
+    // 유저 정보 조회
+    @GET("/user/{userId}")
+    suspend fun getUserInfo(@Path("userId")userId: Int ): UserInfo
 
     // SignUpActivity 관련  ------------------------------------------------------------------------
     @GET("/login/check")

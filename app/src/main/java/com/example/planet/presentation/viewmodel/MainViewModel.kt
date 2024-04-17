@@ -22,6 +22,7 @@ import com.example.planet.data.remote.dto.response.ranking.season.SeasonUser
 import com.example.planet.data.remote.dto.response.ranking.university.University
 import com.example.planet.data.remote.dto.response.ranking.universityuser.ExpandedUniversityUser
 import com.example.planet.data.remote.dto.response.ranking.universityuser.UniversityUser
+import com.example.planet.data.remote.dto.response.user.UserInfo
 import com.example.planet.domain.usecase.GetBannerUseCase
 import com.example.planet.domain.usecase.GetTierListUseCase
 import com.example.planet.domain.usecase.ranking.universityuser.GetAllUniversityUserRankUseCase
@@ -35,6 +36,7 @@ import com.example.planet.domain.usecase.ranking.season.GetHigherSeasonRankUseCa
 import com.example.planet.domain.usecase.ranking.season.GetMySeasonRankUseCase
 import com.example.planet.domain.usecase.ranking.university.GetMyUniversityInfoUseCase
 import com.example.planet.domain.usecase.ranking.university.GetMyUniversityRankUseCase
+import com.example.planet.domain.usecase.user.GetUserInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -57,7 +59,8 @@ class MainViewModel @Inject constructor(
     private val getAllPlanetUserRankUseCase: GetAllPlanetUserRankUseCase,
     private val getHigherPlanetUserUseCase: GetHigherPlanetUserUseCase,
     private val getTierListUseCase: GetTierListUseCase,
-    private val getMyUniversityInfoUseCase: GetMyUniversityInfoUseCase
+    private val getMyUniversityInfoUseCase: GetMyUniversityInfoUseCase,
+    private val getUserInfoUseCase: GetUserInfoUseCase
 ) : ViewModel() {
     init {
         viewModelScope.launch {
@@ -73,6 +76,7 @@ class MainViewModel @Inject constructor(
             getMySeasonRanking()
             getMyPlanetRanking()
             getMyUniversityInfo()
+            getUserInfo()
 
             launch(Dispatchers.IO) {  getAllSeasonUser() }
             launch(Dispatchers.IO) {  getAllUniversities() }
@@ -94,7 +98,8 @@ class MainViewModel @Inject constructor(
 
 
 
-
+    private val _userInfo = mutableStateOf<UserInfo?>(null)
+    val userInfo: State<UserInfo?> = _userInfo
 
     private val _myUniversityRank = mutableStateOf<UniversityUser?>(null)
     val myUniversityRank: State<UniversityUser?> = _myUniversityRank
@@ -379,5 +384,21 @@ class MainViewModel @Inject constructor(
             ApiState.Loading -> TODO()
         }
     }
+
+    private suspend fun getUserInfo() {
+        when (val apiState = getUserInfoUseCase().first()) {
+            is ApiState.Success<*> -> {
+                _userInfo.value = (apiState.value as UserInfo)
+                Log.d(TAG, "getUserInfo() 성공: $_myUniversityRank")
+
+            }
+            is ApiState.Error -> {
+                Log.d("daeYoung", "getUserInfo() 실패: ${apiState.errMsg}")
+            }
+
+            ApiState.Loading -> TODO()
+        }
+    }
+
 
 }

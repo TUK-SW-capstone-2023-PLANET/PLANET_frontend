@@ -38,12 +38,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.example.planet.R
 import com.example.planet.component.common.RedTextButton
 import com.example.planet.component.main.MainTopSwitch
 import com.example.planet.data.remote.dto.response.ranking.season.SeasonUser
 import com.example.planet.data.remote.dto.response.ranking.university.University
+import com.example.planet.data.remote.dto.response.user.UserInfo
 import com.example.planet.presentation.viewmodel.MainViewModel
 import com.example.planet.util.numberComma
 
@@ -51,6 +53,7 @@ import com.example.planet.util.numberComma
 fun UserScreen(
     myUniversityInfo: University,
     seasonUser: SeasonUser,
+    userInfo: UserInfo,
     mainViewModel: MainViewModel,
     onClick: () -> Unit
 ) {
@@ -85,26 +88,19 @@ fun UserScreen(
                         shape = CircleShape
                     ) {
                         Image(
-                            painter = painterResource(id = R.drawable.temporary_user_icon),
+                            painter = rememberAsyncImagePainter(model = userInfo.imageUrl),
                             contentDescription = null,
                         )
-//                    AsyncImage(
-//                        model = ImageRequest.Builder(LocalContext.current)
-//                            .data(userIconUrl)
-//                            .crossfade(true).build(),
-//                        contentDescription = null,
-//                        modifier = Modifier
-//                    )
                     }
                     Spacer(modifier = Modifier.width(15.dp))
                     Column {
                         Text(
-                            text = "HappyBean",
+                            text = userInfo.nickName,
                             color = colorResource(id = R.color.font_background_color1),
                             fontSize = 16.sp
                         )
                         Text(
-                            text = "나랑 같이 플로깅 할 사람",
+                            text = "나랑 같이 플로깅 할 사람", /* TODO(승민이가 상태메시지 추가하면 변경할 것)*/
                             color = colorResource(id = R.color.font_background_color2),
                             fontSize = 10.sp
                         )
@@ -366,7 +362,9 @@ fun MyProfileInfoLayout(
                 .crossfade(true)
                 .build(),
             contentDescription = null,
-            modifier = Modifier.weight(0.2f).align(Alignment.Bottom)
+            modifier = Modifier
+                .weight(0.2f)
+                .align(Alignment.Bottom)
         )
 
         Column(

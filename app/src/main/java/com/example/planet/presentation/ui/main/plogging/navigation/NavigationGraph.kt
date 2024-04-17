@@ -65,8 +65,10 @@ fun NavigationGraph(
                 composable(BottomNavItem.UserScreen.screenRoute) {
                     Log.d(TAG,"seasonUser: ${mainViewModel.mySeasonRank}, universityInfo: ${mainViewModel.myUniversityInfo}")
                     mainViewModel.myUniversityInfo.value?.let { university ->
-                        mainViewModel.mySeasonRank.value?.let { seasonInfo ->
-                            UserScreen(myUniversityInfo = university, seasonUser = seasonInfo, mainViewModel = mainViewModel) { startUserActivity() }
+                        mainViewModel.mySeasonRank.value?.let { season ->
+                            mainViewModel.userInfo.value?.let { user ->
+                                UserScreen(myUniversityInfo = university, seasonUser = season, userInfo = user, mainViewModel = mainViewModel) { startUserActivity() }
+                            }
                         }
                     }
 
