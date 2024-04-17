@@ -30,20 +30,30 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.example.planet.R
 import com.example.planet.component.common.RedTextButton
 import com.example.planet.component.main.MainTopSwitch
+import com.example.planet.data.remote.dto.response.ranking.season.SeasonUser
+import com.example.planet.data.remote.dto.response.ranking.university.University
 import com.example.planet.presentation.viewmodel.MainViewModel
+import com.example.planet.util.numberComma
 
 @Composable
-fun UserScreen(navController: NavController, mainViewModel: MainViewModel, onClick: () -> Unit) {
+fun UserScreen(
+    myUniversityInfo: University,
+    seasonUser: SeasonUser,
+    mainViewModel: MainViewModel,
+    onClick: () -> Unit
+) {
     val scrollState = rememberScrollState()
     Column(
         modifier = Modifier
@@ -122,34 +132,34 @@ fun UserScreen(navController: NavController, mainViewModel: MainViewModel, onCli
                 title = "대학교 점수"
             )
 
+
             MyProfileInfoLayout(
-                image = painterResource(id = R.drawable.university2),
-                title = "한국공학대학교",
+                image = myUniversityInfo.imageUrl,
+                title = myUniversityInfo.name,
                 subTitle1 = "기여 점수",
                 subTitle3 = "통계",
-                subContent1 = "1,120점",
-                subContentDesc1 = "상위 0.01%",
+                score = myUniversityInfo.score.numberComma(),
+                subContentDesc1 = "",
                 subContent3 = painterResource(id = R.drawable.statistics_image)
             ) {
                 Column(
                     modifier = Modifier
                         .wrapContentWidth()
                         .fillMaxHeight()
-                        .padding(horizontal = 16.dp),
+                        .weight(1f),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(text = "기여 점수", fontSize = 10.sp)
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(text = "학교 등수", fontSize = 10.sp)
+                    Column(
+                        modifier = Modifier.weight(1f),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
                         Text(
-                            text = "1,120점",
+                            text = "${myUniversityInfo.rank}등",
                             fontSize = 12.sp,
                             fontWeight = FontWeight.SemiBold
-                        )
-                        Text(
-                            text = "상위 0.01%", /* TODO(승민이가 api 수정하면 바꿀 것)*/
-                            fontSize = 8.sp,
-                            color = colorResource(id = R.color.font_background_color2)
                         )
                     }
                 }
@@ -175,18 +185,18 @@ fun UserScreen(navController: NavController, mainViewModel: MainViewModel, onCli
             )
 
             MyProfileInfoLayout(
-                image = painterResource(id = R.drawable.temporary_tier2),
-                title = "DIAMOND",
+                image = seasonUser.tierImageUrl,
+                title = seasonUser.tierName,
                 subTitle1 = "점수",
                 subTitle3 = "통계",
-                subContent1 = "2,180점",
+                score = seasonUser.score.numberComma(),
                 subContentDesc1 = "상위 1.2%",
                 subContent3 = painterResource(id = R.drawable.statistics_image2)
             ) {
                 Column(
                     modifier = Modifier
                         .wrapContentWidth()
-                        .padding(horizontal = 16.dp),
+                        .weight(1f),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(text = "전 시즌", fontSize = 11.sp)
@@ -197,45 +207,119 @@ fun UserScreen(navController: NavController, mainViewModel: MainViewModel, onCli
                     )
                 }
             }
-            Divider(modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp), thickness = 1.dp, color = colorResource(id = R.color.font_background_color3))
+            Divider(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp),
+                thickness = 1.dp,
+                color = colorResource(id = R.color.font_background_color3)
+            )
             MiddleHeader(
                 image = painterResource(id = R.drawable.communitylogo),
                 title = "커뮤니티"
             )
-            Column(modifier = Modifier.clickable {  }) {
-                Text(modifier = Modifier.fillMaxWidth().padding(start = 31.dp, top = 8.dp, bottom = 8.dp), text = "내가 작성한 게시물", fontSize = 12.sp, textAlign = TextAlign.Start)
-                Divider(modifier = Modifier.fillMaxWidth(), thickness = 1.dp, color = colorResource(id = R.color.font_background_color3))
+            Column(modifier = Modifier.clickable { }) {
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 31.dp, top = 8.dp, bottom = 8.dp),
+                    text = "내가 작성한 게시물",
+                    fontSize = 12.sp,
+                    textAlign = TextAlign.Start
+                )
+                Divider(
+                    modifier = Modifier.fillMaxWidth(),
+                    thickness = 1.dp,
+                    color = colorResource(id = R.color.font_background_color3)
+                )
             }
-            Column(modifier = Modifier.clickable {  }) {
-                Text(modifier = Modifier.fillMaxWidth().padding(start = 31.dp, top = 8.dp, bottom = 8.dp), text = "내가 작성한 댓글", fontSize = 12.sp, textAlign = TextAlign.Start)
-                Divider(modifier = Modifier.fillMaxWidth(), thickness = 1.dp, color = colorResource(id = R.color.font_background_color3))
+            Column(modifier = Modifier.clickable { }) {
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 31.dp, top = 8.dp, bottom = 8.dp),
+                    text = "내가 작성한 댓글",
+                    fontSize = 12.sp,
+                    textAlign = TextAlign.Start
+                )
+                Divider(
+                    modifier = Modifier.fillMaxWidth(),
+                    thickness = 1.dp,
+                    color = colorResource(id = R.color.font_background_color3)
+                )
             }
-            Column(modifier = Modifier.clickable {  }) {
-                Text(modifier = Modifier.fillMaxWidth().padding(start = 31.dp, top = 8.dp, bottom = 8.dp), text = "내가 신고한 게시물", fontSize = 12.sp, textAlign = TextAlign.Start)
-                Divider(modifier = Modifier.fillMaxWidth(), thickness = 1.dp, color = colorResource(id = R.color.font_background_color3))
+            Column(modifier = Modifier.clickable { }) {
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 31.dp, top = 8.dp, bottom = 8.dp),
+                    text = "내가 신고한 게시물",
+                    fontSize = 12.sp,
+                    textAlign = TextAlign.Start
+                )
+                Divider(
+                    modifier = Modifier.fillMaxWidth(),
+                    thickness = 1.dp,
+                    color = colorResource(id = R.color.font_background_color3)
+                )
             }
-            Column(modifier = Modifier.clickable {  }) {
-                Text(modifier = Modifier.fillMaxWidth().padding(start = 31.dp, top = 8.dp, bottom = 8.dp), text = "내가 신고한 댓글", fontSize = 12.sp, textAlign = TextAlign.Start)
-                Divider(modifier = Modifier.fillMaxWidth(), thickness = 1.dp, color = colorResource(id = R.color.font_background_color3))
+            Column(modifier = Modifier.clickable { }) {
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 31.dp, top = 8.dp, bottom = 8.dp),
+                    text = "내가 신고한 댓글",
+                    fontSize = 12.sp,
+                    textAlign = TextAlign.Start
+                )
+                Divider(
+                    modifier = Modifier.fillMaxWidth(),
+                    thickness = 1.dp,
+                    color = colorResource(id = R.color.font_background_color3)
+                )
             }
 
-            Divider(modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp), thickness = 1.dp, color = colorResource(id = R.color.font_background_color3))
+            Divider(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp),
+                thickness = 1.dp,
+                color = colorResource(id = R.color.font_background_color3)
+            )
             MiddleHeader(
                 image = painterResource(id = R.drawable.adminlogo),
                 title = "관리"
             )
 
-            Column(modifier = Modifier.clickable {  }) {
-                Text(modifier = Modifier.fillMaxWidth().padding(start = 31.dp, top = 8.dp, bottom = 8.dp), text = "개발자 소개", fontSize = 12.sp, textAlign = TextAlign.Start)
-                Divider(modifier = Modifier.fillMaxWidth(), thickness = 1.dp, color = colorResource(id = R.color.font_background_color3))
+            Column(modifier = Modifier.clickable { }) {
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 31.dp, top = 8.dp, bottom = 8.dp),
+                    text = "개발자 소개",
+                    fontSize = 12.sp,
+                    textAlign = TextAlign.Start
+                )
+                Divider(
+                    modifier = Modifier.fillMaxWidth(),
+                    thickness = 1.dp,
+                    color = colorResource(id = R.color.font_background_color3)
+                )
             }
-            Column(modifier = Modifier.clickable {  }) {
-                Text(modifier = Modifier.fillMaxWidth().padding(start = 31.dp, top = 8.dp, bottom = 8.dp), text = "설정", fontSize = 12.sp, textAlign = TextAlign.Start)
-                Divider(modifier = Modifier.fillMaxWidth(), thickness = 1.dp, color = colorResource(id = R.color.font_background_color3))
+            Column(modifier = Modifier.clickable { }) {
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 31.dp, top = 8.dp, bottom = 8.dp),
+                    text = "설정",
+                    fontSize = 12.sp,
+                    textAlign = TextAlign.Start
+                )
+                Divider(
+                    modifier = Modifier.fillMaxWidth(),
+                    thickness = 1.dp,
+                    color = colorResource(id = R.color.font_background_color3)
+                )
             }
 
         }
@@ -259,11 +343,11 @@ fun MiddleHeader(image: Painter, title: String) {
 
 @Composable
 fun MyProfileInfoLayout(
-    image: Painter,
+    image: String,
     title: String,
     subTitle1: String,
     subTitle3: String,
-    subContent1: String,
+    score: String,
     subContentDesc1: String,
     subContent3: Painter,
     subTitleContent2: @Composable () -> Unit
@@ -276,23 +360,18 @@ fun MyProfileInfoLayout(
         horizontalArrangement = Arrangement.Center
     ) {
 
-//                    AsyncImage(
-//                        model = ImageRequest.Builder(LocalContext.current)
-//                            .data(mainViewModel.higherSeasonUsers[0].tierImageUrl)
-//                            .crossfade(true)
-//                            .build(),
-//                        contentDescription = null,
-//                        modifier = Modifier.padding(bottom = 4.dp)
-//                    )
-        Image(
-            painter = image,
+        AsyncImage(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(image)
+                .crossfade(true)
+                .build(),
             contentDescription = null,
-            modifier = Modifier.size(80.dp)
+            modifier = Modifier.weight(0.2f).align(Alignment.Bottom)
         )
 
         Column(
             modifier = Modifier
-                .wrapContentWidth()
+                .weight(0.8f)
                 .padding(start = 8.dp),
             horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.SpaceBetween
@@ -305,7 +384,9 @@ fun MyProfileInfoLayout(
                 modifier = Modifier.padding(start = 8.dp, bottom = 8.dp)
             )
             Row(
-                modifier = Modifier.height(IntrinsicSize.Min),
+                modifier = Modifier
+                    .height(IntrinsicSize.Min)
+                    .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Divider(
@@ -314,19 +395,19 @@ fun MyProfileInfoLayout(
                     modifier = Modifier
                         .fillMaxHeight()  //fill the max height
                         .width(1.dp)
+//                        .padding(horizontal = 16.dp)
                 )
                 Column(
                     modifier = Modifier
-                        .wrapContentWidth()
-                        .fillMaxHeight()
-                        .padding(horizontal = 16.dp),
+                        .weight(1f)
+                        .fillMaxHeight(),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(text = subTitle1, fontSize = 10.sp)
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(
-                            text = subContent1,
+                            text = "$score 점",
                             fontSize = 12.sp,
                             fontWeight = FontWeight.SemiBold
                         )
@@ -343,6 +424,7 @@ fun MyProfileInfoLayout(
                     modifier = Modifier
                         .fillMaxHeight()  //fill the max height
                         .width(1.dp)
+//                        .padding(horizontal = 16.dp)
                 )
                 subTitleContent2()
 
@@ -352,11 +434,12 @@ fun MyProfileInfoLayout(
                     modifier = Modifier
                         .fillMaxHeight()  //fill the max height
                         .width(1.dp)
+//                        .padding(horizontal = 16.dp)
                 )
                 Column(
                     modifier = Modifier
                         .wrapContentWidth()
-                        .padding(horizontal = 16.dp),
+                        .weight(1f),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(text = subTitle3, fontSize = 11.sp)
@@ -368,6 +451,5 @@ fun MyProfileInfoLayout(
                 }
             }
         }
-
     }
 }

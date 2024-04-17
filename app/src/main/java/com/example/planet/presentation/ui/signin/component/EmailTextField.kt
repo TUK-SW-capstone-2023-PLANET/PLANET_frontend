@@ -22,6 +22,8 @@ fun EmailTextField(value: () -> String, onValueChange: (String) -> Unit, placeHo
             focusedIndicatorColor = colorResource(id = R.color.main_color3),
             unfocusedIndicatorColor = colorResource(id = R.color.main_color3),
         ),
+        singleLine = true,
+        maxLines = 1,
         placeholder = {
             Text(text = placeHolder, color = colorResource(id = R.color.font_background_color2))
         }

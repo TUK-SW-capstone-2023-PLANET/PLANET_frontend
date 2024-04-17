@@ -20,7 +20,6 @@ import com.example.planet.domain.usecase.login.GetAuthCodeUseCase
 import com.example.planet.domain.usecase.login.GetDuplicatedNameCheckUseCase
 import com.example.planet.domain.usecase.login.GetUniversityCheckUseCase
 import com.example.planet.domain.usecase.login.PostCreateUserUseCase
-import com.example.planet.domain.usecase.login.PostLoginUseCase
 import com.example.planet.presentation.ui.signup.navigation.SignUpNavItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job

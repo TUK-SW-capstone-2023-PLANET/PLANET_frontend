@@ -1,5 +1,6 @@
 package com.example.planet.presentation.ui.main.plogging.navigation
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -11,6 +12,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.planet.TAG
 import com.example.planet.component.main.MainTopSwitch
 import com.example.planet.presentation.ui.main.plogging.component.BottomNavigation
 import com.example.planet.presentation.ui.main.plogging.screen.community.CommunityScreen
@@ -61,8 +63,12 @@ fun NavigationGraph(
                     RankingScreen(navController = navController, mainViewModel = mainViewModel)
                 }
                 composable(BottomNavItem.UserScreen.screenRoute) {
-
-                    UserScreen(navController = navController, mainViewModel = mainViewModel) { startUserActivity() }
+                    Log.d(TAG,"seasonUser: ${mainViewModel.mySeasonRank}, universityInfo: ${mainViewModel.myUniversityInfo}")
+                    mainViewModel.myUniversityInfo.value?.let { university ->
+                        mainViewModel.mySeasonRank.value?.let { seasonInfo ->
+                            UserScreen(myUniversityInfo = university, seasonUser = seasonInfo, mainViewModel = mainViewModel) { startUserActivity() }
+                        }
+                    }
 
                 }
                 composable(BottomNavItem.MessageScreen.screenRoute) {

@@ -108,6 +108,18 @@ class RankingRepository @Inject constructor(private val apiService: ApiService) 
             pagingSourceFactory = { UniversityUserPagingSource(apiService) }).flow
     }
 
+    // 나의 대학교 정보 조회
+    fun getMyUniversityInfo(userId: Int): Flow<ApiState> = flow {
+        kotlin.runCatching {
+            apiService.getMyUniversityInfo(userId = userId)
+        }.onSuccess {
+            emit(ApiState.Success(it))
+        }.onFailure { error ->
+            error.message?.let { emit(ApiState.Error(it)) }
+        }
+    }.flowOn(Dispatchers.IO)
+
+
     // 대학교 유저 랭킹 4개 조회
     suspend fun getUniversityTop4User(userId: Int = 0): Flow<ApiState> = flow {
         kotlin.runCatching {

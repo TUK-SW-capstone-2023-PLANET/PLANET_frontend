@@ -33,6 +33,7 @@ import com.example.planet.domain.usecase.ranking.planet.GetMyPlanetRankUseCase
 import com.example.planet.domain.usecase.ranking.season.GetAllSeasonRankUseCase
 import com.example.planet.domain.usecase.ranking.season.GetHigherSeasonRankUseCase
 import com.example.planet.domain.usecase.ranking.season.GetMySeasonRankUseCase
+import com.example.planet.domain.usecase.ranking.university.GetMyUniversityInfoUseCase
 import com.example.planet.domain.usecase.ranking.university.GetMyUniversityRankUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -56,6 +57,7 @@ class MainViewModel @Inject constructor(
     private val getAllPlanetUserRankUseCase: GetAllPlanetUserRankUseCase,
     private val getHigherPlanetUserUseCase: GetHigherPlanetUserUseCase,
     private val getTierListUseCase: GetTierListUseCase,
+    private val getMyUniversityInfoUseCase: GetMyUniversityInfoUseCase
 ) : ViewModel() {
     init {
         viewModelScope.launch {
@@ -67,9 +69,10 @@ class MainViewModel @Inject constructor(
             getTop4UniversityUser()
             getTop3Universities()
 
-            getMyUniversityRanking()
+            getUniversityMyRanking()
             getMySeasonRanking()
             getMyPlanetRanking()
+            getMyUniversityInfo()
 
             launch(Dispatchers.IO) {  getAllSeasonUser() }
             launch(Dispatchers.IO) {  getAllUniversities() }
@@ -125,6 +128,9 @@ class MainViewModel @Inject constructor(
 
     private val _totalPlanetRankingUser = MutableStateFlow<PagingData<PlanetRankingUser>>(PagingData.empty())
     val totalPlanetRankingUser: MutableStateFlow<PagingData<PlanetRankingUser>> = _totalPlanetRankingUser
+
+    private val _myUniversityInfo = mutableStateOf<University?>(null)
+    val myUniversityInfo: State<University?> = _myUniversityInfo
 
 
 
@@ -223,7 +229,6 @@ class MainViewModel @Inject constructor(
         getAllPlanetUserRankUseCase().distinctUntilChanged().cachedIn(viewModelScope).collect {
             _totalPlanetRankingUser.value = it
         }
-
     }
     private suspend fun getMySeasonRanking() {
         when (val apiState = getMySeasonRankUseCase().first()) {
@@ -345,7 +350,7 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getMyUniversityRanking() {
+    private suspend fun getUniversityMyRanking() {
         when (val apiState = getMyUniversityRankUseCase().first()) {
             is ApiState.Success<*> -> {
                 _myUniversityRank.value = (apiState.value as UniversityUser)
@@ -359,4 +364,20 @@ class MainViewModel @Inject constructor(
             ApiState.Loading -> TODO()
         }
     }
+
+    private suspend fun getMyUniversityInfo() {
+        when (val apiState = getMyUniversityInfoUseCase().first()) {
+            is ApiState.Success<*> -> {
+                _myUniversityInfo.value = (apiState.value as University)
+                Log.d(TAG, "getMyUniversityInfo() 성공: $_myUniversityRank")
+
+            }
+            is ApiState.Error -> {
+                Log.d("daeYoung", "getMyUniversityInfo() 실패: ${apiState.errMsg}")
+            }
+
+            ApiState.Loading -> TODO()
+        }
+    }
+
 }

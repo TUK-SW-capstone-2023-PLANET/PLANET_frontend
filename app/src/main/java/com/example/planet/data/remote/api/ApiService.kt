@@ -56,6 +56,11 @@ interface ApiService {
     @GET("/university/rank")
     suspend fun getHigherUniversities(): List<University>
 
+    // 나의 대학교 랭킹 조회
+    @GET("/university/rank/user/{userId}")
+    suspend fun getMyUniversityInfo(@Path("userId") userId: Int): University
+
+
     // 대학교 랭킹 전체 조회
     @GET("/university/rank/all")
     suspend fun getAllUniversityRanking(@Query("page") page: Int): PagingUniversity
