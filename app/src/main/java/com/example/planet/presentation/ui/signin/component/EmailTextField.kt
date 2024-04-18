@@ -11,7 +11,7 @@ import androidx.compose.ui.res.colorResource
 import com.example.planet.R
 
 @Composable
-fun EmailTextField(value: () -> String, onValueChange: (String) -> Unit, placeHolder: String) {
+fun EmailTextField(value: () -> String, onValueChange: (String) -> Unit, placeholder: String) {
     TextField(
         value = value(),
         onValueChange = { onValueChange(it) },
@@ -25,7 +25,7 @@ fun EmailTextField(value: () -> String, onValueChange: (String) -> Unit, placeHo
         singleLine = true,
         maxLines = 1,
         placeholder = {
-            Text(text = placeHolder, color = colorResource(id = R.color.font_background_color2))
+            Text(text = placeholder, color = colorResource(id = R.color.font_background_color2))
         }
     )
 }

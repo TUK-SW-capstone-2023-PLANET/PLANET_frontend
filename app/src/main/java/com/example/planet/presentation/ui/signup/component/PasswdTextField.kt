@@ -27,16 +27,17 @@ import com.example.planet.util.noRippleClickable
 
 @Composable
 fun PasswdTextField(
-    title: String,
+    title: String = "",
     text: () -> String,
     onValueChange: (String) -> Unit,
+    placeholder: String = ""
 ) {
     val textColor = Color(0XFFC2C2C2)
 
     var showPassword by remember { mutableStateOf(false) }
 
     Column(modifier = Modifier.fillMaxWidth()) {
-        Text(text = title, color = textColor, fontSize = 12.sp)
+        if (title.isNotEmpty()) Text(text = title, color = textColor, fontSize = 12.sp)
         TextField(
             value = text(),
             onValueChange = { onValueChange(it) },
@@ -64,6 +65,11 @@ fun PasswdTextField(
                         contentDescription = "Visibility",
                         modifier = Modifier.noRippleClickable { showPassword = !showPassword }
                     )
+            },
+            placeholder = {
+                if (placeholder.isNotEmpty()) {
+                    Text(text = placeholder, color = colorResource(id = R.color.font_background_color2))
+                }
             },
             supportingText = {
 //                Text(text = "8자리 이상 입력하세요", color = colorResource(id = R.color.red), fontSize = 10.sp)

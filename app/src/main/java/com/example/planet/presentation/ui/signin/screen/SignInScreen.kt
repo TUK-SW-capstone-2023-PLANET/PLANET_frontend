@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.planet.R
 import com.example.planet.presentation.ui.signin.component.EmailTextField
+import com.example.planet.presentation.ui.signup.component.PasswdTextField
 import com.example.planet.presentation.viewmodel.SignInViewModel
 import com.example.planet.util.noRippleClickable
 import kotlinx.coroutines.launch
@@ -57,13 +58,13 @@ fun SignInScreen(
         EmailTextField(
             value = { signInViewModel.email },
             onValueChange = { signInViewModel.email = it },
-            placeHolder = "email"
+            placeholder = "email"
         )
 
-        EmailTextField(
-            value = { signInViewModel.password },
+        PasswdTextField(
+            text = { signInViewModel.password },
             onValueChange = { signInViewModel.password = it },
-            placeHolder = "password"
+            placeholder = "password"
         )
 
         Spacer(modifier = Modifier.height(12.dp))

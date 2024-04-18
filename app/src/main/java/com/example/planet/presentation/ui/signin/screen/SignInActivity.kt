@@ -8,7 +8,7 @@ import androidx.activity.viewModels
 import com.example.planet.presentation.ui.main.plogging.screen.MainActivity
 import com.example.planet.presentation.ui.signup.screen.SignUpActivity
 import com.example.planet.presentation.viewmodel.SignInViewModel
-import com.example.planet.ui.theme.MyApplicationTheme
+import com.example.planet.presentation.ui.ui.theme.MyApplicationTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -28,10 +28,12 @@ class SignInActivity : ComponentActivity() {
     private fun startMainActivity() {
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
+        finish()
     }
 
     private fun startSignUpActivity() {
         val intent = Intent(this, SignUpActivity::class.java)
         startActivity(intent)
+        finish()
     }
 }

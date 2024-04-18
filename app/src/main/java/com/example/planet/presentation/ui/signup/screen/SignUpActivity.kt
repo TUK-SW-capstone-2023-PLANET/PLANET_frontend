@@ -10,7 +10,7 @@ import com.example.planet.presentation.ui.map.MapActivity
 import com.example.planet.presentation.ui.signin.screen.SignInActivity
 import com.example.planet.presentation.ui.signup.navigation.SignUpNavGraph
 import com.example.planet.presentation.viewmodel.SignUpViewModel
-import com.example.planet.ui.theme.MyApplicationTheme
+import com.example.planet.presentation.ui.ui.theme.MyApplicationTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
