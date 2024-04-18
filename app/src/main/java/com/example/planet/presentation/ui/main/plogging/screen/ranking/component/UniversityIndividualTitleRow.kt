@@ -23,42 +23,46 @@ import com.example.planet.util.round
 
 @Composable
 fun UniversityIndividualTitleRow() {
-    Divider(thickness = 1.dp, modifier = Modifier.fillMaxWidth(), color = colorResource(id = R.color.font_background_color3))
+    Divider(
+        thickness = 1.dp,
+        modifier = Modifier.fillMaxWidth(),
+        color = colorResource(id = R.color.font_background_color3)
+    )
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(start = 24.dp, top = 2.dp, bottom = 2.dp)
     ) {
-        Row(modifier = Modifier.fillMaxWidth(0.5f)) {
-            Text(
-                text = "순위",
-                color = colorResource(id = R.color.font_background_color2),
-                fontSize = 12.sp,
-                modifier = Modifier.fillMaxWidth(0.3f)
-            )
-            Text(
-                text = "이름",
-                color = colorResource(id = R.color.font_background_color2),
-                fontSize = 12.sp,
-                modifier = Modifier.weight(1f)
-            )
-        }
-        Row(modifier = Modifier.weight(1f)) {
-            Text(
-                text = "점수",
-                color = colorResource(id = R.color.font_background_color2),
-                fontSize = 12.sp,
-                modifier = Modifier.weight(1f)
-            )
-            Text(
-                text = "기여도",
-                color = colorResource(id = R.color.font_background_color2),
-                fontSize = 12.sp,
-                modifier = Modifier.weight(1f)
-            )
-        }
+        Text(
+            text = "순위",
+            color = colorResource(id = R.color.font_background_color2),
+            fontSize = 12.sp,
+            modifier = Modifier.weight(0.15f)
+        )
+        Text(
+            text = "이름",
+            color = colorResource(id = R.color.font_background_color2),
+            fontSize = 12.sp,
+            modifier = Modifier.weight(0.35f)
+        )
+        Text(
+            text = "점수",
+            color = colorResource(id = R.color.font_background_color2),
+            fontSize = 12.sp,
+            modifier = Modifier.weight(0.3f)
+        )
+        Text(
+            text = "기여도",
+            color = colorResource(id = R.color.font_background_color2),
+            fontSize = 12.sp,
+            modifier = Modifier.weight(0.2f)
+        )
     }
-    Divider(thickness = 1.dp, modifier = Modifier.fillMaxWidth(), color = colorResource(id = R.color.font_background_color3))
+    Divider(
+        thickness = 1.dp,
+        modifier = Modifier.fillMaxWidth(),
+        color = colorResource(id = R.color.font_background_color3)
+    )
 }
 
 @Composable
@@ -74,7 +78,8 @@ fun UniversityIndividualContentRow(
             .fillMaxWidth()
             .height(IntrinsicSize.Min)
             .background(color = color)
-            .padding(vertical = 2.dp)
+            .padding(vertical = 2.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         when (rank) {
             1 -> {
@@ -86,6 +91,7 @@ fun UniversityIndividualContentRow(
                 )
                 Spacer(modifier = Modifier.width(20.dp))
             }
+
             2 -> {
                 Divider(
                     color = colorResource(id = R.color.ranking_color2),
@@ -95,6 +101,7 @@ fun UniversityIndividualContentRow(
                 )
                 Spacer(modifier = Modifier.width(20.dp))
             }
+
             3 -> {
                 Divider(
                     color = colorResource(id = R.color.ranking_color3),
@@ -104,45 +111,37 @@ fun UniversityIndividualContentRow(
                 )
                 Spacer(modifier = Modifier.width(20.dp))
             }
+
             else -> {
                 Spacer(modifier = Modifier.width(24.dp))
             }
         }
-        Row(
-            modifier = Modifier
-                .weight(1f),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = rank.toString(),
-                color = colorResource(id = R.color.font_background_color2),
-                fontSize = 12.sp,
-                modifier = Modifier.fillMaxWidth(0.3f)
-            )
-            Text(
-                text = nickname,
-                color = colorResource(id = R.color.font_background_color2),
-                fontSize = 12.sp,
-                modifier = Modifier.weight(1f)
-            )
-        }
-        Row(modifier = Modifier
-            .weight(1f),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = "${score}점",
-                color = colorResource(id = R.color.font_background_color2),
-                fontSize = 12.sp,
-                modifier = Modifier.weight(1f)
-            )
-            Text(
-                text = "${contribution.round()}%",
-                color = colorResource(id = R.color.font_background_color2),
-                fontSize = 12.sp,
-                modifier = Modifier.weight(1f)
-            )
-        }
+
+        Text(
+            text = rank.toString(),
+            color = colorResource(id = R.color.font_background_color2),
+            fontSize = 12.sp,
+            modifier = Modifier.weight(0.15f)
+        )
+        Text(
+            text = nickname,
+            color = colorResource(id = R.color.font_background_color2),
+            fontSize = 12.sp,
+            modifier = Modifier.weight(0.35f)
+        )
+
+        Text(
+            text = "${score}점",
+            color = colorResource(id = R.color.font_background_color2),
+            fontSize = 12.sp,
+            modifier = Modifier.weight(0.3f)
+        )
+        Text(
+            text = "${contribution.round()}%",
+            color = colorResource(id = R.color.font_background_color2),
+            fontSize = 12.sp,
+            modifier = Modifier.weight(0.2f)
+        )
     }
     Divider(
         thickness = 1.dp,
