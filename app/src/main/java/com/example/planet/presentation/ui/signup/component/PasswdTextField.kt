@@ -55,7 +55,6 @@ fun PasswdTextField(
                 fontWeight = FontWeight.Medium
             ),
             trailingIcon = {
-                val icon =
                     Icon(
                         imageVector = if (showPassword) {
                             Icons.Filled.Visibility

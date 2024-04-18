@@ -7,5 +7,4 @@ data class SeasonUser(
     val rank: Int,
     val tierImageUrl: String,
     val tierName: String
-
 )

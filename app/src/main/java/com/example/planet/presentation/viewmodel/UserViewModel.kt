@@ -22,12 +22,10 @@ class UserViewModel @Inject constructor() : ViewModel() {
     var pwTextValue by mutableStateOf("")
     var nicknameTextValue by mutableStateOf(TextFieldValue(text = "Happy Bean", selection = TextRange("Happy Bean".length)))
     var describeTextValue by mutableStateOf(TextFieldValue(text = "나랑 같이 플로깅 할 사람", selection = TextRange("나랑 같이 플로깅 할 사람".length)))
+    var heightTextValue by mutableStateOf("")
+    var weightTextValue by mutableStateOf("")
     var editNicknameState by mutableStateOf(false)
     var editDescribeState by mutableStateOf(false)
-
-    val duplicateCheck by derivedStateOf {
-        idTextValue.isNotEmpty()
-    }
 
     val nicknameTextLength by derivedStateOf {
         "${nicknameTextValue.text.length} / $maxNicknameTextLength"

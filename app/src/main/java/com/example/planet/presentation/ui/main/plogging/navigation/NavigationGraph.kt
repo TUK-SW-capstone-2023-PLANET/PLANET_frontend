@@ -63,7 +63,7 @@ fun NavigationGraph(
                     RankingScreen(navController = navController, mainViewModel = mainViewModel)
                 }
                 composable(BottomNavItem.UserScreen.screenRoute) {
-                    Log.d(TAG,"seasonUser: ${mainViewModel.mySeasonRank}, universityInfo: ${mainViewModel.myUniversityInfo}")
+                    Log.d(TAG,"seasonUser: ${mainViewModel.mySeasonRank}, universityInfo: ${mainViewModel.myUniversityInfo}, userInfo: ${mainViewModel.userInfo}")
                     mainViewModel.myUniversityInfo.value?.let { university ->
                         mainViewModel.mySeasonRank.value?.let { season ->
                             mainViewModel.userInfo.value?.let { user ->

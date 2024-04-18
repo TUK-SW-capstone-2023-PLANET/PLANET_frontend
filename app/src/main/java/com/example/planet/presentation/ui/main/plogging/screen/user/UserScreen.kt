@@ -58,6 +58,8 @@ fun UserScreen(
     onClick: () -> Unit
 ) {
     val scrollState = rememberScrollState()
+    val redButtonTextColor = colorResource(id = R.color.red)
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -106,7 +108,9 @@ fun UserScreen(
                         )
                     }
                 }
-                RedTextButton(text = "로그아웃")
+                RedTextButton(text = { "로그아웃" }, textColor = { redButtonTextColor }){
+
+                }
             }
 
             Spacer(modifier = Modifier.height(9.dp))

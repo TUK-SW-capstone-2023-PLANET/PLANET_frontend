@@ -6,8 +6,8 @@ data class UserInfo(
     val passwd: String,
     val nickName: String,
     val imageUrl: String,
-    val weight: Int,
-    val height: Int,
+    val weight: Double,
+    val height: Double,
     val message: String
 //    val gender: String,
 //    val address: String,
