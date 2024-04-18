@@ -25,6 +25,7 @@ import com.example.planet.data.remote.dto.response.ranking.universityuser.Univer
 import com.example.planet.data.remote.dto.response.user.UserInfo
 import com.example.planet.domain.usecase.GetBannerUseCase
 import com.example.planet.domain.usecase.GetTierListUseCase
+import com.example.planet.domain.usecase.login.sharedpreference.GetUserTokenUseCase
 import com.example.planet.domain.usecase.ranking.universityuser.GetAllUniversityUserRankUseCase
 import com.example.planet.domain.usecase.ranking.universityuser.GetHigherUniversityUserRankUseCase
 import com.example.planet.domain.usecase.ranking.university.GetUniversitiesUseCase
@@ -60,10 +61,13 @@ class MainViewModel @Inject constructor(
     private val getHigherPlanetUserUseCase: GetHigherPlanetUserUseCase,
     private val getTierListUseCase: GetTierListUseCase,
     private val getMyUniversityInfoUseCase: GetMyUniversityInfoUseCase,
-    private val getUserInfoUseCase: GetUserInfoUseCase
+    private val getUserInfoUseCase: GetUserInfoUseCase,
+    private val getUserTokenUseCase: GetUserTokenUseCase
 ) : ViewModel() {
     init {
         viewModelScope.launch {
+
+            getUserToken()
 
             getTopBanner()
 
@@ -85,6 +89,9 @@ class MainViewModel @Inject constructor(
 
         }
     }
+    // userToken
+    lateinit var userId: String
+
     // 자대 대학교 유저 TOP3 그래프 높이 list
     var universityUserGraphHeightList = emptyList<Dp>()
     // 대학교 TOP3 그래프 높이 list
@@ -177,8 +184,8 @@ class MainViewModel @Inject constructor(
     // 자대 대학교 유저 기준, 1등 ~ 3등까지 score list를 반환
     private fun getGraphHeightList(list: List<ExpandedUniversityUser>): List<Dp> {
         val graphHeight1th = 120 // 기준을 120dp로 잡음
-        val graphHeight2th = (graphHeight1th * list[1].score) / list[0].score
-        val graphHeight3th = (graphHeight1th * list[2].score) / list[0].score
+        val graphHeight2th = (graphHeight1th * list[2].score) / list[1].score
+        val graphHeight3th = (graphHeight1th * list[3].score) / list[1].score
         // 2등, 1등, 3등 순서대로 저장
         return listOf(graphHeight2th.dp, graphHeight1th.dp, graphHeight3th.dp)
     }
@@ -189,6 +196,21 @@ class MainViewModel @Inject constructor(
         val graphHeight3th = (graphHeight1th * list[2].score) / list[0].score
         // 2등, 1등, 3등 순서대로 저장
         return listOf(graphHeight2th.dp, graphHeight1th.dp, graphHeight3th.dp)
+    }
+
+    private suspend fun getUserToken(userTokenKey: String = "userToken") {
+        when (val result = getUserTokenUseCase(userTokenKey).first()) {
+            is ApiState.Success<*> -> {
+                Log.d(TAG, "getUserToken(): ${result.value}")
+                userId = result.value as String
+            }
+
+            is ApiState.Error -> {
+                Log.d(TAG, "getUserToken() 실패: ${result.errMsg}")
+            }
+
+            ApiState.Loading -> TODO()
+        }
     }
 
     private suspend fun getTopBanner() {
@@ -236,7 +258,7 @@ class MainViewModel @Inject constructor(
         }
     }
     private suspend fun getMySeasonRanking() {
-        when (val apiState = getMySeasonRankUseCase().first()) {
+        when (val apiState = getMySeasonRankUseCase(userId).first()) {
             is ApiState.Success<*> -> {
                 _mySeasonRank.value = apiState.value as SeasonUser
                 Log.d(TAG, "getMySeasonRanking() 성공: ${mySeasonRank.value}")
@@ -251,7 +273,7 @@ class MainViewModel @Inject constructor(
     }
 
     private suspend fun getMyPlanetRanking() {
-        when (val apiState = getMyPlanetRankUseCase().first()) {
+        when (val apiState = getMyPlanetRankUseCase(userId).first()) {
             is ApiState.Success<*> -> {
                 _myPlanetRank.value = apiState.value as PlanetRankingUser
                 Log.d(TAG, "getMyPlanetRanking() 성공: ${myPlanetRank.value}")
@@ -268,7 +290,7 @@ class MainViewModel @Inject constructor(
 
 
     private suspend fun getTop5SeasonUser() {
-        when (val apiState = getHigherSeasonRankUseCase().first()) {
+        when (val apiState = getHigherSeasonRankUseCase(userId).first()) {
             is ApiState.Success<*> -> {
                 val result = apiState.value as List<Map<Int, SeasonUser>>
                 result[0].values.forEach {
@@ -338,9 +360,10 @@ class MainViewModel @Inject constructor(
         }
     }
     private suspend fun getTop4UniversityUser() {
-        when (val apiState = getHigherUniversityUserRankUseCase().first()) {
+        when (val apiState = getHigherUniversityUserRankUseCase(userId).first()) {
             is ApiState.Success<*> -> {
-                val result = apiState.value as List<Map<Int, ExpandedUniversityUser>>
+                Log.d("daeYoung", "getUniversityUserTop4Ranking() 성공: ${apiState.value as List<Map<Int, ExpandedUniversityUser>>}")
+                val result = apiState.value
                 result[0].values.forEach { university ->
                     _higherMyUniversityUsers.value = higherMyUniversityUsers.value + university
                 }
@@ -356,7 +379,7 @@ class MainViewModel @Inject constructor(
     }
 
     private suspend fun getUniversityMyRanking() {
-        when (val apiState = getMyUniversityRankUseCase().first()) {
+        when (val apiState = getMyUniversityRankUseCase(userId).first()) {
             is ApiState.Success<*> -> {
                 _myUniversityRank.value = (apiState.value as UniversityUser)
                 Log.d(TAG, "getUniversityMyRankingUseCase() 성공: $_myUniversityRank")
@@ -371,7 +394,7 @@ class MainViewModel @Inject constructor(
     }
 
     private suspend fun getMyUniversityInfo() {
-        when (val apiState = getMyUniversityInfoUseCase().first()) {
+        when (val apiState = getMyUniversityInfoUseCase(userId).first()) {
             is ApiState.Success<*> -> {
                 _myUniversityInfo.value = (apiState.value as University)
                 Log.d(TAG, "getMyUniversityInfo() 성공: $_myUniversityRank")
@@ -386,7 +409,7 @@ class MainViewModel @Inject constructor(
     }
 
     private suspend fun getUserInfo() {
-        when (val apiState = getUserInfoUseCase().first()) {
+        when (val apiState = getUserInfoUseCase(userId).first()) {
             is ApiState.Success<*> -> {
                 _userInfo.value = (apiState.value as UserInfo)
                 Log.d(TAG, "getUserInfo() 성공: ${userInfo.value}")

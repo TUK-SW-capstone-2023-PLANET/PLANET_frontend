@@ -255,6 +255,7 @@ fun UniversityScreen(
                     .wrapContentHeight()
             ) {
                 UniversityIndividualTitleRow()
+
                 universityUserList.forEachIndexed { index, universityUser ->
                     UniversityIndividualContentRow(
                         rank = universityUser.rank,

@@ -6,8 +6,8 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class GetHigherUniversityUserRankUseCase @Inject constructor(private val rankingRepository: RankingRepository) {
-    suspend operator fun invoke(): Flow<ApiState> {
-        return rankingRepository.getUniversityTop4User()
+    suspend operator fun invoke(userId: String): Flow<ApiState> {
+        return rankingRepository.getUniversityTop4User(userId.toInt())
     }
 
 }

@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class GetMyPlanetRankUseCase @Inject constructor(private val rankingRepository: RankingRepository) {
-    suspend operator fun invoke(): Flow<ApiState> {
-        return rankingRepository.getMyPlanetRanking()
+    suspend operator fun invoke(userId: String): Flow<ApiState> {
+        return rankingRepository.getMyPlanetRanking(userId.toInt())
     }
 }
