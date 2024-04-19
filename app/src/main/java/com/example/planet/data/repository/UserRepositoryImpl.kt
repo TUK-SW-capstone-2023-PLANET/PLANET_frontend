@@ -3,6 +3,7 @@ package com.example.planet.data.repository
 import android.content.SharedPreferences
 import com.example.planet.data.remote.api.ApiService
 import com.example.planet.data.remote.dto.ApiState
+import com.example.planet.data.remote.dto.response.user.UserInfo
 import com.example.planet.domain.repository.UserRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -20,6 +21,16 @@ class UserRepositoryImpl @Inject constructor(
     override suspend fun getUserInfo(userId: Int): Flow<ApiState> = flow {
         kotlin.runCatching {
             apiService.getUserInfo(userId = userId)
+        }.onSuccess {
+            emit(ApiState.Success(it))
+        }.onFailure { error ->
+            error.message?.let { emit(ApiState.Error(it)) }
+        }
+    }.flowOn(Dispatchers.IO)
+
+    override suspend fun putUserInfo(userInfo: UserInfo): Flow<ApiState> = flow {
+        kotlin.runCatching {
+            apiService.putUserInfo(userInfo = userInfo)
         }.onSuccess {
             emit(ApiState.Success(it))
         }.onFailure { error ->

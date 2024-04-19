@@ -1,52 +1,43 @@
 package com.example.planet.presentation.viewmodel
 
-import android.content.ContentResolver
 import android.content.Context
-import android.graphics.Bitmap
 import android.net.Uri
-import android.provider.OpenableColumns
 import android.util.Log
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.planet.TAG
 import com.example.planet.data.remote.dto.ApiState
 import com.example.planet.data.remote.dto.ImageUrl
 import com.example.planet.data.remote.dto.response.user.UserInfo
+import com.example.planet.data.remote.dto.response.user.UserInfoResponse
 import com.example.planet.domain.usecase.image.PostImageUseCase
 import com.example.planet.domain.usecase.login.sharedpreference.GetUserTokenUseCase
 import com.example.planet.domain.usecase.user.GetUserInfoUseCase
+import com.example.planet.domain.usecase.user.PutUserInfoUseCase
+import com.example.planet.util.asMultipart
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
-import okhttp3.MediaType
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
-import okhttp3.RequestBody.Companion.asRequestBody
-import okio.BufferedSink
-import okio.source
-import java.io.File
 import javax.inject.Inject
 
 @HiltViewModel
 class UserViewModel @Inject constructor(
     private val getUserTokenUseCase: GetUserTokenUseCase,
     private val getUserInfoUseCase: GetUserInfoUseCase,
-    private val postImageUseCase: PostImageUseCase
+    private val postImageUseCase: PostImageUseCase,
+    private val putUserInfoUseCase: PutUserInfoUseCase
 ) : ViewModel() {
 //    init {
 //        viewModelScope.launch {
 //            getUserToken()
 //        }
 //    }
+
+    var userInfo by mutableStateOf(UserInfo())
 
     private var userToken: String = "0"
     val maxNicknameTextLength = 20
@@ -56,12 +47,13 @@ class UserViewModel @Inject constructor(
     var pwTextValue by mutableStateOf("")
     var nicknameTextValue by mutableStateOf(
         TextFieldValue(
-            text = "Happy Bean", selection = TextRange("Happy Bean".length)
+            text = userInfo.nickName, selection = TextRange(userInfo.nickName.length)
         )
     )
+
     var describeTextValue by mutableStateOf(
         TextFieldValue(
-            text = "나랑 같이 플로깅 할 사람", selection = TextRange("나랑 같이 플로깅 할 사람".length)
+            text = userInfo.message, selection = TextRange(userInfo.message.length)
         )
     )
     var heightTextValue by mutableStateOf("")
@@ -77,7 +69,6 @@ class UserViewModel @Inject constructor(
         "${describeTextValue.text.length} / $maxDescribeTextLength"
     }
 
-    var userInfo by mutableStateOf(UserInfo())
     fun changeEditNicknameScreen() {
         editNicknameState = !editNicknameState
     }
@@ -95,9 +86,11 @@ class UserViewModel @Inject constructor(
                     Log.d(TAG, "getImageUrl success: ${apiState.value as ImageUrl}")
                     userInfo = userInfo.copy(imageUrl = (apiState.value).imageUrl)
                 }
+
                 is ApiState.Error -> {
                     Log.d(TAG, "getImageUrl Error: ${apiState.errMsg}")
                 }
+
                 ApiState.Loading -> TODO()
             }
         }
@@ -111,7 +104,7 @@ class UserViewModel @Inject constructor(
             }
 
             is ApiState.Error -> {
-                Log.d(TAG, "getUserToken Error: ${apiState.errMsg}")
+                Log.d(TAG, "getUserToken() Error: ${apiState.errMsg}")
             }
 
             ApiState.Loading -> TODO()
@@ -121,37 +114,39 @@ class UserViewModel @Inject constructor(
 
     suspend fun getUserInfo() {
         getUserToken()
-        Log.d(TAG, "userToken: ${userToken}")
         when (val apiState = getUserInfoUseCase(userToken).first()) {
             is ApiState.Success<*> -> {
                 userInfo = apiState.value as UserInfo
+                nicknameTextValue = nicknameTextValue.copy(
+                    text = userInfo.nickName,
+                    selection = TextRange(userInfo.nickName.length))
+                describeTextValue = describeTextValue.copy(
+                    text = userInfo.message,
+                    selection = TextRange(userInfo.message.length))
             }
 
-            is ApiState.Error -> TODO()
+            is ApiState.Error -> {
+                Log.d(TAG, "getUserInfo() Error: ${apiState.errMsg}")
+            }
+
             ApiState.Loading -> TODO()
         }
     }
 
-    fun Uri.asMultipart(name: String, contentResolver: ContentResolver): MultipartBody.Part? {
-        return contentResolver.query(this, null, null, null, null)?.let {
-            if (it.moveToNext()) {
-                val displayName = it.getString(it.getColumnIndex(OpenableColumns.DISPLAY_NAME));
-                val requestBody = object : RequestBody() {
-                    override fun contentType(): MediaType? {
-                        return contentResolver.getType(this@asMultipart)?.toMediaType()
-                    }
-
-                    override fun writeTo(sink: BufferedSink) {
-                        sink.writeAll(contentResolver.openInputStream(this@asMultipart)?.source()!!)
-                    }
-                }
-                it.close()
-                MultipartBody.Part.createFormData(name, displayName, requestBody)
-            } else {
-                it.close()
-                null
+    suspend fun putUserInfo() {
+        getUserToken()
+        when (val apiState = putUserInfoUseCase(userInfo).first()) {
+            is ApiState.Success<*> -> {
+                Log.d(TAG, "putUserInfo() success: ${apiState.value as UserInfoResponse}")
             }
+
+            is ApiState.Error -> {
+                Log.d(TAG, "putUserInfo() Error: ${apiState.errMsg}")
+            }
+
+            ApiState.Loading -> TODO()
         }
     }
+
 
 }

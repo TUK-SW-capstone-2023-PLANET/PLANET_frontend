@@ -24,7 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.example.planet.presentation.ui.main.plogging.navigation.NavigationGraph
 import com.example.planet.presentation.ui.map.MapActivity
-import com.example.planet.presentation.ui.user.UserActivity
+import com.example.planet.presentation.ui.user.screen.UserActivity
 import com.example.planet.presentation.ui.ui.theme.MyApplicationTheme
 import com.example.planet.presentation.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint

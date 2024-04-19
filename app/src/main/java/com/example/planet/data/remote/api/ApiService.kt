@@ -23,11 +23,13 @@ import com.example.planet.data.remote.dto.response.ranking.universityuser.Univer
 import com.example.planet.data.remote.dto.response.signin.LoginResponse
 import com.example.planet.data.remote.dto.response.signup.UserId
 import com.example.planet.data.remote.dto.response.user.UserInfo
+import com.example.planet.data.remote.dto.response.user.UserInfoResponse
 import okhttp3.MultipartBody
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -116,6 +118,10 @@ interface ApiService {
     // 유저 정보 조회
     @GET("/user/{userId}")
     suspend fun getUserInfo(@Path("userId")userId: Int ): UserInfo
+
+    // 유저 정보 수정 TODO(UserInfoResponse 수정하면 UserId로 바꿀 것)
+    @PUT("/user")
+    suspend fun putUserInfo(@Body userInfo: UserInfo): UserInfoResponse
 
     // SignUpActivity 관련  ------------------------------------------------------------------------
     @GET("/login/check")

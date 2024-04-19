@@ -1,4 +1,4 @@
-package com.example.planet.presentation.ui.user
+package com.example.planet.presentation.ui.user.screen
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

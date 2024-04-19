@@ -1,11 +1,13 @@
 package com.example.planet.util
 
+import android.content.ContentResolver
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
+import android.provider.OpenableColumns
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -23,6 +25,12 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.permissions.shouldShowRationale
+import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okio.BufferedSink
+import okio.source
 import java.io.File
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
@@ -108,6 +116,28 @@ fun Long.formatTime(): String {
     val seconds = TimeUnit.MILLISECONDS.toSeconds(this) % 60
     val formatter = String.format("%02d : %02d", minutes, seconds)
     return formatter
+}
+
+fun Uri.asMultipart(name: String, contentResolver: ContentResolver): MultipartBody.Part? {
+    return contentResolver.query(this, null, null, null, null)?.let {
+        if (it.moveToNext()) {
+            val displayName = it.getString(it.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+            val requestBody = object : RequestBody() {
+                override fun contentType(): MediaType? {
+                    return contentResolver.getType(this@asMultipart)?.toMediaType()
+                }
+
+                override fun writeTo(sink: BufferedSink) {
+                    sink.writeAll(contentResolver.openInputStream(this@asMultipart)?.source()!!)
+                }
+            }
+            it.close()
+            MultipartBody.Part.createFormData(name, displayName, requestBody)
+        } else {
+            it.close()
+            null
+        }
+    }
 }
 
 @OptIn(ExperimentalPermissionsApi::class)

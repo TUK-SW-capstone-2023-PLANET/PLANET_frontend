@@ -18,7 +18,7 @@ import com.example.planet.R
 import com.example.planet.util.noRippleClickable
 
 @Composable
-fun ProfileModifyTopAppBar(onBack: () -> Unit) {
+fun ProfileModifyTopAppBar(onBack: () -> Unit, updateUserInfo: () ->Unit) {
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
         Icon(
             imageVector = Icons.Default.ArrowBackIosNew,
@@ -41,7 +41,7 @@ fun ProfileModifyTopAppBar(onBack: () -> Unit) {
             fontWeight = FontWeight.SemiBold,
             fontSize = 16.sp,
             modifier = Modifier
-                .noRippleClickable {}
+                .noRippleClickable { updateUserInfo() }
         )
     }
 }
