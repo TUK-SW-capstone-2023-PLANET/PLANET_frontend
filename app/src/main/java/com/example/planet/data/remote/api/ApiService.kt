@@ -142,4 +142,5 @@ interface ApiService {
 
     @POST("/login/user")
     suspend fun postLogin(@Body loginInfo: LoginInfo): LoginResponse
+
 }

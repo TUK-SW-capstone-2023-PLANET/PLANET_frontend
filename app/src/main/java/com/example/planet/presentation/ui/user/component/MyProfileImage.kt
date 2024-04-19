@@ -36,16 +36,13 @@ import com.example.planet.R
 import com.example.planet.TAG
 
 @Composable
-fun MyProfileImage(setProfileImage: (Uri) -> Unit, profileImage: () -> Uri) {
+fun MyProfileImage(getImageUrl: (Uri) -> Unit, profileImage: () -> String) {
     val context = LocalContext.current
 
     val takePhotoFromAlbumLauncher = // 갤러리에서 사진 가져오기
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
-                result.data?.data?.let { uri ->
-                    setProfileImage(uri)
-                    Log.d(TAG, "serViewModel.myProfileImage: $profileImage")
-                }
+                result.data?.data?.let { uri -> getImageUrl(uri) }
             } else if (result.resultCode != Activity.RESULT_CANCELED) {
 //                toast(context, StringAsset.Toast.ErrorTakenPhoto)
             }
@@ -67,23 +64,12 @@ fun MyProfileImage(setProfileImage: (Uri) -> Unit, profileImage: () -> Uri) {
                 .size(115.dp)
                 .aspectRatio(1f), shape = CircleShape
         ) {
-//                AsyncImage(
-//                    model = ImageRequest.Builder(LocalContext.current)
-//                        .data(userIconUrl)
-//                        .crossfade(true).build(),
-//                    contentDescription = null,
-//                    modifier = Modifier
-//                )
             Image(
-                painter = if (profileImage() == Uri.EMPTY) {
-                    painterResource(id = R.drawable.temporary_user_icon)
-                } else {
-                    rememberAsyncImagePainter(model = profileImage())
-                },
+                painter = rememberAsyncImagePainter(model = profileImage()),
                 contentDescription = null,
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop
-                )
+            )
         }
         Card(
             shape = CircleShape,

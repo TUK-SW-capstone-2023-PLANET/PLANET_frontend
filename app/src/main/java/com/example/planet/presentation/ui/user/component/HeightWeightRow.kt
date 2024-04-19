@@ -26,8 +26,10 @@ import com.example.planet.component.common.RedTextButton
 fun HeightWeightRow(
     heightText: () -> String,
     heightTextValue: (String) -> Unit,
+    heightPlaceholder: String,
     weightText: () -> String,
-    weightTextValue: (String) -> Unit
+    weightTextValue: (String) -> Unit,
+    weightPlaceholder: String,
 ) {
     var enabled by remember { mutableStateOf(false) }
     val (redButtonText, redButtonColor) = if (!enabled) {
@@ -56,7 +58,7 @@ fun HeightWeightRow(
                 .focusRequester(focusRequesterList[0]),
             textValue = { heightText() },
             onValueChange = { heightTextValue(it) },
-            placeholder = "키",
+            placeholder = heightPlaceholder,
             suffix = "CM",
             enabled = { enabled },
             keyboardActions = { focusRequesterList[1].requestFocus() }
@@ -65,7 +67,7 @@ fun HeightWeightRow(
             modifier = Modifier.weight(0.3f).focusRequester(focusRequesterList[1]),
             textValue = { weightText() },
             onValueChange = { weightTextValue(it) },
-            placeholder = "몸무게",
+            placeholder = weightPlaceholder,
             suffix = "KG",
             enabled = { enabled },
             keyboardActions = {}

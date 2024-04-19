@@ -21,6 +21,7 @@ import com.example.planet.data.remote.dto.TrashCan
 import com.example.planet.data.map.Trash
 import com.example.planet.data.map.TrashImage
 import com.example.planet.data.repository.MapRepository
+import com.example.planet.domain.usecase.image.PostImageUseCase
 import com.example.planet.util.DistanceManager
 import com.example.planet.util.allDelete
 import com.example.planet.util.numberComma
@@ -41,7 +42,8 @@ import kotlin.math.round
 @HiltViewModel
 class MapViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val mapRepository: MapRepository
+    private val mapRepository: MapRepository,
+    private val postImageUseCase: PostImageUseCase
 ) : ViewModel() {
     private var ploggingId: Int = 0                                     // 플로깅 PK
     private lateinit var timerJob: Job                                  // 타이머 코루틴
@@ -301,7 +303,7 @@ class MapViewModel @Inject constructor(
                     imageFile.name,
                     it
                 )
-                when (val apiState = mapRepository.postImage(file = multipart).first()) {
+                when (val apiState = postImageUseCase(file = multipart).first()) {
                     is ApiState.Success<*> -> {
                         imageUrl = (apiState.value as ImageUrl).imageUrl
                         Log.d("daeYoung", "postImage() 성공: $imageUrl")
