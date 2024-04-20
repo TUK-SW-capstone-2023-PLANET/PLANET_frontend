@@ -51,6 +51,7 @@ fun PlanetRankingScreen(mainViewModel: MainViewModel = hiltViewModel()) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(bottom = 16.dp)
         ) {
             Icon(
                 imageVector = Icons.Default.ArrowBackIosNew,

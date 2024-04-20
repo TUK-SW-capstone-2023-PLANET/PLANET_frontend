@@ -23,6 +23,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,14 +47,16 @@ import com.example.planet.component.common.TripleArrowIcon
 import com.example.planet.component.main.SubTitle
 import com.example.planet.component.main.SubTitleDescription
 import com.example.planet.component.main.plogging.UniversityGraph
+import com.example.planet.data.remote.dto.response.ranking.university.University
+import com.example.planet.data.remote.dto.response.ranking.universityuser.ExpandedUniversityUser
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.UniversityIndividualContentRow
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.UniversityIndividualTitleRow
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.data.ScreenNav
-import com.example.planet.data.remote.dto.response.ranking.university.University
-import com.example.planet.data.remote.dto.response.ranking.universityuser.ExpandedUniversityUser
 import com.example.planet.util.numberComma
 import com.example.planet.util.round
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.drop
 
 @Composable
 fun UniversityScreen(
@@ -65,6 +68,7 @@ fun UniversityScreen(
 
     var visible by remember { mutableStateOf(false) }
     var scrollState = rememberScrollState()
+    val scope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
         delay(300)
@@ -256,7 +260,17 @@ fun UniversityScreen(
             ) {
                 UniversityIndividualTitleRow()
 
-                universityUserList.forEachIndexed { index, universityUser ->
+                universityUserList[0].apply {
+                    UniversityIndividualContentRow(
+                        rank = this.rank,
+                        nickname = this.nickName,
+                        score = this.score.numberComma(),
+                        contribution = this.contribution,  /* TODO(기여도 대학교 로고로 바꿀 것)*/
+                        color = colorResource(id = R.color.main_color4)
+                    )
+                }
+
+                universityUserList.subList(1, universityUserList.size).forEach { universityUser ->
                     UniversityIndividualContentRow(
                         rank = universityUser.rank,
                         nickname = universityUser.nickName,
@@ -266,6 +280,5 @@ fun UniversityScreen(
                 }
             }
         }
-
     }
 }

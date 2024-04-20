@@ -71,7 +71,6 @@ fun NavigationGraph(
                             MessageScreen()
                         }
                         composable(BottomNavItem.CommunityScreen.screenRoute) {
-                            MainTopSwitch(mainViewModel = mainViewModel)
                             CommunityScreen()
                         }
                         composable(ScreenNav.TierScreen.screenRoute) {

@@ -48,7 +48,7 @@ fun UniversityRankingScreen(mainViewModel: MainViewModel = hiltViewModel()) {
             .padding(16.dp)
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
         ) {
             Icon(imageVector = Icons.Default.ArrowBackIosNew,
                 contentDescription = null,
