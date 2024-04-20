@@ -23,12 +23,12 @@ import com.example.planet.component.main.SubTitle
 import com.example.planet.component.main.SubTitleDescription
 
 @Composable
-fun MiddleHead(image: Painter, title: String, description: String, icon: @Composable () -> Unit = {}) {
+fun MiddleHead(modifier: Modifier = Modifier, image: Painter, title: String, description: String, icon: @Composable () -> Unit = {}) {
     Divider(
         thickness = 1.dp,
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
-            .padding(bottom = 8.dp, top = 16.dp),
+            .padding(bottom = 8.dp),
         color = colorResource(id = R.color.font_background_color3)
     )
 

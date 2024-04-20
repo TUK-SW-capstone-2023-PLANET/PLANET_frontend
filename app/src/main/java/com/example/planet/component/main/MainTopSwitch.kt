@@ -25,7 +25,7 @@ fun MainTopSwitch(mainViewModel: MainViewModel = viewModel()) {
     Card(
         modifier = Modifier
             .fillMaxWidth(0.6f)
-            .padding(16.dp),
+            .padding(vertical = 16.dp),
         shape = RoundedCornerShape(8.dp),
         colors = CardDefaults.cardColors(
             containerColor = colorResource(id = R.color.font_background_color3),

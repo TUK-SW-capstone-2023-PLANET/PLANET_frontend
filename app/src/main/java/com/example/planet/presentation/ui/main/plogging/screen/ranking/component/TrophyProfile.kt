@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
@@ -23,6 +24,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.example.planet.R
 
@@ -42,12 +44,11 @@ fun TrophyProfile(image: Painter, imageSize: Dp, userIconUrl: String, userName: 
                     .size(30.dp)
                     .aspectRatio(1f), shape = CircleShape
             ) {
-                AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(userIconUrl)
-                        .crossfade(true).build(),
+                Image(
+                    painter = rememberAsyncImagePainter(model = userIconUrl),
                     contentDescription = null,
-                    modifier = Modifier
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop
                 )
             }
             Spacer(modifier = Modifier.height(4.dp))

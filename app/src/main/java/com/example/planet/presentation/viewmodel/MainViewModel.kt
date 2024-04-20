@@ -38,6 +38,7 @@ import com.example.planet.domain.usecase.ranking.season.GetMySeasonRankUseCase
 import com.example.planet.domain.usecase.ranking.university.GetMyUniversityInfoUseCase
 import com.example.planet.domain.usecase.ranking.university.GetMyUniversityRankUseCase
 import com.example.planet.domain.usecase.user.GetUserInfoUseCase
+import com.example.planet.presentation.ui.main.plogging.screen.ranking.data.ScreenNav
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -80,7 +81,6 @@ class MainViewModel @Inject constructor(
             getMySeasonRanking()
             getMyPlanetRanking()
             getMyUniversityInfo()
-            getUserInfo()
 
             launch(Dispatchers.IO) {  getAllSeasonUser() }
             launch(Dispatchers.IO) {  getAllUniversities() }
@@ -149,13 +149,10 @@ class MainViewModel @Inject constructor(
     private val _tierList = mutableStateOf(emptyList<Tier>())
     val tierList: State<List<Tier>> = _tierList
 
-    private val _mainTopSwitchIsShow = mutableStateOf<Boolean>(true)
-    val mainTopSwitchIsShow: State<Boolean> = _mainTopSwitchIsShow
-
     private val _searchText = mutableStateOf("")
     val searchText: State<String> = _searchText
 
-
+    var showRankingScreen: ScreenNav by mutableStateOf(ScreenNav.HomeScreen)
 
     fun changePloggingScreen() {
         _ploggingOrRecordSwitch.value = false
@@ -169,13 +166,6 @@ class MainViewModel @Inject constructor(
         _tierList.value = emptyList()
     }
 
-    fun mainTopSwitchOnHide() {
-        _mainTopSwitchIsShow.value = false
-    }
-
-    fun mainTopSwitchOnShow() {
-        _mainTopSwitchIsShow.value = true
-    }
 
     val changeSearchText: (String) -> Unit = { text ->
         _searchText.value = text
@@ -257,7 +247,7 @@ class MainViewModel @Inject constructor(
             _totalPlanetRankingUser.value = it
         }
     }
-    private suspend fun getMySeasonRanking() {
+    suspend fun getMySeasonRanking() {
         when (val apiState = getMySeasonRankUseCase(userId).first()) {
             is ApiState.Success<*> -> {
                 _mySeasonRank.value = apiState.value as SeasonUser
@@ -393,7 +383,7 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getMyUniversityInfo() {
+    suspend fun getMyUniversityInfo() {
         when (val apiState = getMyUniversityInfoUseCase(userId).first()) {
             is ApiState.Success<*> -> {
                 _myUniversityInfo.value = (apiState.value as University)
@@ -408,7 +398,7 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getUserInfo() {
+    suspend fun getUserInfo() {
         when (val apiState = getUserInfoUseCase(userId).first()) {
             is ApiState.Success<*> -> {
                 _userInfo.value = (apiState.value as UserInfo)

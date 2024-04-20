@@ -24,28 +24,24 @@ import androidx.navigation.NavController
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.planet.R
+import com.example.planet.data.remote.dto.response.ranking.season.SeasonUser
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.MiddleHead
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.SearchTextField
-import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.TearProfile
-import com.example.planet.data.remote.dto.response.ranking.season.SeasonUser
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.SeasonContentRow
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.SeasonTitleRow
+import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.TearProfile
+import com.example.planet.presentation.ui.main.plogging.screen.ranking.data.ScreenNav
 import com.example.planet.presentation.viewmodel.MainViewModel
 import com.example.planet.util.noRippleClickable
 import com.example.planet.util.numberComma
 
 @Composable
-fun SeasonRankingScreen(
-    navController: NavController, mainViewModel: MainViewModel = hiltViewModel()
-) {
+fun SeasonRankingScreen(mainViewModel: MainViewModel = hiltViewModel()) {
     val seasonUserList: LazyPagingItems<SeasonUser> =
         mainViewModel.totalSeasonUser.collectAsLazyPagingItems()
 
 
-    BackHandler {
-        mainViewModel.mainTopSwitchOnShow()
-        navController.popBackStack()
-    }
+    BackHandler { mainViewModel.showRankingScreen = ScreenNav.HomeScreen }
 
     Column(
         modifier = Modifier
@@ -59,8 +55,7 @@ fun SeasonRankingScreen(
                 contentDescription = null,
                 tint = colorResource(id = R.color.font_background_color1),
                 modifier = Modifier.noRippleClickable {
-                    mainViewModel.mainTopSwitchOnShow()
-                    navController.popBackStack()
+                    mainViewModel.showRankingScreen = ScreenNav.HomeScreen
                 })
         }
         MiddleHead(

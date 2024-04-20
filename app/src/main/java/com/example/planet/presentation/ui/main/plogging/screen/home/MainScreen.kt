@@ -33,7 +33,6 @@ import androidx.navigation.NavController
 import com.example.planet.R
 import com.example.planet.TAG
 import com.example.planet.component.common.MyScrollableTabRow
-import com.example.planet.component.main.MainTopSwitch
 import com.example.planet.component.main.plogging.MainTopBanner
 import com.example.planet.presentation.viewmodel.MainViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -76,13 +75,12 @@ fun MainScreen(
                 .padding(it),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            MainTopSwitch(mainViewModel = mainViewModel)
             /* TODO("스켈레톤 ui 적용할 것") */
             MainTopBanner(imageUrlList = mainViewModel.imageUrlList)
             MyScrollableTabRow(
                 modifier = Modifier
                     .height(45.dp)
-                    .padding(vertical = 8.dp),
+                    .padding(bottom = 8.dp),
                 edgePadding = 16.dp,
                 selectedTabIndex = pagerState.currentPage,
                 minItemWidth = 0.dp,
@@ -127,6 +125,7 @@ fun MainScreen(
                         graphHeightList = mainViewModel.universityGraphHeightList,
                         navController = navController,
                     )
+
                     2 -> SeasonScreen(navController = navController, mainViewModel = mainViewModel)
                     3 -> SeasonScreen(navController = navController, mainViewModel = mainViewModel)
                 }

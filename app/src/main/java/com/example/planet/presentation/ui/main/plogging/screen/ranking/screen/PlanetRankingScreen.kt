@@ -1,6 +1,5 @@
 package com.example.planet.presentation.ui.main.plogging.screen.ranking.screen
 
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,7 +13,6 @@ import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
@@ -22,38 +20,28 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.planet.R
-import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.UniversityIndividualContentRow
-import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.UniversityIndividualTitleRow
+import com.example.planet.data.remote.dto.response.ranking.planet.PlanetRankingUser
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.MiddleHead
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.SearchTextField
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.TrophyProfile
-import com.example.planet.data.remote.dto.response.ranking.planet.PlanetRankingUser
+import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.UniversityIndividualContentRow
+import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.UniversityIndividualTitleRow
+import com.example.planet.presentation.ui.main.plogging.screen.ranking.data.ScreenNav
 import com.example.planet.presentation.viewmodel.MainViewModel
 import com.example.planet.util.noRippleClickable
 import com.example.planet.util.numberComma
 
 @Composable
-fun PlanetRankingScreen(
-    navController: NavController,
-    mainViewModel: MainViewModel = hiltViewModel()
-) {
+fun PlanetRankingScreen(mainViewModel: MainViewModel = hiltViewModel()) {
 
     val planetUserList: LazyPagingItems<PlanetRankingUser> =
         mainViewModel.totalPlanetRankingUser.collectAsLazyPagingItems()
 
 
-    BackHandler {
-        mainViewModel.mainTopSwitchOnShow()
-        navController.popBackStack()
-    }
-
-    LaunchedEffect(Unit) {
-        Log.d("daeYoung","mainViewModel.universityPerson: ${mainViewModel.totalUniversityUser}")
-    }
+    BackHandler { mainViewModel.showRankingScreen = ScreenNav.HomeScreen }
 
     Column(
         modifier = Modifier
@@ -68,10 +56,7 @@ fun PlanetRankingScreen(
                 imageVector = Icons.Default.ArrowBackIosNew,
                 contentDescription = null,
                 tint = colorResource(id = R.color.font_background_color1),
-                modifier = Modifier.noRippleClickable {
-                    mainViewModel.mainTopSwitchOnShow()
-                    navController.popBackStack()
-                }
+                modifier = Modifier.noRippleClickable { mainViewModel.showRankingScreen = ScreenNav.HomeScreen }
             )
         }
         MiddleHead(

@@ -27,278 +27,223 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.planet.R
 import com.example.planet.component.common.TripleArrowIcon
-import com.example.planet.component.main.MainTopSwitch
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.MiddleHead
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.TearProfile
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.TrophyProfile
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.UniversityProfile
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.data.ScreenNav
-import com.example.planet.util.numberComma
 import com.example.planet.presentation.viewmodel.MainViewModel
+import com.example.planet.util.numberComma
 
 @Composable
-fun RankingScreen(navController: NavController, mainViewModel: MainViewModel = hiltViewModel()) {
+fun RankingScreen(mainViewModel: MainViewModel = hiltViewModel()) {
     val scrollState = rememberScrollState()
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(scrollState),
+            .verticalScroll(scrollState)
+            .padding(horizontal = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
+
     ) {
-        MainTopSwitch(mainViewModel = mainViewModel)
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 16.dp),
+        MiddleHead(
+            image = painterResource(id = R.drawable.plogging_ranking_planet),
+            title = "플래닛 랭킹",
+            description = "플래닛 누적점수를 통해 최고의 자리를 차지하세요.",
+            icon = {
+                TripleArrowIcon { mainViewModel.showRankingScreen = ScreenNav.PlanetRankingScreen }
+            }
+        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.Bottom
         ) {
-            MiddleHead(
-                image = painterResource(id = R.drawable.plogging_ranking_planet),
-                title = "플래닛 랭킹",
-                description = "플래닛 누적점수를 통해 최고의 자리를 차지하세요.",
-                icon = {
-                    TripleArrowIcon {
-                        mainViewModel.mainTopSwitchOnHide()
-                        navController.navigate(ScreenNav.PlanetRankingScreen.screenRoute)
-                    }
-                }
+            TrophyProfile(
+                image = painterResource(id = R.drawable.plogging_ranking_2st_trophy),
+                imageSize = 50.dp,
+                userIconUrl = mainViewModel.higherPlanetUsers[1].imageUrl,
+                userName = mainViewModel.higherPlanetUsers[1].nickName
             )
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                verticalAlignment = Alignment.Bottom
-            ) {
-                TrophyProfile(
-                    image = painterResource(id = R.drawable.plogging_ranking_2st_trophy),
-                    imageSize = 50.dp,
-                    userIconUrl = mainViewModel.higherPlanetUsers[1].imageUrl,
-                    userName = mainViewModel.higherPlanetUsers[1].nickName
-                )
 
-                TrophyProfile(
-                    image = painterResource(id = R.drawable.plogging_ranking_1st_trophy),
-                    imageSize = 60.dp,
-                    userIconUrl = mainViewModel.higherPlanetUsers[0].imageUrl,
-                    userName = mainViewModel.higherPlanetUsers[0].nickName
-                )
+            TrophyProfile(
+                image = painterResource(id = R.drawable.plogging_ranking_1st_trophy),
+                imageSize = 60.dp,
+                userIconUrl = mainViewModel.higherPlanetUsers[0].imageUrl,
+                userName = mainViewModel.higherPlanetUsers[0].nickName
+            )
 
-                TrophyProfile(
-                    image = painterResource(id = R.drawable.plogging_ranking_3st_trophy),
-                    imageSize = 40.dp,
-                    userIconUrl = mainViewModel.higherPlanetUsers[2].imageUrl,
-                    userName = mainViewModel.higherPlanetUsers[2].nickName
+            TrophyProfile(
+                image = painterResource(id = R.drawable.plogging_ranking_3st_trophy),
+                imageSize = 40.dp,
+                userIconUrl = mainViewModel.higherPlanetUsers[2].imageUrl,
+                userName = mainViewModel.higherPlanetUsers[2].nickName
+            )
+        }
+
+        MiddleHead(
+            modifier = Modifier.padding(top = 16.dp),
+            image = painterResource(id = R.drawable.plogging_ranking_season),
+            title = "Spring Season IV",
+            description = "아름다운 자연과 함께 봄의 주인공이 되어 보세요!",
+            icon = {
+                TripleArrowIcon { mainViewModel.showRankingScreen = ScreenNav.SeasonRankingScreen }
+            }
+        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.Bottom
+        ) {
+            TearProfile(
+                imageUrl = mainViewModel.higherSeasonUsers[2].tierImageUrl,
+                imageSize = 80.dp,
+                userName = mainViewModel.higherSeasonUsers[2].userName,
+                userScore = mainViewModel.higherSeasonUsers[2].score.numberComma()
+            )
+            TearProfile(
+                imageUrl = mainViewModel.higherSeasonUsers[1].tierImageUrl,
+                imageSize = 95.dp,
+                userName = mainViewModel.higherSeasonUsers[1].userName,
+                userScore = mainViewModel.higherSeasonUsers[1].score.numberComma()
+            )
+            TearProfile(
+                imageUrl = mainViewModel.higherSeasonUsers[3].tierImageUrl,
+                imageSize = 80.dp,
+                userName = mainViewModel.higherSeasonUsers[3].userName,
+                userScore = mainViewModel.higherSeasonUsers[3].score.numberComma()
+            )
+        }
+        MiddleHead(
+            modifier = Modifier.padding(top = 16.dp),
+            image = painterResource(id = R.drawable.plogging_ranking_universitylogo),
+            title = "대학교 랭킹",
+            description = "학교를 인증하여, 학교의 위상을 높히세요!!",
+            icon = {
+                TripleArrowIcon {
+                    mainViewModel.showRankingScreen = ScreenNav.UniversityRankingScreen
+                }
+            }
+        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.Bottom
+        ) {
+            UniversityProfile(
+                imageUrl = mainViewModel.higherUniversity[1].imageUrl,
+                imageSize = 55.dp,
+                medal = painterResource(id = R.drawable.medal_2st),
+                universityName = mainViewModel.higherUniversity[1].name
+            )
+
+            UniversityProfile(
+                imageUrl = mainViewModel.higherUniversity[0].imageUrl,
+                imageSize = 65.dp,
+                medal = painterResource(id = R.drawable.medal_1st),
+                universityName = mainViewModel.higherUniversity[0].name
+            )
+
+            UniversityProfile(
+                imageUrl = mainViewModel.higherUniversity[2].imageUrl,
+                imageSize = 55.dp,
+                medal = painterResource(id = R.drawable.medal_3st),
+                universityName = mainViewModel.higherUniversity[2].name
+            )
+        }
+
+        MiddleHead(
+            modifier = Modifier.padding(top = 16.dp),
+            image = painterResource(id = R.drawable.plogging_ranking_universitylogo),
+            title = "대학교 개인 랭킹",
+            description = "대학교 랭킹의 나의 기여도는?",
+            icon = {
+                TripleArrowIcon {
+                    mainViewModel.showRankingScreen = ScreenNav.UniversityIndividualRankingScreen
+                }
+            }
+        )
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.Top
+        ) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(mainViewModel.higherMyUniversityUsers.value[0].universityLogo)
+                        .crossfade(true).build(),
+                    contentDescription = null,
+                    modifier = Modifier.size(65.dp)
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+                Text(
+                    text = mainViewModel.higherMyUniversityUsers.value[0].universityName,
+                    color = colorResource(id = R.color.font_background_color1),
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.Bold
                 )
             }
-
-            MiddleHead(
-                image = painterResource(id = R.drawable.plogging_ranking_season),
-                title = "Spring Season IV",
-                description = "아름다운 자연과 함께 봄의 주인공이 되어 보세요!",
-                icon = {
-                    TripleArrowIcon {
-                        mainViewModel.mainTopSwitchOnHide()
-                        navController.navigate(ScreenNav.SeasonRankingScreen.screenRoute)
-                    }
-                }
-            )
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                verticalAlignment = Alignment.Bottom
-            ) {
-                TearProfile(
-                    imageUrl = mainViewModel.higherSeasonUsers[2].tierImageUrl,
-                    imageSize = 80.dp,
-                    userName = mainViewModel.higherSeasonUsers[2].userName,
-                    userScore = mainViewModel.higherSeasonUsers[2].score.numberComma()
-                )
-                TearProfile(
-                    imageUrl = mainViewModel.higherSeasonUsers[1].tierImageUrl,
-                    imageSize = 95.dp,
-                    userName = mainViewModel.higherSeasonUsers[1].userName,
-                    userScore = mainViewModel.higherSeasonUsers[1].score.numberComma()
-                )
-                TearProfile(
-                    imageUrl = mainViewModel.higherSeasonUsers[3].tierImageUrl,
-                    imageSize = 80.dp,
-                    userName = mainViewModel.higherSeasonUsers[3].userName,
-                    userScore = mainViewModel.higherSeasonUsers[3].score.numberComma()
-                )
-            }
-            MiddleHead(
-                image = painterResource(id = R.drawable.plogging_ranking_universitylogo),
-                title = "대학교 랭킹",
-                description = "학교를 인증하여, 학교의 위상을 높히세요!!",
-                icon = {
-                    TripleArrowIcon {
-                        mainViewModel.mainTopSwitchOnHide()
-                        navController.navigate(ScreenNav.UniversityRankingScreen.screenRoute)
-                    }
-                }
-            )
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                verticalAlignment = Alignment.Bottom
-            ) {
-                UniversityProfile(
-                    imageUrl = mainViewModel.higherUniversity[1].imageUrl,
-                    imageSize = 55.dp,
-                    medal = painterResource(id = R.drawable.medal_2st),
-                    universityName = mainViewModel.higherUniversity[1].name
-                )
-
-                UniversityProfile(
-                    imageUrl = mainViewModel.higherUniversity[0].imageUrl,
-                    imageSize = 65.dp,
-                    medal = painterResource(id = R.drawable.medal_1st),
-                    universityName = mainViewModel.higherUniversity[0].name
-                )
-
-                UniversityProfile(
-                    imageUrl = mainViewModel.higherUniversity[2].imageUrl,
-                    imageSize = 55.dp,
-                    medal = painterResource(id = R.drawable.medal_3st),
-                    universityName = mainViewModel.higherUniversity[2].name
-                )
-            }
-
-            MiddleHead(
-                image = painterResource(id = R.drawable.plogging_ranking_universitylogo),
-                title = "대학교 개인 랭킹",
-                description = "대학교 랭킹의 나의 기여도는?",
-                icon = {
-                    TripleArrowIcon {
-                        mainViewModel.mainTopSwitchOnHide()
-                        navController.navigate(ScreenNav.UniversityIndividualRankingScreen.screenRoute)
-                    }
-                }
-            )
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                verticalAlignment = Alignment.Top
-            ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    AsyncImage(
-                        model = ImageRequest.Builder(LocalContext.current)
-                            .data(mainViewModel.higherMyUniversityUsers.value[0].universityLogo)
-                            .crossfade(true).build(),
-                        contentDescription = null,
-                        modifier = Modifier.size(65.dp)
-                    )
-                    Spacer(modifier = Modifier.height(12.dp))
-                    Text(
-                        text = mainViewModel.higherMyUniversityUsers.value[0].universityName,
-                        color = colorResource(id = R.color.font_background_color1),
-                        fontSize = 11.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-                Column(modifier = Modifier.fillMaxWidth(0.8f)) {
-                    UniversityIndividualRankingTitle()
-                    mainViewModel.higherMyUniversityUsers.value.subList(1, 4)
-                        .forEachIndexed { index, user ->
-                            when (index) {
-                                0 -> {
-                                    UniversityIndividualRankingContent(
-                                        ranking = user.rank,
-                                        name = user.nickName,
-                                        score = user.score.numberComma()
-                                    ) {
-                                        Divider(
-                                            color = colorResource(id = R.color.ranking_color1),
-                                            modifier = Modifier
-                                                .fillMaxHeight()
-                                                .width(2.dp)
-                                        )
-                                        Spacer(modifier = Modifier.width(13.dp))
-                                    }
+            Column(modifier = Modifier.fillMaxWidth(0.8f)) {
+                UniversityIndividualRankingTitle()
+                mainViewModel.higherMyUniversityUsers.value.subList(1, 4)
+                    .forEachIndexed { index, user ->
+                        when (index) {
+                            0 -> {
+                                UniversityIndividualRankingContent(
+                                    ranking = user.rank,
+                                    name = user.nickName,
+                                    score = user.score.numberComma()
+                                ) {
+                                    Divider(
+                                        color = colorResource(id = R.color.ranking_color1),
+                                        modifier = Modifier
+                                            .fillMaxHeight()
+                                            .width(2.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(13.dp))
                                 }
+                            }
 
-                                1 -> {
-                                    UniversityIndividualRankingContent(
-                                        ranking = user.rank,
-                                        name = user.nickName,
-                                        score = user.score.numberComma()
-                                    ) {
-                                        Divider(
-                                            color = colorResource(id = R.color.ranking_color2),
-                                            modifier = Modifier
-                                                .fillMaxHeight()
-                                                .width(2.dp)
-                                        )
-                                        Spacer(modifier = Modifier.width(13.dp))
-                                    }
+                            1 -> {
+                                UniversityIndividualRankingContent(
+                                    ranking = user.rank,
+                                    name = user.nickName,
+                                    score = user.score.numberComma()
+                                ) {
+                                    Divider(
+                                        color = colorResource(id = R.color.ranking_color2),
+                                        modifier = Modifier
+                                            .fillMaxHeight()
+                                            .width(2.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(13.dp))
                                 }
+                            }
 
-                                2 -> {
-                                    UniversityIndividualRankingContent(
-                                        ranking = user.rank,
-                                        name = user.nickName,
-                                        score = user.score.numberComma()
-                                    ) {
-                                        Divider(
-                                            color = colorResource(id = R.color.ranking_color3),
-                                            modifier = Modifier
-                                                .fillMaxHeight()
-                                                .width(2.dp)
-                                        )
-                                        Spacer(modifier = Modifier.width(13.dp))
-                                    }
+                            2 -> {
+                                UniversityIndividualRankingContent(
+                                    ranking = user.rank,
+                                    name = user.nickName,
+                                    score = user.score.numberComma()
+                                ) {
+                                    Divider(
+                                        color = colorResource(id = R.color.ranking_color3),
+                                        modifier = Modifier
+                                            .fillMaxHeight()
+                                            .width(2.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(13.dp))
                                 }
                             }
                         }
-//                    mainViewModel.myUniversityTop4RankingUsers.forEachIndexed { index, user ->
-//                        when (index) {
-//                            0 -> {
-//                                UniversityIndividualRankingContent(
-//                                    ranking = index + 1,
-//                                    name = user.nickName,
-//                                    score = user.score.numberComma()
-//                                ) {
-//                                    Divider(
-//                                        color = colorResource(id = R.color.ranking_color1),
-//                                        modifier = Modifier
-//                                            .fillMaxHeight()
-//                                            .width(2.dp)
-//                                    )
-//                                    Spacer(modifier = Modifier.width(13.dp))
-//                                }
-//                            }
-//
-//                            1 -> {
-//
-//                            }
-//
-//                            2 -> {
-//
-//                            }
-//
-//                            else -> {
-//
-//                            }
-//                        }
-//                        UniversityIndividualRankingContent(
-//                            ranking = index + 1,
-//                            name = user.nickName,
-//                            score = user.score.numberComma()
-//                        ) {
-//                            Divider(
-//                                color = colorResource(id = R.color.ranking_color1),
-//                                modifier = Modifier
-//                                    .fillMaxHeight()
-//                                    .width(2.dp)
-//                            )
-//                            Spacer(modifier = Modifier.width(13.dp))
-//                        }
-                }
+                    }
             }
         }
     }

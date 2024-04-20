@@ -1,5 +1,6 @@
 package com.example.planet.presentation.ui.main.plogging.screen.user
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -27,6 +28,7 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
@@ -42,45 +44,49 @@ import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.example.planet.R
+import com.example.planet.TAG
 import com.example.planet.component.common.RedTextButton
-import com.example.planet.component.main.MainTopSwitch
-import com.example.planet.data.remote.dto.response.ranking.season.SeasonUser
-import com.example.planet.data.remote.dto.response.ranking.university.University
-import com.example.planet.data.remote.dto.response.user.UserInfo
 import com.example.planet.presentation.viewmodel.MainViewModel
 import com.example.planet.util.numberComma
+import kotlinx.coroutines.launch
 
 @Composable
 fun UserScreen(
-    myUniversityInfo: University,
-    seasonUser: SeasonUser,
-    userInfo: UserInfo,
     mainViewModel: MainViewModel,
     onClick: () -> Unit
 ) {
+    LaunchedEffect(Unit) {
+        Log.d(TAG, "UserScreen 실행")
+        launch {
+            mainViewModel.getUserInfo()
+        }
+        launch {
+            mainViewModel.getMySeasonRanking()
+        }
+        launch {
+            mainViewModel.getMyUniversityInfo()
+        }
+    }
+
     val scrollState = rememberScrollState()
     val redButtonTextColor = colorResource(id = R.color.red)
+
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(scrollState),
+            .verticalScroll(scrollState)
+            .padding(horizontal = 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        MainTopSwitch(mainViewModel = mainViewModel)
-        Column(
+        Row(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .fillMaxWidth()
+                .wrapContentHeight(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
+            mainViewModel.userInfo.value?.let { userInfo ->
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -111,31 +117,32 @@ fun UserScreen(
                         )
                     }
                 }
-                RedTextButton(text = { "로그아웃" }, textColor = { redButtonTextColor }){
-
-                }
             }
+            RedTextButton(text = { "로그아웃" }, textColor = { redButtonTextColor }) {
 
-            Spacer(modifier = Modifier.height(9.dp))
-
-            TextButton(
-                modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = colorResource(id = R.color.font_background_color3),
-                    contentColor = colorResource(id = R.color.font_background_color2)
-                ),
-                shape = RoundedCornerShape(5.dp),
-                onClick = { onClick() },
-            ) {
-                Text(text = "프로필 수정", fontSize = 10.sp)
             }
+        }
 
-            MiddleHeader(
-                image = painterResource(id = R.drawable.plogging_ranking_universitylogo),
-                title = "대학교 점수"
-            )
+        Spacer(modifier = Modifier.height(9.dp))
 
+        TextButton(
+            modifier = Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = colorResource(id = R.color.font_background_color3),
+                contentColor = colorResource(id = R.color.font_background_color2)
+            ),
+            shape = RoundedCornerShape(5.dp),
+            onClick = { onClick() },
+        ) {
+            Text(text = "프로필 수정", fontSize = 10.sp)
+        }
 
+        MiddleHeader(
+            image = painterResource(id = R.drawable.plogging_ranking_universitylogo),
+            title = "대학교 점수"
+        )
+
+        mainViewModel.myUniversityInfo.value?.let { myUniversityInfo ->
             MyProfileInfoLayout(
                 image = myUniversityInfo.imageUrl,
                 title = myUniversityInfo.name,
@@ -167,32 +174,33 @@ fun UserScreen(
                     }
                 }
             }
+        }
 
-            Spacer(modifier = Modifier.height(9.dp))
+        Spacer(modifier = Modifier.height(9.dp))
 
-            TextButton(
-                modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = colorResource(id = R.color.font_background_color3),
-                    contentColor = colorResource(id = R.color.font_background_color2)
-                ),
-                shape = RoundedCornerShape(5.dp),
-                onClick = { /*TODO*/ },
-            ) {
-                Text(text = "대학교 등록 및 변경", fontSize = 10.sp)
-            }
+        TextButton(
+            modifier = Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = colorResource(id = R.color.font_background_color3),
+                contentColor = colorResource(id = R.color.font_background_color2)
+            ),
+            shape = RoundedCornerShape(5.dp),
+            onClick = { /*TODO*/ },
+        ) {
+            Text(text = "대학교 등록 및 변경", fontSize = 10.sp)
+        }
 
-            MiddleHeader(
-                image = painterResource(id = R.drawable.plogging_user_seasonscorelogo),
-                title = "시즌 점수"
-            )
-
+        MiddleHeader(
+            image = painterResource(id = R.drawable.plogging_user_seasonscorelogo),
+            title = "시즌 점수"
+        )
+        mainViewModel.mySeasonRank.value?.let { mySeasonInfo ->
             MyProfileInfoLayout(
-                image = seasonUser.tierImageUrl,
-                title = seasonUser.tierName,
+                image = mySeasonInfo.tierImageUrl,
+                title = mySeasonInfo.tierName,
                 subTitle1 = "점수",
                 subTitle3 = "통계",
-                score = seasonUser.score.numberComma(),
+                score = mySeasonInfo.score.numberComma(),
                 subContentDesc1 = "상위 1.2%",
                 subContent3 = painterResource(id = R.drawable.statistics_image2)
             ) {
@@ -210,122 +218,123 @@ fun UserScreen(
                     )
                 }
             }
-            Divider(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp),
-                thickness = 1.dp,
-                color = colorResource(id = R.color.font_background_color3)
-            )
-            MiddleHeader(
-                image = painterResource(id = R.drawable.communitylogo),
-                title = "커뮤니티"
-            )
-            Column(modifier = Modifier.clickable { }) {
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 31.dp, top = 8.dp, bottom = 8.dp),
-                    text = "내가 작성한 게시물",
-                    fontSize = 12.sp,
-                    textAlign = TextAlign.Start
-                )
-                Divider(
-                    modifier = Modifier.fillMaxWidth(),
-                    thickness = 1.dp,
-                    color = colorResource(id = R.color.font_background_color3)
-                )
-            }
-            Column(modifier = Modifier.clickable { }) {
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 31.dp, top = 8.dp, bottom = 8.dp),
-                    text = "내가 작성한 댓글",
-                    fontSize = 12.sp,
-                    textAlign = TextAlign.Start
-                )
-                Divider(
-                    modifier = Modifier.fillMaxWidth(),
-                    thickness = 1.dp,
-                    color = colorResource(id = R.color.font_background_color3)
-                )
-            }
-            Column(modifier = Modifier.clickable { }) {
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 31.dp, top = 8.dp, bottom = 8.dp),
-                    text = "내가 신고한 게시물",
-                    fontSize = 12.sp,
-                    textAlign = TextAlign.Start
-                )
-                Divider(
-                    modifier = Modifier.fillMaxWidth(),
-                    thickness = 1.dp,
-                    color = colorResource(id = R.color.font_background_color3)
-                )
-            }
-            Column(modifier = Modifier.clickable { }) {
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 31.dp, top = 8.dp, bottom = 8.dp),
-                    text = "내가 신고한 댓글",
-                    fontSize = 12.sp,
-                    textAlign = TextAlign.Start
-                )
-                Divider(
-                    modifier = Modifier.fillMaxWidth(),
-                    thickness = 1.dp,
-                    color = colorResource(id = R.color.font_background_color3)
-                )
-            }
-
-            Divider(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp),
-                thickness = 1.dp,
-                color = colorResource(id = R.color.font_background_color3)
-            )
-            MiddleHeader(
-                image = painterResource(id = R.drawable.adminlogo),
-                title = "관리"
-            )
-
-            Column(modifier = Modifier.clickable { }) {
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 31.dp, top = 8.dp, bottom = 8.dp),
-                    text = "개발자 소개",
-                    fontSize = 12.sp,
-                    textAlign = TextAlign.Start
-                )
-                Divider(
-                    modifier = Modifier.fillMaxWidth(),
-                    thickness = 1.dp,
-                    color = colorResource(id = R.color.font_background_color3)
-                )
-            }
-            Column(modifier = Modifier.clickable { }) {
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 31.dp, top = 8.dp, bottom = 8.dp),
-                    text = "설정",
-                    fontSize = 12.sp,
-                    textAlign = TextAlign.Start
-                )
-                Divider(
-                    modifier = Modifier.fillMaxWidth(),
-                    thickness = 1.dp,
-                    color = colorResource(id = R.color.font_background_color3)
-                )
-            }
-
         }
+
+        Divider(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp),
+            thickness = 1.dp,
+            color = colorResource(id = R.color.font_background_color3)
+        )
+        MiddleHeader(
+            image = painterResource(id = R.drawable.communitylogo),
+            title = "커뮤니티"
+        )
+        Column(modifier = Modifier.clickable { }) {
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 31.dp, top = 8.dp, bottom = 8.dp),
+                text = "내가 작성한 게시물",
+                fontSize = 12.sp,
+                textAlign = TextAlign.Start
+            )
+            Divider(
+                modifier = Modifier.fillMaxWidth(),
+                thickness = 1.dp,
+                color = colorResource(id = R.color.font_background_color3)
+            )
+        }
+        Column(modifier = Modifier.clickable { }) {
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 31.dp, top = 8.dp, bottom = 8.dp),
+                text = "내가 작성한 댓글",
+                fontSize = 12.sp,
+                textAlign = TextAlign.Start
+            )
+            Divider(
+                modifier = Modifier.fillMaxWidth(),
+                thickness = 1.dp,
+                color = colorResource(id = R.color.font_background_color3)
+            )
+        }
+        Column(modifier = Modifier.clickable { }) {
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 31.dp, top = 8.dp, bottom = 8.dp),
+                text = "내가 신고한 게시물",
+                fontSize = 12.sp,
+                textAlign = TextAlign.Start
+            )
+            Divider(
+                modifier = Modifier.fillMaxWidth(),
+                thickness = 1.dp,
+                color = colorResource(id = R.color.font_background_color3)
+            )
+        }
+        Column(modifier = Modifier.clickable { }) {
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 31.dp, top = 8.dp, bottom = 8.dp),
+                text = "내가 신고한 댓글",
+                fontSize = 12.sp,
+                textAlign = TextAlign.Start
+            )
+            Divider(
+                modifier = Modifier.fillMaxWidth(),
+                thickness = 1.dp,
+                color = colorResource(id = R.color.font_background_color3)
+            )
+        }
+
+        Divider(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp),
+            thickness = 1.dp,
+            color = colorResource(id = R.color.font_background_color3)
+        )
+        MiddleHeader(
+            image = painterResource(id = R.drawable.adminlogo),
+            title = "관리"
+        )
+
+        Column(modifier = Modifier.clickable { }) {
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 31.dp, top = 8.dp, bottom = 8.dp),
+                text = "개발자 소개",
+                fontSize = 12.sp,
+                textAlign = TextAlign.Start
+            )
+            Divider(
+                modifier = Modifier.fillMaxWidth(),
+                thickness = 1.dp,
+                color = colorResource(id = R.color.font_background_color3)
+            )
+        }
+        Column(modifier = Modifier.clickable { }) {
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 31.dp, top = 8.dp, bottom = 8.dp),
+                text = "설정",
+                fontSize = 12.sp,
+                textAlign = TextAlign.Start
+            )
+            Divider(
+                modifier = Modifier.fillMaxWidth(),
+                thickness = 1.dp,
+                color = colorResource(id = R.color.font_background_color3)
+            )
+        }
+
     }
 }
 

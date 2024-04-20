@@ -44,16 +44,14 @@ import com.example.planet.presentation.ui.main.plogging.screen.ranking.component
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.UniversityIndividualContentRow
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.UniversityIndividualGraph
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.UniversityIndividualTitleRow
+import com.example.planet.presentation.ui.main.plogging.screen.ranking.data.ScreenNav
 import com.example.planet.presentation.viewmodel.MainViewModel
 import com.example.planet.util.noRippleClickable
 import com.example.planet.util.numberComma
 import kotlinx.coroutines.delay
 
 @Composable
-fun UniversityIndividualRankingScreen(
-    navController: NavController,
-    mainViewModel: MainViewModel = hiltViewModel()
-) {
+fun UniversityIndividualRankingScreen(mainViewModel: MainViewModel = hiltViewModel()) {
     val universityUserList: LazyPagingItems<UniversityUser> =
         mainViewModel.totalUniversityUser.collectAsLazyPagingItems()
 
@@ -64,10 +62,8 @@ fun UniversityIndividualRankingScreen(
         visible = true
     }
 
-    BackHandler {
-        mainViewModel.mainTopSwitchOnShow()
-        navController.popBackStack()
-    }
+    BackHandler { mainViewModel.showRankingScreen = ScreenNav.HomeScreen }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -80,8 +76,7 @@ fun UniversityIndividualRankingScreen(
                 contentDescription = null,
                 tint = colorResource(id = R.color.font_background_color1),
                 modifier = Modifier.noRippleClickable {
-                    mainViewModel.mainTopSwitchOnShow()
-                    navController.popBackStack()
+                    mainViewModel.showRankingScreen = ScreenNav.HomeScreen
                 })
         }
         MiddleHead(

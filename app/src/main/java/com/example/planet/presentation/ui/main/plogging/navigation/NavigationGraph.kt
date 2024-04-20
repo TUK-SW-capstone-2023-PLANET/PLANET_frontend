@@ -1,6 +1,5 @@
 package com.example.planet.presentation.ui.main.plogging.navigation
 
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -12,7 +11,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.planet.TAG
 import com.example.planet.component.main.MainTopSwitch
 import com.example.planet.presentation.ui.main.plogging.component.BottomNavigation
 import com.example.planet.presentation.ui.main.plogging.screen.community.CommunityScreen
@@ -48,54 +46,51 @@ fun NavigationGraph(
                 .padding(it),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-//            if(mainViewModel.mainTopSwitchIsShow.value) {
-//                MainTopSwitch(mainViewModel = mainViewModel)
-//            }
-
-            NavHost(
-                navController = navController,
-                startDestination = BottomNavItem.HomeScreen.screenRoute
-            ) {
-                composable(BottomNavItem.HomeScreen.screenRoute) {
-                    MainScreen(navController = navController, mainViewModel = mainViewModel) { startMapActivity() }
-                }
-                composable(BottomNavItem.RankingScreen.screenRoute) {
-                    RankingScreen(navController = navController, mainViewModel = mainViewModel)
-                }
-                composable(BottomNavItem.UserScreen.screenRoute) {
-                    Log.d(TAG,"seasonUser: ${mainViewModel.mySeasonRank}, universityInfo: ${mainViewModel.myUniversityInfo}, userInfo: ${mainViewModel.userInfo}")
-                    mainViewModel.myUniversityInfo.value?.let { university ->
-                        mainViewModel.mySeasonRank.value?.let { season ->
-                            mainViewModel.userInfo.value?.let { user ->
-                                UserScreen(myUniversityInfo = university, seasonUser = season, userInfo = user, mainViewModel = mainViewModel) { startUserActivity() }
-                            }
+            when(mainViewModel.showRankingScreen) {
+                ScreenNav.HomeScreen -> {
+                    MainTopSwitch(mainViewModel = mainViewModel)
+                    NavHost(
+                        navController = navController,
+                        startDestination = BottomNavItem.HomeScreen.screenRoute
+                    ) {
+                        composable(BottomNavItem.HomeScreen.screenRoute) {
+                            MainScreen(
+                                navController = navController,
+                                mainViewModel = mainViewModel
+                            ) { startMapActivity() }
+                        }
+                        composable(BottomNavItem.RankingScreen.screenRoute) {
+                            RankingScreen(mainViewModel = mainViewModel)
+                        }
+                        composable(BottomNavItem.UserScreen.screenRoute) {
+                            UserScreen(
+                                mainViewModel = mainViewModel
+                            ) { startUserActivity() }
+                        }
+                        composable(BottomNavItem.MessageScreen.screenRoute) {
+                            MessageScreen()
+                        }
+                        composable(BottomNavItem.CommunityScreen.screenRoute) {
+                            MainTopSwitch(mainViewModel = mainViewModel)
+                            CommunityScreen()
+                        }
+                        composable(ScreenNav.TierScreen.screenRoute) {
+                            TierScreen(tierList = mainViewModel.tierList.value)
                         }
                     }
-
                 }
-                composable(BottomNavItem.MessageScreen.screenRoute) {
-                    MainTopSwitch(mainViewModel = mainViewModel)
-                    MessageScreen()
+                ScreenNav.PlanetRankingScreen -> {
+                    PlanetRankingScreen(mainViewModel = mainViewModel)
                 }
-                composable(BottomNavItem.CommunityScreen.screenRoute) {
-                    MainTopSwitch(mainViewModel = mainViewModel)
-                    CommunityScreen()
+                ScreenNav.SeasonRankingScreen -> {
+                    SeasonRankingScreen(mainViewModel = mainViewModel)
                 }
-                composable(ScreenNav.TierScreen.screenRoute) {
-                    TierScreen(tierList = mainViewModel.tierList.value)
+                ScreenNav.TierScreen -> {}
+                ScreenNav.UniversityIndividualRankingScreen -> {
+                    UniversityIndividualRankingScreen(mainViewModel = mainViewModel)
                 }
-
-                composable(ScreenNav.PlanetRankingScreen.screenRoute) {
-                    PlanetRankingScreen(navController = navController, mainViewModel = mainViewModel)
-                }
-                composable(ScreenNav.SeasonRankingScreen.screenRoute) {
-                    SeasonRankingScreen(navController = navController, mainViewModel = mainViewModel)
-                }
-                composable(ScreenNav.UniversityRankingScreen.screenRoute) {
-                    UniversityRankingScreen(navController = navController, mainViewModel = mainViewModel)
-                }
-                composable(ScreenNav.UniversityIndividualRankingScreen.screenRoute) {
-                    UniversityIndividualRankingScreen(navController = navController, mainViewModel = mainViewModel)
+                ScreenNav.UniversityRankingScreen -> {
+                    UniversityRankingScreen(mainViewModel = mainViewModel)
                 }
             }
         }

@@ -30,22 +30,17 @@ import com.example.planet.presentation.ui.main.plogging.screen.ranking.component
 import com.example.planet.data.remote.dto.response.ranking.university.University
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.UniversityContentRow
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.UniversityTitleRow
+import com.example.planet.presentation.ui.main.plogging.screen.ranking.data.ScreenNav
 import com.example.planet.presentation.viewmodel.MainViewModel
 import com.example.planet.util.noRippleClickable
 import com.example.planet.util.numberComma
 
 @Composable
-fun UniversityRankingScreen(
-    navController: NavController,
-    mainViewModel: MainViewModel = hiltViewModel()
-) {
+fun UniversityRankingScreen(mainViewModel: MainViewModel = hiltViewModel()) {
     val universityList: LazyPagingItems<University> =
         mainViewModel.totalUniversity.collectAsLazyPagingItems()
 
-    BackHandler {
-        mainViewModel.mainTopSwitchOnShow()
-        navController.popBackStack()
-    }
+    BackHandler { mainViewModel.showRankingScreen = ScreenNav.HomeScreen }
 
     Column(
         modifier = Modifier
@@ -59,8 +54,7 @@ fun UniversityRankingScreen(
                 contentDescription = null,
                 tint = colorResource(id = R.color.font_background_color1),
                 modifier = Modifier.noRippleClickable {
-                    mainViewModel.mainTopSwitchOnShow()
-                    navController.popBackStack()
+                    mainViewModel.showRankingScreen = ScreenNav.HomeScreen
                 })
         }
         MiddleHead(
