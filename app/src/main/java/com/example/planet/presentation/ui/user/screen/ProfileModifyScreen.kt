@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.planet.R
+import com.example.planet.presentation.ui.user.component.GetPictureDialog
 import com.example.planet.presentation.ui.user.component.HeightWeightRow
 import com.example.planet.presentation.ui.user.component.MyProfileImage
 import com.example.planet.presentation.ui.user.component.ProfileModifyTopAppBar
@@ -40,6 +41,7 @@ import com.example.planet.presentation.ui.user.component.ShowEditTextField
 import com.example.planet.presentation.ui.user.component.UserIdTextField
 import com.example.planet.presentation.ui.user.component.UserPwTextField
 import com.example.planet.presentation.viewmodel.UserViewModel
+import com.example.planet.util.getImageUri
 import kotlinx.coroutines.launch
 
 @Composable
@@ -51,7 +53,13 @@ fun ProfileModifyScreen(userViewModel: UserViewModel, onClick: () -> Unit) {
 
     val scrollState = rememberScrollState()
     val scope = rememberCoroutineScope()
-    val context =  LocalContext.current
+    val context = LocalContext.current
+
+    if (userViewModel.dialogState) {
+        GetPictureDialog(closeDialog = { userViewModel.dialogState = false }, getImageUri = {
+            scope.launch { userViewModel.getImageUrl(uri = it, context = context) }
+        })
+    }
 
     BackHandler {
         if (userViewModel.editNicknameState || userViewModel.editDescribeState) {
@@ -90,7 +98,7 @@ fun ProfileModifyScreen(userViewModel: UserViewModel, onClick: () -> Unit) {
             color = colorResource(id = R.color.font_background_color3)
         )
         MyProfileImage(
-            getImageUrl = { scope.launch { userViewModel.getImageUrl(uri = it, context = context) } },
+            onGetPictureDialog = { userViewModel.dialogState = true },
             profileImage = { userViewModel.userInfo.imageUrl }
         )
 

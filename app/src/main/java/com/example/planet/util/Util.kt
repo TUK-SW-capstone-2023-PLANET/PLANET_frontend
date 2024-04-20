@@ -119,9 +119,30 @@ fun Long.formatTime(): String {
 }
 
 fun Uri.asMultipart(name: String, contentResolver: ContentResolver): MultipartBody.Part? {
-    return contentResolver.query(this, null, null, null, null)?.let {
+//    return contentResolver.query(this, null, null, null, null)?.let {
+//        if (it.moveToNext()) {
+//            val displayName = it.getString(it.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+//            Log.d(TAG, "displayName: $displayName")
+//            val requestBody = object : RequestBody() {
+//                override fun contentType(): MediaType? {
+//                    return contentResolver.getType(this@asMultipart)?.toMediaType()
+//                }
+//
+//                override fun writeTo(sink: BufferedSink) {
+//                    sink.writeAll(contentResolver.openInputStream(this@asMultipart)?.source()!!)
+//                }
+//            }
+//            it.close()
+//            MultipartBody.Part.createFormData(name, displayName, requestBody)
+//        } else {
+//            it.close()
+//            null
+//        }
+//    }
+    return contentResolver.query(this, null, null, null, null)?.use {
         if (it.moveToNext()) {
             val displayName = it.getString(it.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+            Log.d(TAG, "displayName: $displayName")
             val requestBody = object : RequestBody() {
                 override fun contentType(): MediaType? {
                     return contentResolver.getType(this@asMultipart)?.toMediaType()
@@ -131,10 +152,8 @@ fun Uri.asMultipart(name: String, contentResolver: ContentResolver): MultipartBo
                     sink.writeAll(contentResolver.openInputStream(this@asMultipart)?.source()!!)
                 }
             }
-            it.close()
             MultipartBody.Part.createFormData(name, displayName, requestBody)
         } else {
-            it.close()
             null
         }
     }

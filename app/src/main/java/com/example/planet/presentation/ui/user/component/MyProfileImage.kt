@@ -1,14 +1,5 @@
 package com.example.planet.presentation.ui.user.component
 
-import android.app.Activity
-import android.content.Context
-import android.content.Intent
-import android.graphics.Bitmap
-import android.net.Uri
-import android.provider.MediaStore
-import android.util.Log
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
@@ -28,35 +19,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
-import com.example.planet.R
-import com.example.planet.TAG
 
 @Composable
-fun MyProfileImage(getImageUrl: (Uri) -> Unit, profileImage: () -> String) {
-    val context = LocalContext.current
-
-    val takePhotoFromAlbumLauncher = // 갤러리에서 사진 가져오기
-        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                result.data?.data?.let { uri -> getImageUrl(uri) }
-            } else if (result.resultCode != Activity.RESULT_CANCELED) {
-//                toast(context, StringAsset.Toast.ErrorTakenPhoto)
-            }
-        }
-    val takePhotoFromAlbumIntent =
-        Intent(Intent.ACTION_GET_CONTENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI).apply {
-            type = "image/*"
-            action = Intent.ACTION_GET_CONTENT
-            putExtra(
-                Intent.EXTRA_MIME_TYPES,
-                arrayOf("image/jpeg", "image/png", "image/bmp", "image/webp")
-            )
-            putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false)
-        }
+fun MyProfileImage(profileImage: () -> String, onGetPictureDialog: (Boolean) -> Unit) {
 
     Box(modifier = Modifier.wrapContentSize()) {
         Card(
@@ -79,7 +46,7 @@ fun MyProfileImage(getImageUrl: (Uri) -> Unit, profileImage: () -> String) {
             elevation = CardDefaults.elevatedCardElevation(2.dp)
         ) {
             IconButton(
-                onClick = { takePhotoFromAlbumLauncher.launch(takePhotoFromAlbumIntent) },
+                onClick = { onGetPictureDialog(true) },
                 modifier = Modifier.fillMaxSize(),
                 colors = IconButtonDefaults.iconButtonColors(containerColor = Color.White)
             ) {

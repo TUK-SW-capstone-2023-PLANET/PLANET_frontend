@@ -39,6 +39,8 @@ class UserViewModel @Inject constructor(
 
     var userInfo by mutableStateOf(UserInfo())
 
+    var dialogState by mutableStateOf(false)
+
     private var userToken: String = "0"
     val maxNicknameTextLength = 20
     val maxDescribeTextLength = 20
@@ -78,8 +80,8 @@ class UserViewModel @Inject constructor(
     }
 
     suspend fun getImageUrl(uri: Uri, context: Context) {
-        uri.asMultipart("file", context.contentResolver)?.let {
-            postImageUseCase(it)
+        uri.asMultipart("file", context.contentResolver)?.let { multipartBody ->
+            postImageUseCase(multipartBody)
         }?.let { multipart ->
             when (val apiState = multipart.first()) {
                 is ApiState.Success<*> -> {
@@ -94,7 +96,6 @@ class UserViewModel @Inject constructor(
                 ApiState.Loading -> TODO()
             }
         }
-
     }
 
     private suspend fun getUserToken() {
