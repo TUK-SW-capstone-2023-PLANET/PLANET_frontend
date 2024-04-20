@@ -3,6 +3,7 @@ package com.example.planet.presentation.viewmodel
 import android.content.Context
 import android.net.Uri
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -36,6 +37,8 @@ class UserViewModel @Inject constructor(
 //            getUserToken()
 //        }
 //    }
+
+    val defaultImageUrl = "https://tuk-planet.s3.ap-northeast-2.amazonaws.com/user/free-icon-user-149071+3.png"
 
     var userInfo by mutableStateOf(UserInfo())
 
@@ -77,6 +80,11 @@ class UserViewModel @Inject constructor(
 
     fun changeEditDescribeScreen() {
         editDescribeState = !editDescribeState
+    }
+
+    fun changeDefaultImage() {
+        userInfo = userInfo.copy(imageUrl = defaultImageUrl)
+        dialogState = false
     }
 
     suspend fun getImageUrl(uri: Uri, context: Context) {
@@ -134,11 +142,12 @@ class UserViewModel @Inject constructor(
         }
     }
 
-    suspend fun putUserInfo() {
+    suspend fun putUserInfo(context: Context) {
         getUserToken()
         when (val apiState = putUserInfoUseCase(userInfo).first()) {
             is ApiState.Success<*> -> {
                 Log.d(TAG, "putUserInfo() success: ${apiState.value as UserInfoResponse}")
+                Toast.makeText(context, "회원정보가 변경되었습니다.", Toast.LENGTH_SHORT).show()
             }
 
             is ApiState.Error -> {

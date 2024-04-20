@@ -41,7 +41,6 @@ import com.example.planet.presentation.ui.user.component.ShowEditTextField
 import com.example.planet.presentation.ui.user.component.UserIdTextField
 import com.example.planet.presentation.ui.user.component.UserPwTextField
 import com.example.planet.presentation.viewmodel.UserViewModel
-import com.example.planet.util.getImageUri
 import kotlinx.coroutines.launch
 
 @Composable
@@ -56,9 +55,13 @@ fun ProfileModifyScreen(userViewModel: UserViewModel, onClick: () -> Unit) {
     val context = LocalContext.current
 
     if (userViewModel.dialogState) {
-        GetPictureDialog(closeDialog = { userViewModel.dialogState = false }, getImageUri = {
-            scope.launch { userViewModel.getImageUrl(uri = it, context = context) }
-        })
+        GetPictureDialog(
+            closeDialog = { userViewModel.dialogState = false },
+            getImageUri = {
+                scope.launch { userViewModel.getImageUrl(uri = it, context = context) }
+            },
+            getDefaultImage = { userViewModel.changeDefaultImage() }
+            )
     }
 
     BackHandler {
@@ -87,7 +90,7 @@ fun ProfileModifyScreen(userViewModel: UserViewModel, onClick: () -> Unit) {
     ) {
         ProfileModifyTopAppBar(onBack = { onClick() }) {
             scope.launch {
-                userViewModel.putUserInfo()
+                userViewModel.putUserInfo(context)
             }
         }
         Divider(
@@ -98,7 +101,7 @@ fun ProfileModifyScreen(userViewModel: UserViewModel, onClick: () -> Unit) {
             color = colorResource(id = R.color.font_background_color3)
         )
         MyProfileImage(
-            onGetPictureDialog = { userViewModel.dialogState = true },
+            isShowDialog = { userViewModel.dialogState = true },
             profileImage = { userViewModel.userInfo.imageUrl }
         )
 

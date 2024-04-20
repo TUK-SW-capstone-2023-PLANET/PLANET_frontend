@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 
 @Composable
-fun MyProfileImage(profileImage: () -> String, onGetPictureDialog: (Boolean) -> Unit) {
+fun MyProfileImage(profileImage: () -> String, isShowDialog: (Boolean) -> Unit) {
 
     Box(modifier = Modifier.wrapContentSize()) {
         Card(
@@ -46,7 +46,7 @@ fun MyProfileImage(profileImage: () -> String, onGetPictureDialog: (Boolean) -> 
             elevation = CardDefaults.elevatedCardElevation(2.dp)
         ) {
             IconButton(
-                onClick = { onGetPictureDialog(true) },
+                onClick = { isShowDialog(false) },
                 modifier = Modifier.fillMaxSize(),
                 colors = IconButtonDefaults.iconButtonColors(containerColor = Color.White)
             ) {

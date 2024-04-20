@@ -7,7 +7,6 @@ import android.provider.MediaStore
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -34,7 +33,7 @@ import com.example.planet.R
 import com.example.planet.util.noRippleClickable
 
 @Composable
-fun GetPictureDialog(closeDialog: (Boolean) -> Unit, getImageUri: (Uri) -> Unit) {
+fun GetPictureDialog(closeDialog: (Boolean) -> Unit, getImageUri: (Uri) -> Unit, getDefaultImage: () -> Unit) {
     val takePhotoFromAlbumLauncher = // 갤러리에서 사진 가져오기
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
@@ -79,7 +78,7 @@ fun GetPictureDialog(closeDialog: (Boolean) -> Unit, getImageUri: (Uri) -> Unit)
             ) {
                 GetPictureDialogContent(
                     goOnGallery = { takePhotoFromAlbumLauncher.launch(takePhotoFromAlbumIntent) },
-                    changeGeneralImage = {}
+                    changeGeneralImage = { getDefaultImage() }
                 )
             }
             TextButton(
@@ -155,7 +154,8 @@ fun GetPictureDialogContent(
             fontSize = 16.sp,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 8.dp),
+                .padding(vertical = 8.dp)
+                .noRippleClickable { changeGeneralImage() },
             textAlign = TextAlign.Center,
             color = colorResource(id = R.color.main_color1)
         )

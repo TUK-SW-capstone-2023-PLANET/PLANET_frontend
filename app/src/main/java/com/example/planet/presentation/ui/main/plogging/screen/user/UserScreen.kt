@@ -30,6 +30,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -90,8 +91,10 @@ fun UserScreen(
                         shape = CircleShape
                     ) {
                         Image(
+                            modifier = Modifier.fillMaxSize(),
                             painter = rememberAsyncImagePainter(model = userInfo.imageUrl),
                             contentDescription = null,
+                            contentScale = ContentScale.Crop
                         )
                     }
                     Spacer(modifier = Modifier.width(15.dp))
@@ -368,7 +371,7 @@ fun MyProfileInfoLayout(
             contentDescription = null,
             modifier = Modifier
                 .weight(0.2f)
-                .align(Alignment.Bottom)
+                .align(Alignment.Bottom),
         )
 
         Column(
