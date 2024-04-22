@@ -1,8 +1,16 @@
 package com.example.planet.di.module
 
 import com.example.planet.data.repository.ImageRepositoryImpl
+import com.example.planet.data.repository.LoginRepositoryImpl
+import com.example.planet.data.repository.MainRepositoryImpl
+import com.example.planet.data.repository.MapRepositoryImpl
+import com.example.planet.data.repository.RankRepositoryImpl
 import com.example.planet.data.repository.UserRepositoryImpl
 import com.example.planet.domain.repository.ImageRepository
+import com.example.planet.domain.repository.LoginRepository
+import com.example.planet.domain.repository.MainRepository
+import com.example.planet.domain.repository.MapRepository
+import com.example.planet.domain.repository.RankRepository
 import com.example.planet.domain.repository.UserRepository
 import dagger.Binds
 import dagger.Module
@@ -18,7 +26,27 @@ abstract class RepositoryModule {
     ): UserRepository
 
     @Binds
-    abstract fun ImageRepository(
-        ImageRepositoryImpl: ImageRepositoryImpl
+    abstract fun imageRepository(
+        imageRepositoryImpl: ImageRepositoryImpl
     ): ImageRepository
+
+    @Binds
+    abstract fun loginRepository(
+        loginRepositoryImpl: LoginRepositoryImpl
+    ): LoginRepository
+
+    @Binds
+    abstract fun rankRepository(
+        rankRepositoryImpl: RankRepositoryImpl
+    ): RankRepository
+
+    @Binds
+    abstract fun mainRepository(
+        mainRepositoryImpl: MainRepositoryImpl
+    ): MainRepository
+
+    @Binds
+    abstract fun mapRepository(
+        mapRepositoryImpl: MapRepositoryImpl
+    ): MapRepository
 }

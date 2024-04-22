@@ -3,27 +3,29 @@ package com.example.planet.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.example.planet.data.remote.dto.ApiState
-import com.example.planet.data.dataSource.PlanetPagingSource
-import com.example.planet.data.dataSource.UniversityPagingSource
-import com.example.planet.data.dataSource.SeasonUserPagingSource
-import com.example.planet.data.dataSource.UniversityUserPagingSource
 import com.example.planet.data.remote.api.ApiService
+import com.example.planet.data.remote.dto.ApiState
 import com.example.planet.data.remote.dto.response.ranking.planet.PlanetRankingUser
-import com.example.planet.data.remote.dto.response.ranking.university.University
 import com.example.planet.data.remote.dto.response.ranking.season.SeasonUser
+import com.example.planet.data.remote.dto.response.ranking.university.University
 import com.example.planet.data.remote.dto.response.ranking.universityuser.UniversityUser
+import com.example.planet.data.repository.paging.PlanetPagingSource
+import com.example.planet.data.repository.paging.SeasonUserPagingSource
+import com.example.planet.data.repository.paging.UniversityPagingSource
+import com.example.planet.data.repository.paging.UniversityUserPagingSource
+import com.example.planet.domain.repository.RankRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
-class RankingRepository @Inject constructor(private val apiService: ApiService) {
+class RankRepositoryImpl @Inject constructor(private val apiService: ApiService) :
+    RankRepository {
 
     // Planet User 관련 ----------------------------------------------------------------------------
     // 플래넷 유저 랭킹 Top3 조회
-    suspend fun getTop3PlanetUser(): Flow<ApiState> = flow {
+    override suspend fun getTop3PlanetUser(): Flow<ApiState> = flow {
         kotlin.runCatching {
             apiService.getTop3PlanetUser()
         }.onSuccess {
@@ -33,7 +35,7 @@ class RankingRepository @Inject constructor(private val apiService: ApiService) 
         }
     }.flowOn(Dispatchers.IO)
 
-    suspend fun getMyPlanetRanking(userId: Int = 0): Flow<ApiState> = flow {
+    override suspend fun getMyPlanetRanking(userId: Int): Flow<ApiState> = flow {
         kotlin.runCatching {
             apiService.getMyPlanetRanking(userId = userId)
         }.onSuccess {
@@ -45,7 +47,7 @@ class RankingRepository @Inject constructor(private val apiService: ApiService) 
 
 
     // 플래넷 유저 랭킹 전체 조회
-    fun getAllPlanetUserRanking(): Flow<PagingData<PlanetRankingUser>> {
+    override fun getAllPlanetUserRanking(): Flow<PagingData<PlanetRankingUser>> {
         return Pager(
             config = PagingConfig(pageSize = 20, prefetchDistance = 2),
             pagingSourceFactory = { PlanetPagingSource(apiService) }).flow
@@ -53,7 +55,7 @@ class RankingRepository @Inject constructor(private val apiService: ApiService) 
 
     // Season 관련 ---------------------------------------------------------------------------------
     // 자대 대학교 나의 랭킹 정보 조회
-    suspend fun getMySeasonRanking(userId: Int = 0): Flow<ApiState> = flow {
+    override suspend fun getMySeasonRanking(userId: Int): Flow<ApiState> = flow {
         kotlin.runCatching {
             apiService.getMySeasonRanking(userId = userId)
         }.onSuccess {
@@ -64,7 +66,7 @@ class RankingRepository @Inject constructor(private val apiService: ApiService) 
     }.flowOn(Dispatchers.IO)
 
     // 시즌 유저 랭킹 5명 조회
-    suspend fun getSeasonTop5UserInfo(userId: Int = 0): Flow<ApiState> = flow {
+    override suspend fun getSeasonTop5UserInfo(userId: Int): Flow<ApiState> = flow {
         kotlin.runCatching {
             apiService.getSeasonTop5UserInfo(userId = userId)
         }.onSuccess {
@@ -74,7 +76,7 @@ class RankingRepository @Inject constructor(private val apiService: ApiService) 
         }
     }.flowOn(Dispatchers.IO)
 
-    fun getAllSeasonUser(): Flow<PagingData<SeasonUser>> {
+    override fun getAllSeasonUser(): Flow<PagingData<SeasonUser>> {
         return Pager(
             config = PagingConfig(pageSize = 20, prefetchDistance = 2),
             pagingSourceFactory = { SeasonUserPagingSource(apiService) }).flow
@@ -82,7 +84,7 @@ class RankingRepository @Inject constructor(private val apiService: ApiService) 
 
     // University 관련 -----------------------------------------------------------------------------
     // 대학교 랭킹 3개 조회
-    suspend fun getHigherUniversities(): Flow<ApiState> = flow {
+    override suspend fun getHigherUniversities(): Flow<ApiState> = flow {
         kotlin.runCatching {
             apiService.getHigherUniversities()
         }.onSuccess {
@@ -93,7 +95,7 @@ class RankingRepository @Inject constructor(private val apiService: ApiService) 
     }.flowOn(Dispatchers.IO)
 
     // 대학교 랭킹 전체 조회
-    fun getAllUniversity(): Flow<PagingData<University>> {
+    override fun getAllUniversity(): Flow<PagingData<University>> {
         return Pager(
             config = PagingConfig(pageSize = 20, prefetchDistance = 2),
             pagingSourceFactory = { UniversityPagingSource(apiService) }).flow
@@ -102,14 +104,14 @@ class RankingRepository @Inject constructor(private val apiService: ApiService) 
 
     // UniversityUser 관련 -------------------------------------------------------------------------
     // 대학교 유저 랭킹 전체 조회
-    fun getAllUniversityUser(): Flow<PagingData<UniversityUser>> {
+    override fun getAllUniversityUser(): Flow<PagingData<UniversityUser>> {
         return Pager(
             config = PagingConfig(pageSize = 20, prefetchDistance = 2),
             pagingSourceFactory = { UniversityUserPagingSource(apiService) }).flow
     }
 
     // 나의 대학교 정보 조회
-    fun getMyUniversityInfo(userId: Int): Flow<ApiState> = flow {
+    override fun getMyUniversityInfo(userId: Int): Flow<ApiState> = flow {
         kotlin.runCatching {
             apiService.getMyUniversityInfo(userId = userId)
         }.onSuccess {
@@ -121,7 +123,7 @@ class RankingRepository @Inject constructor(private val apiService: ApiService) 
 
 
     // 대학교 유저 랭킹 4개 조회
-    suspend fun getUniversityTop4User(userId: Int = 0): Flow<ApiState> = flow {
+    override suspend fun getUniversityTop4User(userId: Int): Flow<ApiState> = flow {
         kotlin.runCatching {
             apiService.getUniversityTop4UserRanking(userId = userId)
         }.onSuccess {
@@ -132,7 +134,7 @@ class RankingRepository @Inject constructor(private val apiService: ApiService) 
     }.flowOn(Dispatchers.IO)
 
     // 자대 대학교 나의 랭킹 정보 조회
-    suspend fun getUniversityMyRanking(userId: Int = 0): Flow<ApiState> = flow {
+    override suspend fun getUniversityMyRanking(userId: Int): Flow<ApiState> = flow {
         kotlin.runCatching {
             apiService.getUniversityMyRanking(userId = userId)
         }.onSuccess {

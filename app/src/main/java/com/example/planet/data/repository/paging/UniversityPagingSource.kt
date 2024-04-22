@@ -1,4 +1,4 @@
-package com.example.planet.data.dataSource
+package com.example.planet.data.repository.paging
 
 import android.net.http.HttpException
 import android.os.Build
@@ -8,19 +8,19 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.example.planet.TAG
 import com.example.planet.data.remote.api.ApiService
-import com.example.planet.data.remote.dto.response.ranking.universityuser.UniversityUser
+import com.example.planet.data.remote.dto.response.ranking.university.University
 import java.io.IOException
 import javax.inject.Inject
 
-class UniversityUserPagingSource @Inject constructor(
+class UniversityPagingSource @Inject constructor(
     private val apiService: ApiService
-): PagingSource<Int, UniversityUser>() {
+): PagingSource<Int, University>() {
     @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, UniversityUser> {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, University> {
         return try {
-            Log.d(TAG, "UniversityUserPagingSource() 실행")
+            Log.d(TAG, "UniversityPagingSource() 실행")
             val currentPage = params.key ?: 0
-            val users = apiService.getAllUniversityUserRanking(
+            val users = apiService.getAllUniversityRanking(
                 page = currentPage
             )
             LoadResult.Page(
@@ -35,7 +35,7 @@ class UniversityUserPagingSource @Inject constructor(
         }
     }
 
-    override fun getRefreshKey(state: PagingState<Int, UniversityUser>): Int? {
+    override fun getRefreshKey(state: PagingState<Int, University>): Int? {
         return state.anchorPosition
     }
 }

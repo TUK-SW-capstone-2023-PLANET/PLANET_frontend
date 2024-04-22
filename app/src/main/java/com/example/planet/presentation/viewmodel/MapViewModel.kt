@@ -20,7 +20,7 @@ import com.example.planet.data.remote.dto.PloggingInfo
 import com.example.planet.data.remote.dto.TrashCan
 import com.example.planet.data.map.Trash
 import com.example.planet.data.map.TrashImage
-import com.example.planet.data.repository.MapRepository
+import com.example.planet.data.repository.MapRepositoryImpl
 import com.example.planet.domain.usecase.image.PostImageUseCase
 import com.example.planet.util.DistanceManager
 import com.example.planet.util.allDelete
@@ -42,7 +42,7 @@ import kotlin.math.round
 @HiltViewModel
 class MapViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val mapRepository: MapRepository,
+    private val mapRepositoryImpl: MapRepositoryImpl,
     private val postImageUseCase: PostImageUseCase
 ) : ViewModel() {
     private var ploggingId: Int = 0                                     // 플로깅 PK
@@ -247,7 +247,7 @@ class MapViewModel @Inject constructor(
 
     fun getAllTrashCanLocation() {
         viewModelScope.launch {
-            when (val apiState = mapRepository.getAllTrashCanLocation().first()) {
+            when (val apiState = mapRepositoryImpl.getAllTrashCanLocation().first()) {
                 is ApiState.Success<*> -> {
                     val result = apiState.value as List<TrashCan>
 
@@ -275,7 +275,7 @@ class MapViewModel @Inject constructor(
 
     fun getPloggingId() {
         viewModelScope.launch {
-            when (val apiState = mapRepository.getPloggingId().first()) {
+            when (val apiState = mapRepositoryImpl.getPloggingId().first()) {
                 is ApiState.Success<*> -> {
                     ploggingId = apiState.value as Int
                     Log.d(TAG, "getPloggingId: $ploggingId")
@@ -335,7 +335,7 @@ class MapViewModel @Inject constructor(
             )
 
             when (val apiState =
-                mapRepository.postPloggingLive(ploggingData = ploggingImage).first()) {
+                mapRepositoryImpl.postPloggingLive(ploggingData = ploggingImage).first()) {
                 is ApiState.Success<*> -> {
 //                    (apiState.value as List<Map<String, Int>>).forEach { trash ->
 //                        trashItems.add(trash)
@@ -540,7 +540,7 @@ class MapViewModel @Inject constructor(
         )
         viewModelScope.launch {
             when (val apiState =
-                mapRepository.postPlogging(ploggingInfo = ploggingIfo).first()) {
+                mapRepositoryImpl.postPlogging(ploggingInfo = ploggingIfo).first()) {
                 is ApiState.Success<*> -> {
                     val result = apiState.value as PloggingComplete
                     Log.d("daeYoung", "postPlogging() 성공: $result")

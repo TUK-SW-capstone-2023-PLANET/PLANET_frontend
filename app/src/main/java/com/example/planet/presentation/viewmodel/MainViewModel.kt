@@ -13,8 +13,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.example.planet.TAG
-import com.example.planet.data.remote.dto.ApiState
 import com.example.planet.data.remote.dto.Advertisement
+import com.example.planet.data.remote.dto.ApiState
 import com.example.planet.data.remote.dto.Tier
 import com.example.planet.data.remote.dto.response.ranking.planet.HigherPlanetUser
 import com.example.planet.data.remote.dto.response.ranking.planet.PlanetRankingUser
@@ -26,17 +26,18 @@ import com.example.planet.data.remote.dto.response.user.UserInfo
 import com.example.planet.domain.usecase.GetBannerUseCase
 import com.example.planet.domain.usecase.GetTierListUseCase
 import com.example.planet.domain.usecase.login.sharedpreference.GetUserTokenUseCase
-import com.example.planet.domain.usecase.ranking.universityuser.GetAllUniversityUserRankUseCase
-import com.example.planet.domain.usecase.ranking.universityuser.GetHigherUniversityUserRankUseCase
-import com.example.planet.domain.usecase.ranking.university.GetUniversitiesUseCase
 import com.example.planet.domain.usecase.ranking.planet.GetAllPlanetUserRankUseCase
 import com.example.planet.domain.usecase.ranking.planet.GetHigherPlanetUserUseCase
 import com.example.planet.domain.usecase.ranking.planet.GetMyPlanetRankUseCase
 import com.example.planet.domain.usecase.ranking.season.GetAllSeasonRankUseCase
 import com.example.planet.domain.usecase.ranking.season.GetHigherSeasonRankUseCase
 import com.example.planet.domain.usecase.ranking.season.GetMySeasonRankUseCase
+import com.example.planet.domain.usecase.ranking.university.GetAllUniversitiesUseCase
+import com.example.planet.domain.usecase.ranking.university.GetHigherUniversitiesUseCase
 import com.example.planet.domain.usecase.ranking.university.GetMyUniversityInfoUseCase
 import com.example.planet.domain.usecase.ranking.university.GetMyUniversityRankUseCase
+import com.example.planet.domain.usecase.ranking.universityuser.GetAllUniversityUserRankUseCase
+import com.example.planet.domain.usecase.ranking.universityuser.GetHigherUniversityUserRankUseCase
 import com.example.planet.domain.usecase.user.GetUserInfoUseCase
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.data.ScreenNav
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -51,7 +52,8 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val getBannerUseCase: GetBannerUseCase,
     private val getAllUniversityUserRankUseCase: GetAllUniversityUserRankUseCase,
-    private val getUniversitiesUseCase: GetUniversitiesUseCase,
+    private val getAllUniversitiesUseCase: GetAllUniversitiesUseCase,
+    private val getHigherUniversitiesUseCase: GetHigherUniversitiesUseCase,
     private val getHigherUniversityUserRankUseCase: GetHigherUniversityUserRankUseCase,
     private val getMyUniversityRankUseCase: GetMyUniversityRankUseCase,
     private val getMySeasonRankUseCase: GetMySeasonRankUseCase,
@@ -322,7 +324,7 @@ class MainViewModel @Inject constructor(
     }
 
     private suspend fun getTop3Universities() {
-        when (val apiState = getUniversitiesUseCase.getHigherUniversity().first()) {
+        when (val apiState = getHigherUniversitiesUseCase().first()) {
             is ApiState.Success<*> -> {
                 (apiState.value as List<University>).forEach { university ->
                     _higherUniversity.add(university)
@@ -338,7 +340,7 @@ class MainViewModel @Inject constructor(
     }
 
     private suspend fun getAllUniversities() {
-        getUniversitiesUseCase().distinctUntilChanged().cachedIn(viewModelScope).collect {
+        getAllUniversitiesUseCase().distinctUntilChanged().cachedIn(viewModelScope).collect {
             _totalUniversity.value = it
         }
     }

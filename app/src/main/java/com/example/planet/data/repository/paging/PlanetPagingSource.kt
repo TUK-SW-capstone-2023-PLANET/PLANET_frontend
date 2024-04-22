@@ -1,4 +1,4 @@
-package com.example.planet.data.dataSource
+package com.example.planet.data.repository.paging
 
 import android.net.http.HttpException
 import android.os.Build

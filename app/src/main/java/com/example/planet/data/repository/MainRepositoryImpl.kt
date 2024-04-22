@@ -2,15 +2,16 @@ package com.example.planet.data.repository
 
 import com.example.planet.data.remote.dto.ApiState
 import com.example.planet.data.remote.api.ApiService
+import com.example.planet.domain.repository.MainRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
-class MainRepository @Inject constructor(private val apiService: ApiService) {
+class MainRepositoryImpl @Inject constructor(private val apiService: ApiService): MainRepository {
 
-    suspend fun getTopBanner(): Flow<ApiState> = flow{
+    override suspend fun getTopBanner(): Flow<ApiState> = flow{
         kotlin.runCatching {
             apiService.getTopBanner()
         }.onSuccess {
@@ -20,7 +21,7 @@ class MainRepository @Inject constructor(private val apiService: ApiService) {
         }
     }.flowOn(Dispatchers.IO)
 
-    suspend fun getTierList(): Flow<ApiState> = flow{
+    override suspend fun getTierList(): Flow<ApiState> = flow{
         kotlin.runCatching {
             apiService.getTierList()
         }.onSuccess {

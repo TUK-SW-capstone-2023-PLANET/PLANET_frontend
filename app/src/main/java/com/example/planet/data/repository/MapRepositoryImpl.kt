@@ -1,18 +1,18 @@
 package com.example.planet.data.repository
 
+import com.example.planet.data.remote.api.ApiService
 import com.example.planet.data.remote.dto.ApiState
 import com.example.planet.data.remote.dto.PloggingImage
 import com.example.planet.data.remote.dto.PloggingInfo
-import com.example.planet.data.remote.api.ApiService
+import com.example.planet.domain.repository.MapRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import okhttp3.MultipartBody
 import javax.inject.Inject
 
-class MapRepository @Inject constructor(private val apiService: ApiService) {
-    suspend fun getAllTrashCanLocation(): Flow<ApiState> = flow {
+class MapRepositoryImpl @Inject constructor(private val apiService: ApiService): MapRepository {
+    override suspend fun getAllTrashCanLocation(): Flow<ApiState> = flow {
         kotlin.runCatching {
             apiService.getAllTrashCanLocation()
         }.onSuccess {
@@ -22,7 +22,7 @@ class MapRepository @Inject constructor(private val apiService: ApiService) {
         }
     }.flowOn(Dispatchers.IO)
 
-    suspend fun getPloggingId(): Flow<ApiState> = flow {
+    override suspend fun getPloggingId(): Flow<ApiState> = flow {
         kotlin.runCatching {
             apiService.getPloggingId()
         }.onSuccess {
@@ -32,7 +32,7 @@ class MapRepository @Inject constructor(private val apiService: ApiService) {
         }
     }.flowOn(Dispatchers.IO)
 
-    suspend fun postPloggingLive(ploggingData: PloggingImage): Flow<ApiState> = flow {
+    override suspend fun postPloggingLive(ploggingData: PloggingImage): Flow<ApiState> = flow {
         kotlin.runCatching {
             apiService.postPloggingLive(ploggingImage = ploggingData)
         }.onSuccess {
@@ -42,7 +42,7 @@ class MapRepository @Inject constructor(private val apiService: ApiService) {
         }
     }.flowOn(Dispatchers.IO)
 
-    suspend fun postPlogging(ploggingInfo: PloggingInfo): Flow<ApiState> = flow {
+    override suspend fun postPlogging(ploggingInfo: PloggingInfo): Flow<ApiState> = flow {
         kotlin.runCatching {
             apiService.postPlogging(ploggingInfo = ploggingInfo)
         }.onSuccess {
