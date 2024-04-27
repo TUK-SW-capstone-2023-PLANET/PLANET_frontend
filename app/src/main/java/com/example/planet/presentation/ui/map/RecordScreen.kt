@@ -51,8 +51,8 @@ import com.example.planet.component.map.common.CameraButton
 import com.example.planet.component.map.common.LockButton
 import com.example.planet.component.map.record.RoundCornerCard
 import com.example.planet.presentation.viewmodel.MapViewModel
-import com.example.planet.util.getImageUri
-import com.example.planet.util.noRippleClickable
+import com.example.planet.presentation.util.getImageUri
+import com.example.planet.presentation.util.noRippleClickable
 
 //@Preview(showBackground = true)
 @Composable

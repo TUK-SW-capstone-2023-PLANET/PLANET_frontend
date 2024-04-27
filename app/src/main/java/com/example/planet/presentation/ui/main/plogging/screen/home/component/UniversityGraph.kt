@@ -1,4 +1,4 @@
-package com.example.planet.component.main.plogging
+package com.example.planet.presentation.ui.main.plogging.screen.home.component
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
@@ -8,7 +8,6 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -23,7 +22,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -33,7 +31,7 @@ import com.example.planet.R
 
 @Composable
 fun UniversityGraph(
-    visible: Boolean = false,
+    visible: () -> Boolean = { false },
     universityLogo: String,
     score: String,
     graphHeight: Dp,
@@ -46,7 +44,7 @@ fun UniversityGraph(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         AnimatedVisibility(
-            visible = visible,
+            visible = visible(),
             enter = scaleIn()
         ) {
             Column(
@@ -70,7 +68,7 @@ fun UniversityGraph(
                 )
             }
         }
-        AnimatedVisibility(visible = visible,
+        AnimatedVisibility(visible = visible(),
             enter = slideInVertically { it }) {
             Canvas(
                 modifier = Modifier
@@ -86,7 +84,7 @@ fun UniversityGraph(
             }
         }
         AnimatedVisibility(
-            visible = visible,
+            visible = visible(),
             enter = scaleIn()
         ) {
             Row(

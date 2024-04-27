@@ -29,7 +29,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
@@ -46,7 +45,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.planet.R
 import com.example.planet.component.common.RedTextButton
-import com.example.planet.util.noRippleClickable
+import com.example.planet.presentation.util.noRippleClickable
 import kotlinx.coroutines.delay
 
 @Composable
@@ -78,12 +77,12 @@ fun UserIdTextField(
             singleLine = true,
             modifier = Modifier
                 .weight(0.6f)
-                .height(45.dp),
+                .height(50.dp),
             textStyle = TextStyle.Default.copy(fontSize = 10.sp),
             placeholder = {
                 Text(
                     text = placeholder,
-                    fontSize = 11.sp,
+                    fontSize = 10.sp,
                     color = colorResource(id = R.color.font_background_color2)
                 )
             },
@@ -95,11 +94,19 @@ fun UserIdTextField(
                 .background(color = Color.Transparent)
         )
     }
-    Text(
-        text = "*아이디는 특수문자 사용이 불가능합니다.",
-        fontSize = 8.sp,
-        color = colorResource(id = R.color.font_background_color2),
-    )
+    Row {
+        Box(
+            modifier = Modifier
+                .weight(0.2f)
+                .background(color = Color.Transparent)
+        )
+        Text(
+            text = "*아이디는 특수문자 사용이 불가능합니다.",
+            fontSize = 8.sp,
+            color = colorResource(id = R.color.font_background_color2),
+            modifier = Modifier.weight(0.8f)
+        )
+    }
     Spacer(modifier = Modifier.height(16.dp))
 }
 
@@ -150,7 +157,7 @@ fun UserPwTextField(
             singleLine = true,
             modifier = Modifier
                 .weight(0.6f)
-                .height(45.dp)
+                .height(50.dp)
                 .focusRequester(focusRequester),
             textStyle = TextStyle.Default.copy(fontSize = 10.sp),
             trailingIcon = {
@@ -167,21 +174,33 @@ fun UserPwTextField(
             placeholder = {
                 Text(
                     text = placeholder,
-                    fontSize = 11.sp,
+                    fontSize = 10.sp,
                     color = colorResource(id = R.color.font_background_color2)
                 )
             },
         )
         Spacer(modifier = Modifier.width(8.dp))
-        RedTextButton(text = { redButtonText }, textColor = { redButtonColor }, modifier = Modifier.weight(0.2f)) {
+        RedTextButton(
+            text = { redButtonText },
+            textColor = { redButtonColor },
+            modifier = Modifier.weight(0.2f)
+        ) {
             enabled = !enabled
         }
     }
-    Text(
-        text = "* 특수문자, 숫자, 대문자를 포함하여 8자 이상",
-        fontSize = 8.sp,
-        color = colorResource(id = R.color.font_background_color2)
-    )
+    Row {
+        Box(
+            modifier = Modifier
+                .weight(0.2f)
+                .background(color = Color.Transparent)
+        )
+        Text(
+            text = "* 특수문자, 숫자, 대문자를 포함하여 8자 이상",
+            fontSize = 8.sp,
+            color = colorResource(id = R.color.font_background_color2),
+            modifier = Modifier.weight(0.8f)
+        )
+    }
     Spacer(modifier = Modifier.height(16.dp))
 }
 
@@ -210,7 +229,7 @@ fun UserHeightWeightTextField(
             singleLine = true,
             modifier = Modifier
                 .weight(2f)
-                .height(45.dp),
+                .height(50.dp),
             textStyle = TextStyle.Default.copy(fontSize = 10.sp),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             keyboardActions = KeyboardActions(onDone = { keyboardActions() }),

@@ -1,6 +1,5 @@
 package com.example.planet.data.map
 
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
 
 data class Tabltem(

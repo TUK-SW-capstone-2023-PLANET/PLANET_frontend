@@ -14,8 +14,8 @@ import androidx.navigation.compose.composable
 import com.example.planet.component.main.MainTopSwitch
 import com.example.planet.presentation.ui.main.plogging.component.BottomNavigation
 import com.example.planet.presentation.ui.main.plogging.screen.community.CommunityScreen
-import com.example.planet.presentation.ui.main.plogging.screen.home.MainScreen
-import com.example.planet.presentation.ui.main.plogging.screen.home.TierScreen
+import com.example.planet.presentation.ui.main.plogging.screen.home.screen.MainScreen
+import com.example.planet.presentation.ui.main.plogging.screen.home.screen.TierScreen
 import com.example.planet.presentation.ui.main.plogging.screen.message.MessageScreen
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.data.ScreenNav
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.screen.PlanetRankingScreen
@@ -34,6 +34,7 @@ fun NavigationGraph(
     startMapActivity: () -> Unit,
     startUserActivity: () -> Unit
 ) {
+
 
     Scaffold(
         bottomBar = {
@@ -57,7 +58,7 @@ fun NavigationGraph(
                             MainScreen(
                                 navController = navController,
                                 mainViewModel = mainViewModel
-                            ) { startMapActivity() }
+                            ){ startMapActivity() }
                         }
                         composable(BottomNavItem.RankingScreen.screenRoute) {
                             RankingScreen(mainViewModel = mainViewModel)
@@ -82,6 +83,7 @@ fun NavigationGraph(
                     PlanetRankingScreen(mainViewModel = mainViewModel)
                 }
                 ScreenNav.SeasonRankingScreen -> {
+
                     SeasonRankingScreen(mainViewModel = mainViewModel)
                 }
                 ScreenNav.TierScreen -> {}

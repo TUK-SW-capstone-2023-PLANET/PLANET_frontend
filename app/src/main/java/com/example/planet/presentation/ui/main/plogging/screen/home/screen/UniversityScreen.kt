@@ -1,4 +1,4 @@
-package com.example.planet.presentation.ui.main.plogging.screen.home
+package com.example.planet.presentation.ui.main.plogging.screen.home.screen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,7 +16,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
-import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -40,35 +39,34 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.planet.R
 import com.example.planet.component.common.TripleArrowIcon
 import com.example.planet.component.main.SubTitle
 import com.example.planet.component.main.SubTitleDescription
-import com.example.planet.component.main.plogging.UniversityGraph
+import com.example.planet.presentation.ui.main.plogging.screen.home.component.UniversityGraph
 import com.example.planet.data.remote.dto.response.ranking.university.University
 import com.example.planet.data.remote.dto.response.ranking.universityuser.ExpandedUniversityUser
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.UniversityIndividualContentRow
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.UniversityIndividualTitleRow
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.data.ScreenNav
-import com.example.planet.util.numberComma
-import com.example.planet.util.round
+import com.example.planet.presentation.util.numberComma
+import com.example.planet.presentation.util.round
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.drop
 
 @Composable
 fun UniversityScreen(
-    universityUserList: List<ExpandedUniversityUser>,
-    universityList: List<University>,
-    graphHeightList: List<Dp>,
-    navController: NavController
+    universityUserList: () -> List<ExpandedUniversityUser>,
+    universityList: () -> List<University>,
+    graphHeightList: () -> List<Dp>,
+    navController: NavHostController,
+
 ) {
 
-    var visible by remember { mutableStateOf(false) }
+    var visible by remember { mutableStateOf(true) }
     var scrollState = rememberScrollState()
-    val scope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
         delay(300)
@@ -96,7 +94,7 @@ fun UniversityScreen(
                 SubTitle(title = "대학교 순위", modifier = Modifier.padding(end = 8.dp))
                 SubTitleDescription("학교를 인증하여, 학교의 위상을 높히세요!!")
             }
-            TripleArrowIcon { navController.navigate(ScreenNav.UniversityRankingScreen.screenRoute) }
+            TripleArrowIcon { navController.navigate(ScreenNav.UniversityRankingScreen.screenRoute)  }
         }
         Column(
             modifier = Modifier
@@ -114,42 +112,36 @@ fun UniversityScreen(
             ) {
 
                 UniversityGraph(
-                    visible = visible,
-                    universityLogo = universityList[1].imageUrl,
-                    score = universityList[1].score.numberComma(),
-                    graphHeight = graphHeightList[0],
+                    visible = { visible },
+                    universityLogo = universityList()[1].imageUrl,
+                    score = universityList()[1].score.numberComma(),
+                    graphHeight = graphHeightList()[0],
                     colors = listOf(Color(0XFFD1CFCF), Color(0XFFFFFFFF)),
-                    universityName = universityList[1].name,
+                    universityName = universityList()[1].name,
                     medal = painterResource(id = R.drawable.medal_2st)
                 )
                 UniversityGraph(
-                    visible = visible,
-                    universityLogo = universityList[0].imageUrl,
-                    score = universityList[0].score.numberComma(),
-                    graphHeight = graphHeightList[1],
+                    visible = { visible },
+                    universityLogo = universityList()[0].imageUrl,
+                    score = universityList()[0].score.numberComma(),
+                    graphHeight = graphHeightList()[1],
                     colors = listOf(Color(0xFFFFCC31), Color(0XFFFFFFFF)),
-                    universityName = universityList[0].name,
+                    universityName = universityList()[0].name,
                     medal = painterResource(id = R.drawable.medal_1st)
                 )
                 UniversityGraph(
-                    visible = visible,
-                    universityLogo = universityList[2].imageUrl,
-                    score = universityList[2].score.numberComma(),
-                    graphHeight = graphHeightList[2],
+                    visible = { visible },
+                    universityLogo = universityList()[2].imageUrl,
+                    score = universityList()[2].score.numberComma(),
+                    graphHeight = graphHeightList()[2],
                     colors = listOf(Color(0xFFE1B983), Color(0XFFFFFFFF)),
-                    universityName = universityList[2].name,
+                    universityName = universityList()[2].name,
                     medal = painterResource(id = R.drawable.medal_3st)
                 )
             }
 
         }
-        Divider(
-            thickness = 1.dp,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp),
-            color = colorResource(id = R.color.font_background_color3)
-        )
+
         Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center) {
             Row(
                 modifier = Modifier
@@ -169,6 +161,7 @@ fun UniversityScreen(
                     )
                 }
                 TripleArrowIcon { navController.navigate(ScreenNav.UniversityIndividualRankingScreen.screenRoute) }
+
             }
 
             Row(
@@ -184,7 +177,7 @@ fun UniversityScreen(
                 ) {
                     AsyncImage(
                         model = ImageRequest.Builder(LocalContext.current)
-                            .data(universityUserList[0].imageUrl).crossfade(true).build(),
+                            .data(universityUserList()[0].imageUrl).crossfade(true).build(),
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
                     )
@@ -199,11 +192,11 @@ fun UniversityScreen(
                     Row(modifier = Modifier, verticalAlignment = Alignment.Bottom) {
                         AsyncImage(
                             model = ImageRequest.Builder(LocalContext.current)
-                                .data(universityUserList[0].universityLogo).crossfade(true)
+                                .data(universityUserList()[0].universityLogo).crossfade(true)
                                 .build(), contentDescription = null, modifier = Modifier.size(25.dp)
                         )
                         Text(
-                            text = universityUserList[0].universityName,
+                            text = universityUserList()[0].universityName,
                             fontWeight = FontWeight.Bold,
                             fontSize = 15.sp,
                             color = colorResource(id = R.color.font_background_color1),
@@ -211,7 +204,7 @@ fun UniversityScreen(
                         )
                     }
                     Text(
-                        text = universityUserList[0].nickName,
+                        text = universityUserList()[0].nickName,
                         fontSize = 16.sp,
                         color = colorResource(id = R.color.font_background_color1)
                     )
@@ -222,7 +215,7 @@ fun UniversityScreen(
                                 color = colorResource(id = R.color.font_background_color1)
                             )
                         ) {
-                            append(universityUserList[0].score.numberComma())
+                            append(universityUserList()[0].score.numberComma())
                             append("점")
                         }
                         withStyle(
@@ -232,7 +225,7 @@ fun UniversityScreen(
                             )
                         ) {
                             append(" (")
-                            append(universityUserList[0].contribution.round())
+                            append(universityUserList()[0].contribution.round())
                             append("%)")
                         }
 
@@ -245,7 +238,7 @@ fun UniversityScreen(
                                 color = colorResource(id = R.color.font_background_color1)
                             )
                         ) {
-                            append(universityUserList[0].rank.toString())
+                            append(universityUserList()[0].rank.toString())
                             append("등")
                         }
                     })
@@ -260,7 +253,7 @@ fun UniversityScreen(
             ) {
                 UniversityIndividualTitleRow()
 
-                universityUserList[0].apply {
+                universityUserList()[0].apply {
                     UniversityIndividualContentRow(
                         rank = this.rank,
                         nickname = this.nickName,
@@ -270,7 +263,7 @@ fun UniversityScreen(
                     )
                 }
 
-                universityUserList.subList(1, universityUserList.size).forEach { universityUser ->
+                universityUserList().subList(1, universityUserList().size).forEach { universityUser ->
                     UniversityIndividualContentRow(
                         rank = universityUser.rank,
                         nickname = universityUser.nickName,

@@ -19,7 +19,7 @@ class SplashViewModel @Inject constructor(
     private val getUserTokenUseCase: GetUserTokenUseCase,
     private val getAutoLoginUseCase: GetAutoLoginUseCase
 ) : ViewModel() {
-    lateinit var userId: String
+    var userId: String = ""
     private var autoLoginState: Boolean = false
 
     fun goActivity(goActivities: List<() -> Unit>) {
@@ -27,10 +27,10 @@ class SplashViewModel @Inject constructor(
             async(Dispatchers.IO) { getUserToken() }.await()
             async(Dispatchers.IO) { getAutoLogin() }.await()
             if (userId.isNotEmpty() && autoLoginState) {
-                Log.d(TAG, "if() 실행 -> userId: ${userId}, autoLoginState: ${autoLoginState}")
+                Log.d(TAG, "자동 로그인 성공 -> userId: ${userId}, autoLoginState: ${autoLoginState}")
                 goActivities[0]()  // MainActivity 이동
             } else {
-                Log.d(TAG, "else() 실행 -> userId: ${userId}, autoLoginState: ${autoLoginState}")
+                Log.d(TAG, "자동 로그인 실패 -> userId: ${userId}, autoLoginState: ${autoLoginState}")
                 goActivities[1]()  // SingInActivity 이동
             }
         }

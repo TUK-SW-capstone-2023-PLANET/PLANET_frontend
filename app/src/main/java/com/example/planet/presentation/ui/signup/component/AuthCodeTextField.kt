@@ -15,7 +15,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.example.planet.R
 import com.example.planet.data.remote.dto.response.signup.LoginAuthState
-import com.example.planet.util.formatTime
+import com.example.planet.presentation.util.formatTime
 import kotlinx.coroutines.flow.StateFlow
 
 @Composable

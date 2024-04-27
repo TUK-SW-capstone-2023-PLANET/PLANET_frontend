@@ -1,4 +1,4 @@
-package com.example.planet.util
+package com.example.planet.presentation.util
 
 import android.content.ContentResolver
 import android.content.Context

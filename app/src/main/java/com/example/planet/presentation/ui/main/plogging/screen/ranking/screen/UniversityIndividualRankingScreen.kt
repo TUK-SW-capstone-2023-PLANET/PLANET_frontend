@@ -18,6 +18,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,6 +33,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -46,8 +48,8 @@ import com.example.planet.presentation.ui.main.plogging.screen.ranking.component
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.UniversityIndividualTitleRow
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.data.ScreenNav
 import com.example.planet.presentation.viewmodel.MainViewModel
-import com.example.planet.util.noRippleClickable
-import com.example.planet.util.numberComma
+import com.example.planet.presentation.util.noRippleClickable
+import com.example.planet.presentation.util.numberComma
 import kotlinx.coroutines.delay
 
 @Composable
@@ -70,7 +72,9 @@ fun UniversityIndividualRankingScreen(mainViewModel: MainViewModel = hiltViewMod
             .padding(16.dp)
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp)
         ) {
             Icon(imageVector = Icons.Default.ArrowBackIosNew,
                 contentDescription = null,
@@ -97,14 +101,14 @@ fun UniversityIndividualRankingScreen(mainViewModel: MainViewModel = hiltViewMod
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 AsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)
-                        .data(mainViewModel.higherMyUniversityUsers.value[0].universityLogo)
+                        .data(mainViewModel.higherMyUniversityUsers[0].universityLogo)
                         .crossfade(true).build(),
                     contentDescription = null,
                     modifier = Modifier.size(65.dp)
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 Text(
-                    text = mainViewModel.higherMyUniversityUsers.value[0].universityName,
+                    text = mainViewModel.higherMyUniversityUsers[0].universityName,
                     color = colorResource(id = R.color.font_background_color1),
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Bold
@@ -113,24 +117,24 @@ fun UniversityIndividualRankingScreen(mainViewModel: MainViewModel = hiltViewMod
 
             UniversityIndividualGraph(
                 visible = visible,
-                score = mainViewModel.higherMyUniversityUsers.value[1].score.numberComma(),
+                score = mainViewModel.higherMyUniversityUsers[1].score.numberComma(),
                 graphHeight = mainViewModel.universityUserGraphHeightList[0],
                 colors = listOf(Color(0XFFD1CFCF), Color(0XFFFFFFFF)),
-                userName = mainViewModel.higherMyUniversityUsers.value[1].nickName,
+                userName = mainViewModel.higherMyUniversityUsers[1].nickName,
             )
             UniversityIndividualGraph(
                 visible = visible,
-                score = mainViewModel.higherMyUniversityUsers.value[0].score.numberComma(),
+                score = mainViewModel.higherMyUniversityUsers[0].score.numberComma(),
                 graphHeight = mainViewModel.universityUserGraphHeightList[1],
                 colors = listOf(Color(0xFFFFCC31), Color(0XFFFFFFFF)),
-                userName = mainViewModel.higherMyUniversityUsers.value[0].nickName,
+                userName = mainViewModel.higherMyUniversityUsers[0].nickName,
             )
             UniversityIndividualGraph(
                 visible = visible,
-                score = mainViewModel.higherMyUniversityUsers.value[2].score.numberComma(),
+                score = mainViewModel.higherMyUniversityUsers[2].score.numberComma(),
                 graphHeight = mainViewModel.universityUserGraphHeightList[2],
                 colors = listOf(Color(0xFFE1B983), Color(0XFFFFFFFF)),
-                userName = mainViewModel.higherMyUniversityUsers.value[2].nickName,
+                userName = mainViewModel.higherMyUniversityUsers[2].nickName,
             )
         }
 
@@ -146,7 +150,7 @@ fun UniversityIndividualRankingScreen(mainViewModel: MainViewModel = hiltViewMod
         }
 
         UniversityIndividualTitleRow()
-        mainViewModel.myUniversityRank.value?.let { myRank ->
+        mainViewModel.myUniversityRank.collectAsStateWithLifecycle().value?.let { myRank ->
             UniversityIndividualContentRow(
                 rank = myRank.rank,
                 nickname = myRank.nickName,

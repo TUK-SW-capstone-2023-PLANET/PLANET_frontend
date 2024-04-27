@@ -22,7 +22,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.planet.R
-import com.example.planet.util.noRippleClickable
+import com.example.planet.presentation.util.noRippleClickable
 
 @Composable
 fun PloggingHelpCard(

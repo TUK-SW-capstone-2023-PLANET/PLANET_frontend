@@ -30,7 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.example.planet.R
-import com.example.planet.util.noRippleClickable
+import com.example.planet.presentation.util.noRippleClickable
 
 @Composable
 fun GetPictureDialog(closeDialog: (Boolean) -> Unit, getImageUri: (Uri) -> Unit, getDefaultImage: () -> Unit) {

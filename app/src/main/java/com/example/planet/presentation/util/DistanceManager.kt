@@ -1,4 +1,4 @@
-package com.example.planet.util
+package com.example.planet.presentation.util
 
 import kotlin.math.asin
 import kotlin.math.cos

@@ -12,7 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import com.example.planet.R
-import com.example.planet.util.noRippleClickable
+import com.example.planet.presentation.util.noRippleClickable
 
 @Composable
 fun GenderSwitch(isMale: () -> Boolean, genderChange: (Boolean) -> Unit) {

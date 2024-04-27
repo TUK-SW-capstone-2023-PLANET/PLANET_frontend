@@ -24,8 +24,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.example.planet.presentation.ui.main.plogging.navigation.NavigationGraph
 import com.example.planet.presentation.ui.map.MapActivity
-import com.example.planet.presentation.ui.user.screen.UserActivity
 import com.example.planet.presentation.ui.ui.theme.MyApplicationTheme
+import com.example.planet.presentation.ui.user.screen.UserActivity
 import com.example.planet.presentation.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -39,9 +39,13 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val navController = rememberNavController()
+            mainViewModel
             MyApplicationTheme {
 //                RequestPermission()
-                NavigationGraph(navController = navController, mainViewModel = mainViewModel, startMapActivity = { startMapActivity() }) {
+                NavigationGraph(
+                    navController = navController,
+                    mainViewModel = mainViewModel,
+                    startMapActivity = { startMapActivity() }) {
                     startUserActivity()
                 }
             }

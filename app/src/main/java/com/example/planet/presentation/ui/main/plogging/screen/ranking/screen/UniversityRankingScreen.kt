@@ -32,8 +32,8 @@ import com.example.planet.presentation.ui.main.plogging.screen.ranking.component
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.UniversityTitleRow
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.data.ScreenNav
 import com.example.planet.presentation.viewmodel.MainViewModel
-import com.example.planet.util.noRippleClickable
-import com.example.planet.util.numberComma
+import com.example.planet.presentation.util.noRippleClickable
+import com.example.planet.presentation.util.numberComma
 
 @Composable
 fun UniversityRankingScreen(mainViewModel: MainViewModel = hiltViewModel()) {

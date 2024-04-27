@@ -15,7 +15,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.example.planet.R
-import com.example.planet.util.noRippleClickable
+import com.example.planet.presentation.util.noRippleClickable
 
 @Composable
 fun ProfileModifyTopAppBar(onBack: () -> Unit, updateUserInfo: () ->Unit) {

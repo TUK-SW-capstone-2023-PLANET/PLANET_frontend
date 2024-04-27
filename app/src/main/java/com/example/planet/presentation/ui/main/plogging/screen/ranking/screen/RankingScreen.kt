@@ -1,5 +1,6 @@
 package com.example.planet.presentation.ui.main.plogging.screen.ranking.screen
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -37,10 +38,11 @@ import com.example.planet.presentation.ui.main.plogging.screen.ranking.component
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.UniversityProfile
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.data.ScreenNav
 import com.example.planet.presentation.viewmodel.MainViewModel
-import com.example.planet.util.numberComma
+import com.example.planet.presentation.util.numberComma
 
 @Composable
 fun RankingScreen(mainViewModel: MainViewModel = hiltViewModel()) {
+
     val scrollState = rememberScrollState()
 
     Column(
@@ -177,14 +179,14 @@ fun RankingScreen(mainViewModel: MainViewModel = hiltViewModel()) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 AsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)
-                        .data(mainViewModel.higherMyUniversityUsers.value[0].universityLogo)
+                        .data(mainViewModel.higherMyUniversityUsers[0].universityLogo)
                         .crossfade(true).build(),
                     contentDescription = null,
                     modifier = Modifier.size(65.dp)
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 Text(
-                    text = mainViewModel.higherMyUniversityUsers.value[0].universityName,
+                    text = mainViewModel.higherMyUniversityUsers[0].universityName,
                     color = colorResource(id = R.color.font_background_color1),
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Bold
@@ -192,7 +194,7 @@ fun RankingScreen(mainViewModel: MainViewModel = hiltViewModel()) {
             }
             Column(modifier = Modifier.fillMaxWidth(0.8f)) {
                 UniversityIndividualRankingTitle()
-                mainViewModel.higherMyUniversityUsers.value.subList(1, 4)
+                mainViewModel.higherMyUniversityUsers.subList(1, 4)
                     .forEachIndexed { index, user ->
                         when (index) {
                             0 -> {

@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.example.planet.presentation.viewmodel.UserViewModel
-import com.example.planet.util.noRippleClickable
+import com.example.planet.presentation.util.noRippleClickable
 
 @Composable
 fun ShowEditTextField(userViewModel: UserViewModel) {

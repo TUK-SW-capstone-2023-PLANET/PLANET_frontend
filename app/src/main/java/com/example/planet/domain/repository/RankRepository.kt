@@ -7,6 +7,7 @@ import com.example.planet.data.remote.dto.response.ranking.season.SeasonUser
 import com.example.planet.data.remote.dto.response.ranking.university.University
 import com.example.planet.data.remote.dto.response.ranking.universityuser.UniversityUser
 import kotlinx.coroutines.flow.Flow
+import kotlin.jvm.Throws
 
 interface RankRepository {
     // Planet User 관련 ----------------------------------------------------------------------------
@@ -28,10 +29,16 @@ interface RankRepository {
     fun getAllSeasonUser(): Flow<PagingData<SeasonUser>>
 
     // University 관련 -----------------------------------------------------------------------------
-    // 대학교 랭킹 3개 조회
+    /** 대학교 랭킹 3개 조회
+     * @author fuck
+     * @see getAllUniversity
+     * @throws NullPointerException if non-exists username then throw exception
+     * @param username 사용자이름 넣어라 병신아
+     * @param University 사용자이름 넣어라 병신아 **/
+//    @Throws(NullPointerException::class)
     suspend fun getHigherUniversities(): Flow<ApiState>
 
-    // 대학교 랭킹 전체 조회
+    /** 대학교 랭킹 전체 조회 **/
     fun getAllUniversity(): Flow<PagingData<University>>
 
     // UniversityUser 관련 -------------------------------------------------------------------------

@@ -1,4 +1,4 @@
-package com.example.planet.presentation.ui.main.plogging.screen.home
+package com.example.planet.presentation.ui.main.plogging.screen.home.screen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

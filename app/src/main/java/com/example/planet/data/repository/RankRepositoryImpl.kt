@@ -1,8 +1,10 @@
 package com.example.planet.data.repository
 
+import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import com.example.planet.TAG
 import com.example.planet.data.remote.api.ApiService
 import com.example.planet.data.remote.dto.ApiState
 import com.example.planet.data.remote.dto.response.ranking.planet.PlanetRankingUser

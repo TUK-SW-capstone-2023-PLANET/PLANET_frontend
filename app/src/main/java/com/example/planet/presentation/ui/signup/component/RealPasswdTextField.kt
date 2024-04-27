@@ -26,7 +26,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.sp
 import com.example.planet.R
 import com.example.planet.TAG
-import com.example.planet.util.noRippleClickable
+import com.example.planet.presentation.util.noRippleClickable
 
 @Composable
 fun RealPasswdTextField(

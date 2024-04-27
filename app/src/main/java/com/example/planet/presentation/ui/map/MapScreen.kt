@@ -31,7 +31,7 @@ import com.example.planet.component.map.common.CameraButton
 import com.example.planet.component.map.map.MyLocationButton
 import com.example.planet.component.map.map.NaverMapClustering
 import com.example.planet.presentation.viewmodel.MapViewModel
-import com.example.planet.util.getImageUri
+import com.example.planet.presentation.util.getImageUri
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraAnimation
 import com.naver.maps.map.CameraPosition

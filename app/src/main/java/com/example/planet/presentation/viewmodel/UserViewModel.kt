@@ -20,7 +20,7 @@ import com.example.planet.domain.usecase.image.PostImageUseCase
 import com.example.planet.domain.usecase.login.sharedpreference.GetUserTokenUseCase
 import com.example.planet.domain.usecase.user.GetUserInfoUseCase
 import com.example.planet.domain.usecase.user.PutUserInfoUseCase
-import com.example.planet.util.asMultipart
+import com.example.planet.presentation.util.asMultipart
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject

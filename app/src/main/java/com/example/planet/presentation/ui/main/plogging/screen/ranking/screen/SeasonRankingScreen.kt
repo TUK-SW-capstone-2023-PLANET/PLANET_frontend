@@ -13,6 +13,7 @@ import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
@@ -20,6 +21,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -32,8 +34,8 @@ import com.example.planet.presentation.ui.main.plogging.screen.ranking.component
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.TearProfile
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.data.ScreenNav
 import com.example.planet.presentation.viewmodel.MainViewModel
-import com.example.planet.util.noRippleClickable
-import com.example.planet.util.numberComma
+import com.example.planet.presentation.util.noRippleClickable
+import com.example.planet.presentation.util.numberComma
 
 @Composable
 fun SeasonRankingScreen(mainViewModel: MainViewModel = hiltViewModel()) {
@@ -49,7 +51,9 @@ fun SeasonRankingScreen(mainViewModel: MainViewModel = hiltViewModel()) {
             .padding(16.dp)
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp)
         ) {
             Icon(imageVector = Icons.Default.ArrowBackIosNew,
                 contentDescription = null,
@@ -99,7 +103,7 @@ fun SeasonRankingScreen(mainViewModel: MainViewModel = hiltViewModel()) {
         }
 
         SeasonTitleRow()
-        mainViewModel.mySeasonRank.value?.let { myRank ->
+        mainViewModel.mySeasonRank.collectAsStateWithLifecycle().value?.let { myRank ->
             SeasonContentRow(
                 rank = myRank.rank,
                 nickname = myRank.userName,

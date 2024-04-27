@@ -22,9 +22,9 @@ import com.example.planet.data.map.Trash
 import com.example.planet.data.map.TrashImage
 import com.example.planet.data.repository.MapRepositoryImpl
 import com.example.planet.domain.usecase.image.PostImageUseCase
-import com.example.planet.util.DistanceManager
-import com.example.planet.util.allDelete
-import com.example.planet.util.numberComma
+import com.example.planet.presentation.util.DistanceManager
+import com.example.planet.presentation.util.allDelete
+import com.example.planet.presentation.util.numberComma
 import com.naver.maps.geometry.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext

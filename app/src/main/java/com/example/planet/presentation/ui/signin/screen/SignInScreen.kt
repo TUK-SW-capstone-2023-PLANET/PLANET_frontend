@@ -1,5 +1,6 @@
 package com.example.planet.presentation.ui.signin.screen
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -31,10 +32,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.planet.R
+import com.example.planet.TAG
 import com.example.planet.presentation.ui.signin.component.EmailTextField
 import com.example.planet.presentation.ui.signup.component.PasswdTextField
 import com.example.planet.presentation.viewmodel.SignInViewModel
-import com.example.planet.util.noRippleClickable
+import com.example.planet.presentation.util.noRippleClickable
 import kotlinx.coroutines.launch
 
 @Composable
@@ -43,6 +45,8 @@ fun SignInScreen(
     startSignUpActivity: () -> Unit,
     startMainActivity: () -> Unit
 ) {
+    Log.d(TAG, "SignInScreen 실행")
+
     val scrollState = rememberScrollState()
     val scope = rememberCoroutineScope()
 

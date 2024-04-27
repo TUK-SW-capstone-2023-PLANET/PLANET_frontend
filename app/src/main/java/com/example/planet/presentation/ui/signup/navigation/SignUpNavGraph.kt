@@ -31,7 +31,7 @@ import com.example.planet.presentation.ui.signup.screen.NameScreen
 import com.example.planet.presentation.ui.signup.screen.PasswdScreen
 import com.example.planet.presentation.viewmodel.SignUpViewModel
 import com.example.planet.presentation.viewmodel.navRouteList
-import com.example.planet.util.noRippleClickable
+import com.example.planet.presentation.util.noRippleClickable
 
 @Composable
 fun SignUpNavGraph(

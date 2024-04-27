@@ -24,11 +24,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
@@ -40,14 +42,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.example.planet.R
 import com.example.planet.TAG
 import com.example.planet.component.common.RedTextButton
+import com.example.planet.presentation.util.numberComma
 import com.example.planet.presentation.viewmodel.MainViewModel
-import com.example.planet.util.numberComma
 import kotlinx.coroutines.launch
 
 @Composable
@@ -56,7 +59,6 @@ fun UserScreen(
     onClick: () -> Unit
 ) {
     LaunchedEffect(Unit) {
-        Log.d(TAG, "UserScreen 실행")
         launch {
             mainViewModel.getUserInfo()
         }
@@ -71,13 +73,13 @@ fun UserScreen(
     val scrollState = rememberScrollState()
     val redButtonTextColor = colorResource(id = R.color.red)
 
-
     Column(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(scrollState)
             .padding(horizontal = 24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
     ) {
         Row(
             modifier = Modifier
@@ -86,7 +88,7 @@ fun UserScreen(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            mainViewModel.userInfo.value?.let { userInfo ->
+            mainViewModel.userInfo.collectAsStateWithLifecycle().value?.let { userInfo ->
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -141,8 +143,7 @@ fun UserScreen(
             image = painterResource(id = R.drawable.plogging_ranking_universitylogo),
             title = "대학교 점수"
         )
-
-        mainViewModel.myUniversityInfo.value?.let { myUniversityInfo ->
+        mainViewModel.myUniversityInfo.collectAsStateWithLifecycle().value?.let { myUniversityInfo ->
             MyProfileInfoLayout(
                 image = myUniversityInfo.imageUrl,
                 title = myUniversityInfo.name,
@@ -194,7 +195,7 @@ fun UserScreen(
             image = painterResource(id = R.drawable.plogging_user_seasonscorelogo),
             title = "시즌 점수"
         )
-        mainViewModel.mySeasonRank.value?.let { mySeasonInfo ->
+        mainViewModel.mySeasonRank.collectAsStateWithLifecycle().value?.let { mySeasonInfo ->
             MyProfileInfoLayout(
                 image = mySeasonInfo.tierImageUrl,
                 title = mySeasonInfo.tierName,

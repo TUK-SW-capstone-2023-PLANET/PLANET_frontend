@@ -43,6 +43,13 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("debug")
+//            isShrinkResources = true
+//            isMinifyEnabled = true
+//            proguardFiles(
+//                getDefaultProguardFile("proguard-android-optimize.txt"),
+//                "proguard-rules.pro",
+//            )
         }
     }
     compileOptions {
@@ -69,8 +76,8 @@ dependencies {
 
     implementation("androidx.core:core-ktx:${rootProject.extra["core-ktxVersion"]}")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
-    implementation("androidx.activity:activity-compose:1.8.2")
-    implementation(platform("androidx.compose:compose-bom:2023.08.00"))
+    implementation("androidx.activity:activity-compose:1.9.0")
+    implementation(platform("androidx.compose:compose-bom:2024.03.00"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
@@ -108,13 +115,14 @@ dependencies {
     implementation("com.patrykandpatrick.vico:compose-m3:${rootProject.extra["vico-version"]}") // For `compose`. Creates a `ChartStyle` based on an M3 Material Theme.
 
     // viewPager2
-//    implementation("com.tbuonomo:dotsindicator:5.0")
-//    implementation("androidx.compose.foundation:foundation:1.4.0")
-    implementation ("com.google.accompanist:accompanist-pager:${rootProject.extra["accompanist_version"]}") // Pager
-    implementation ("com.google.accompanist:accompanist-pager-indicators:${rootProject.extra["accompanist_version"]}") // Pager Indicators
+    implementation("com.tbuonomo:dotsindicator:5.0")
+    implementation("androidx.compose.foundation:foundation:1.6.6")
+    // accompanist-pager는 지원 중단
+//    implementation ("com.google.accompanist:accompanist-pager:${rootProject.extra["accompanist_version"]}") // Pager
+//    implementation ("com.google.accompanist:accompanist-pager-indicators:${rootProject.extra["accompanist_version"]}") // Pager Indicators
 
-    // okHttp, requestBodu 사용하기 위함
-    implementation("com.squareup.okhttp3:okhttp:4.9.1")
+    // okHttp, requestBody 사용하기 위함
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
 
     // retrofit
     implementation("com.google.code.gson:gson:2.8.9")
@@ -143,4 +151,7 @@ dependencies {
     //paging 3
     implementation ( "androidx.paging:paging-runtime-ktx:3.2.1")
     implementation ("androidx.paging:paging-compose:3.3.0-alpha02")
+
+    // collectAsStateWithLifecycle 사용
+    implementation ("androidx.lifecycle:lifecycle-runtime-compose:2.7.0")
 }

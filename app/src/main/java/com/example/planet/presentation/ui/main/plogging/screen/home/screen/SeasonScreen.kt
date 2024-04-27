@@ -1,4 +1,4 @@
-package com.example.planet.presentation.ui.main.plogging.screen.home
+package com.example.planet.presentation.ui.main.plogging.screen.home.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -33,22 +33,22 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.planet.R
 import com.example.planet.component.main.SubTitle
 import com.example.planet.component.main.SubTitleDescription
-import com.example.planet.presentation.ui.main.plogging.screen.ranking.data.ScreenNav
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.SeasonContentRow
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.SeasonTitleRow
+import com.example.planet.presentation.ui.main.plogging.screen.ranking.data.ScreenNav
+import com.example.planet.presentation.util.noRippleClickable
+import com.example.planet.presentation.util.numberComma
 import com.example.planet.presentation.viewmodel.MainViewModel
-import com.example.planet.util.noRippleClickable
-import com.example.planet.util.numberComma
 import kotlinx.coroutines.launch
 
 @Composable
-fun SeasonScreen(navController: NavController, mainViewModel: MainViewModel) {
+fun SeasonScreen(navController: NavHostController, mainViewModel: MainViewModel) {
     var scrollState = rememberScrollState()
     val coroutineScope = rememberCoroutineScope()
 

@@ -42,7 +42,11 @@ import com.example.planet.domain.usecase.user.GetUserInfoUseCase
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.data.ScreenNav
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -69,35 +73,39 @@ class MainViewModel @Inject constructor(
 ) : ViewModel() {
     init {
         viewModelScope.launch {
+            async(Dispatchers.IO) { getUserToken() }.await()
+            listOf(
+                async(Dispatchers.IO) { getTop5SeasonUser() },
+                async(Dispatchers.IO) { getTop4UniversityUser() },
+                async(Dispatchers.IO) { getUniversityMyRanking() },
+                async(Dispatchers.IO) { getMySeasonRanking() },
+                async(Dispatchers.IO) { getMyPlanetRanking() },
+                async(Dispatchers.IO) { getMyUniversityInfo() },
+                async(Dispatchers.IO) { getTopBanner() },
+                async(Dispatchers.IO) { getTop3PlanetUser() },
+                async(Dispatchers.IO) { getTop3Universities() }
+            ).awaitAll()
 
-            getUserToken()
-
-            getTopBanner()
-
-            getTop3PlanetUser()
-            getTop5SeasonUser()
-            getTop4UniversityUser()
-            getTop3Universities()
-
-            getUniversityMyRanking()
-            getMySeasonRanking()
-            getMyPlanetRanking()
-            getMyUniversityInfo()
-
-            launch(Dispatchers.IO) {  getAllSeasonUser() }
-            launch(Dispatchers.IO) {  getAllUniversities() }
-            launch(Dispatchers.IO) {  getAllPlanetUserRanking() }
-            launch(Dispatchers.IO) {  getAllUniversityUser() }
+            launch(Dispatchers.IO) { getAllSeasonUser() }
+            launch(Dispatchers.IO) { getAllUniversities() }
+            launch(Dispatchers.IO) { getAllPlanetUserRanking() }
+            launch(Dispatchers.IO) { getAllUniversityUser() }
 
         }
     }
+
     // userToken
     lateinit var userId: String
 
     // 자대 대학교 유저 TOP3 그래프 높이 list
     var universityUserGraphHeightList = emptyList<Dp>()
+
     // 대학교 TOP3 그래프 높이 list
-    var universityGraphHeightList = emptyList<Dp>()
+    var universityGraphHeightList = listOf<Dp>(
+        300.dp,
+        300.dp,
+        300.dp,
+    )
 
     private val _ploggingOrRecordSwitch = mutableStateOf(true)
     val ploggingOrRecordSwitch: State<Boolean> = _ploggingOrRecordSwitch
@@ -106,21 +114,19 @@ class MainViewModel @Inject constructor(
     var imageUrlList by mutableStateOf(listOf<String>())
 
 
+    private val _userInfo = MutableStateFlow<UserInfo?>(null)
+    val userInfo: StateFlow<UserInfo?> = _userInfo.asStateFlow()
 
-    private val _userInfo = mutableStateOf<UserInfo?>(null)
-    val userInfo: State<UserInfo?> = _userInfo
+    private val _myUniversityRank = MutableStateFlow<UniversityUser?>(null)
+    val myUniversityRank: StateFlow<UniversityUser?> = _myUniversityRank.asStateFlow()
 
-    private val _myUniversityRank = mutableStateOf<UniversityUser?>(null)
-    val myUniversityRank: State<UniversityUser?> = _myUniversityRank
-
-    private val _mySeasonRank = mutableStateOf<SeasonUser?>(null)
-    val mySeasonRank: State<SeasonUser?> = _mySeasonRank
+    private val _mySeasonRank = MutableStateFlow<SeasonUser?>(null)
+    val mySeasonRank: StateFlow<SeasonUser?> = _mySeasonRank.asStateFlow()
 
     private val _myPlanetRank = mutableStateOf<PlanetRankingUser?>(null)
     val myPlanetRank: State<PlanetRankingUser?> = _myPlanetRank
 
-    private val _higherMyUniversityUsers = mutableStateOf(emptyList<ExpandedUniversityUser>())
-    val higherMyUniversityUsers: State<List<ExpandedUniversityUser>> = _higherMyUniversityUsers
+    var higherMyUniversityUsers by mutableStateOf(emptyList<ExpandedUniversityUser>())
 
     private val _higherUniversity = mutableStateListOf<University>()
     val higherUniversity: List<University> = _higherUniversity
@@ -131,7 +137,8 @@ class MainViewModel @Inject constructor(
     private val _higherPlanetUsers = mutableStateListOf<HigherPlanetUser>()
     val higherPlanetUsers: List<HigherPlanetUser> = _higherPlanetUsers
 
-    private val _totalUniversityUser = MutableStateFlow<PagingData<UniversityUser>>(PagingData.empty())
+    private val _totalUniversityUser =
+        MutableStateFlow<PagingData<UniversityUser>>(PagingData.empty())
     val totalUniversityUser: MutableStateFlow<PagingData<UniversityUser>> = _totalUniversityUser
 
     private val _totalUniversity = MutableStateFlow<PagingData<University>>(PagingData.empty())
@@ -140,12 +147,13 @@ class MainViewModel @Inject constructor(
     private val _totalSeasonUser = MutableStateFlow<PagingData<SeasonUser>>(PagingData.empty())
     val totalSeasonUser: MutableStateFlow<PagingData<SeasonUser>> = _totalSeasonUser
 
-    private val _totalPlanetRankingUser = MutableStateFlow<PagingData<PlanetRankingUser>>(PagingData.empty())
-    val totalPlanetRankingUser: MutableStateFlow<PagingData<PlanetRankingUser>> = _totalPlanetRankingUser
+    private val _totalPlanetRankingUser =
+        MutableStateFlow<PagingData<PlanetRankingUser>>(PagingData.empty())
+    val totalPlanetRankingUser: MutableStateFlow<PagingData<PlanetRankingUser>> =
+        _totalPlanetRankingUser
 
-    private val _myUniversityInfo = mutableStateOf<University?>(null)
-    val myUniversityInfo: State<University?> = _myUniversityInfo
-
+    private val _myUniversityInfo = MutableStateFlow<University?>(null)
+    val myUniversityInfo: StateFlow<University?> = _myUniversityInfo.asStateFlow()
 
 
     private val _tierList = mutableStateOf(emptyList<Tier>())
@@ -184,6 +192,10 @@ class MainViewModel @Inject constructor(
 
     private fun getGraphHeightList1(list: List<University>): List<Dp> {
         val graphHeight1th = 120 // 기준을 120dp로 잡음
+        Log.d(
+            "daeYoung",
+            "getGraphHeightList1():  1->${list}\n2-> ${(graphHeight1th * list[1].score)}\n3->${(graphHeight1th * list[1].score) / list[0].score}"
+        )
         val graphHeight2th = (graphHeight1th * list[1].score) / list[0].score
         val graphHeight3th = (graphHeight1th * list[2].score) / list[0].score
         // 2등, 1등, 3등 순서대로 저장
@@ -211,7 +223,6 @@ class MainViewModel @Inject constructor(
             is ApiState.Success<*> -> {
                 val result = apiState.value as List<Advertisement>
                 result.forEach {
-//                    _imageUrlList.add(it.imageUrl)
                     imageUrlList = imageUrlList.toList() + it.imageUrl
                 }
                 Log.d(TAG, "getTopBanner() 성공")
@@ -249,10 +260,11 @@ class MainViewModel @Inject constructor(
             _totalPlanetRankingUser.value = it
         }
     }
+
     suspend fun getMySeasonRanking() {
         when (val apiState = getMySeasonRankUseCase(userId).first()) {
             is ApiState.Success<*> -> {
-                _mySeasonRank.value = apiState.value as SeasonUser
+                _mySeasonRank.emit(apiState.value as SeasonUser)
                 Log.d(TAG, "getMySeasonRanking() 성공: ${mySeasonRank.value}")
             }
 
@@ -280,7 +292,6 @@ class MainViewModel @Inject constructor(
     }
 
 
-
     private suspend fun getTop5SeasonUser() {
         when (val apiState = getHigherSeasonRankUseCase(userId).first()) {
             is ApiState.Success<*> -> {
@@ -306,8 +317,6 @@ class MainViewModel @Inject constructor(
     }
 
 
-
-
     suspend fun getTierList() {
         when (val apiState = getTierListUseCase().first()) {
             is ApiState.Success<*> -> {
@@ -330,7 +339,13 @@ class MainViewModel @Inject constructor(
                     _higherUniversity.add(university)
                 }
                 universityGraphHeightList = getGraphHeightList1(list = higherUniversity)
+                Log.d(
+                    "daeYoung",
+                    "getTop3Universities() 성공: ${higherUniversity}, ${universityGraphHeightList}"
+                )
+
             }
+
             is ApiState.Error -> {
                 Log.d("daeYoung", "getTopHigherUniversities() 실패: ${apiState.errMsg}")
             }
@@ -351,15 +366,19 @@ class MainViewModel @Inject constructor(
             _totalUniversityUser.value = it
         }
     }
+
     private suspend fun getTop4UniversityUser() {
         when (val apiState = getHigherUniversityUserRankUseCase(userId).first()) {
             is ApiState.Success<*> -> {
-                Log.d("daeYoung", "getUniversityUserTop4Ranking() 성공: ${apiState.value as List<Map<Int, ExpandedUniversityUser>>}")
+                Log.d(
+                    "daeYoung",
+                    "getUniversityUserTop4Ranking() 성공: ${apiState.value as List<Map<Int, ExpandedUniversityUser>>}"
+                )
                 val result = apiState.value
                 result[0].values.forEach { university ->
-                    _higherMyUniversityUsers.value = higherMyUniversityUsers.value + university
+                    higherMyUniversityUsers = higherMyUniversityUsers + university
                 }
-                universityUserGraphHeightList = getGraphHeightList(list = higherMyUniversityUsers.value)
+                universityUserGraphHeightList = getGraphHeightList(list = higherMyUniversityUsers)
             }
 
             is ApiState.Error -> {
@@ -373,10 +392,11 @@ class MainViewModel @Inject constructor(
     private suspend fun getUniversityMyRanking() {
         when (val apiState = getMyUniversityRankUseCase(userId).first()) {
             is ApiState.Success<*> -> {
-                _myUniversityRank.value = (apiState.value as UniversityUser)
+                _myUniversityRank.emit(apiState.value as UniversityUser)
                 Log.d(TAG, "getUniversityMyRankingUseCase() 성공: $_myUniversityRank")
 
             }
+
             is ApiState.Error -> {
                 Log.d("daeYoung", "getUniversityMyRankingUseCase() 실패: ${apiState.errMsg}")
             }
@@ -388,10 +408,11 @@ class MainViewModel @Inject constructor(
     suspend fun getMyUniversityInfo() {
         when (val apiState = getMyUniversityInfoUseCase(userId).first()) {
             is ApiState.Success<*> -> {
-                _myUniversityInfo.value = (apiState.value as University)
+                _myUniversityInfo.emit(apiState.value as University)
                 Log.d(TAG, "getMyUniversityInfo() 성공: $_myUniversityRank")
 
             }
+
             is ApiState.Error -> {
                 Log.d("daeYoung", "getMyUniversityInfo() 실패: ${apiState.errMsg}")
             }
@@ -403,9 +424,10 @@ class MainViewModel @Inject constructor(
     suspend fun getUserInfo() {
         when (val apiState = getUserInfoUseCase(userId).first()) {
             is ApiState.Success<*> -> {
-                _userInfo.value = (apiState.value as UserInfo)
+                _userInfo.emit(apiState.value as UserInfo)
                 Log.d(TAG, "getUserInfo() 성공: ${userInfo.value}")
             }
+
             is ApiState.Error -> {
                 Log.d("daeYoung", "getUserInfo() 실패: ${apiState.errMsg}")
             }
