@@ -6,7 +6,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.navigation.compose.rememberNavController
-import com.example.planet.presentation.ui.map.MapActivity
 import com.example.planet.presentation.ui.signin.screen.SignInActivity
 import com.example.planet.presentation.ui.signup.navigation.SignUpNavGraph
 import com.example.planet.presentation.viewmodel.SignUpViewModel

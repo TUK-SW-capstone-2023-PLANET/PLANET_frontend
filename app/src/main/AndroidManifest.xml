@@ -24,21 +24,25 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".presentation.ui.plogging.screen.PloggingResultActivity"
+            android:exported="false"
+            android:label="@string/title_activity_plogging_result"
+            android:theme="@style/Theme.MyApplication"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".presentation.ui.signin.screen.SignInActivity"
             android:exported="false"
             android:label="@string/title_activity_sign_in"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MyApplication"
-            android:windowSoftInputMode="adjustResize">
-        </activity>
+            android:windowSoftInputMode="adjustResize"></activity>
         <activity
             android:name=".presentation.ui.signup.screen.SignUpActivity"
             android:exported="false"
             android:label="@string/title_activity_sign_up"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MyApplication"
-            android:windowSoftInputMode="adjustResize">
-        </activity>
+            android:windowSoftInputMode="adjustResize"></activity>
         <activity
             android:name=".presentation.ui.user.screen.UserActivity"
             android:exported="false"
@@ -75,7 +79,7 @@
             android:value="${NAVER_CLIENT_ID}" />
 
         <activity
-            android:name=".presentation.ui.map.MapActivity"
+            android:name=".presentation.ui.plogging.screen.MapActivity"
             android:exported="false"
             android:label="@string/title_activity_map"
             android:screenOrientation="portrait"

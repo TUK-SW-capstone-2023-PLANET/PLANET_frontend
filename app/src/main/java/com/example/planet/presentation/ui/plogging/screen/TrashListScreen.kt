@@ -1,4 +1,4 @@
-package com.example.planet.presentation.ui.map
+package com.example.planet.presentation.ui.plogging.screen
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding

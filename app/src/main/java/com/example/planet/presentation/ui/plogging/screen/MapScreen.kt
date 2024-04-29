@@ -1,4 +1,4 @@
-package com.example.planet.presentation.ui.map
+package com.example.planet.presentation.ui.plogging.screen
 
 import android.graphics.PointF
 import android.net.Uri
