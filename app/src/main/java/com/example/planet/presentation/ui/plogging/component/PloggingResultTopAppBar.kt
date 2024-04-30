@@ -21,10 +21,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.planet.R
+import androidx.compose.ui.text.TextStyle
 
 @Composable
 fun PloggingResultTopAppBar() {
-    val fontColor = colorResource(id = R.color.font_background_color1)
+    val textStyle = TextStyle(
+        color = colorResource(id = R.color.font_background_color1),
+        fontSize = 14.sp,
+        fontWeight = FontWeight.SemiBold,
+    )
+    val iconColor = colorResource(id = R.color.font_background_color1)
 
     Box(modifier = Modifier
         .fillMaxWidth()
@@ -32,22 +38,20 @@ fun PloggingResultTopAppBar() {
         Text(
             text = "플로깅 결과",
             modifier = Modifier.align(Alignment.Center),
-            fontSize = 14.sp,
-            fontWeight = FontWeight.SemiBold,
-            color = fontColor
+            style = textStyle
         )
         Row(modifier = Modifier.align(Alignment.CenterEnd)) {
             Icon(
                 imageVector = Icons.Default.Share,
                 contentDescription = null,
-                tint = fontColor,
+                tint = iconColor,
                 modifier = Modifier.size(18.dp)
             )
             Spacer(modifier = Modifier.width(13.dp))
             Icon(
                 imageVector = Icons.Default.Done,
                 contentDescription = null,
-                tint = fontColor,
+                tint = iconColor,
                 modifier = Modifier.size(18.dp)
             )
         }
