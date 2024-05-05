@@ -27,7 +27,7 @@ import androidx.compose.ui.text.TextStyle
 fun PloggingResultTopAppBar() {
     val textStyle = TextStyle(
         color = colorResource(id = R.color.font_background_color1),
-        fontSize = 14.sp,
+        fontSize = 15.sp,
         fontWeight = FontWeight.SemiBold,
     )
     val iconColor = colorResource(id = R.color.font_background_color1)

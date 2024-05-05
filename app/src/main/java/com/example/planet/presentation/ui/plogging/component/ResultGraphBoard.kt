@@ -202,7 +202,7 @@ fun TrashGraphCard(trash: TrashItem, highestScore: Int, scoreColor: Color, count
                     .height(12.dp)
             ) {
                 drawRect(
-                    color = countColor,
+                    color = scoreColor,
                     size = Size(this.size.width / highestScore * trash.score, size.height)
                 )
             }
@@ -212,7 +212,7 @@ fun TrashGraphCard(trash: TrashItem, highestScore: Int, scoreColor: Color, count
                     .fillMaxWidth()
                     .height(12.dp)
             ) {
-                drawRect(color = scoreColor, size = this.size)
+                drawRect(color = countColor, size = this.size)
             }
             Spacer(modifier = Modifier.height(20.dp))
 

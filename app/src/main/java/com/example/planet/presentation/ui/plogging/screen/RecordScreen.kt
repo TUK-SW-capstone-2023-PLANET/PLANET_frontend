@@ -50,20 +50,20 @@ import com.example.planet.TAG
 import com.example.planet.component.map.common.CameraButton
 import com.example.planet.component.map.common.LockButton
 import com.example.planet.component.map.record.RoundCornerCard
-import com.example.planet.presentation.viewmodel.MapViewModel
+import com.example.planet.presentation.viewmodel.PloggingViewModel
 import com.example.planet.presentation.util.getImageUri
 import com.example.planet.presentation.util.noRippleClickable
 
 //@Preview(showBackground = true)
 @Composable
-fun RecordScreen(mapViewModel: MapViewModel = viewModel(), cameraLauncher: ManagedActivityResultLauncher<Uri, Boolean>) {
+fun RecordScreen(ploggingViewModel: PloggingViewModel = viewModel(), cameraLauncher: ManagedActivityResultLauncher<Uri, Boolean>) {
     val timerColorList =
         listOf(colorResource(id = R.color.main_color1), colorResource(id = R.color.main_color3))
     val fontColor = colorResource(id = R.color.font_background_color1)
     val textMeasurer1 = rememberTextMeasurer()
     val textMeasurer2 = rememberTextMeasurer()
-    val hour = "${mapViewModel.hour.value}hour"
-    val minuteSecond = mapViewModel.formattedTime.value
+    val hour = "${ploggingViewModel.hour.value}hour"
+    val minuteSecond = ploggingViewModel.formattedTime.value
     val textStyle1 = TextStyle(color = fontColor, fontWeight = FontWeight.Medium)
     val textStyle2 = TextStyle(color = Color.Black, fontWeight = FontWeight.Bold, fontSize = 45.sp)
     val textLayoutResult1 = remember(hour) {
@@ -76,7 +76,7 @@ fun RecordScreen(mapViewModel: MapViewModel = viewModel(), cameraLauncher: Manag
 
     DisposableEffect(Unit) {
         onDispose {
-            val result = mapViewModel.cashFileAllDelete()
+            val result = ploggingViewModel.cashFileAllDelete()
             Log.d(TAG, "recordScreen onDispose\n cashFile.delete(): ${result}")
         }
     }
@@ -151,7 +151,7 @@ fun RecordScreen(mapViewModel: MapViewModel = viewModel(), cameraLauncher: Manag
                     .align(Alignment.BottomCenter)
                     .padding(bottom = 90.dp)
                     .size(50.dp)
-                    .noRippleClickable { mapViewModel.displayOnDialog() },
+                    .noRippleClickable { ploggingViewModel.displayOnDialog() },
                 tint = colorResource(id = R.color.font_background_color3)
             )
         }
@@ -169,7 +169,7 @@ fun RecordScreen(mapViewModel: MapViewModel = viewModel(), cameraLauncher: Manag
                         fontStyle = FontStyle.Italic
                     )
                 ) {
-                    append(mapViewModel.roundDistance())
+                    append(ploggingViewModel.roundDistance())
                 }
                 withStyle(SpanStyle(fontSize = 25.sp, fontWeight = FontWeight.Medium)) {
                     append(" km")
@@ -190,7 +190,7 @@ fun RecordScreen(mapViewModel: MapViewModel = viewModel(), cameraLauncher: Manag
                             fontWeight = FontWeight.SemiBold,
                         )
                     ) {
-                        append(mapViewModel.pace.value.first.toString())
+                        append(ploggingViewModel.pace.value.first.toString())
                     }
                     withStyle(SpanStyle(fontSize = 22.sp, fontWeight = FontWeight.SemiBold)) {
                         append("'")
@@ -201,7 +201,7 @@ fun RecordScreen(mapViewModel: MapViewModel = viewModel(), cameraLauncher: Manag
                             fontWeight = FontWeight.SemiBold,
                         )
                     ) {
-                        append(mapViewModel.roundpaceSecond())
+                        append(ploggingViewModel.roundpaceSecond())
                     }
                     withStyle(SpanStyle(fontSize = 22.sp, fontWeight = FontWeight.SemiBold)) {
                         append("\"")
@@ -217,7 +217,7 @@ fun RecordScreen(mapViewModel: MapViewModel = viewModel(), cameraLauncher: Manag
                             fontWeight = FontWeight.SemiBold,
                         )
                     ) {
-                        append(mapViewModel.roundKcal())
+                        append(ploggingViewModel.roundKcal())
                     }
                     withStyle(SpanStyle(fontSize = 20.sp, fontWeight = FontWeight.SemiBold)) {
                         append(" kcal")
@@ -239,7 +239,7 @@ fun RecordScreen(mapViewModel: MapViewModel = viewModel(), cameraLauncher: Manag
                             fontWeight = FontWeight.SemiBold,
                         )
                     ) {
-                        append(mapViewModel.formatTrashScore())
+                        append(ploggingViewModel.formatTrashScore())
                     }
                     withStyle(SpanStyle(fontSize = 20.sp, fontWeight = FontWeight.SemiBold)) {
                         append("점")
@@ -255,7 +255,7 @@ fun RecordScreen(mapViewModel: MapViewModel = viewModel(), cameraLauncher: Manag
                             fontWeight = FontWeight.SemiBold,
                         )
                     ) {
-                        append(mapViewModel.totalTrashCount.value.toString())
+                        append(ploggingViewModel.totalTrashCount.value.toString())
                     }
                     withStyle(SpanStyle(fontSize = 20.sp, fontWeight = FontWeight.SemiBold)) {
                         append(" 개")
@@ -267,10 +267,10 @@ fun RecordScreen(mapViewModel: MapViewModel = viewModel(), cameraLauncher: Manag
         Spacer(modifier = Modifier.height(16.dp))
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = if (!mapViewModel.lockScreenState.value) Arrangement.SpaceBetween else Arrangement.End
+            horizontalArrangement = if (!ploggingViewModel.lockScreenState.value) Arrangement.SpaceBetween else Arrangement.End
         ) {
-            if (!mapViewModel.lockScreenState.value) {
-                LockButton(imgaeVector = Icons.Default.Lock, lock = { mapViewModel.lockScreen() })
+            if (!ploggingViewModel.lockScreenState.value) {
+                LockButton(imgaeVector = Icons.Default.Lock, lock = { ploggingViewModel.lockScreen() })
             }
             CameraButton { cameraLauncher.launch(getImageUri(context)) }
         }

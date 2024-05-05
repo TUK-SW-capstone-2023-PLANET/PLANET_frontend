@@ -32,13 +32,13 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.planet.R
-import com.example.planet.presentation.viewmodel.MapViewModel
+import com.example.planet.presentation.viewmodel.PloggingViewModel
 
 @Composable
-fun PloggingDialog(mapViewModel: MapViewModel = viewModel(), onClick: () -> Unit) {
+fun PloggingDialog(ploggingViewModel: PloggingViewModel = viewModel(), onClick: () -> Unit) {
     Dialog(onDismissRequest = {
-        mapViewModel.displayOnDialog()
-        mapViewModel.startTimer()
+        ploggingViewModel.displayOnDialog()
+        ploggingViewModel.startTimer()
     }) {
         Surface(
             modifier = Modifier
@@ -49,10 +49,10 @@ fun PloggingDialog(mapViewModel: MapViewModel = viewModel(), onClick: () -> Unit
         ) {
             DialogContent(
                 stop = {
-                    mapViewModel.postPlogging()
+                    ploggingViewModel.postPlogging()
                     onClick()
                 },
-                replay = { mapViewModel.startTimer() }) { mapViewModel.displayOnDialog() }
+                replay = { ploggingViewModel.startTimer() }) { ploggingViewModel.displayOnDialog() }
         }
     }
 }

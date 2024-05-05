@@ -1,26 +1,35 @@
 package com.example.planet.presentation.ui.plogging.screen
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import com.example.planet.presentation.ui.ui.theme.MyApplicationTheme
-import com.example.planet.presentation.viewmodel.MapViewModel
+import com.example.planet.presentation.viewmodel.PloggingViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MapActivity : ComponentActivity() {
-    private val mapViewModel by viewModels<MapViewModel>()
+    private val ploggingViewModel by viewModels<PloggingViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        ploggingViewModel
         setContent {
             MyApplicationTheme {
                 // A surface container using the 'background' color from the theme
-                MapGraph(mapViewModel = mapViewModel) {
-                    finish()
+                MapGraph(ploggingViewModel = ploggingViewModel) {
+                    showPloggingResultActivity()
                 }
             }
         }
     }
+
+    private fun showPloggingResultActivity() {
+        val intent = Intent(this, PloggingResultActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
 }
+

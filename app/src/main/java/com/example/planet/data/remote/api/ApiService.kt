@@ -2,13 +2,15 @@ package com.example.planet.data.remote.api
 
 import com.example.planet.data.remote.dto.Advertisement
 import com.example.planet.data.remote.dto.ImageUrl
-import com.example.planet.data.remote.dto.PloggingComplete
-import com.example.planet.data.remote.dto.PloggingImage
-import com.example.planet.data.remote.dto.PloggingInfo
+import com.example.planet.data.remote.dto.response.plogging.PloggingComplete
+import com.example.planet.data.remote.dto.request.plogging.PloggingImage
+import com.example.planet.data.remote.dto.request.plogging.PloggingInfo
 import com.example.planet.data.remote.dto.Tier
 import com.example.planet.data.remote.dto.TrashCan
 import com.example.planet.data.remote.dto.request.signin.LoginInfo
 import com.example.planet.data.remote.dto.request.signup.PlanetUser
+import com.example.planet.data.remote.dto.response.plogging.PloggingId
+import com.example.planet.data.remote.dto.response.plogging.PloggingResult
 import com.example.planet.data.remote.dto.response.signup.SignUpResponse
 import com.example.planet.data.remote.dto.response.ranking.planet.HigherPlanetUser
 import com.example.planet.data.remote.dto.response.ranking.planet.PagingPlanetUser
@@ -38,8 +40,8 @@ interface ApiService {
     @GET("/trash-can/all")
     suspend fun getAllTrashCanLocation(): List<TrashCan>
 
-    @GET("/plogging/id")
-    suspend fun getPloggingId(): Int
+    @GET("/plogging/user/{userId}")
+    suspend fun getPloggingId(@Path("userId") userId: Int): PloggingId
 
     @Multipart
     @POST("/image")
@@ -50,6 +52,10 @@ interface ApiService {
 
     @POST("/plogging")
     suspend fun postPlogging(@Body ploggingInfo: PloggingInfo): PloggingComplete
+
+
+    @GET("/plogging/{ploggingId}")
+    suspend fun GetPloggingInfo(@Path("ploggingId") ploggingId: Int): PloggingResult
 
     @GET("/advertisement")
     suspend fun getTopBanner(): List<Advertisement>

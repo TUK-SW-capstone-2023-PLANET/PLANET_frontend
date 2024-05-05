@@ -19,5 +19,6 @@ sealed class TrashImage() {
 data class Trash(
     val name: String,
     val image: Int,
-    var count: Int
+    var count: Int,
+    val score: Int,
 )

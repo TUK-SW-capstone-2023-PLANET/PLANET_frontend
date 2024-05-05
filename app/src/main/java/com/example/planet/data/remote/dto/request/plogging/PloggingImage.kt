@@ -1,4 +1,4 @@
-package com.example.planet.data.remote.dto
+package com.example.planet.data.remote.dto.request.plogging
 
 data class PloggingImage(
     val userId: Int,

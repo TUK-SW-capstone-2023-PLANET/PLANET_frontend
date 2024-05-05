@@ -39,8 +39,6 @@ import kotlinx.coroutines.flow.collectLatest
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MainTopBanner(imageUrlList: () -> List<String>) {
-    Log.d(TAG, "MainTopBanner 실행: ${imageUrlList()}")
-
 
     val pagerState = rememberPagerState {
         imageUrlList().size

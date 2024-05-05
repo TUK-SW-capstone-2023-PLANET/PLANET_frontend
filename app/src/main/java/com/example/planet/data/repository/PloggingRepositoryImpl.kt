@@ -2,16 +2,16 @@ package com.example.planet.data.repository
 
 import com.example.planet.data.remote.api.ApiService
 import com.example.planet.data.remote.dto.ApiState
-import com.example.planet.data.remote.dto.PloggingImage
-import com.example.planet.data.remote.dto.PloggingInfo
-import com.example.planet.domain.repository.MapRepository
+import com.example.planet.data.remote.dto.request.plogging.PloggingImage
+import com.example.planet.data.remote.dto.request.plogging.PloggingInfo
+import com.example.planet.domain.repository.PloggingRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
-class MapRepositoryImpl @Inject constructor(private val apiService: ApiService): MapRepository {
+class PloggingRepositoryImpl @Inject constructor(private val apiService: ApiService): PloggingRepository {
     override suspend fun getAllTrashCanLocation(): Flow<ApiState> = flow {
         kotlin.runCatching {
             apiService.getAllTrashCanLocation()
@@ -22,9 +22,9 @@ class MapRepositoryImpl @Inject constructor(private val apiService: ApiService):
         }
     }.flowOn(Dispatchers.IO)
 
-    override suspend fun getPloggingId(): Flow<ApiState> = flow {
+    override suspend fun getPloggingId(userId: Int): Flow<ApiState> = flow {
         kotlin.runCatching {
-            apiService.getPloggingId()
+            apiService.getPloggingId(userId = userId)
         }.onSuccess {
             emit(ApiState.Success(it))
         }.onFailure { error ->

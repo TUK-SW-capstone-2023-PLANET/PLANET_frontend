@@ -42,13 +42,13 @@ import com.example.planet.TAG
 import com.example.planet.component.common.PloggingDialog
 import com.example.planet.component.map.common.LockButton
 import com.example.planet.data.map.Tabltem
-import com.example.planet.presentation.viewmodel.MapViewModel
+import com.example.planet.presentation.viewmodel.PloggingViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun MapGraph(mapViewModel: MapViewModel = viewModel(), onClick: () -> Unit) {
+fun MapGraph(ploggingViewModel: PloggingViewModel = viewModel(), onClick: () -> Unit) {
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -56,7 +56,7 @@ fun MapGraph(mapViewModel: MapViewModel = viewModel(), onClick: () -> Unit) {
         rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { success ->
             if (success) Log.d(TAG, "take picture 성공")
             // 사진 저장하는 API 호출
-            mapViewModel.postImage()
+            ploggingViewModel.postImage()
         }
 
     val tabltems = listOf(
@@ -81,32 +81,30 @@ fun MapGraph(mapViewModel: MapViewModel = viewModel(), onClick: () -> Unit) {
 
     LaunchedEffect(Unit) {
         while (true) {
-            mapViewModel.pastLatLng = mapViewModel.currentLatLng
+            ploggingViewModel.pastLatLng = ploggingViewModel.currentLatLng
             delay(5000)
 //            Log.d(TAG, "계산중: ${mapViewModel.distance.value}")
 //            Log.d(TAG, "pastLocation: ${mapViewModel.pastLatLng}")
 //            Log.d(TAG, "currentLocation: ${mapViewModel.currentLatLng}")
-            mapViewModel.distanceCalculate()
+            ploggingViewModel.distanceCalculate()
 
         }
     }
-    LaunchedEffect(mapViewModel.kcal.value) {
-        mapViewModel.kcalCalculate()
+    LaunchedEffect(ploggingViewModel.kcal.value) {
+        ploggingViewModel.kcalCalculate()
     }
 
     DisposableEffect(Unit) {
-        mapViewModel.startTimer()
-        mapViewModel.getAllTrashCanLocation()
-        mapViewModel.getPloggingId()
+        ploggingViewModel.startTimer()
+        ploggingViewModel.getAllTrashCanLocation()
         onDispose {
-            mapViewModel.endTimer()
+            ploggingViewModel.endTimer()
         }
     }
 
     BackHandler {
-        Log.d(TAG, "BackHandler 호출")
-        mapViewModel.displayOnDialog()
-        mapViewModel.pauseTimer()
+        ploggingViewModel.displayOnDialog()
+        ploggingViewModel.pauseTimer()
     }
 
     // 탑 앱바 적용하면 RecordScreen 화면 카메라, 잠금 버튼 뭉게짐
@@ -119,11 +117,11 @@ fun MapGraph(mapViewModel: MapViewModel = viewModel(), onClick: () -> Unit) {
 //            )
 //        })
 //    })
-    if (mapViewModel.dialogState.value) {
-        PloggingDialog(mapViewModel = mapViewModel) {
+    if (ploggingViewModel.dialogState.value) {
+        PloggingDialog(ploggingViewModel = ploggingViewModel) {
             onClick()
         }
-        mapViewModel.pauseTimer()
+        ploggingViewModel.pauseTimer()
     }
     Box(
         modifier = Modifier
@@ -159,17 +157,17 @@ fun MapGraph(mapViewModel: MapViewModel = viewModel(), onClick: () -> Unit) {
             }
             HorizontalPager(state = pagerState) { index ->
                 when (index) {
-                    0 -> MapScreen(mapViewModel = mapViewModel, cameraLauncher = cameraLauncher)
+                    0 -> MapScreen(ploggingViewModel = ploggingViewModel, cameraLauncher = cameraLauncher)
                     1 -> RecordScreen(
-                        mapViewModel = mapViewModel,
+                        ploggingViewModel = ploggingViewModel,
                         cameraLauncher = cameraLauncher
                     )
 
-                    2 -> TrashListScreen(trashList = mapViewModel.trashs)
+                    2 -> TrashListScreen(trashList = ploggingViewModel.trashes)
                 }
             }
         }
-        if (mapViewModel.lockScreenState.value) {
+        if (ploggingViewModel.lockScreenState.value) {
             Surface(
                 modifier = Modifier.fillMaxSize(),
                 color = Color.Black.copy(alpha = 0.5f)
@@ -187,7 +185,7 @@ fun MapGraph(mapViewModel: MapViewModel = viewModel(), onClick: () -> Unit) {
                         .align(Alignment.BottomStart)
                         .padding(16.dp),
                         imgaeVector = Icons.Default.LockOpen,
-                        unlock = { mapViewModel.unlockScreen() })
+                        unlock = { ploggingViewModel.unlockScreen() })
                 }
             }
         }

@@ -204,10 +204,7 @@ class MainViewModel @Inject constructor(
 
     private suspend fun getUserToken(userTokenKey: String = "userToken") {
         when (val result = getUserTokenUseCase(userTokenKey).first()) {
-            is ApiState.Success<*> -> {
-                Log.d(TAG, "getUserToken(): ${result.value}")
-                userId = result.value as String
-            }
+            is ApiState.Success<*> -> { userId = result.value as String }
 
             is ApiState.Error -> {
                 Log.d(TAG, "getUserToken() 실패: ${result.errMsg}")
@@ -222,10 +219,7 @@ class MainViewModel @Inject constructor(
         when (val apiState = getBannerUseCase().first()) {
             is ApiState.Success<*> -> {
                 val result = apiState.value as List<Advertisement>
-                result.forEach {
-                    imageUrlList = imageUrlList.toList() + it.imageUrl
-                }
-                Log.d(TAG, "getTopBanner() 성공")
+                result.forEach { imageUrlList = imageUrlList.toList() + it.imageUrl }
             }
 
             is ApiState.Error -> {
@@ -241,10 +235,7 @@ class MainViewModel @Inject constructor(
         when (val apiState = getHigherPlanetUserUseCase().first()) {
             is ApiState.Success<*> -> {
                 val result = apiState.value as List<HigherPlanetUser>
-                result.forEach {
-                    _higherPlanetUsers.add(it)
-                }
-                Log.d(TAG, "getTop3PlanetUser() 성공: ${higherPlanetUsers}")
+                result.forEach { _higherPlanetUsers.add(it) }
             }
 
             is ApiState.Error -> {
@@ -265,7 +256,6 @@ class MainViewModel @Inject constructor(
         when (val apiState = getMySeasonRankUseCase(userId).first()) {
             is ApiState.Success<*> -> {
                 _mySeasonRank.emit(apiState.value as SeasonUser)
-                Log.d(TAG, "getMySeasonRanking() 성공: ${mySeasonRank.value}")
             }
 
             is ApiState.Error -> {
@@ -280,7 +270,6 @@ class MainViewModel @Inject constructor(
         when (val apiState = getMyPlanetRankUseCase(userId).first()) {
             is ApiState.Success<*> -> {
                 _myPlanetRank.value = apiState.value as PlanetRankingUser
-                Log.d(TAG, "getMyPlanetRanking() 성공: ${myPlanetRank.value}")
             }
 
             is ApiState.Error -> {
@@ -299,7 +288,6 @@ class MainViewModel @Inject constructor(
                 result[0].values.forEach {
                     _higherSeasonUsers.add(it)
                 }
-                Log.d(TAG, "getTop5SeasonUser() 성공: ${higherSeasonUsers}")
             }
 
             is ApiState.Error -> {
@@ -321,7 +309,6 @@ class MainViewModel @Inject constructor(
         when (val apiState = getTierListUseCase().first()) {
             is ApiState.Success<*> -> {
                 _tierList.value = apiState.value as List<Tier>
-                Log.d(TAG, "getTierList() 성공")
             }
 
             is ApiState.Error -> {
@@ -339,11 +326,6 @@ class MainViewModel @Inject constructor(
                     _higherUniversity.add(university)
                 }
                 universityGraphHeightList = getGraphHeightList1(list = higherUniversity)
-                Log.d(
-                    "daeYoung",
-                    "getTop3Universities() 성공: ${higherUniversity}, ${universityGraphHeightList}"
-                )
-
             }
 
             is ApiState.Error -> {
@@ -370,11 +352,7 @@ class MainViewModel @Inject constructor(
     private suspend fun getTop4UniversityUser() {
         when (val apiState = getHigherUniversityUserRankUseCase(userId).first()) {
             is ApiState.Success<*> -> {
-                Log.d(
-                    "daeYoung",
-                    "getUniversityUserTop4Ranking() 성공: ${apiState.value as List<Map<Int, ExpandedUniversityUser>>}"
-                )
-                val result = apiState.value
+                val result = apiState.value as List<Map<Int, ExpandedUniversityUser>>
                 result[0].values.forEach { university ->
                     higherMyUniversityUsers = higherMyUniversityUsers + university
                 }
@@ -393,8 +371,6 @@ class MainViewModel @Inject constructor(
         when (val apiState = getMyUniversityRankUseCase(userId).first()) {
             is ApiState.Success<*> -> {
                 _myUniversityRank.emit(apiState.value as UniversityUser)
-                Log.d(TAG, "getUniversityMyRankingUseCase() 성공: $_myUniversityRank")
-
             }
 
             is ApiState.Error -> {
@@ -409,8 +385,6 @@ class MainViewModel @Inject constructor(
         when (val apiState = getMyUniversityInfoUseCase(userId).first()) {
             is ApiState.Success<*> -> {
                 _myUniversityInfo.emit(apiState.value as University)
-                Log.d(TAG, "getMyUniversityInfo() 성공: $_myUniversityRank")
-
             }
 
             is ApiState.Error -> {
@@ -425,7 +399,6 @@ class MainViewModel @Inject constructor(
         when (val apiState = getUserInfoUseCase(userId).first()) {
             is ApiState.Success<*> -> {
                 _userInfo.emit(apiState.value as UserInfo)
-                Log.d(TAG, "getUserInfo() 성공: ${userInfo.value}")
             }
 
             is ApiState.Error -> {

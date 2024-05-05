@@ -3,13 +3,13 @@ package com.example.planet.di.module
 import com.example.planet.data.repository.ImageRepositoryImpl
 import com.example.planet.data.repository.LoginRepositoryImpl
 import com.example.planet.data.repository.MainRepositoryImpl
-import com.example.planet.data.repository.MapRepositoryImpl
+import com.example.planet.data.repository.PloggingRepositoryImpl
 import com.example.planet.data.repository.RankRepositoryImpl
 import com.example.planet.data.repository.UserRepositoryImpl
 import com.example.planet.domain.repository.ImageRepository
 import com.example.planet.domain.repository.LoginRepository
 import com.example.planet.domain.repository.MainRepository
-import com.example.planet.domain.repository.MapRepository
+import com.example.planet.domain.repository.PloggingRepository
 import com.example.planet.domain.repository.RankRepository
 import com.example.planet.domain.repository.UserRepository
 import dagger.Binds
@@ -46,7 +46,7 @@ abstract class RepositoryModule {
     ): MainRepository
 
     @Binds
-    abstract fun mapRepository(
-        mapRepositoryImpl: MapRepositoryImpl
-    ): MapRepository
+    abstract fun ploggingRepository(
+        ploggingRepositoryImpl: PloggingRepositoryImpl
+    ): PloggingRepository
 }
