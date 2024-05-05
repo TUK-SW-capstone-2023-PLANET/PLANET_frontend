@@ -3,6 +3,7 @@ package com.example.planet.domain.repository
 import com.example.planet.data.remote.dto.ApiState
 import com.example.planet.data.remote.dto.request.plogging.PloggingImage
 import com.example.planet.data.remote.dto.request.plogging.PloggingInfo
+import com.example.planet.data.remote.dto.response.plogging.PloggingId
 import kotlinx.coroutines.flow.Flow
 
 interface PloggingRepository {
@@ -13,4 +14,9 @@ interface PloggingRepository {
     suspend fun postPloggingLive(ploggingData: PloggingImage): Flow<ApiState>
 
     suspend fun postPlogging(ploggingInfo: PloggingInfo): Flow<ApiState>
+
+    suspend fun getPloggingInfo(ploggingId: Int): Flow<ApiState>
+
+
+
 }

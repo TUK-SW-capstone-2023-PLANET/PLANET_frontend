@@ -4,6 +4,7 @@ import com.example.planet.data.remote.api.ApiService
 import com.example.planet.data.remote.dto.ApiState
 import com.example.planet.data.remote.dto.request.plogging.PloggingImage
 import com.example.planet.data.remote.dto.request.plogging.PloggingInfo
+import com.example.planet.data.remote.dto.response.plogging.PloggingId
 import com.example.planet.domain.repository.PloggingRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -51,4 +52,15 @@ class PloggingRepositoryImpl @Inject constructor(private val apiService: ApiServ
             error.message?.let { emit(ApiState.Error(it)) }
         }
     }.flowOn(Dispatchers.IO)
+
+    override suspend fun getPloggingInfo(ploggingId: Int): Flow<ApiState> = flow {
+        kotlin.runCatching {
+            apiService.getPloggingInfo(ploggingId)
+        }.onSuccess {
+            emit(ApiState.Success(it))
+        }.onFailure { error ->
+            error.message?.let { emit(ApiState.Error(it)) }
+        }
+    }.flowOn(Dispatchers.IO)
+
 }

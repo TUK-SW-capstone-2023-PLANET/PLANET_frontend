@@ -48,7 +48,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun MapGraph(ploggingViewModel: PloggingViewModel = viewModel(), onClick: () -> Unit) {
+fun MapGraph(ploggingViewModel: PloggingViewModel = viewModel(), onClick: (Int) -> Unit) {
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -118,8 +118,8 @@ fun MapGraph(ploggingViewModel: PloggingViewModel = viewModel(), onClick: () -> 
 //        })
 //    })
     if (ploggingViewModel.dialogState.value) {
-        PloggingDialog(ploggingViewModel = ploggingViewModel) {
-            onClick()
+        PloggingDialog(ploggingViewModel = ploggingViewModel) { ploggingId ->
+            onClick(ploggingId)
         }
         ploggingViewModel.pauseTimer()
     }

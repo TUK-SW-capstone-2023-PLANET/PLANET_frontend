@@ -22,6 +22,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -33,9 +34,12 @@ import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.planet.R
 import com.example.planet.presentation.viewmodel.PloggingViewModel
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 
 @Composable
-fun PloggingDialog(ploggingViewModel: PloggingViewModel = viewModel(), onClick: () -> Unit) {
+fun PloggingDialog(ploggingViewModel: PloggingViewModel = viewModel(), onClick: (Int) -> Unit) {
+    val scope = rememberCoroutineScope()
     Dialog(onDismissRequest = {
         ploggingViewModel.displayOnDialog()
         ploggingViewModel.startTimer()
@@ -49,8 +53,12 @@ fun PloggingDialog(ploggingViewModel: PloggingViewModel = viewModel(), onClick: 
         ) {
             DialogContent(
                 stop = {
-                    ploggingViewModel.postPlogging()
-                    onClick()
+                    scope.launch {
+                        val result = async { ploggingViewModel.postPlogging() }.await()
+                        if (result != 0) {
+                            onClick(result)
+                        }
+                    }
                 },
                 replay = { ploggingViewModel.startTimer() }) { ploggingViewModel.displayOnDialog() }
         }

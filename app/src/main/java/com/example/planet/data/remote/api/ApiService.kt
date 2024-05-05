@@ -55,7 +55,7 @@ interface ApiService {
 
 
     @GET("/plogging/{ploggingId}")
-    suspend fun GetPloggingInfo(@Path("ploggingId") ploggingId: Int): PloggingResult
+    suspend fun getPloggingInfo(@Path("ploggingId") ploggingId: Int): PloggingResult
 
     @GET("/advertisement")
     suspend fun getTopBanner(): List<Advertisement>

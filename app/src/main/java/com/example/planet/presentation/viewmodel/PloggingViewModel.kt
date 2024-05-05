@@ -22,11 +22,13 @@ import com.example.planet.data.remote.dto.TrashCan
 import com.example.planet.data.map.Trash
 import com.example.planet.data.map.TrashImage
 import com.example.planet.data.remote.dto.response.plogging.PloggingId
+import com.example.planet.data.remote.dto.response.plogging.PloggingResult
 import com.example.planet.data.repository.PloggingRepositoryImpl
 import com.example.planet.domain.usecase.image.PostImageUseCase
 import com.example.planet.domain.usecase.login.sharedpreference.GetUserTokenUseCase
 import com.example.planet.domain.usecase.plogging.GetAllTrashCanLocation
 import com.example.planet.domain.usecase.plogging.GetPloggingIdUseCase
+import com.example.planet.domain.usecase.plogging.GetPloggingInfoUseCase
 import com.example.planet.domain.usecase.plogging.PostPloggingUseCase
 import com.example.planet.presentation.util.DistanceManager
 import com.example.planet.presentation.util.allDelete
@@ -48,7 +50,6 @@ import kotlin.math.round
 @HiltViewModel
 class PloggingViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val ploggingRepositoryImpl: PloggingRepositoryImpl,
     private val postImageUseCase: PostImageUseCase,
     private val postPloggingUseCase: PostPloggingUseCase,
     private val getAllTrashCanLocation: GetAllTrashCanLocation,
@@ -64,7 +65,7 @@ class PloggingViewModel @Inject constructor(
 
     var userId: Int = 0                                         // userToken
 
-    private var ploggingId: Int = 0                                     // 플로깅 PK
+    var ploggingId: Int = 0                                     // 플로깅 PK
     private lateinit var timerJob: Job                                  // 타이머 코루틴
     private lateinit var distanceCalculateJob: Job                      // 1초마다 위도,경도의 거리를 계산하는 코루틴
     private var milliseconds: Long = 0L                                 // 타이머 시간
@@ -551,7 +552,7 @@ class PloggingViewModel @Inject constructor(
         }
     }
 
-    fun postPlogging() {
+    suspend fun postPlogging(): Int {
         val list = listOf(
             Location(37.5660645, 126.9826732),
             Location(37.5660294, 126.9826723),
@@ -605,9 +606,9 @@ class PloggingViewModel @Inject constructor(
             Location(37.5586699, 126.9783698),
         )
 
-        var trashList:List<Map<String, Int>> = emptyList()
+        var trashList: List<Map<String, Int>> = emptyList()
         trashes.forEach {
-            trashList = trashList + (mapOf(it.name to it.count)  )
+            trashList = trashList + (mapOf(it.name to it.count))
         }
 
         val ploggingInfo = PloggingInfo(
@@ -635,20 +636,21 @@ class PloggingViewModel @Inject constructor(
                     "score: $totalTrashScore\n" +
                     "ploggingTime: ${milliseconds / 1000}\n"
         )
-        viewModelScope.launch {
-            when (val apiState =
-                postPloggingUseCase.invoke(ploggingInfo = ploggingInfo).first()) {
-                is ApiState.Success<*> -> {
-                    val result = apiState.value as PloggingComplete
-                    Log.d("daeYoung", "postPlogging() 성공: $result")
-                }
-
-                is ApiState.Error -> {
-                    Log.d("daeYoung", "postPlogging() 실패: ${apiState.errMsg}")
-                }
-
-                ApiState.Loading -> TODO()
+        when (val apiState =
+            postPloggingUseCase.invoke(ploggingInfo = ploggingInfo).first()) {
+            is ApiState.Success<*> -> {
+                val result = apiState.value as PloggingComplete
+                Log.d("daeYoung", "postPlogging() 성공: $result")
+                return ploggingId
             }
+
+            is ApiState.Error -> {
+                Log.d("daeYoung", "postPlogging() 실패: ${apiState.errMsg}")
+                return 0
+            }
+
+            ApiState.Loading -> return 0
         }
     }
+
 }
