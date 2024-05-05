@@ -43,23 +43,23 @@ fun ScoreCard(modifier: Modifier = Modifier, text: String, unit: String) {
 }
 
 @Composable
-fun ScoreBoard() {
+fun ScoreBoard(time: String, distance: String, kcal: String, pace: String, totalTrashCount: String, score: String) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = 22.dp, bottom = 15.dp)
     ) {
-        ScoreCard(modifier = Modifier.weight(1f), text = "04:40", unit = "시간")
-        ScoreCard(modifier = Modifier.weight(1f), text = "04:40", unit = "시간")
-        ScoreCard(modifier = Modifier.weight(1f), text = "04:40", unit = "시간")
+        ScoreCard(modifier = Modifier.weight(1f), text = time, unit = "시간")
+        ScoreCard(modifier = Modifier.weight(1f), text = distance, unit = "거리(km)")
+        ScoreCard(modifier = Modifier.weight(1f), text = "$kcal kcal", unit = "소모 칼로리")
     }
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(bottom = 22.dp)
     ) {
-        ScoreCard(modifier = Modifier.weight(1f), text = "04:40", unit = "시간")
-        ScoreCard(modifier = Modifier.weight(1f), text = "04:40", unit = "시간")
-        ScoreCard(modifier = Modifier.weight(1f), text = "04:40", unit = "시간")
+        ScoreCard(modifier = Modifier.weight(1f), text = pace, unit = "평균 페이스")
+        ScoreCard(modifier = Modifier.weight(1f), text = "$totalTrashCount 개", unit = "주운 쓰레기")
+        ScoreCard(modifier = Modifier.weight(1f), text = "$score 점", unit = "점수")
     }
 }

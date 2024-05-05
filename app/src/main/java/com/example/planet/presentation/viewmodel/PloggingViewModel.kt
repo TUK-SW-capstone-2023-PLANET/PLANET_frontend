@@ -32,6 +32,7 @@ import com.example.planet.domain.usecase.plogging.GetPloggingInfoUseCase
 import com.example.planet.domain.usecase.plogging.PostPloggingUseCase
 import com.example.planet.presentation.util.DistanceManager
 import com.example.planet.presentation.util.allDelete
+import com.example.planet.presentation.util.formatTime
 import com.example.planet.presentation.util.numberComma
 import com.naver.maps.geometry.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -199,7 +200,7 @@ class PloggingViewModel @Inject constructor(
             while (true) {
                 delay(1000)
                 milliseconds += 1000L
-                _formattedTime.value = formatTime(milliseconds)
+                _formattedTime.value = milliseconds.formatTime()
 //                Log.d("daeYoung", "time: ${_formattedTime.value}")
             }
         }
@@ -271,14 +272,14 @@ class PloggingViewModel @Inject constructor(
 
 
     // 시간 format 설정
-    private fun formatTime(milliseconds: Long): String {
-        val hours = TimeUnit.MILLISECONDS.toHours(milliseconds) % 24
-        val minutes = TimeUnit.MILLISECONDS.toMinutes(milliseconds) % 60
-        val seconds = TimeUnit.MILLISECONDS.toSeconds(milliseconds) % 60
-        val formatter = String.format("%02d : %02d", minutes, seconds)
-        _hour.value = hours.toString()
-        return formatter
-    }
+//    private fun formatTime(milliseconds: Long): String {
+//        val hours = TimeUnit.MILLISECONDS.toHours(milliseconds) % 24
+//        val minutes = TimeUnit.MILLISECONDS.toMinutes(milliseconds) % 60
+//        val seconds = TimeUnit.MILLISECONDS.toSeconds(milliseconds) % 60
+//        val formatter = String.format("%02d : %02d", minutes, seconds)
+//        _hour.value = hours.toString()
+//        return formatter
+//    }
 
 
     fun getAllTrashCanLocation() {
@@ -622,19 +623,6 @@ class PloggingViewModel @Inject constructor(
             speed = paceToSecond(),
             score = totalTrashScore.value,
             ploggingTime = milliseconds / 1000,
-        )
-        Log.d(
-            TAG,
-            "플로깅 저장 정보: \n" +
-                    "ploggingId: $ploggingId\n" +
-                    "userId: $userId\n" +
-                    "location: $ploggingLog\n" +
-                    "trash: $trashList\n" +
-                    "distance: ${distance.value}\n" +
-                    "kcal: ${kcal.value}\n" +
-                    "speed: ${paceToSecond()}\n" +
-                    "score: $totalTrashScore\n" +
-                    "ploggingTime: ${milliseconds / 1000}\n"
         )
         when (val apiState =
             postPloggingUseCase.invoke(ploggingInfo = ploggingInfo).first()) {

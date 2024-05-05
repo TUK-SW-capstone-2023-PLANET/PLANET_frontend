@@ -45,14 +45,14 @@ fun PloggingResultTopAppBar() {
                 imageVector = Icons.Default.Share,
                 contentDescription = null,
                 tint = iconColor,
-                modifier = Modifier.size(18.dp)
+                modifier = Modifier.size(20.dp)
             )
             Spacer(modifier = Modifier.width(13.dp))
             Icon(
                 imageVector = Icons.Default.Done,
                 contentDescription = null,
                 tint = iconColor,
-                modifier = Modifier.size(18.dp)
+                modifier = Modifier.size(20.dp)
             )
         }
     }

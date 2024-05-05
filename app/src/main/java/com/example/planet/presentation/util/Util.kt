@@ -74,29 +74,33 @@ fun Uri.parseBitmap(context: Context): Bitmap {
             val source = ImageDecoder.createSource(context.contentResolver, this)
             ImageDecoder.decodeBitmap(source)
         }
+
         else -> {
             MediaStore.Images.Media.getBitmap(context.contentResolver, this)
         }
     }
 }
 
-fun File.allDelete():Boolean? {
+fun File.allDelete(): Boolean? {
     var returnData = false
-    val result = runCatching {     if (this.exists()) {
-        val files = this.listFiles()
-        if (files != null && files.size >0) {
-            files.forEachIndexed { index, file ->
-                returnData = file.delete()
+    val result = runCatching {
+        if (this.exists()) {
+            val files = this.listFiles()
+            if (files != null && files.size > 0) {
+                files.forEachIndexed { index, file ->
+                    returnData = file.delete()
+                }
+                return returnData
+            } else {
+                return false
             }
-            return returnData
         } else {
             return false
         }
-    } else {
-        return false
-    } }.onSuccess { return true }.onFailure { error ->
+    }.onSuccess { return true }.onFailure { error ->
         Log.d(TAG, "error: ${error.message}")
-        return false }
+        return false
+    }
 
     return result.getOrNull()
 }
@@ -117,6 +121,21 @@ fun Long.formatTime(): String {
     val formatter = String.format("%02d : %02d", minutes, seconds)
     return formatter
 }
+
+fun Long.secondsFormatTime(): String {
+    val milliseconds = this * 1000
+    val minutes = TimeUnit.MILLISECONDS.toMinutes(milliseconds) % 60
+    val seconds = TimeUnit.MILLISECONDS.toSeconds(milliseconds) % 60
+    val formatter = String.format("%02d : %02d", minutes, seconds)
+    return formatter
+}
+
+fun Double.paceFormat(): String {
+    val minutes = this.toInt()
+    val seconds = ((this - minutes) * 100).toInt()
+    return "$minutes\'$seconds\""
+}
+
 
 fun Uri.asMultipart(name: String, contentResolver: ContentResolver): MultipartBody.Part? {
 //    return contentResolver.query(this, null, null, null, null)?.let {
@@ -169,16 +188,17 @@ fun RequestPermission() {
     )
 
     val cameraPermissionState = rememberPermissionState(android.Manifest.permission.CAMERA)
-    val requestPermissionLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-        if (isGranted) {
-            // 권한 부여
-            cameraPermissionState.launchPermissionRequest()
-            Log.d(TAG, "camera permission is ok")
-        } else {
-            // 권한 거부 처리, 처음 거절했을 때
-            Log.d(TAG, "camera permission is reject")
+    val requestPermissionLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (isGranted) {
+                // 권한 부여
+                cameraPermissionState.launchPermissionRequest()
+                Log.d(TAG, "camera permission is ok")
+            } else {
+                // 권한 거부 처리, 처음 거절했을 때
+                Log.d(TAG, "camera permission is reject")
+            }
         }
-    }
     LaunchedEffect(cameraPermissionState) {
         if (cameraPermissionState.status.isGranted.not() && cameraPermissionState.status.shouldShowRationale) {
             // 필요한 경우 근거 표시

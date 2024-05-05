@@ -13,9 +13,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.planet.R
+import java.time.YearMonth
 
 @Composable
-fun DateCard() {
+fun DateCard(yearMonth: String, hourMinutes: String) {
     Column(
         modifier = Modifier
             .fillMaxWidth()

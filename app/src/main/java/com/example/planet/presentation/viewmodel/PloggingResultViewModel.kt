@@ -11,6 +11,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,24 +20,24 @@ class PloggingResultViewModel @Inject constructor(
     private val getPloggingInfoUseCase: GetPloggingInfoUseCase,
 ) : ViewModel() {
 
-    var ploggingId = 0
-
-    private val _ploggingInfo = MutableStateFlow<PloggingResult>(PloggingResult())
-    val ploggingInfo: StateFlow<PloggingResult> = _ploggingInfo
+    private val _ploggingInfo = MutableStateFlow<ApiState>(ApiState.Loading)
+    val ploggingInfo: StateFlow<ApiState> = _ploggingInfo
 
 
     suspend fun getPloggingInfo(ploggingId: Int) {
-        when (val apiState = getPloggingInfoUseCase(ploggingId).first()) {
+        when (val apiState = getPloggingInfoUseCase(1706808767).first()) {
             is ApiState.Success<*> -> {
-                val result = apiState.value as PloggingResult
-                Log.d("daeYoung", "getPloggingInfo() 성공: $result")
+                _ploggingInfo.emit(apiState)
+                Log.d("daeYoung", "getPloggingInfo() 성공: ${ploggingInfo.value}")
             }
 
             is ApiState.Error -> {
                 Log.d("daeYoung", "getPloggingInfo() 실패: ${apiState.errMsg}")
             }
+
             ApiState.Loading -> TODO()
         }
-
     }
+
+
 }

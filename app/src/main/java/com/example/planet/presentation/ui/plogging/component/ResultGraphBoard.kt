@@ -1,5 +1,6 @@
 package com.example.planet.presentation.ui.plogging.component
 
+import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -31,13 +32,13 @@ import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.planet.R
-import com.example.planet.presentation.ui.plogging.screen.TrashItem
+import com.example.planet.TAG
+import com.example.planet.data.remote.dto.response.plogging.PloggingTrash
+import kotlin.math.ceil
 
 @Composable
-fun ResultGraphBoard(trashList: List<TrashItem>) {
+fun ResultGraphBoard(trashList: List<PloggingTrash>, totalScore: Int, totalCount: Int) {
 
-    val leftLineTrashes = trashList.subList(0, 5)
-    val rightLineTrashes = trashList.subList(5, 10)
     val scoreColor = colorResource(id = R.color.main_color1)
     val countColor = colorResource(id = R.color.main_color2)
 
@@ -50,36 +51,44 @@ fun ResultGraphBoard(trashList: List<TrashItem>) {
         text2 = "전체 점수 비율"
     )
 
-    Row(
+    Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = 20.dp, start = 30.dp, end = 30.dp)
-            .height(IntrinsicSize.Min)
     ) {
-        Column(modifier = Modifier.weight(1f)) {
-            leftLineTrashes.forEach {
+        var index = 0
+        repeat((ceil(trashList.size / 2.0)).toInt()) {
+            Row(modifier = Modifier
+                .height(IntrinsicSize.Min)
+                .fillMaxWidth()
+                ) {
                 TrashGraphCard(
-                    trash = it,
-                    highestScore = leftLineTrashes[0].score,
+                    modifier = Modifier.weight(1f),
+                    trash = trashList[index],
+                    totalScore = totalScore,
                     scoreColor = scoreColor,
+                    totalCount = totalCount,
                     countColor = countColor
                 )
-            }
-        }
-        VerticalDivider(
-            thickness = 1.dp,
-            color = colorResource(id = R.color.font_background_color4),
-            modifier = Modifier.padding(horizontal = 8.dp)
-        )
-        Column(modifier = Modifier.weight(1f)) {
-            rightLineTrashes.forEach {
-                TrashGraphCard(
-                    trash = it,
-                    highestScore = leftLineTrashes[0].score,
-                    scoreColor = scoreColor,
-                    countColor = countColor
+                VerticalDivider(
+                    thickness = 1.dp,
+                    color = colorResource(id = R.color.font_background_color4),
+                    modifier = Modifier.padding(horizontal = 8.dp)
                 )
+                if (trashList.size <= index + 1) {
+                    Box(modifier = Modifier.weight(1f))
+                } else {
+                    TrashGraphCard(
+                        modifier = Modifier.weight(1f),
+                        trash = trashList[index + 1],
+                        totalScore = totalScore,
+                        totalCount = totalCount,
+                        scoreColor = scoreColor,
+                        countColor = countColor
+                    )
+                }
             }
+            index += 2
         }
     }
 }
@@ -174,7 +183,14 @@ fun GraphDescription(color1: Color, text1: String, color2: Color, text2: String)
 }
 
 @Composable
-fun TrashGraphCard(trash: TrashItem, highestScore: Int, scoreColor: Color, countColor: Color) {
+fun TrashGraphCard(
+    modifier: Modifier,
+    trash: PloggingTrash,
+    totalScore: Int,
+    totalCount: Int,
+    scoreColor: Color,
+    countColor: Color
+) {
 
     val trashTextStyle =
         TextStyle(
@@ -184,16 +200,15 @@ fun TrashGraphCard(trash: TrashItem, highestScore: Int, scoreColor: Color, count
         )
 
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
+        modifier = modifier
             .wrapContentHeight(),
         verticalAlignment = Alignment.Top
     ) {
-        Text(text = trash.name, modifier = Modifier.padding(end = 20.dp), style = trashTextStyle)
+        Text(text = trash.name, modifier = Modifier.weight(0.4f).padding(end = 20.dp), style = trashTextStyle)
 
         Column(
             modifier = Modifier
-                .fillMaxWidth()
+                .weight(0.6f)
                 .wrapContentHeight()
         ) {
             Canvas(
@@ -203,7 +218,7 @@ fun TrashGraphCard(trash: TrashItem, highestScore: Int, scoreColor: Color, count
             ) {
                 drawRect(
                     color = scoreColor,
-                    size = Size(this.size.width / highestScore * trash.score, size.height)
+                    size = Size(this.size.width / totalScore * trash.score, size.height)
                 )
             }
             Spacer(modifier = Modifier.height(2.dp))
@@ -212,7 +227,10 @@ fun TrashGraphCard(trash: TrashItem, highestScore: Int, scoreColor: Color, count
                     .fillMaxWidth()
                     .height(12.dp)
             ) {
-                drawRect(color = countColor, size = this.size)
+                drawRect(
+                    color = countColor,
+                    size = Size(this.size.width / totalCount * trash.count, size.height)
+                )
             }
             Spacer(modifier = Modifier.height(20.dp))
 
