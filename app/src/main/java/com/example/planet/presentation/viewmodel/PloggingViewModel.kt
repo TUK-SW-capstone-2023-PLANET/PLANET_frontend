@@ -12,24 +12,20 @@ import androidx.lifecycle.viewModelScope
 import com.example.planet.R
 import com.example.planet.TAG
 import com.example.planet.component.map.map.TrashCanItem
-import com.example.planet.data.remote.dto.ApiState
-import com.example.planet.data.remote.dto.ImageUrl
-import com.example.planet.data.remote.dto.Location
-import com.example.planet.data.remote.dto.response.plogging.PloggingComplete
-import com.example.planet.data.remote.dto.request.plogging.PloggingImage
-import com.example.planet.data.remote.dto.request.plogging.PloggingInfo
-import com.example.planet.data.remote.dto.TrashCan
 import com.example.planet.data.map.Trash
-import com.example.planet.data.map.TrashImage
+import com.example.planet.data.remote.dto.ApiState
+import com.example.planet.data.remote.dto.Location
+import com.example.planet.data.remote.dto.TrashCan
+import com.example.planet.data.remote.dto.request.plogging.PloggingInfo
+import com.example.planet.data.remote.dto.response.plogging.PloggingComplete
 import com.example.planet.data.remote.dto.response.plogging.PloggingId
-import com.example.planet.data.remote.dto.response.plogging.PloggingResult
-import com.example.planet.data.repository.PloggingRepositoryImpl
+import com.example.planet.data.remote.dto.response.plogging.TrashImage
 import com.example.planet.domain.usecase.image.PostImageUseCase
 import com.example.planet.domain.usecase.login.sharedpreference.GetUserTokenUseCase
 import com.example.planet.domain.usecase.plogging.GetAllTrashCanLocation
 import com.example.planet.domain.usecase.plogging.GetPloggingIdUseCase
-import com.example.planet.domain.usecase.plogging.GetPloggingInfoUseCase
 import com.example.planet.domain.usecase.plogging.PostPloggingUseCase
+import com.example.planet.domain.usecase.plogging.PostTrashImageUseCase
 import com.example.planet.presentation.util.DistanceManager
 import com.example.planet.presentation.util.allDelete
 import com.example.planet.presentation.util.formatTime
@@ -44,7 +40,6 @@ import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.math.round
 
@@ -55,7 +50,8 @@ class PloggingViewModel @Inject constructor(
     private val postPloggingUseCase: PostPloggingUseCase,
     private val getAllTrashCanLocation: GetAllTrashCanLocation,
     private val getPloggingIdUseCase: GetPloggingIdUseCase,
-    private val getUserTokenUseCase: GetUserTokenUseCase
+    private val getUserTokenUseCase: GetUserTokenUseCase,
+    private val postTrashImageUseCase: PostTrashImageUseCase
 ) : ViewModel() {
     init {
         viewModelScope.launch {
@@ -74,8 +70,7 @@ class PloggingViewModel @Inject constructor(
     private val weight: Double = 70.0                                   // 사용자의 몸무계
     var currentLatLng: LatLng? = null
     var pastLatLng: LatLng? = null
-    var trashCanLatLng: LatLng? = null                                  // 쓰레기통 위치
-    var imageUrl: String = ""                                           // 사진을 imageUrl로 바꾼거
+//    var imageUrl: String = ""                                           // 사진을 imageUrl로 바꾼거
 
     private val _dialogState = mutableStateOf(false)
     val dialogState: State<Boolean> = _dialogState
@@ -328,6 +323,8 @@ class PloggingViewModel @Inject constructor(
     }
 
     fun postImage() {
+        var trashCanLatLng: LatLng
+
         viewModelScope.launch {
             val path = context.externalCacheDir
             Log.d(TAG, "path?.listFiles(): ${path}")
@@ -340,14 +337,13 @@ class PloggingViewModel @Inject constructor(
                     imageFile.name,
                     it
                 )
-                when (val apiState = postImageUseCase(file = multipart).first()) {
+                when (val apiState = postTrashImageUseCase(file = multipart).first()) {
                     is ApiState.Success<*> -> {
-                        imageUrl = (apiState.value as ImageUrl).imageUrl
-                        Log.d("daeYoung", "postImage() 성공: $imageUrl")
-                        trashCanLatLng = currentLatLng
+                        Log.d("daeYoung", "postImage() 성공: ${(apiState.value as TrashImage)}")
+                        trashCanLatLng = currentLatLng ?: LatLng(0.0, 0.0)
                         Log.d("daeYoung", "currentLatLng: $trashCanLatLng")
                         imageFile.delete()
-                        postPloggingImageUrl()
+//                        postPloggingImageUrl()
                     }
 
                     is ApiState.Error -> {
@@ -363,14 +359,14 @@ class PloggingViewModel @Inject constructor(
 
     private suspend fun postPloggingImageUrl() {
         // TODO: 나중에 다시 작업할 것
-        trashCanLatLng?.let {
-            val ploggingImage = PloggingImage(
-                userId = 0,
-                ploggingId = ploggingId,
-                imageUrl = imageUrl,
-                latitude = it.latitude,
-                longitude = it.longitude
-            )
+//        trashCanLatLng?.let {
+//            val ploggingImage = PloggingImage(
+//                userId = 0,
+//                ploggingId = ploggingId,
+//                imageUrl = imageUrl,
+//                latitude = it.latitude,
+//                longitude = it.longitude
+//            )
 
 //            when (val apiState =
 //                ploggingRepositoryImpl.postPloggingLive(ploggingData = ploggingImage).first()) {
@@ -550,7 +546,7 @@ class PloggingViewModel @Inject constructor(
 //
 //                ApiState.Loading -> TODO()
 //            }
-        }
+//        }
     }
 
     suspend fun postPlogging(): Int {

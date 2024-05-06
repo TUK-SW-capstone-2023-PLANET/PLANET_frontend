@@ -1,7 +1,7 @@
 package com.example.planet.data.repository
 
 import com.example.planet.data.remote.dto.ApiState
-import com.example.planet.data.remote.api.ApiService
+import com.example.planet.data.remote.api.spring.MainApi
 import com.example.planet.data.remote.dto.request.signin.LoginInfo
 import com.example.planet.data.remote.dto.request.signup.PlanetUser
 import com.example.planet.domain.repository.LoginRepository
@@ -11,11 +11,11 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
-class LoginRepositoryImpl @Inject constructor(private val apiService: ApiService): LoginRepository {
+class LoginRepositoryImpl @Inject constructor(private val mainApi: MainApi): LoginRepository {
 
     override suspend fun getUniversityCheck(university: String): Flow<ApiState> = flow{
         kotlin.runCatching {
-            apiService.getUniversityCheck(university)
+            mainApi.getUniversityCheck(university)
         }.onSuccess {
             emit(ApiState.Success(it))
         }.onFailure { error ->
@@ -25,7 +25,7 @@ class LoginRepositoryImpl @Inject constructor(private val apiService: ApiService
 
     override suspend fun getAuthCode(name: String, email: String): Flow<ApiState> = flow{
         kotlin.runCatching {
-            apiService.getAuthCode(name = name, email = email)
+            mainApi.getAuthCode(name = name, email = email)
         }.onSuccess {
             emit(ApiState.Success(it))
         }.onFailure { error ->
@@ -35,7 +35,7 @@ class LoginRepositoryImpl @Inject constructor(private val apiService: ApiService
 
     override suspend fun getAuthCodeCheck(code: String, name: String, email: String): Flow<ApiState> = flow{
         kotlin.runCatching {
-            apiService.getAuthCodeCheck(code = code, name = name, email = email)
+            mainApi.getAuthCodeCheck(code = code, name = name, email = email)
         }.onSuccess {
             emit(ApiState.Success(it))
         }.onFailure { error ->
@@ -45,7 +45,7 @@ class LoginRepositoryImpl @Inject constructor(private val apiService: ApiService
 
     override suspend fun getDuplicatedNameCheck(name: String): Flow<ApiState> = flow{
         kotlin.runCatching {
-            apiService.getDuplicatedNameCheck(name = name)
+            mainApi.getDuplicatedNameCheck(name = name)
         }.onSuccess {
             emit(ApiState.Success(it))
         }.onFailure { error ->
@@ -55,7 +55,7 @@ class LoginRepositoryImpl @Inject constructor(private val apiService: ApiService
 
     override suspend fun postCreateUser(user: PlanetUser): Flow<ApiState> = flow{
         kotlin.runCatching {
-            apiService.postUserInfo(user = user)
+            mainApi.postUserInfo(user = user)
         }.onSuccess {
             emit(ApiState.Success(it))
         }.onFailure { error ->
@@ -65,7 +65,7 @@ class LoginRepositoryImpl @Inject constructor(private val apiService: ApiService
 
     override suspend fun postLogin(loginInfo: LoginInfo): Flow<ApiState> = flow{
         kotlin.runCatching {
-            apiService.postLogin(loginInfo = loginInfo)
+            mainApi.postLogin(loginInfo = loginInfo)
         }.onSuccess {
             emit(ApiState.Success(it))
         }.onFailure { error ->

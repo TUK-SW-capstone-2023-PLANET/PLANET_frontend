@@ -1,6 +1,7 @@
 package com.example.planet.di.module
 
-import com.example.planet.data.remote.api.ApiService
+import com.example.planet.data.remote.api.ai.AiApi
+import com.example.planet.data.remote.api.spring.MainApi
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -17,9 +18,10 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object RetrofitModule {
-    private const val URL = "http://3.37.87.60:8080/"
+    private const val MAIN_URL = "http://3.37.87.60:8080/"
+    private const val AI_URL = "http://172.20.10.5:8081/"
+
     // 스웨거 주소: http://3.37.87.60:8080/swagger-ui/index.html
-    private const val NAVER_URL = "https://naveropenapi.apigw.ntruss.com"
     val gson : Gson = GsonBuilder()
         .setLenient()
         .create()
@@ -38,13 +40,24 @@ object RetrofitModule {
 
     @Singleton
     @Provides
-    fun getRetrofitImpl(): ApiService {
+    fun getMainApi(): MainApi {
         return Retrofit.Builder()
-            .baseUrl(URL)
+            .baseUrl(MAIN_URL)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .client(client())
             .build()
-            .create(ApiService::class.java)
+            .create(MainApi::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun getAiApi(): AiApi {
+        return Retrofit.Builder()
+            .baseUrl(AI_URL)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .client(client())
+            .build()
+            .create(AiApi::class.java)
     }
 
 //    class AppInterceptor : Interceptor {

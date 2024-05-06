@@ -1,7 +1,7 @@
 package com.example.planet.data.repository
 
 import android.content.SharedPreferences
-import com.example.planet.data.remote.api.ApiService
+import com.example.planet.data.remote.api.spring.MainApi
 import com.example.planet.data.remote.dto.ApiState
 import com.example.planet.data.remote.dto.response.user.UserInfo
 import com.example.planet.domain.repository.UserRepository
@@ -12,14 +12,14 @@ import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
-    private val apiService: ApiService,
+    private val mainApi: MainApi,
     private val sharedPreferences: SharedPreferences
 ) : UserRepository {
 
     // 유저 정보 조회
     override suspend fun getUserInfo(userId: Int): Flow<ApiState> = flow {
         kotlin.runCatching {
-            apiService.getUserInfo(userId = userId)
+            mainApi.getUserInfo(userId = userId)
         }.onSuccess {
             emit(ApiState.Success(it))
         }.onFailure { error ->
@@ -29,7 +29,7 @@ class UserRepositoryImpl @Inject constructor(
 
     override suspend fun putUserInfo(userInfo: UserInfo): Flow<ApiState> = flow {
         kotlin.runCatching {
-            apiService.putUserInfo(userInfo = userInfo)
+            mainApi.putUserInfo(userInfo = userInfo)
         }.onSuccess {
             emit(ApiState.Success(it))
         }.onFailure { error ->

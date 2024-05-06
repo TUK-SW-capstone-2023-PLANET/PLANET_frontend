@@ -1,4 +1,4 @@
-package com.example.planet.data.remote.api
+package com.example.planet.data.remote.api.spring
 
 import com.example.planet.data.remote.dto.Advertisement
 import com.example.planet.data.remote.dto.ImageUrl
@@ -36,7 +36,7 @@ import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-interface ApiService {
+interface MainApi {
     @GET("/trash-can/all")
     suspend fun getAllTrashCanLocation(): List<TrashCan>
 
