@@ -25,7 +25,7 @@ class PloggingResultViewModel @Inject constructor(
 
 
     suspend fun getPloggingInfo(ploggingId: Int) {
-        when (val apiState = getPloggingInfoUseCase(1706808767).first()) {
+        when (val apiState = getPloggingInfoUseCase(ploggingId).first()) {
             is ApiState.Success<*> -> {
                 _ploggingInfo.emit(apiState)
                 Log.d("daeYoung", "getPloggingInfo() 성공: ${ploggingInfo.value}")

@@ -342,7 +342,6 @@ class PloggingViewModel @Inject constructor(
                         result.trash.keys.forEachIndexed { index, trash ->
                             trashList.add(mapOf(trashNameList[index] to trashCountList[index]))
                         }
-                        Log.d("daeYoung", "postImage() 성공: ${result.trash.keys}")
                         trashCanLatLng = currentLatLng ?: LatLng(0.0, 0.0)
                         imageFile.delete()
                         postPloggingImageUrl(
@@ -376,16 +375,16 @@ class PloggingViewModel @Inject constructor(
             latitude = location.latitude,
             trash = trash
         )
-        Log.d("daeYoung", "postPloggingImageUrl() 실행되나?")
 
 
         when (val apiState =
             postTrashImageUrlUseCase(trashImageUrl).first()) {
             is ApiState.Success<*> -> {
                 val result = apiState.value as List<Trash>
-                Log.d("daeYoung", "postPloggingImageUrl() 성공: ${result}")
                 result.forEach { trash ->
                     trashList.value = trashList.value + trash
+                    _totalTrashCount.value += trash.count
+                    _totalTrashScore.value += trash.score
                 }
             }
 
@@ -452,17 +451,17 @@ class PloggingViewModel @Inject constructor(
             Location(37.5586699, 126.9783698),
         )
 
-        var trashList: List<Map<String, Int>> = emptyList()
-//        trashes.forEach {
-//            trashList = trashList + (mapOf(it.name to it.count))
-//        }
+        var trashMapList: MutableList<Map<String, Int>> = mutableListOf()
+        trashList.value.forEach { trash ->
+            trashMapList.add(mapOf(trash.name to trash.count))
+        }
 
         val ploggingInfo = PloggingInfo(
             ploggingId = ploggingId,
             userId = userId,
 //            location = ploggingLog,
             location = list,
-            trash = trashList,
+            trash = trashMapList,
             distance = distance.value,
             kcal = kcal.value,
             speed = paceToSecond(),
