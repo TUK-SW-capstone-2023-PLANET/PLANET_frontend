@@ -1,4 +1,4 @@
-package com.example.planet.presentation.ui.user.component
+package com.example.planet.presentation.ui.main.plogging.screen.user.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row

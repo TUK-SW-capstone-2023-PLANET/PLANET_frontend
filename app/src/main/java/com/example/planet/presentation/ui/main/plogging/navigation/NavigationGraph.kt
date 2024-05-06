@@ -13,7 +13,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.planet.presentation.ui.main.plogging.component.MainTopSwitch
 import com.example.planet.presentation.ui.main.plogging.component.BottomNavigation
-import com.example.planet.presentation.ui.main.plogging.screen.community.CommunityScreen
+import com.example.planet.presentation.ui.main.plogging.screen.community.screen.CommunityScreen
 import com.example.planet.presentation.ui.main.plogging.screen.home.screen.MainScreen
 import com.example.planet.presentation.ui.main.plogging.screen.home.screen.TierScreen
 import com.example.planet.presentation.ui.main.plogging.screen.message.MessageScreen
@@ -23,7 +23,7 @@ import com.example.planet.presentation.ui.main.plogging.screen.ranking.screen.Ra
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.screen.SeasonRankingScreen
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.screen.UniversityIndividualRankingScreen
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.screen.UniversityRankingScreen
-import com.example.planet.presentation.ui.main.plogging.screen.user.UserScreen
+import com.example.planet.presentation.ui.main.plogging.screen.user.screen.UserScreen
 import com.example.planet.presentation.viewmodel.MainViewModel
 
 
@@ -32,7 +32,8 @@ fun NavigationGraph(
     navController: NavHostController,
     mainViewModel: MainViewModel = viewModel(),
     startMapActivity: () -> Unit,
-    startUserActivity: () -> Unit
+    startUserActivity: () -> Unit,
+    startCommunityActivity: () -> Unit,
 ) {
 
 
@@ -72,7 +73,7 @@ fun NavigationGraph(
                             MessageScreen()
                         }
                         composable(BottomNavItem.CommunityScreen.screenRoute) {
-                            CommunityScreen()
+                            CommunityScreen{ startCommunityActivity() }
                         }
                         composable(ScreenNav.TierScreen.screenRoute) {
                             TierScreen(tierList = mainViewModel.tierList.value)

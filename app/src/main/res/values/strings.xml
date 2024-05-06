@@ -13,4 +13,5 @@
     <string name="title_activity_sign_in">SignInActivity</string>
     <string name="title_activity_sign_up">SignUpActivity</string>
     <string name="title_activity_plogging_result">PloggingResultActivity</string>
+    <string name="title_activity_bulletin_board">BulletinBoardActivity</string>
 </resources>

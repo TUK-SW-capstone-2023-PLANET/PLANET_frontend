@@ -1,4 +1,4 @@
-package com.example.planet.presentation.ui.user.component
+package com.example.planet.presentation.ui.main.plogging.screen.user.component
 
 import android.app.Activity
 import android.content.Intent

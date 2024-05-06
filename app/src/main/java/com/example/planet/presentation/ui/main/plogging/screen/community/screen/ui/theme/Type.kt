@@ -1,4 +1,4 @@
-package com.example.planet.presentation.ui.user.ui.theme
+package com.example.planet.presentation.ui.main.plogging.screen.community.screen.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

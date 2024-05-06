@@ -23,9 +23,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.example.planet.presentation.ui.main.plogging.navigation.NavigationGraph
+import com.example.planet.presentation.ui.main.plogging.screen.community.screen.CommunityActivity
 import com.example.planet.presentation.ui.plogging.screen.MapActivity
 import com.example.planet.presentation.ui.ui.theme.MyApplicationTheme
-import com.example.planet.presentation.ui.user.screen.UserActivity
+import com.example.planet.presentation.ui.main.plogging.screen.user.screen.UserActivity
 import com.example.planet.presentation.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -45,9 +46,10 @@ class MainActivity : ComponentActivity() {
                 NavigationGraph(
                     navController = navController,
                     mainViewModel = mainViewModel,
-                    startMapActivity = { startMapActivity() }) {
-                    startUserActivity()
-                }
+                    startMapActivity = { startMapActivity() },
+                    startUserActivity = { startUserActivity() },
+                    startCommunityActivity = { startCommunityActivity() }
+                )
             }
         }
     }
@@ -59,6 +61,11 @@ class MainActivity : ComponentActivity() {
 
     private fun startUserActivity() {
         val intent = Intent(this, UserActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun startCommunityActivity() {
+        val intent = Intent(this, CommunityActivity::class.java)
         startActivity(intent)
     }
 }

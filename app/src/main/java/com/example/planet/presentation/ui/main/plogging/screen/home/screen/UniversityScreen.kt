@@ -87,9 +87,10 @@ fun UniversityScreen(
             Header(
                 title = "대학교 순위",
                 description = "학교를 인증하여, 학교의 위상을 높히세요!!",
-                navController = navController,
                 modifier = Modifier.fillMaxHeight(0.1f)
-            )
+            ) {
+                navController.navigate(ScreenNav.UniversityRankingScreen.screenRoute)
+            }
 
             Row(
                 modifier = Modifier
@@ -142,8 +143,10 @@ fun UniversityScreen(
             Header(
                 title = "대학교와 함께하기",
                 description = "내 학교와 같이 뛰면 즐거움과 성취감 두 배!",
-                navController = navController
-            )
+                modifier = Modifier.fillMaxHeight(0.1f)
+            ) {
+                navController.navigate(ScreenNav.UniversityIndividualRankingScreen.screenRoute)
+            }
 
             Row(
                 modifier = Modifier

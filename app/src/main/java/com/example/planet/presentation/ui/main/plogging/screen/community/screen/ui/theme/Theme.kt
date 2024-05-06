@@ -1,4 +1,4 @@
-package com.example.planet.presentation.ui.user.ui.theme
+package com.example.planet.presentation.ui.main.plogging.screen.community.screen.ui.theme
 
 import android.app.Activity
 import android.os.Build

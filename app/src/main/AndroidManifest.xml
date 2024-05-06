@@ -24,27 +24,32 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".presentation.ui.main.plogging.screen.community.screen.CommunityActivity"
+            android:exported="false"
+            android:label="@string/title_activity_bulletin_board"
+            android:theme="@style/Theme.MyApplication" />
+        <activity
             android:name=".presentation.ui.plogging.screen.PloggingResultActivity"
             android:exported="false"
             android:label="@string/title_activity_plogging_result"
-            android:theme="@style/Theme.MyApplication"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.MyApplication" />
         <activity
             android:name=".presentation.ui.signin.screen.SignInActivity"
             android:exported="false"
             android:label="@string/title_activity_sign_in"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MyApplication"
-            android:windowSoftInputMode="adjustResize"></activity>
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".presentation.ui.signup.screen.SignUpActivity"
             android:exported="false"
             android:label="@string/title_activity_sign_up"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MyApplication"
-            android:windowSoftInputMode="adjustResize"></activity>
+            android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".presentation.ui.user.screen.UserActivity"
+            android:name=".presentation.ui.main.plogging.screen.user.screen.UserActivity"
             android:exported="false"
             android:label="@string/title_activity_user"
             android:screenOrientation="portrait"

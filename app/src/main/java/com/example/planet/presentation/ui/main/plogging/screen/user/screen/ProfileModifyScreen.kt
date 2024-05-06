@@ -1,4 +1,4 @@
-package com.example.planet.presentation.ui.user.screen
+package com.example.planet.presentation.ui.main.plogging.screen.user.screen
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
@@ -33,13 +33,13 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.planet.R
-import com.example.planet.presentation.ui.user.component.GetPictureDialog
-import com.example.planet.presentation.ui.user.component.HeightWeightRow
-import com.example.planet.presentation.ui.user.component.MyProfileImage
-import com.example.planet.presentation.ui.user.component.ProfileModifyTopAppBar
-import com.example.planet.presentation.ui.user.component.ShowEditTextField
-import com.example.planet.presentation.ui.user.component.UserIdTextField
-import com.example.planet.presentation.ui.user.component.UserPwTextField
+import com.example.planet.presentation.ui.main.plogging.screen.user.component.GetPictureDialog
+import com.example.planet.presentation.ui.main.plogging.screen.user.component.HeightWeightRow
+import com.example.planet.presentation.ui.main.plogging.screen.user.component.MyProfileImage
+import com.example.planet.presentation.ui.main.plogging.screen.user.component.ProfileModifyTopAppBar
+import com.example.planet.presentation.ui.main.plogging.screen.user.component.ShowEditTextField
+import com.example.planet.presentation.ui.main.plogging.screen.user.component.UserIdTextField
+import com.example.planet.presentation.ui.main.plogging.screen.user.component.UserPwTextField
 import com.example.planet.presentation.viewmodel.UserViewModel
 import kotlinx.coroutines.launch
 
