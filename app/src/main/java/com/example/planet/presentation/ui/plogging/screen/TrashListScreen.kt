@@ -13,9 +13,14 @@ import com.example.planet.data.remote.dto.response.plogging.Trash
 @Composable
 fun TrashListScreen(trashList: List<Trash>) {
     LazyColumn(modifier = Modifier.fillMaxSize()) {
-        items(trashList.size) {count ->
-//            TrashCard(trash = trashList[count].name, count = trashList[count].count, image = trashList[count].image)
-            if(count != 9) {  // 마지막 TrashCard에는 밑줄 X
+        items(trashList.size) { index ->
+            TrashCard(
+                trash = trashList[index].name,
+                count = trashList[index].count,
+                imageUrl = trashList[index].imageUrl,
+                score = trashList[index].score
+            )
+            if (index != 9) {  // 마지막 TrashCard에는 밑줄 X
                 Divider(thickness = 1.dp, modifier = Modifier.padding(horizontal = 16.dp))
             }
         }

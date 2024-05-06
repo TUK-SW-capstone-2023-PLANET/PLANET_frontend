@@ -121,10 +121,6 @@ class PloggingViewModel @Inject constructor(
     val met: State<Double> = _met
 
     private val _kcal = derivedStateOf {
-//        Log.d(
-//            TAG,
-//            "minSpeed: $minSpeed, MET: $met, kcal: ${0.005 * met.value * (3.5 * weight * minSpeed.value)}"
-//        )
         if (minSpeed.value == 0.0) {
             0.0
         } else {
@@ -154,11 +150,7 @@ class PloggingViewModel @Inject constructor(
 
     val ploggingLog = mutableListOf<Location>()
     var trashItems = mutableStateListOf<Map<String, Int>>()
-//    var trashes = mutableListOf<Trash>(
-//        Trash(name = "건전지", image = R.drawable.battery, count = 2, score = 10),
-//        Trash(name = "일반쓰레기", image = R.drawable.battery, count = 3, score = 10),
-//        Trash(name = "플라스틱", image = R.drawable.battery, count = 1, score = 10)
-//    )
+    var trashList = mutableStateOf(emptyList<Trash>())
 
     private suspend fun getUserToken(userTokenKey: String = "userToken") {
         when (val result = getUserTokenUseCase(userTokenKey).first()) {
@@ -390,7 +382,11 @@ class PloggingViewModel @Inject constructor(
         when (val apiState =
             postTrashImageUrlUseCase(trashImageUrl).first()) {
             is ApiState.Success<*> -> {
-                Log.d("daeYoung", "postPloggingImageUrl() 성공: ${apiState.value as List<Trash>}")
+                val result = apiState.value as List<Trash>
+                Log.d("daeYoung", "postPloggingImageUrl() 성공: ${result}")
+                result.forEach { trash ->
+                    trashList.value = trashList.value + trash
+                }
             }
 
             is ApiState.Error -> {

@@ -164,7 +164,7 @@ fun MapGraph(ploggingViewModel: PloggingViewModel = viewModel(), onClick: (Int) 
                         cameraLauncher = cameraLauncher
                     )
 
-                    2 -> TrashListScreen(trashList = emptyList<Trash>())
+                    2 -> TrashListScreen(trashList = ploggingViewModel.trashList.value)
                 }
             }
         }

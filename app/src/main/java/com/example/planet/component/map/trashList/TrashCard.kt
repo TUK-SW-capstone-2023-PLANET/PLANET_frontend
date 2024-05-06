@@ -25,10 +25,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.rememberAsyncImagePainter
 import com.example.planet.R
 
 @Composable
-fun TrashCard(trash: String, count: Int, image: Int) {
+fun TrashCard(trash: String, count: Int, imageUrl: String, score: Int) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -37,7 +38,7 @@ fun TrashCard(trash: String, count: Int, image: Int) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
-            painter = painterResource(id = image),
+            painter = rememberAsyncImagePainter(imageUrl),
             contentDescription = null,
             modifier = Modifier.size(50.dp)
         )
@@ -58,7 +59,7 @@ fun TrashCard(trash: String, count: Int, image: Int) {
                 )
                 Column(modifier = Modifier, horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(text = "점수", color = colorResource(id = R.color.font_background_color1))
-                    Text(text = "4", color = colorResource(id = R.color.font_background_color1), fontWeight = FontWeight.Medium)
+                    Text(text = score.toString(), color = colorResource(id = R.color.font_background_color1), fontWeight = FontWeight.Medium)
                 }
             }
         }
