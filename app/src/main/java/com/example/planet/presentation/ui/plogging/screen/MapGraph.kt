@@ -42,6 +42,7 @@ import com.example.planet.TAG
 import com.example.planet.component.common.PloggingDialog
 import com.example.planet.component.map.common.LockButton
 import com.example.planet.data.map.Tabltem
+import com.example.planet.data.remote.dto.response.plogging.Trash
 import com.example.planet.presentation.viewmodel.PloggingViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -163,7 +164,7 @@ fun MapGraph(ploggingViewModel: PloggingViewModel = viewModel(), onClick: (Int) 
                         cameraLauncher = cameraLauncher
                     )
 
-                    2 -> TrashListScreen(trashList = ploggingViewModel.trashes)
+                    2 -> TrashListScreen(trashList = emptyList<Trash>())
                 }
             }
         }

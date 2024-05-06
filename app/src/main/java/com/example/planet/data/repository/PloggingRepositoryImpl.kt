@@ -3,7 +3,7 @@ package com.example.planet.data.repository
 import com.example.planet.data.remote.api.ai.AiApi
 import com.example.planet.data.remote.api.spring.MainApi
 import com.example.planet.data.remote.dto.ApiState
-import com.example.planet.data.remote.dto.request.plogging.PloggingImage
+import com.example.planet.data.remote.dto.request.plogging.TrashImageUrlInfo
 import com.example.planet.data.remote.dto.request.plogging.PloggingInfo
 import com.example.planet.domain.repository.PloggingRepository
 import kotlinx.coroutines.Dispatchers
@@ -48,9 +48,9 @@ class PloggingRepositoryImpl @Inject constructor(
     }.flowOn(Dispatchers.IO)
 
 
-    override suspend fun postPloggingLive(ploggingData: PloggingImage): Flow<ApiState> = flow {
+    override suspend fun postPloggingLive(ploggingData: TrashImageUrlInfo): Flow<ApiState> = flow {
         kotlin.runCatching {
-            mainApi.postPloggingLive(ploggingImage = ploggingData)
+            mainApi.postPloggingLive(trashImageUrlInfo = ploggingData)
         }.onSuccess {
             emit(ApiState.Success(it))
         }.onFailure { error ->

@@ -12,11 +12,12 @@ import androidx.lifecycle.viewModelScope
 import com.example.planet.R
 import com.example.planet.TAG
 import com.example.planet.component.map.map.TrashCanItem
-import com.example.planet.data.map.Trash
+import com.example.planet.data.remote.dto.response.plogging.Trash
 import com.example.planet.data.remote.dto.ApiState
 import com.example.planet.data.remote.dto.Location
 import com.example.planet.data.remote.dto.TrashCan
 import com.example.planet.data.remote.dto.request.plogging.PloggingInfo
+import com.example.planet.data.remote.dto.request.plogging.TrashImageUrlInfo
 import com.example.planet.data.remote.dto.response.plogging.PloggingComplete
 import com.example.planet.data.remote.dto.response.plogging.PloggingId
 import com.example.planet.data.remote.dto.response.plogging.TrashImage
@@ -25,6 +26,7 @@ import com.example.planet.domain.usecase.login.sharedpreference.GetUserTokenUseC
 import com.example.planet.domain.usecase.plogging.GetAllTrashCanLocation
 import com.example.planet.domain.usecase.plogging.GetPloggingIdUseCase
 import com.example.planet.domain.usecase.plogging.PostPloggingUseCase
+import com.example.planet.domain.usecase.plogging.PostTrashImageUrlUseCase
 import com.example.planet.domain.usecase.plogging.PostTrashImageUseCase
 import com.example.planet.presentation.util.DistanceManager
 import com.example.planet.presentation.util.allDelete
@@ -51,7 +53,9 @@ class PloggingViewModel @Inject constructor(
     private val getAllTrashCanLocation: GetAllTrashCanLocation,
     private val getPloggingIdUseCase: GetPloggingIdUseCase,
     private val getUserTokenUseCase: GetUserTokenUseCase,
-    private val postTrashImageUseCase: PostTrashImageUseCase
+    private val postTrashImageUseCase: PostTrashImageUseCase,
+    private val postTrashImageUrlUseCase: PostTrashImageUrlUseCase
+
 ) : ViewModel() {
     init {
         viewModelScope.launch {
@@ -70,7 +74,6 @@ class PloggingViewModel @Inject constructor(
     private val weight: Double = 70.0                                   // 사용자의 몸무계
     var currentLatLng: LatLng? = null
     var pastLatLng: LatLng? = null
-//    var imageUrl: String = ""                                           // 사진을 imageUrl로 바꾼거
 
     private val _dialogState = mutableStateOf(false)
     val dialogState: State<Boolean> = _dialogState
@@ -151,11 +154,11 @@ class PloggingViewModel @Inject constructor(
 
     val ploggingLog = mutableListOf<Location>()
     var trashItems = mutableStateListOf<Map<String, Int>>()
-    var trashes = mutableListOf<Trash>(
-        Trash(name = "건전지", image = R.drawable.battery, count = 2, score = 10),
-        Trash(name = "일반쓰레기", image = R.drawable.battery, count = 3, score = 10),
-        Trash(name = "플라스틱", image = R.drawable.battery, count = 1, score = 10)
-    )
+//    var trashes = mutableListOf<Trash>(
+//        Trash(name = "건전지", image = R.drawable.battery, count = 2, score = 10),
+//        Trash(name = "일반쓰레기", image = R.drawable.battery, count = 3, score = 10),
+//        Trash(name = "플라스틱", image = R.drawable.battery, count = 1, score = 10)
+//    )
 
     private suspend fun getUserToken(userTokenKey: String = "userToken") {
         when (val result = getUserTokenUseCase(userTokenKey).first()) {
@@ -325,6 +328,7 @@ class PloggingViewModel @Inject constructor(
     fun postImage() {
         var trashCanLatLng: LatLng
 
+
         viewModelScope.launch {
             val path = context.externalCacheDir
             Log.d(TAG, "path?.listFiles(): ${path}")
@@ -339,11 +343,21 @@ class PloggingViewModel @Inject constructor(
                 )
                 when (val apiState = postTrashImageUseCase(file = multipart).first()) {
                     is ApiState.Success<*> -> {
-                        Log.d("daeYoung", "postImage() 성공: ${(apiState.value as TrashImage)}")
+                        val result = (apiState.value as TrashImage)
+                        val trashNameList = result.trash.keys.toList()
+                        val trashCountList = result.trash.values.toList()
+                        val trashList = mutableListOf<Map<String, Int>>()
+                        result.trash.keys.forEachIndexed { index, trash ->
+                            trashList.add(mapOf(trashNameList[index] to trashCountList[index]))
+                        }
+                        Log.d("daeYoung", "postImage() 성공: ${result.trash.keys}")
                         trashCanLatLng = currentLatLng ?: LatLng(0.0, 0.0)
-                        Log.d("daeYoung", "currentLatLng: $trashCanLatLng")
                         imageFile.delete()
-//                        postPloggingImageUrl()
+                        postPloggingImageUrl(
+                            imageUrl = result.imageUrl,
+                            location = trashCanLatLng,
+                            trash = trashList
+                        )
                     }
 
                     is ApiState.Error -> {
@@ -357,196 +371,35 @@ class PloggingViewModel @Inject constructor(
         }
     }
 
-    private suspend fun postPloggingImageUrl() {
-        // TODO: 나중에 다시 작업할 것
-//        trashCanLatLng?.let {
-//            val ploggingImage = PloggingImage(
-//                userId = 0,
-//                ploggingId = ploggingId,
-//                imageUrl = imageUrl,
-//                latitude = it.latitude,
-//                longitude = it.longitude
-//            )
+    private suspend fun postPloggingImageUrl(
+        imageUrl: String,
+        location: LatLng,
+        trash: List<Map<String, Int>>
+    ) {
+        val trashImageUrl = TrashImageUrlInfo(
+            userId = userId,
+            ploggingId = ploggingId,
+            imageUrl = imageUrl,
+            longitude = location.longitude,
+            latitude = location.latitude,
+            trash = trash
+        )
+        Log.d("daeYoung", "postPloggingImageUrl() 실행되나?")
 
-//            when (val apiState =
-//                ploggingRepositoryImpl.postPloggingLive(ploggingData = ploggingImage).first()) {
-//                is ApiState.Success<*> -> {
-////                    (apiState.value as List<Map<String, Int>>).forEach { trash ->
-////                        trashItems.add(trash)
-////                        _totalTrashCount.value += trash.values.toList()[0]
-////                    }
-//                    Log.d("daeYoung", "postPloggingImageUrl() 성공: ${apiState.value as List<Map<String, Int>>}")
-//
-//                    (apiState.value as List<Map<String, Int>>).forEach { trash ->
-//                        trashItems.add(trash)  // 플로깅 저장 api 수정되면 삭제할 것
-//                        val trashCount = trash.values.toList()[0]
-//                        _totalTrashCount.value += trashCount
-//                        when (trash.keys.toList()[0]) {
-//                            TrashImage.Battery().trash -> {
-//                                _totalTrashScore.value += TrashImage.Battery().score * trashCount
-//                                if (!trashs.map { trash -> trash.name }
-//                                        .contains(TrashImage.Battery().trash)) {
-//                                    trashs.add(
-//                                        Trash(
-//                                            name = TrashImage.Battery().trash,
-//                                            image = TrashImage.Battery().image,
-//                                            count = trashCount
-//                                        )
-//                                    )
-//                                }
-//                            }
-//
-//                            TrashImage.Bottle().trash -> {
-//                                _totalTrashScore.value += TrashImage.Bottle().score * trashCount
-//                                if (!trashs.map { trash -> trash.name }
-//                                        .contains(TrashImage.Bottle().trash)) {
-//                                    trashs.add(
-//                                        Trash(
-//                                            name = TrashImage.Bottle().trash,
-//                                            image = TrashImage.Bottle().image,
-//                                            count = trashCount
-//                                        )
-//                                    )
-//                                }
-//                            }
-//
-//                            TrashImage.Can().trash -> {
-//                                _totalTrashScore.value += TrashImage.Can().score * trashCount
-//                                if (!trashs.map { trash -> trash.name }
-//                                        .contains(TrashImage.Can().trash)) {
-//                                    trashs.add(
-//                                        Trash(
-//                                            name = TrashImage.Can().trash,
-//                                            image = TrashImage.Can().image,
-//                                            count = trashCount
-//                                        )
-//                                    )
-//                                }
-//                            }
-//
-//                            TrashImage.Glass().trash -> {
-//                                _totalTrashScore.value += TrashImage.Glass().score * trashCount
-//                                if (!trashs.map { trash -> trash.name }
-//                                        .contains(TrashImage.Glass().trash)) {
-//                                    trashs.add(
-//                                        Trash(
-//                                            name = TrashImage.Glass().trash,
-//                                            image = TrashImage.Glass().image,
-//                                            count = trashCount
-//                                        )
-//                                    )
-//                                }
-//                            }
-//
-//                            TrashImage.Paper().trash -> {
-//                                _totalTrashScore.value += TrashImage.Paper().score * trashCount
-//                                if (!trashs.map { trash -> trash.name }
-//                                        .contains(TrashImage.Paper().trash)) {
-//                                    trashs.add(
-//                                        Trash(
-//                                            name = TrashImage.Paper().trash,
-//                                            image = TrashImage.Paper().image,
-//                                            count = trashCount
-//                                        )
-//                                    )
-//                                }
-//                            }
-//
-//                            TrashImage.GeneralWaste().trash -> {
-//                                _totalTrashScore.value += TrashImage.GeneralWaste().score * trashCount
-//                                if (!trashs.map { trash -> trash.name }
-//                                        .contains(TrashImage.GeneralWaste().trash)) {
-//                                    trashs.add(
-//                                        Trash(
-//                                            name = TrashImage.GeneralWaste().trash,
-//                                            image = TrashImage.GeneralWaste().image,
-//                                            count = trashCount
-//                                        )
-//                                    )
-//                                }
-//                            }
-//
-//                            TrashImage.PaperCup().trash -> {
-//                                _totalTrashScore.value += TrashImage.PaperCup().score * trashCount
-//                                if (!trashs.map { trash -> trash.name }
-//                                        .contains(TrashImage.PaperCup().trash)) {
-//                                    trashs.add(
-//                                        Trash(
-//                                            name = TrashImage.PaperCup().trash,
-//                                            image = TrashImage.PaperCup().image,
-//                                            count = trashCount
-//                                        )
-//                                    )
-//                                }
-//                            }
-//
-//                            TrashImage.Pet().trash -> {
-//                                _totalTrashScore.value += TrashImage.Pet().score * trashCount
-//                                if (!trashs.map { trash -> trash.name }
-//                                        .contains(TrashImage.Pet().trash)) {
-//                                    trashs.add(
-//                                        Trash(
-//                                            name = TrashImage.Pet().trash,
-//                                            image = TrashImage.Pet().image,
-//                                            count = trashCount
-//                                        )
-//                                    )
-//                                }
-//                            }
-//
-//                            TrashImage.Plastic().trash -> {
-//                                _totalTrashScore.value += TrashImage.Plastic().score * trashCount
-//                                if (!trashs.map { trash -> trash.name }
-//                                        .contains(TrashImage.Plastic().trash)) {
-//                                    trashs.add(
-//                                        Trash(
-//                                            name = TrashImage.Plastic().trash,
-//                                            image = TrashImage.Plastic().image,
-//                                            count = trashCount
-//                                        )
-//                                    )
-//                                }
-//                            }
-//
-//                            TrashImage.PlasticBag().trash -> {
-//                                _totalTrashScore.value += TrashImage.PlasticBag().score * trashCount
-//                                if (!trashs.map { trash -> trash.name }
-//                                        .contains(TrashImage.PlasticBag().trash)) {
-//                                    trashs.add(
-//                                        Trash(
-//                                            name = TrashImage.PlasticBag().trash,
-//                                            image = TrashImage.PlasticBag().image,
-//                                            count = trashCount
-//                                        )
-//                                    )
-//                                }
-//                            }
-//
-//                            TrashImage.Styrofoam().trash -> {
-//                                _totalTrashScore.value += TrashImage.Styrofoam().score * trashCount
-//                                if (!trashs.map { trash -> trash.name }
-//                                        .contains(TrashImage.Styrofoam().trash)) {
-//                                    trashs.add(
-//                                        Trash(
-//                                            name = TrashImage.Styrofoam().trash,
-//                                            image = TrashImage.Styrofoam().image,
-//                                            count = trashCount
-//                                        )
-//                                    )
-//                                }
-//                            }
-//                        }
-//                    }
-//                    Log.d("daeYoung", "postPloggingImageUrl() 성공, trashs: $trashs")
-//                }
-//
-//                is ApiState.Error -> {
-//                    Log.d("daeYoung", "postPloggingImageUrl() 실패: ${apiState.errMsg}")
-//                }
-//
-//                ApiState.Loading -> TODO()
-//            }
-//        }
+
+        when (val apiState =
+            postTrashImageUrlUseCase(trashImageUrl).first()) {
+            is ApiState.Success<*> -> {
+                Log.d("daeYoung", "postPloggingImageUrl() 성공: ${apiState.value as List<Trash>}")
+            }
+
+            is ApiState.Error -> {
+                Log.d("daeYoung", "postPloggingImageUrl() 실패: ${apiState.errMsg}")
+            }
+
+            ApiState.Loading -> TODO()
+
+        }
     }
 
     suspend fun postPlogging(): Int {
@@ -604,9 +457,9 @@ class PloggingViewModel @Inject constructor(
         )
 
         var trashList: List<Map<String, Int>> = emptyList()
-        trashes.forEach {
-            trashList = trashList + (mapOf(it.name to it.count))
-        }
+//        trashes.forEach {
+//            trashList = trashList + (mapOf(it.name to it.count))
+//        }
 
         val ploggingInfo = PloggingInfo(
             ploggingId = ploggingId,

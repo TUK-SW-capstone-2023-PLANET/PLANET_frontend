@@ -1,9 +1,8 @@
 package com.example.planet.domain.repository
 
 import com.example.planet.data.remote.dto.ApiState
-import com.example.planet.data.remote.dto.request.plogging.PloggingImage
+import com.example.planet.data.remote.dto.request.plogging.TrashImageUrlInfo
 import com.example.planet.data.remote.dto.request.plogging.PloggingInfo
-import com.example.planet.data.remote.dto.response.plogging.PloggingId
 import kotlinx.coroutines.flow.Flow
 import okhttp3.MultipartBody
 
@@ -14,7 +13,7 @@ interface PloggingRepository {
 
     suspend fun postTrashImages(file: MultipartBody.Part): Flow<ApiState>
 
-    suspend fun postPloggingLive(ploggingData: PloggingImage): Flow<ApiState>
+    suspend fun postPloggingLive(ploggingData: TrashImageUrlInfo): Flow<ApiState>
 
     suspend fun postPlogging(ploggingInfo: PloggingInfo): Flow<ApiState>
 

@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 import okhttp3.MultipartBody
 import javax.inject.Inject
 
-class PostTrashImageUseCase  @Inject constructor(private val ploggingRepository: PloggingRepository) {
+class PostTrashImageUseCase @Inject constructor(private val ploggingRepository: PloggingRepository) {
     suspend operator fun invoke(file: MultipartBody.Part): Flow<ApiState> {
         return ploggingRepository.postTrashImages(file)
     }

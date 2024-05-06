@@ -3,7 +3,7 @@ package com.example.planet.data.remote.api.spring
 import com.example.planet.data.remote.dto.Advertisement
 import com.example.planet.data.remote.dto.ImageUrl
 import com.example.planet.data.remote.dto.response.plogging.PloggingComplete
-import com.example.planet.data.remote.dto.request.plogging.PloggingImage
+import com.example.planet.data.remote.dto.request.plogging.TrashImageUrlInfo
 import com.example.planet.data.remote.dto.request.plogging.PloggingInfo
 import com.example.planet.data.remote.dto.Tier
 import com.example.planet.data.remote.dto.TrashCan
@@ -11,6 +11,7 @@ import com.example.planet.data.remote.dto.request.signin.LoginInfo
 import com.example.planet.data.remote.dto.request.signup.PlanetUser
 import com.example.planet.data.remote.dto.response.plogging.PloggingId
 import com.example.planet.data.remote.dto.response.plogging.PloggingResult
+import com.example.planet.data.remote.dto.response.plogging.Trash
 import com.example.planet.data.remote.dto.response.signup.SignUpResponse
 import com.example.planet.data.remote.dto.response.ranking.planet.HigherPlanetUser
 import com.example.planet.data.remote.dto.response.ranking.planet.PagingPlanetUser
@@ -48,7 +49,7 @@ interface MainApi {
     suspend fun postImage(@Part file: MultipartBody.Part): ImageUrl
 
     @POST("/plogging-live")
-    suspend fun postPloggingLive(@Body ploggingImage: PloggingImage): List<Map<String, Int>>
+    suspend fun postPloggingLive(@Body trashImageUrlInfo: TrashImageUrlInfo): List<Trash>
 
     @POST("/plogging")
     suspend fun postPlogging(@Body ploggingInfo: PloggingInfo): PloggingComplete

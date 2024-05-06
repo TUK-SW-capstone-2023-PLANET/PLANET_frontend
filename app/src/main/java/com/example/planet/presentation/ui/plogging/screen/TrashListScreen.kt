@@ -8,13 +8,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.planet.component.map.trashList.TrashCard
-import com.example.planet.data.map.Trash
+import com.example.planet.data.remote.dto.response.plogging.Trash
 
 @Composable
 fun TrashListScreen(trashList: List<Trash>) {
     LazyColumn(modifier = Modifier.fillMaxSize()) {
         items(trashList.size) {count ->
-            TrashCard(trash = trashList[count].name, count = trashList[count].count, image = trashList[count].image)
+//            TrashCard(trash = trashList[count].name, count = trashList[count].count, image = trashList[count].image)
             if(count != 9) {  // 마지막 TrashCard에는 밑줄 X
                 Divider(thickness = 1.dp, modifier = Modifier.padding(horizontal = 16.dp))
             }
