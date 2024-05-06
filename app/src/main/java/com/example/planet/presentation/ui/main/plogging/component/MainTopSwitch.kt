@@ -1,4 +1,4 @@
-package com.example.planet.component.main
+package com.example.planet.presentation.ui.main.plogging.component
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box

@@ -1,4 +1,4 @@
-package com.example.planet.component.main
+package com.example.planet.presentation.ui.main.plogging.component
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable

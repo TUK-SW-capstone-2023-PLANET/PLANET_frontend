@@ -37,8 +37,8 @@ import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.planet.R
-import com.example.planet.component.main.SubTitle
-import com.example.planet.component.main.SubTitleDescription
+import com.example.planet.presentation.ui.main.plogging.component.SubTitle
+import com.example.planet.presentation.ui.main.plogging.component.SubTitleDescription
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.SeasonContentRow
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.SeasonTitleRow
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.data.ScreenNav

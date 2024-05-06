@@ -16,13 +16,13 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,17 +38,17 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.planet.R
 import com.example.planet.component.common.TripleArrowIcon
-import com.example.planet.component.main.SubTitle
-import com.example.planet.component.main.SubTitleDescription
+import com.example.planet.presentation.ui.main.plogging.component.SubTitle
+import com.example.planet.presentation.ui.main.plogging.component.SubTitleDescription
 import com.example.planet.presentation.ui.main.plogging.screen.home.component.UniversityGraph
 import com.example.planet.data.remote.dto.response.ranking.university.University
 import com.example.planet.data.remote.dto.response.ranking.universityuser.ExpandedUniversityUser
+import com.example.planet.presentation.ui.main.plogging.component.Header
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.UniversityIndividualContentRow
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.UniversityIndividualTitleRow
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.data.ScreenNav
@@ -63,7 +63,7 @@ fun UniversityScreen(
     graphHeightList: () -> List<Dp>,
     navController: NavHostController,
 
-) {
+    ) {
 
     var visible by remember { mutableStateOf(true) }
     var scrollState = rememberScrollState()
@@ -79,33 +79,22 @@ fun UniversityScreen(
             .padding(horizontal = 16.dp, vertical = 8.dp)
             .verticalScroll(scrollState)
     ) {
-        Row(
-            modifier = Modifier
-                .wrapContentHeight()
-                .fillMaxWidth()
-                .padding(bottom = 8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Row(
-                modifier = Modifier.wrapContentSize(),
-                verticalAlignment = Alignment.Bottom,
-            ) {
-                SubTitle(title = "대학교 순위", modifier = Modifier.padding(end = 8.dp))
-                SubTitleDescription("학교를 인증하여, 학교의 위상을 높히세요!!")
-            }
-            TripleArrowIcon { navController.navigate(ScreenNav.UniversityRankingScreen.screenRoute)  }
-        }
         Column(
             modifier = Modifier
-                .height(220.dp)
-                .fillMaxWidth(),
-            verticalArrangement = Arrangement.SpaceBetween
+                .fillMaxWidth()
+                .fillMaxHeight(0.4f)
         ) {
+            Header(
+                title = "대학교 순위",
+                description = "학교를 인증하여, 학교의 위상을 높히세요!!",
+                navController = navController,
+                modifier = Modifier.fillMaxHeight(0.1f)
+            )
 
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .fillMaxHeight()
                     .padding(horizontal = 24.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.Bottom
@@ -139,30 +128,22 @@ fun UniversityScreen(
                     medal = painterResource(id = R.drawable.medal_3st)
                 )
             }
-
         }
 
-        Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center) {
-            Row(
-                modifier = Modifier
-                    .wrapContentHeight()
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Row(
-                    modifier = Modifier.wrapContentSize(), verticalAlignment = Alignment.Bottom
-                ) {
-                    SubTitle(title = "대학교와 함께하기", modifier = Modifier.padding(end = 8.dp))
-                    Text(
-                        text = "내 학교와 같이 뛰면 즐거움과 성취감 두 배!",
-                        color = colorResource(id = R.color.font_background_color2),
-                        fontSize = 9.sp
-                    )
-                }
-                TripleArrowIcon { navController.navigate(ScreenNav.UniversityIndividualRankingScreen.screenRoute) }
+        HorizontalDivider(
+            thickness = 1.dp,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+            color = colorResource(id = R.color.font_background_color3)
+        )
 
-            }
+        Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center) {
+            Header(
+                title = "대학교와 함께하기",
+                description = "내 학교와 같이 뛰면 즐거움과 성취감 두 배!",
+                navController = navController
+            )
 
             Row(
                 modifier = Modifier
@@ -263,14 +244,15 @@ fun UniversityScreen(
                     )
                 }
 
-                universityUserList().subList(1, universityUserList().size).forEach { universityUser ->
-                    UniversityIndividualContentRow(
-                        rank = universityUser.rank,
-                        nickname = universityUser.nickName,
-                        score = universityUser.score.numberComma(),
-                        contribution = universityUser.contribution
-                    )
-                }
+                universityUserList().subList(1, universityUserList().size)
+                    .forEach { universityUser ->
+                        UniversityIndividualContentRow(
+                            rank = universityUser.rank,
+                            nickname = universityUser.nickName,
+                            score = universityUser.score.numberComma(),
+                            contribution = universityUser.contribution
+                        )
+                    }
             }
         }
     }

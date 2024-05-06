@@ -15,12 +15,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.planet.R
-import com.example.planet.component.common.TripleArrowIcon
-import com.example.planet.component.main.SubTitle
-import com.example.planet.component.main.SubTitleDescription
+import com.example.planet.presentation.ui.main.plogging.component.SubTitle
+import com.example.planet.presentation.ui.main.plogging.component.SubTitleDescription
 
 @Composable
 fun MiddleHead(modifier: Modifier = Modifier, image: Painter, title: String, description: String, icon: @Composable () -> Unit = {}) {
