@@ -48,7 +48,6 @@ import kotlin.math.round
 @HiltViewModel
 class PloggingViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val postImageUseCase: PostImageUseCase,
     private val postPloggingUseCase: PostPloggingUseCase,
     private val getAllTrashCanLocation: GetAllTrashCanLocation,
     private val getPloggingIdUseCase: GetPloggingIdUseCase,
@@ -259,17 +258,6 @@ class PloggingViewModel @Inject constructor(
 
 
     fun paceToSecond(): Long = round(pace.value.second).toLong() + (pace.value.first * 60)
-
-
-    // 시간 format 설정
-//    private fun formatTime(milliseconds: Long): String {
-//        val hours = TimeUnit.MILLISECONDS.toHours(milliseconds) % 24
-//        val minutes = TimeUnit.MILLISECONDS.toMinutes(milliseconds) % 60
-//        val seconds = TimeUnit.MILLISECONDS.toSeconds(milliseconds) % 60
-//        val formatter = String.format("%02d : %02d", minutes, seconds)
-//        _hour.value = hours.toString()
-//        return formatter
-//    }
 
 
     fun getAllTrashCanLocation() {
