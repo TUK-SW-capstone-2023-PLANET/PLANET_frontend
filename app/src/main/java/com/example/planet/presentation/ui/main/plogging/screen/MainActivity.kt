@@ -48,7 +48,7 @@ class MainActivity : ComponentActivity() {
                     mainViewModel = mainViewModel,
                     startMapActivity = { startMapActivity() },
                     startUserActivity = { startUserActivity() },
-                    startCommunityActivity = { startCommunityActivity() }
+                    startCommunityActivity = { board -> startCommunityActivity(board) }
                 )
             }
         }
@@ -64,8 +64,10 @@ class MainActivity : ComponentActivity() {
         startActivity(intent)
     }
 
-    private fun startCommunityActivity() {
-        val intent = Intent(this, CommunityActivity::class.java)
+    private fun startCommunityActivity(bulletinBoard: String) {
+        val intent = Intent(this, CommunityActivity::class.java).apply {
+            this.putExtra("board", bulletinBoard)
+        }
         startActivity(intent)
     }
 }

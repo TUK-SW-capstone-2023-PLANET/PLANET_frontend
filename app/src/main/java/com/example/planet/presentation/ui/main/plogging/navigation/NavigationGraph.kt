@@ -33,7 +33,7 @@ fun NavigationGraph(
     mainViewModel: MainViewModel = viewModel(),
     startMapActivity: () -> Unit,
     startUserActivity: () -> Unit,
-    startCommunityActivity: () -> Unit,
+    startCommunityActivity: (String) -> Unit,
 ) {
 
 
@@ -73,7 +73,7 @@ fun NavigationGraph(
                             MessageScreen()
                         }
                         composable(BottomNavItem.CommunityScreen.screenRoute) {
-                            CommunityScreen{ startCommunityActivity() }
+                            CommunityScreen{ board -> startCommunityActivity(board) }
                         }
                         composable(ScreenNav.TierScreen.screenRoute) {
                             TierScreen(tierList = mainViewModel.tierList.value)

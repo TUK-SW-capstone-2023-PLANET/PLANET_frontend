@@ -28,10 +28,10 @@ import com.example.planet.R
 import com.example.planet.presentation.util.noRippleClickable
 
 @Composable
-fun CommunityTopAppBar(title: String, onBack: () -> Unit, goSearchScreen: () -> Unit) {
+fun CommunityTopAppBar(modifier: Modifier = Modifier, title: String, onBack: () -> Unit, goSearchScreen: () -> Unit) {
     val iconColor = colorResource(id = R.color.font_background_color1)
 
-    Column {
+    Column(modifier = modifier) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
