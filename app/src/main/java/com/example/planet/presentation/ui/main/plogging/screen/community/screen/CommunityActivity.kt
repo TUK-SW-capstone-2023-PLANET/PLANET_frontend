@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.planet.presentation.ui.main.plogging.screen.community.navigation.CommunityNavGraph
 import com.example.planet.presentation.ui.main.plogging.screen.community.navigation.CommunityNavItem
 import com.example.planet.presentation.ui.ui.theme.MyApplicationTheme
 
@@ -25,23 +26,15 @@ class CommunityActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    NavHost(
+                    CommunityNavGraph(
                         navController = navController,
-                        startDestination = intent.getStringExtra("board")
-                            ?: CommunityNavItem.FreeBoardScreen.screenRoute
-                    ) {
-                        composable(CommunityNavItem.FreeBoardScreen.screenRoute) {
-                            FreeBoardScreen(onBack = { finish() }){}
-                        }
-                        composable(CommunityNavItem.UniversityBoardScreen.screenRoute) {
-                            UniversityBoardScreen(onBack = { finish() }){finish()}
-                        }
-                    }
-
+                        startRoute = intent.getStringExtra("board")
+                            ?: CommunityNavItem.FreeBoardScreen.screenRoute,
+                        activityFinish = { finish() }
+                    )
                 }
             }
         }
     }
-
 }
 

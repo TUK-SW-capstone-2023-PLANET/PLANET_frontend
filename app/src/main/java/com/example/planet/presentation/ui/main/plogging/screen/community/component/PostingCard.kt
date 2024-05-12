@@ -1,6 +1,7 @@
 package com.example.planet.presentation.ui.main.plogging.screen.community.component
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -28,7 +29,8 @@ fun PostingCard(
     name: String,
     heartCount: Int,
     commentCount: Int,
-    personCount: Int
+    personCount: Int,
+    onClick: () -> Unit
 ) {
     val titleStyle = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
     val contentStyle = TextStyle(fontSize = 12.sp, fontWeight = FontWeight.Medium)
@@ -40,6 +42,7 @@ fun PostingCard(
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .clickable { onClick() }
             .padding(start = 19.dp, end = 19.dp, top = 14.dp, bottom = 10.dp)
     ) {
         Text(text = title, style = titleStyle, modifier = Modifier.padding(bottom = 4.dp))
@@ -50,7 +53,11 @@ fun PostingCard(
                 Text(text = name, style = timeStyle)
             }
             Row {
-                PostingCardIcons(heartCount = heartCount, commentCount = commentCount, personCount = personCount)
+                PostingCardIcons(
+                    heartCount = heartCount,
+                    commentCount = commentCount,
+                    personCount = personCount
+                )
             }
         }
     }

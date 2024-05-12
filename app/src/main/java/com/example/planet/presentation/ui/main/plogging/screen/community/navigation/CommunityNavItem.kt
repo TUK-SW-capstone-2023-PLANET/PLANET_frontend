@@ -5,7 +5,7 @@ const val FREE = "freeBoardScreen"
 const val UNIVERSITY = "universityBoardScreen"
 const val FREE_SEARCH = "freeBoardSearchScreen"
 const val UNIVERSITY_SEARCH = "universityBoardSearchScreen"
-const val COMMUNITY = "communityScreen"
+const val POSTED = "postedInfoScreen"
 
 
 sealed class CommunityNavItem(
@@ -13,18 +13,17 @@ sealed class CommunityNavItem(
 ) {
     data object FreeBoardScreen : CommunityNavItem(
         screenRoute = FREE,
-
     )
     data object UniversityBoardScreen : CommunityNavItem(
         screenRoute = UNIVERSITY,
-
+    )
+    data object PostedInfoScreen : CommunityNavItem(
+        screenRoute = POSTED,
     )
     data object FreeBoardSearchScreen : CommunityNavItem(
         screenRoute = FREE_SEARCH,
-
     )
     data object UniversityBoardSearchScreen : CommunityNavItem(
         screenRoute = UNIVERSITY_SEARCH,
-
     )
 }
