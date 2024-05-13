@@ -18,10 +18,10 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object RetrofitModule {
-    private const val MAIN_URL = "http://3.37.87.60:8080/"
+    private const val MAIN_URL = "http://54.180.102.87:8080/"
     private const val AI_URL = "http://172.20.10.5:8081/"
 
-    // 스웨거 주소: http://3.37.87.60:8080/swagger-ui/index.html
+    // 스웨거 주소: http://54.180.102.87:8080/swagger-ui/index.html#/
     val gson : Gson = GsonBuilder()
         .setLenient()
         .create()

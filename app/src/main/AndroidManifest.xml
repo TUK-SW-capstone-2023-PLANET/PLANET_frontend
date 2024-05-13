@@ -27,7 +27,9 @@
             android:name=".presentation.ui.main.plogging.screen.community.screen.CommunityActivity"
             android:exported="false"
             android:label="@string/title_activity_bulletin_board"
-            android:theme="@style/Theme.MyApplication" />
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.MyApplication"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".presentation.ui.plogging.screen.PloggingResultActivity"
             android:exported="false"

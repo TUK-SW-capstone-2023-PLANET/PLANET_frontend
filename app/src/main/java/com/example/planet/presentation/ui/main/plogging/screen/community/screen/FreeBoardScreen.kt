@@ -1,5 +1,7 @@
 package com.example.planet.presentation.ui.main.plogging.screen.community.screen
 
+import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -11,19 +13,49 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.planet.R
+import com.example.planet.TAG
+import com.example.planet.presentation.ui.component.DialogComponent
 import com.example.planet.presentation.ui.main.plogging.screen.community.component.BulletinBoardTopAppBar
 import com.example.planet.presentation.ui.main.plogging.screen.community.component.HeartPostingCard
 import com.example.planet.presentation.ui.main.plogging.screen.community.component.PostingCard
 import com.example.planet.presentation.ui.main.plogging.screen.community.component.VisitPostingCard
 import com.example.planet.presentation.ui.main.plogging.screen.community.navigation.CommunityNavItem
+import com.example.planet.presentation.viewmodel.CommunityViewModel
 
 @Composable
-fun FreeBoardScreen(navController: NavHostController, onBack: () -> Unit, onSearch: () -> Unit) {
+fun FreeBoardScreen(
+    viewModel: CommunityViewModel,
+    navController: NavHostController,
+    onBack: () -> Unit,
+    onSearch: () -> Unit
+) {
+
+    BackHandler {
+        if (viewModel.boardDialogState) viewModel.boardDialogState = false
+        else navController.popBackStack()
+    }
+
+    Log.d(TAG, "boardDialogState: ${viewModel.boardDialogState}")
+
+    if (viewModel.boardDialogState) {
+        DialogComponent(
+            title = "게시판 메뉴",
+            text1 = "글 쓰기",
+            text2 = "내가 쓴 글 보기",
+            closeDialog = { viewModel.boardDialogState = false },
+            onClick1 = { navController.navigate(CommunityNavItem.PostingScreen.screenRoute) },
+            onClick2 = { }
+        )
+    }
+
     Column(modifier = Modifier.fillMaxSize()) {
         BulletinBoardTopAppBar(
             modifier = Modifier.padding(bottom = 18.dp),
             title = "자유 게시판",
-            onBack = { onBack() }) { onSearch() }
+            onBack = { onBack() },
+            onSearch = { onSearch() }) {
+            viewModel.boardDialogState = true
+        }
         VisitPostingCard(
             text = "플로깅 10년차의 플로깅 꿀팁",
             count = 10,

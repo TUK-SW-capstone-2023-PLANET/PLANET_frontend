@@ -1,11 +1,5 @@
-package com.example.planet.presentation.ui.main.plogging.screen.user.component
+package com.example.planet.presentation.ui.component
 
-import android.app.Activity
-import android.content.Intent
-import android.net.Uri
-import android.provider.MediaStore
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,6 +11,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -33,28 +28,16 @@ import com.example.planet.R
 import com.example.planet.presentation.util.noRippleClickable
 
 @Composable
-fun GetPictureDialog(closeDialog: (Boolean) -> Unit, getImageUri: (Uri) -> Unit, getDefaultImage: () -> Unit) {
-    val takePhotoFromAlbumLauncher = // 갤러리에서 사진 가져오기
-        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                result.data?.data?.let {
-                    uri -> getImageUri(uri)
-                    closeDialog(false)
-                }
-            } else if (result.resultCode != Activity.RESULT_CANCELED) {
-//                toast(context, StringAsset.Toast.ErrorTakenPhoto)
-            }
-        }
-    val takePhotoFromAlbumIntent =
-        Intent(Intent.ACTION_GET_CONTENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI).apply {
-            type = "image/*"
-            action = Intent.ACTION_GET_CONTENT
-            putExtra(
-                Intent.EXTRA_MIME_TYPES,
-                arrayOf("image/jpeg", "image/png", "image/bmp", "image/webp")
-            )
-            putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false)
-        }
+fun DialogComponent(
+    title: String,
+    text1: String,
+    text2: String,
+    text2Color: Color = colorResource(id = R.color.main_color1),
+    closeDialog: (Boolean) -> Unit,
+    onClick1: () -> Unit,
+    onClick2: () -> Unit
+) {
+
 
     Box(modifier = Modifier
         .fillMaxSize()
@@ -77,13 +60,22 @@ fun GetPictureDialog(closeDialog: (Boolean) -> Unit, getImageUri: (Uri) -> Unit,
                 color = colorResource(id = R.color.font_background_color4)
             ) {
                 GetPictureDialogContent(
-                    goOnGallery = { takePhotoFromAlbumLauncher.launch(takePhotoFromAlbumIntent) },
-                    changeGeneralImage = { getDefaultImage() }
+                    title = title,
+                    text1 = text1,
+                    text2 = text2,
+                    text2Color = text2Color,
+                    goOnGallery = {
+                        onClick1()
+                        closeDialog(false)
+                    },
+                    changeGeneralImage = { onClick2() }
                 )
             }
             TextButton(
                 onClick = { closeDialog(false) },
-                modifier = Modifier.fillMaxWidth().padding(bottom = 24.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 24.dp),
                 shape = RoundedCornerShape(10.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.White,
@@ -97,6 +89,7 @@ fun GetPictureDialog(closeDialog: (Boolean) -> Unit, getImageUri: (Uri) -> Unit,
                         .fillMaxWidth()
                         .padding(vertical = 8.dp),
                     textAlign = TextAlign.Center,
+                    color = colorResource(id = R.color.main_color1)
                 )
             }
         }
@@ -105,6 +98,10 @@ fun GetPictureDialog(closeDialog: (Boolean) -> Unit, getImageUri: (Uri) -> Unit,
 
 @Composable
 fun GetPictureDialogContent(
+    title: String,
+    text1: String,
+    text2: String,
+    text2Color: Color = colorResource(id = R.color.main_color1),
     goOnGallery: () -> Unit = {},
     changeGeneralImage: () -> Unit,
 ) {
@@ -117,13 +114,13 @@ fun GetPictureDialogContent(
     ) {
 
         Text(
-            text = "프로필 사진 설정",
+            text = title,
             fontSize = 12.sp,
             color = colorResource(id = R.color.font_background_color2)
         )
 
 //        Spacer(modifier = Modifier.height(16.dp))
-        Divider(
+        HorizontalDivider(
             thickness = 1.dp,
             color = colorResource(id = R.color.font_background_color2),
             modifier = Modifier
@@ -132,7 +129,7 @@ fun GetPictureDialogContent(
         )
 
         Text(
-            text = "앨범에서 사진 선택",
+            text = text1,
             fontSize = 16.sp,
             modifier = Modifier
                 .fillMaxWidth()
@@ -141,23 +138,24 @@ fun GetPictureDialogContent(
             textAlign = TextAlign.Center,
             color = colorResource(id = R.color.main_color1)
         )
-        Divider(
-            thickness = 1.dp,
-            color = colorResource(id = R.color.font_background_color2),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp)
-        )
-
-        Text(
-            text = "기본 이미지로 변경",
-            fontSize = 16.sp,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp)
-                .noRippleClickable { changeGeneralImage() },
-            textAlign = TextAlign.Center,
-            color = colorResource(id = R.color.main_color1)
-        )
+        if (text2.isNotEmpty()) {
+            HorizontalDivider(
+                thickness = 1.dp,
+                color = colorResource(id = R.color.font_background_color2),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp)
+            )
+            Text(
+                text = text2,
+                fontSize = 16.sp,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp)
+                    .noRippleClickable { changeGeneralImage() },
+                textAlign = TextAlign.Center,
+                color = text2Color
+            )
+        }
     }
 }

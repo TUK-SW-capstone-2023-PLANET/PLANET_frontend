@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -34,7 +35,7 @@ fun HeartPostingCard(
     modifier: Modifier
 ) {
     val containerColor = Color(0xFFFFD3D3)
-    val iconColor = Color(0xFFFF5D5D)
+    val iconColor = colorResource(id = R.color.red)
 
     val textStyle = TextStyle(
         fontSize = 12.sp,
@@ -90,7 +91,7 @@ fun VisitPostingCard(
     modifier: Modifier
 ) {
     val containerColor = Color(0xFFFFD3D3)
-    val iconColor = Color(0xFFFF5D5D)
+    val iconColor = colorResource(id = R.color.red)
 
     val textStyle = TextStyle(
         fontSize = 12.sp,

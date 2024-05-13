@@ -8,15 +8,19 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.Search
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -29,7 +33,8 @@ fun BulletinBoardTopAppBar(
     modifier: Modifier = Modifier,
     title: String,
     onBack: () -> Unit,
-    goSearchScreen: () -> Unit
+    onSearch: () -> Unit,
+    onDialog: () -> Unit
 ) {
     val iconColor = colorResource(id = R.color.font_background_color1)
 
@@ -64,7 +69,10 @@ fun BulletinBoardTopAppBar(
                     Icon(
                         imageVector = Icons.Default.MoreVert,
                         contentDescription = null,
-                        tint = iconColor
+                        tint = iconColor,
+                        modifier = Modifier.noRippleClickable {
+                            onDialog()
+                        }
                     )
                 }
             }
@@ -113,6 +121,53 @@ fun PostedTopAppBar(
                     contentDescription = null,
                     tint = iconColor,
                     modifier = Modifier.noRippleClickable { onDialog() }
+                )
+            }
+            Text(
+                text = title,
+                fontWeight = FontWeight.Bold,
+                fontSize = 18.sp,
+                modifier = Modifier.align(Alignment.TopCenter)
+            )
+        }
+    }
+}
+
+@Composable
+fun PostingTopAppBar(
+    modifier: Modifier = Modifier,
+    title: String,
+    onBack: () -> Unit,
+    onComplete: () -> Unit
+) {
+    val iconColor = colorResource(id = R.color.font_background_color1)
+
+    Column(modifier = modifier) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 22.dp, vertical = 16.dp),
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = Icons.Default.ArrowBackIosNew,
+                    contentDescription = null,
+                    tint = iconColor,
+                    modifier = Modifier
+                        .noRippleClickable {
+                            onBack()
+                        }
+                )
+
+                Text(
+                    text = "완료",
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 15.sp,
                 )
             }
             Text(

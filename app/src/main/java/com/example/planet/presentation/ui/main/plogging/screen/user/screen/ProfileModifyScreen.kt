@@ -1,6 +1,11 @@
 package com.example.planet.presentation.ui.main.plogging.screen.user.screen
 
+import android.app.Activity
+import android.content.Intent
+import android.provider.MediaStore
 import androidx.activity.compose.BackHandler
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -33,7 +38,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.planet.R
-import com.example.planet.presentation.ui.main.plogging.screen.user.component.GetPictureDialog
+import com.example.planet.presentation.ui.component.DialogComponent
 import com.example.planet.presentation.ui.main.plogging.screen.user.component.HeightWeightRow
 import com.example.planet.presentation.ui.main.plogging.screen.user.component.MyProfileImage
 import com.example.planet.presentation.ui.main.plogging.screen.user.component.ProfileModifyTopAppBar
@@ -54,14 +59,36 @@ fun ProfileModifyScreen(userViewModel: UserViewModel, onClick: () -> Unit) {
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
 
-    if (userViewModel.dialogState) {
-        GetPictureDialog(
-            closeDialog = { userViewModel.dialogState = false },
-            getImageUri = {
-                scope.launch { userViewModel.getImageUrl(uri = it, context = context) }
-            },
-            getDefaultImage = { userViewModel.changeDefaultImage() }
+    val takePhotoFromAlbumLauncher = // 갤러리에서 사진 가져오기
+        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                result.data?.data?.let {
+                        uri -> scope.launch { userViewModel.getImageUrl(uri = uri, context = context) }
+                }
+            } else if (result.resultCode != Activity.RESULT_CANCELED) {
+//                toast(context, StringAsset.Toast.ErrorTakenPhoto)
+            }
+        }
+    val takePhotoFromAlbumIntent =
+        Intent(Intent.ACTION_GET_CONTENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI).apply {
+            type = "image/*"
+            action = Intent.ACTION_GET_CONTENT
+            putExtra(
+                Intent.EXTRA_MIME_TYPES,
+                arrayOf("image/jpeg", "image/png", "image/bmp", "image/webp")
             )
+            putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false)
+        }
+
+    if (userViewModel.dialogState) {
+        DialogComponent(
+            title = "프로필 사진 설정",
+            text1 = "앨범에서 사진 선택",
+            text2 = "기본 이미지로 변경",
+            closeDialog = { userViewModel.dialogState = it },
+            onClick1 = { takePhotoFromAlbumLauncher.launch(takePhotoFromAlbumIntent) },
+            onClick2 = { userViewModel.changeDefaultImage() }
+        )
     }
 
     BackHandler {
