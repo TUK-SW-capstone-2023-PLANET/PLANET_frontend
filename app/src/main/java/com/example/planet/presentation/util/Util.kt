@@ -114,6 +114,10 @@ fun Double.round(): String {
     val formatDistance = round(this * 100) / 100
     return formatDistance.toString()
 }
+fun Double.round2(): String {
+    val formatDistance = round(this * 1000) / 1000
+    return formatDistance.toString()
+}
 
 fun Double.roundToDouble(): Double = round(this * 100) / 100
 

@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
@@ -21,6 +22,7 @@ import com.example.planet.presentation.ui.main.plogging.screen.community.compone
 import com.example.planet.presentation.ui.main.plogging.screen.community.component.VisitPostingCard
 import com.example.planet.presentation.ui.main.plogging.screen.community.navigation.CommunityNavItem
 import com.example.planet.presentation.viewmodel.CommunityViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun FreeBoardScreen(
@@ -29,6 +31,8 @@ fun FreeBoardScreen(
     onBack: () -> Unit,
     onSearch: () -> Unit
 ) {
+
+    val scope = rememberCoroutineScope()
 
     BackHandler {
         if (viewModel.boardDialogState) viewModel.boardDialogState = false
@@ -81,7 +85,11 @@ fun FreeBoardScreen(
                     commentCount = 21,
                     personCount = 100
                 ) {
-                    navController.navigate("${CommunityNavItem.PostedInfoScreen.screenRoute}/자유 게시판")
+                    scope.launch {
+                        viewModel.getPostedInfo{
+                            navController.navigate("${CommunityNavItem.PostedInfoScreen.screenRoute}/자유 게시판")
+                        }
+                    }
                 }
             }
         }

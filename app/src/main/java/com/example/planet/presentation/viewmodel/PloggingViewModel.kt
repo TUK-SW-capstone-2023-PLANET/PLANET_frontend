@@ -58,7 +58,6 @@ class PloggingViewModel @Inject constructor(
     private val getUserTokenUseCase: GetUserTokenUseCase,
     private val postTrashImageUseCase: PostTrashImageUseCase,
     private val postTrashImageUrlUseCase: PostTrashImageUrlUseCase
-
 ) : ViewModel() {
     init {
         viewModelScope.launch {
@@ -407,10 +406,15 @@ class PloggingViewModel @Inject constructor(
             postTrashImageUrlUseCase(trashImageUrl).first()) {
             is ApiState.Success<*> -> {
                 trashList = apiState.value as List<Trash>
+                var trashScore = 0
+                var trashCount = 0
                 trashList.forEach { trash ->
-                    _totalTrashCount.value += trash.count
-                    _totalTrashScore.value += trash.score
+                    trashCount += trash.count
+                    trashScore += trash.score
                 }
+                _totalTrashScore.value = trashScore
+                _totalTrashCount.value = trashCount
+
             }
 
             is ApiState.Error -> {

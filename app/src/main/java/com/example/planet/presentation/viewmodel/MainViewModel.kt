@@ -78,19 +78,19 @@ class MainViewModel @Inject constructor(
             async(Dispatchers.IO) { getUserToken() }.await()
             listOf(
                 async(Dispatchers.IO) { getTop5SeasonUser() },
-//                async(Dispatchers.IO) { getTop4UniversityUser() },
+                async(Dispatchers.IO) { getTop4UniversityUser() },
                 async(Dispatchers.IO) { getUniversityMyRanking(userId) },
                 async(Dispatchers.IO) { getMySeasonRanking() },
                 async(Dispatchers.IO) { getMyPlanetRanking() },
                 async(Dispatchers.IO) { getMyUniversityInfo() },
                 async(Dispatchers.IO) { getTopBanner() },
                 async(Dispatchers.IO) { getTop3PlanetUser() },
-//                async(Dispatchers.IO) { getTop3Universities() }
+                async(Dispatchers.IO) { getTop3Universities() }
             ).awaitAll()
 
             launch(Dispatchers.IO) { getAllSeasonUser() }
             launch(Dispatchers.IO) { getAllUniversities() }
-//            launch(Dispatchers.IO) { getAllPlanetUserRanking() }
+            launch(Dispatchers.IO) { getAllPlanetUserRanking() }
             launch(Dispatchers.IO) { getAllUniversityUser() }
 
         }

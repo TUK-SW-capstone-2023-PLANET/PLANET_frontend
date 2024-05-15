@@ -22,4 +22,14 @@ class PostingRepositoryImpl @Inject constructor(
             error.message?.let { emit(ApiState.Error(it)) }
         }
     }.flowOn(Dispatchers.IO)
+
+    override suspend fun getPostedInfo(postId: Long, userId: Long): Flow<ApiState> = flow {
+        kotlin.runCatching {
+            mainApi.getPosted(postId = postId, userId = userId)
+        }.onSuccess {
+            emit(ApiState.Success(it))
+        }.onFailure { error ->
+            error.message?.let { emit(ApiState.Error(it)) }
+        }
+    }.flowOn(Dispatchers.IO)
 }

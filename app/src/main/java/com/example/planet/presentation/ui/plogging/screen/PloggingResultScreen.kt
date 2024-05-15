@@ -31,6 +31,7 @@ import com.example.planet.presentation.ui.plogging.component.ResultGraphBoard
 import com.example.planet.presentation.ui.plogging.component.ResultMap
 import com.example.planet.presentation.ui.plogging.component.ScoreBoard
 import com.example.planet.presentation.util.paceFormat
+import com.example.planet.presentation.util.round2
 import com.example.planet.presentation.util.secondsFormatTime
 
 
@@ -90,7 +91,7 @@ fun PloggingResultScreen(ploggingInfo: PloggingResult, onBack: (Boolean) -> Unit
             )
             ScoreBoard(
                 time = ploggingInfo.ploggingTime.secondsFormatTime(),
-                distance = ploggingInfo.distance.toString(),
+                distance = ploggingInfo.distance.round2(),
                 kcal = ploggingInfo.kcal.toString(),
                 pace = ploggingInfo.pace.paceFormat(),
                 totalTrashCount = ploggingInfo.trashCount.toString(),

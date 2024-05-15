@@ -41,7 +41,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import coil.compose.rememberAsyncImagePainter
 import com.example.planet.R
+import com.example.planet.data.remote.dto.response.post.PostedInfo
 import com.example.planet.presentation.ui.component.DialogComponent
 import com.example.planet.presentation.ui.main.plogging.screen.community.component.PostedTopAppBar
 import com.example.planet.presentation.ui.main.plogging.screen.community.component.PostingCardIcons
@@ -88,26 +90,28 @@ fun PostedInfoScreen(
                 .verticalScroll(scrollState)
                 .padding(top = 18.dp)
                 .fillMaxSize()
-
         ) {
             Column(
                 modifier = Modifier
                     .padding(start = 20.dp, end = 20.dp, bottom = 15.dp)
                     .fillMaxWidth()
             ) {
-                PostedMyProfileCard(name = "HappyBean", date = "2024.04.29 01:28")
+                PostedMyProfileCard(name = viewModel.postedInfo.nickName, date = viewModel.postedInfo.uploadTime)
                 PostedContent(
-                    title = "다들 뭐하고 있어?",
-                    image = emptyList(),
-                    content = "나 심심해\n놀아줘\n뿌엥 놀고싶어",
-                    heartCount = 12,
-                    commentCount = 21,
-                    personCount = 100
-                )
+                    title = viewModel.postedInfo.title,
+                    image = viewModel.postedInfo.imageUrl,
+                    content = viewModel.postedInfo.content,
+                    heartCount = viewModel.postedInfo.heartCount,
+                    commentCount = viewModel.postedInfo.commentCount,
+                    personCount = viewModel.postedInfo.viewCount,
+                    isFavorite = viewModel.postedInfo.heart
+                ) {
+                    viewModel.postedInfo = viewModel.postedInfo.copy(heart = it)
+                }
             }
 
             Column {
-                repeat(6) {
+                repeat(viewModel.postedInfo.commentCount) {
                     CommentCard(
                         image = painterResource(id = R.drawable.temporary_user_icon),
                         name = "행복한 티노",
@@ -246,7 +250,8 @@ fun PostedContent(
     heartCount: Int,
     commentCount: Int,
     personCount: Int,
-    isFavorite: Boolean = false
+    isFavorite: Boolean = false,
+    favoriteOnClick: (Boolean) -> Unit
 ) {
     val titleTextStyle = TextStyle(fontSize = 17.sp, fontWeight = FontWeight.SemiBold)
     val contentTextStyle = TextStyle(fontSize = 12.sp, fontWeight = FontWeight.Medium)
@@ -254,22 +259,25 @@ fun PostedContent(
     Column {
         Text(text = title, style = titleTextStyle, modifier = Modifier.padding(bottom = 14.dp))
 
-        LazyRow(
-            modifier = Modifier
-                .padding(bottom = 14.dp)
-                .fillMaxWidth()
-        ) {
-            items(9) {
-                Image(
-                    painter = painterResource(id = R.drawable.plogginghelp_card2),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .padding(end = if (it != 8) 6.dp else 0.dp)
-                        .size(150.dp)
-                        .clip(RoundedCornerShape(6.dp))
-                )
+        if (image.isNotEmpty()) {
+            LazyRow(
+                modifier = Modifier
+                    .padding(bottom = 14.dp)
+                    .fillMaxWidth()
+            ) {
+                items(image.size) {
+                    Image(
+                        painter = rememberAsyncImagePainter(model = image[it]),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .padding(end = if (it != 8) 6.dp else 0.dp)
+                            .size(150.dp)
+                            .clip(RoundedCornerShape(6.dp))
+                    )
+                }
             }
         }
+
 
         Text(text = content, style = contentTextStyle, modifier = Modifier.padding(bottom = 6.dp))
         Row(modifier = Modifier.padding(bottom = 6.dp)) {
@@ -279,30 +287,29 @@ fun PostedContent(
                 personCount = personCount
             )
         }
-        PostedFavoriteButton()
+        PostedFavoriteButton(enabled = { isFavorite }) {
+            favoriteOnClick(it)
+        }
 
     }
 }
 
 @Composable
-fun PostedFavoriteButton(/*enabled: Boolean = false*/) {
+fun PostedFavoriteButton(enabled: () -> Boolean, onClick: (Boolean) -> Unit) {
     val iconSize = 11.dp
     val disableColor = colorResource(id = R.color.font_background_color2)
     val enableColor = colorResource(id = R.color.font_background_color2)
     val textStyle =
         TextStyle(fontSize = 11.sp, fontWeight = FontWeight.SemiBold)
-    var enabled: Boolean by remember {
-        mutableStateOf(false)
-    }
 
     Card(
-        modifier = Modifier.noRippleClickable { enabled = !enabled },
+        modifier = Modifier.noRippleClickable { onClick(!enabled()) },
         shape = RoundedCornerShape(5.dp),
         colors = CardDefaults.cardColors(
-            containerColor = if (enabled) colorResource(id = R.color.main_color2) else colorResource(
+            containerColor = if (enabled()) colorResource(id = R.color.main_color2) else colorResource(
                 id = R.color.font_background_color3
             ),
-            contentColor = if (enabled) Color.White else colorResource(id = R.color.font_background_color2)
+            contentColor = if (enabled()) Color.White else colorResource(id = R.color.font_background_color2)
         )
     ) {
         Row(
@@ -311,7 +318,7 @@ fun PostedFavoriteButton(/*enabled: Boolean = false*/) {
             horizontalArrangement = Arrangement.Center
         ) {
             Icon(
-                imageVector = if (enabled) Icons.Default.Favorite else Icons.Outlined.FavoriteBorder,
+                imageVector = if (enabled()) Icons.Default.Favorite else Icons.Outlined.FavoriteBorder,
                 contentDescription = null,
                 modifier = Modifier
                     .padding(end = 2.dp)

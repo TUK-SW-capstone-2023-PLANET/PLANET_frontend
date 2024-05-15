@@ -11,8 +11,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.planet.presentation.ui.main.plogging.component.MainTopSwitch
 import com.example.planet.presentation.ui.main.plogging.component.BottomNavigation
+import com.example.planet.presentation.ui.main.plogging.component.MainTopSwitch
 import com.example.planet.presentation.ui.main.plogging.screen.community.screen.CommunityScreen
 import com.example.planet.presentation.ui.main.plogging.screen.home.screen.MainScreen
 import com.example.planet.presentation.ui.main.plogging.screen.home.screen.TierScreen

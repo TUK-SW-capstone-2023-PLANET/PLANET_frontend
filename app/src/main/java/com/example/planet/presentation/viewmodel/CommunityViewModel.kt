@@ -14,8 +14,10 @@ import com.example.planet.data.remote.dto.ApiState
 import com.example.planet.data.remote.dto.ImageUrl
 import com.example.planet.data.remote.dto.request.post.PostingInfo
 import com.example.planet.data.remote.dto.response.post.PostStoreResponse
+import com.example.planet.data.remote.dto.response.post.PostedInfo
 import com.example.planet.data.remote.dto.response.ranking.season.SeasonUser
 import com.example.planet.domain.usecase.login.sharedpreference.GetUserTokenUseCase
+import com.example.planet.domain.usecase.post.GetPostedInfoUseCase
 import com.example.planet.domain.usecase.post.PostPostingStoreUseCase
 import com.example.planet.presentation.util.asMultipart
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,7 +30,8 @@ import javax.inject.Inject
 class CommunityViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val getUserTokenUseCase: GetUserTokenUseCase,
-    private val postPostingStoreUseCase: PostPostingStoreUseCase
+    private val postPostingStoreUseCase: PostPostingStoreUseCase,
+    private val getPostedInfoUseCase: GetPostedInfoUseCase
 ) : ViewModel() {
 
     var userId: Long = 0L
@@ -40,6 +43,8 @@ class CommunityViewModel @Inject constructor(
     var postingContentInput by mutableStateOf("")
 
     var postingImageList by mutableStateOf(emptyList<Uri>())
+
+    var postedInfo by mutableStateOf(PostedInfo())
 
     init {
         viewModelScope.launch {
@@ -96,7 +101,20 @@ class CommunityViewModel @Inject constructor(
                 onBack()
             }
             is ApiState.Error -> {
-                Log.d("daeYoung", "getMySeasonRanking() 실패: ${apiState.errMsg}")
+                Log.d("daeYoung", "storePosting() 실패: ${apiState.errMsg}")
+            }
+            ApiState.Loading -> TODO()
+        }
+    }
+
+    suspend fun getPostedInfo(goPostedInfoScreen: () -> Unit) {
+        when (val apiState = getPostedInfoUseCase(postId = 1720021919, userId = userId).first()) {
+            is ApiState.Success<*> -> {
+                postedInfo = apiState.value as PostedInfo
+                goPostedInfoScreen()
+            }
+            is ApiState.Error -> {
+                Log.d("daeYoung", "getPostedInfo() 실패: ${apiState.errMsg}")
             }
             ApiState.Loading -> TODO()
         }

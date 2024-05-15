@@ -40,7 +40,6 @@ class MainActivity : ComponentActivity() {
 
 
     private val mainViewModel by viewModels<MainViewModel>()
-//    async(Dispatchers.IO) { getUniversityMyRanking() },
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

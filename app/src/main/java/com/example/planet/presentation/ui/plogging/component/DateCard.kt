@@ -23,13 +23,13 @@ fun DateCard(yearMonth: String, hourMinutes: String) {
             .padding(start = 18.dp, top = 15.dp, bottom = 9.dp)
     ) {
         Text(
-            text = "2023년 10월 24일",
+            text = yearMonth,
             fontWeight = FontWeight.SemiBold,
             fontSize = 12.sp,
             color = colorResource(id = R.color.font_background_color1)
         )
         Text(
-            text = "오후 3시 32분 ~ 오후 3시 37분",
+            text = hourMinutes,
             fontSize = 10.sp,
             fontWeight = FontWeight.Medium,
             color = colorResource(id = R.color.font_background_color2)

@@ -1,6 +1,5 @@
 package com.example.planet.presentation.ui.plogging.screen
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -17,8 +16,6 @@ import androidx.lifecycle.lifecycleScope
 import com.example.planet.R
 import com.example.planet.data.remote.dto.ApiState
 import com.example.planet.data.remote.dto.response.plogging.PloggingResult
-import com.example.planet.presentation.ui.main.plogging.screen.MainActivity
-import com.example.planet.presentation.ui.main.plogging.screen.community.screen.CommunityActivity
 import com.example.planet.presentation.ui.ui.theme.MyApplicationTheme
 import com.example.planet.presentation.viewmodel.PloggingResultViewModel
 import dagger.hilt.android.AndroidEntryPoint

@@ -14,6 +14,7 @@ import com.example.planet.data.remote.dto.response.plogging.PloggingId
 import com.example.planet.data.remote.dto.response.plogging.PloggingResult
 import com.example.planet.data.remote.dto.response.plogging.Trash
 import com.example.planet.data.remote.dto.response.post.PostStoreResponse
+import com.example.planet.data.remote.dto.response.post.PostedInfo
 import com.example.planet.data.remote.dto.response.signup.SignUpResponse
 import com.example.planet.data.remote.dto.response.ranking.planet.HigherPlanetUser
 import com.example.planet.data.remote.dto.response.ranking.planet.PagingPlanetUser
@@ -161,4 +162,7 @@ interface MainApi {
     // 게시글
     @POST("/post")
     suspend fun postPosting(@Body postInfo: PostingInfo): PostStoreResponse
+
+    @GET("/post")
+    suspend fun getPosted(@Query("postId") postId: Long, @Query("userId") userId: Long ): PostedInfo
 }
