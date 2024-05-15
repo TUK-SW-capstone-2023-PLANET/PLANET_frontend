@@ -1,5 +1,6 @@
 package com.example.planet.presentation.ui.plogging.screen
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -16,6 +17,8 @@ import androidx.lifecycle.lifecycleScope
 import com.example.planet.R
 import com.example.planet.data.remote.dto.ApiState
 import com.example.planet.data.remote.dto.response.plogging.PloggingResult
+import com.example.planet.presentation.ui.main.plogging.screen.MainActivity
+import com.example.planet.presentation.ui.main.plogging.screen.community.screen.CommunityActivity
 import com.example.planet.presentation.ui.ui.theme.MyApplicationTheme
 import com.example.planet.presentation.viewmodel.PloggingResultViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -35,7 +38,9 @@ class PloggingResultActivity : ComponentActivity() {
                 val ploggingInfoState =
                     ploggingResultViewModel.ploggingInfo.collectAsStateWithLifecycle().value
                 if (ploggingInfoState is ApiState.Success<*>) {
-                    PloggingResultScreen(ploggingInfo = (ploggingInfoState.value) as PloggingResult)
+                    PloggingResultScreen(ploggingInfo = (ploggingInfoState.value) as PloggingResult) {
+                        startMainActivity(it)
+                    }
                 } else {
                     Column(
                         modifier = Modifier.fillMaxSize(),
@@ -47,5 +52,12 @@ class PloggingResultActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    private fun startMainActivity(isApiCall: Boolean = true) {
+        val intent = Intent(this, MainActivity::class.java).apply {
+            this.putExtra("API_call", isApiCall)
+        }
+        startActivity(intent)
     }
 }

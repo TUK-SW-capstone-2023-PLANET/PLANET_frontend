@@ -1,5 +1,6 @@
 package com.example.planet.presentation.ui.plogging.screen
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -35,7 +36,7 @@ import com.example.planet.presentation.util.secondsFormatTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PloggingResultScreen(ploggingInfo: PloggingResult) {
+fun PloggingResultScreen(ploggingInfo: PloggingResult, onBack: (Boolean) -> Unit) {
 
     val sheetState = rememberStandardBottomSheetState()
     val bottomSheetState = rememberBottomSheetScaffoldState(bottomSheetState = sheetState)
@@ -48,6 +49,10 @@ fun PloggingResultScreen(ploggingInfo: PloggingResult) {
             fontSize = 14.sp,
             fontWeight = FontWeight.SemiBold,
         )
+
+    BackHandler {
+        onBack(true)
+    }
 
     BottomSheetScaffold(
         scaffoldState = bottomSheetState,
@@ -77,7 +82,7 @@ fun PloggingResultScreen(ploggingInfo: PloggingResult) {
                 .padding(bottom = 80.dp)
                 .verticalScroll(scrollState)
         ) {
-            PloggingResultTopAppBar()
+            PloggingResultTopAppBar(onDone = { onBack(it) })
             DateCard(yearMonth = ploggingInfo.uploadTime, hourMinutes = ploggingInfo.runningTime)
             ResultMap(
                 cameraPosition = ploggingInfo.middleLocation,

@@ -2,6 +2,7 @@ package com.example.planet.presentation.viewmodel
 
 import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.mutableDoubleStateOf
@@ -9,10 +10,8 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.planet.R
 import com.example.planet.TAG
 import com.example.planet.component.map.map.TrashCanItem
-import com.example.planet.data.remote.dto.response.plogging.Trash
 import com.example.planet.data.remote.dto.ApiState
 import com.example.planet.data.remote.dto.Location
 import com.example.planet.data.remote.dto.TrashCan
@@ -20,8 +19,8 @@ import com.example.planet.data.remote.dto.request.plogging.PloggingInfo
 import com.example.planet.data.remote.dto.request.plogging.TrashImageUrlInfo
 import com.example.planet.data.remote.dto.response.plogging.PloggingComplete
 import com.example.planet.data.remote.dto.response.plogging.PloggingId
+import com.example.planet.data.remote.dto.response.plogging.Trash
 import com.example.planet.data.remote.dto.response.plogging.TrashImage
-import com.example.planet.domain.usecase.image.PostImageUseCase
 import com.example.planet.domain.usecase.login.sharedpreference.GetUserTokenUseCase
 import com.example.planet.domain.usecase.plogging.GetAllTrashCanLocation
 import com.example.planet.domain.usecase.plogging.GetPloggingIdUseCase
@@ -32,6 +31,8 @@ import com.example.planet.presentation.util.DistanceManager
 import com.example.planet.presentation.util.allDelete
 import com.example.planet.presentation.util.formatTime
 import com.example.planet.presentation.util.numberComma
+import com.example.planet.presentation.util.roundToDouble
+import com.example.planet.presentation.util.toSecond
 import com.naver.maps.geometry.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -95,25 +96,25 @@ class PloggingViewModel @Inject constructor(
         if (distance.value <= 0.0 || milliseconds == 0L) {
             return@derivedStateOf 0.0
         } else {
-            return@derivedStateOf (distance.value * 1000) / (milliseconds / 1000.0) * 60   // 분속 측정
+            return@derivedStateOf ((distance.value * 1000) / (milliseconds / 1000.0) * 60).roundToDouble()   // 분속 측정
         }
     }
     val minSpeed: State<Double> = _minSpeed
 
     private val _met = derivedStateOf {                                 // MET
-        when (minSpeed.value) {
-            0.0 -> 1.2
-            in 0.0..54.0 -> return@derivedStateOf (2 / 135) * minSpeed.value + 1.2
-            in 54.0..67.0 -> return@derivedStateOf (1 / 13) * (minSpeed.value - 54) + 2.0
-            in 67.0..81.0 -> return@derivedStateOf (3 / 140) * (minSpeed.value - 67) + 3.0
-            in 81.0..94.0 -> return@derivedStateOf (1 / 26) * (minSpeed.value - 81) + 3.3
-            in 94.0..100.0 -> return@derivedStateOf (1 / 30) * (minSpeed.value - 94) + 3.8
-            in 100.0..107.0 -> return@derivedStateOf (1 / 7) * (minSpeed.value - 100) + 4.0
-            in 107.0..134.0 -> return@derivedStateOf (1 / 9) * (minSpeed.value - 107) + 5.0
-            in 134.0..161.0 -> return@derivedStateOf (2 / 27) * (minSpeed.value - 134) + 8.0
-            in 161.0..190.0 -> return@derivedStateOf (1 / 29) * (minSpeed.value - 161) + 10.0
-            in 190.0..268.0 -> return@derivedStateOf (5 / 156) * (minSpeed.value - 190) + 11.0
-            in 268.0..321.0 -> return@derivedStateOf (9 / 106) * (minSpeed.value - 268) + 14.5
+        when (minSpeed.value.toInt()) {
+            0 -> 1.2
+            in 0 until 54 -> return@derivedStateOf (2 / 135) * minSpeed.value + 1.2
+            in 54 until 67 -> return@derivedStateOf (1 / 13) * (minSpeed.value - 54) + 2.0
+            in 67 until 81 -> return@derivedStateOf (3 / 140) * (minSpeed.value - 67) + 3.0
+            in 81 until 94 -> return@derivedStateOf (1 / 26) * (minSpeed.value - 81) + 3.3
+            in 94 until 100 -> return@derivedStateOf (1 / 30) * (minSpeed.value - 94) + 3.8
+            in 100 until 107 -> return@derivedStateOf (1 / 7) * (minSpeed.value - 100) + 4.0
+            in 107 until 134 -> return@derivedStateOf (1 / 9) * (minSpeed.value - 107) + 5.0
+            in 134 until 161 -> return@derivedStateOf (2 / 27) * (minSpeed.value - 134) + 8.0
+            in 161 until 190 -> return@derivedStateOf (1 / 29) * (minSpeed.value - 161) + 10.0
+            in 190 until 268 -> return@derivedStateOf (5 / 156) * (minSpeed.value - 190) + 11.0
+            in 268 until 321 -> return@derivedStateOf (9 / 106) * (minSpeed.value - 268) + 14.5
             else -> return@derivedStateOf (2 / 27) * (minSpeed.value - 321) + 19.0
         }
     }
@@ -123,9 +124,9 @@ class PloggingViewModel @Inject constructor(
         if (minSpeed.value == 0.0) {
             0.0
         } else {
-            0.005 * met.value * (3.5 * weight * (milliseconds / 12000))
+            Log.d(TAG, "kacl: ${(0.005 * met.value * (3.5 * weight * milliseconds.toSecond())) / 60}")
+            ((0.005 * met.value * (3.5 * weight * milliseconds.toSecond())) / 60).roundToDouble()
         }
-
     }
     val kcal: State<Double> = _kcal
 
@@ -134,12 +135,12 @@ class PloggingViewModel @Inject constructor(
 
     private val _pace = derivedStateOf {                                // 평균 페이스, 1km 기준으로 측정
         if (minSpeed.value > 0.0) {
-            return@derivedStateOf (1000 / minSpeed.value).toInt() to 60000 / minSpeed.value - (1000 / minSpeed.value).toInt()
+            return@derivedStateOf (1000 / minSpeed.value).toInt() to (60000 / minSpeed.value - (1000 / minSpeed.value).toInt()*60).toInt()
         } else {
-            return@derivedStateOf 0 to 0.0
+            return@derivedStateOf 0 to 0
         }
     }
-    val pace: State<Pair<Int, Double>> = _pace
+    val pace: State<Pair<Int, Int>> = _pace
 
     private val _totalTrashScore = mutableStateOf<Int>(0)                   // 모든 쓰레기의 총 점수
     val totalTrashScore: State<Int> = _totalTrashScore
@@ -215,10 +216,10 @@ class PloggingViewModel @Inject constructor(
     }
 
     fun distanceCalculate() {
-        Log.d(
-            TAG,
-            "distance: ${distance.value}\nminSpeed: ${minSpeed.value}\nMET: $met\nkcal: ${kcal.value}\npace: ${pace.value}"
-        )
+//        Log.d(
+//            TAG,
+//            "distance: ${distance.value}\nminSpeed: ${minSpeed.value}\nMET: $met\nkcal: ${kcal.value}\npace: ${pace.value}"
+//        )
         if (currentLatLng != null && pastLatLng != null) {
             storePloggingLog(location = Location(pastLatLng!!.latitude, pastLatLng!!.longitude))
             if (currentLatLng!!.latitude != pastLatLng!!.latitude || currentLatLng!!.longitude != pastLatLng!!.longitude) {
@@ -228,10 +229,9 @@ class PloggingViewModel @Inject constructor(
                     currentLatLng!!.latitude,
                     currentLatLng!!.longitude
                 )
-                if (distance >= 7.0) {
+                if (distance <= 9.0) {              // 1초 동안 1m 이하 거리이동만 측정
                     _distance.value += distance / 1000.0
                 }
-//                _distance.value += distance / 1000.0
             }
         }
     }
@@ -247,17 +247,13 @@ class PloggingViewModel @Inject constructor(
 
 
     fun roundKcal(): String =
-//        round(kcal.value).toInt().toString()
         round(totalKcal.value).toString()
-
-    fun roundpaceSecond(): String =
-        round(pace.value.second).toInt().toString()
 
     fun formatTrashScore(): String =
         totalTrashScore.value.numberComma()
 
 
-    fun paceToSecond(): Long = round(pace.value.second).toLong() + (pace.value.first * 60)
+    fun paceToSecond() = pace.value.second + (pace.value.first * 60)
 
 
     fun getAllTrashCanLocation() {
@@ -324,26 +320,35 @@ class PloggingViewModel @Inject constructor(
                 when (val apiState = postTrashImageUseCase(file = multipart).first()) {
                     is ApiState.Success<*> -> {
                         val result = (apiState.value as TrashImage)
-                        val trashNameList = result.trash.keys.toList()
-                        val trashCountList = result.trash.values.toList()
-                        val trashList = mutableListOf<Map<String, Int>>()
-                        result.trash.keys.forEachIndexed { index, trash ->
-                            trashList.add(mapOf(trashNameList[index] to trashCountList[index]))
+                        if (result.trash.isEmpty()) {
+                            Log.d("daeYoung", "postImage() empty 블럭 실행")
+                            Toast.makeText(context, "쓰레기를 인식할 수 없습니다.", Toast.LENGTH_SHORT).show()
+                        } else {
+                            val trashNameList = result.trash.keys.toList()
+                            val trashCountList = result.trash.values.toList()
+                            val trashList = mutableListOf<Map<String, Int>>()
+                            result.trash.keys.forEachIndexed { index, trash ->
+                                trashList.add(mapOf(trashNameList[index] to trashCountList[index]))
+                            }
+                            trashCanLatLng = currentLatLng ?: LatLng(0.0, 0.0)
+
+                            postPloggingImageUrl(
+                                imageUrl = result.imageUrl,
+                                location = trashCanLatLng,
+                                trash = trashList
+                            )
                         }
-                        trashCanLatLng = currentLatLng ?: LatLng(0.0, 0.0)
                         imageFile.delete()
-                        postPloggingImageUrl(
-                            imageUrl = result.imageUrl,
-                            location = trashCanLatLng,
-                            trash = trashList
-                        )
+
                     }
 
                     is ApiState.Error -> {
                         Log.d("daeYoung", "postImage() 실패: ${apiState.errMsg}")
                     }
 
-                    ApiState.Loading -> TODO()
+                    ApiState.Loading -> {
+                        Toast.makeText(context, "쓰레기 판별중...", Toast.LENGTH_SHORT)
+                    }
                 }
             }
 

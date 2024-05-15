@@ -62,13 +62,13 @@ fun UniversityScreen(
     universityList: () -> List<University>,
     graphHeightList: () -> List<Dp>,
     navController: NavHostController,
-
     ) {
 
     var visible by remember { mutableStateOf(true) }
     var scrollState = rememberScrollState()
 
     LaunchedEffect(Unit) {
+
         delay(300)
         visible = true
     }

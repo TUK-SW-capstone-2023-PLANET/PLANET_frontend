@@ -83,12 +83,8 @@ fun MapGraph(ploggingViewModel: PloggingViewModel = viewModel(), onClick: (Int) 
     LaunchedEffect(Unit) {
         while (true) {
             ploggingViewModel.pastLatLng = ploggingViewModel.currentLatLng
-            delay(5000)
-//            Log.d(TAG, "계산중: ${mapViewModel.distance.value}")
-//            Log.d(TAG, "pastLocation: ${mapViewModel.pastLatLng}")
-//            Log.d(TAG, "currentLocation: ${mapViewModel.currentLatLng}")
+            delay(1000)
             ploggingViewModel.distanceCalculate()
-
         }
     }
     LaunchedEffect(ploggingViewModel.kcal.value) {

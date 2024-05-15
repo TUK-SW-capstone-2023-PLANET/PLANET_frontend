@@ -32,10 +32,8 @@ fun FreeBoardScreen(
 
     BackHandler {
         if (viewModel.boardDialogState) viewModel.boardDialogState = false
-        else navController.popBackStack()
+        else onBack()
     }
-
-    Log.d(TAG, "boardDialogState: ${viewModel.boardDialogState}")
 
     if (viewModel.boardDialogState) {
         DialogComponent(

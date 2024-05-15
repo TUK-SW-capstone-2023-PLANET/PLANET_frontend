@@ -201,7 +201,7 @@ fun RecordScreen(ploggingViewModel: PloggingViewModel = viewModel(), cameraLaunc
                             fontWeight = FontWeight.SemiBold,
                         )
                     ) {
-                        append(ploggingViewModel.roundpaceSecond())
+                        append(ploggingViewModel.pace.value.second.toString())
                     }
                     withStyle(SpanStyle(fontSize = 22.sp, fontWeight = FontWeight.SemiBold)) {
                         append("\"")

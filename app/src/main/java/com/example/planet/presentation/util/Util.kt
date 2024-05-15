@@ -115,6 +115,9 @@ fun Double.round(): String {
     return formatDistance.toString()
 }
 
+fun Double.roundToDouble(): Double = round(this * 100) / 100
+
+
 fun Long.formatTime(): String {
     val minutes = TimeUnit.MILLISECONDS.toMinutes(this) % 60
     val seconds = TimeUnit.MILLISECONDS.toSeconds(this) % 60
@@ -135,6 +138,9 @@ fun Double.paceFormat(): String {
     val seconds = ((this - minutes) * 100).toInt()
     return "$minutes\'$seconds\""
 }
+
+fun Long.toSecond(): Long = this / 1000
+
 
 
 fun Uri.asMultipart(name: String, contentResolver: ContentResolver): MultipartBody.Part? {

@@ -13,6 +13,7 @@ import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
@@ -30,9 +31,9 @@ import com.example.planet.presentation.ui.main.plogging.screen.ranking.component
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.UniversityIndividualContentRow
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.UniversityIndividualTitleRow
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.data.ScreenNav
-import com.example.planet.presentation.viewmodel.MainViewModel
 import com.example.planet.presentation.util.noRippleClickable
 import com.example.planet.presentation.util.numberComma
+import com.example.planet.presentation.viewmodel.MainViewModel
 
 @Composable
 fun PlanetRankingScreen(mainViewModel: MainViewModel = hiltViewModel()) {
@@ -40,6 +41,9 @@ fun PlanetRankingScreen(mainViewModel: MainViewModel = hiltViewModel()) {
     val planetUserList: LazyPagingItems<PlanetRankingUser> =
         mainViewModel.totalPlanetRankingUser.collectAsLazyPagingItems()
 
+    LaunchedEffect(Unit) {
+        mainViewModel.getAllPlanetUserRanking()
+    }
 
     BackHandler { mainViewModel.showRankingScreen = ScreenNav.HomeScreen }
 

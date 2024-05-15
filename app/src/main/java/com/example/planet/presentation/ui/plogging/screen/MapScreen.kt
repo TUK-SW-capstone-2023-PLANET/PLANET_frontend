@@ -114,22 +114,7 @@ fun MapScreen(
             NaverMapClustering(items = ploggingViewModel.trashCanItem)
             // PathOverlay(coords = list)  // 내가 해왔던 경로 찍으면 됌
         }
-        // 여기서부터 임시로 거리측정에 오류가 있는지 없는지 확인하기 위함
-        Card(
-            modifier = Modifier
-                .wrapContentSize(align = Alignment.Center)
-                .align(Alignment.BottomCenter)
-                .padding(16.dp), shape = RoundedCornerShape(8.dp)
-        ) {
-            Column {
-                Text(text = "거리: ${ploggingViewModel.distance.value}", modifier = Modifier.padding(16.dp))
-                Text(text = "분속: ${ploggingViewModel.minSpeed.value}", modifier = Modifier.padding(horizontal = 16.dp))
-                Text(text = "MET: ${ploggingViewModel.met.value}", modifier = Modifier.padding(16.dp))
-                Text(text = "kacl: ${ploggingViewModel.kcal.value}", modifier = Modifier.padding(horizontal = 16.dp))
-                Text(text = "pace: ${ploggingViewModel.pace.value}", modifier = Modifier.padding(16.dp))
-            }
-        }
-        // 여기까지
+
         MyLocationButton(
             modifier = Modifier
                 .padding(bottom = 46.dp, end = 16.dp)

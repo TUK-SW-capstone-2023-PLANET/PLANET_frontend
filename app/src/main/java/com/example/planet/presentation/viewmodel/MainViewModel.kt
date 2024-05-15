@@ -22,6 +22,7 @@ import com.example.planet.data.remote.dto.response.ranking.season.SeasonUser
 import com.example.planet.data.remote.dto.response.ranking.university.University
 import com.example.planet.data.remote.dto.response.ranking.universityuser.ExpandedUniversityUser
 import com.example.planet.data.remote.dto.response.ranking.universityuser.UniversityUser
+import com.example.planet.data.remote.dto.response.signup.UserId
 import com.example.planet.data.remote.dto.response.user.UserInfo
 import com.example.planet.domain.usecase.GetBannerUseCase
 import com.example.planet.domain.usecase.GetTierListUseCase
@@ -75,9 +76,9 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             async(Dispatchers.IO) { getUserToken() }.await()
             listOf(
-                async(Dispatchers.IO) { getTop5SeasonUser() },
+                async(Dispatchers.IO) { getTop5SeasonUser(userId) },
                 async(Dispatchers.IO) { getTop4UniversityUser() },
-                async(Dispatchers.IO) { getUniversityMyRanking() },
+                async(Dispatchers.IO) { getUniversityMyRanking(userId) },
                 async(Dispatchers.IO) { getMySeasonRanking() },
                 async(Dispatchers.IO) { getMyPlanetRanking() },
                 async(Dispatchers.IO) { getMyUniversityInfo() },
@@ -88,14 +89,14 @@ class MainViewModel @Inject constructor(
 
             launch(Dispatchers.IO) { getAllSeasonUser() }
             launch(Dispatchers.IO) { getAllUniversities() }
-            launch(Dispatchers.IO) { getAllPlanetUserRanking() }
+//            launch(Dispatchers.IO) { getAllPlanetUserRanking() }
             launch(Dispatchers.IO) { getAllUniversityUser() }
 
         }
     }
 
     // userToken
-    lateinit var userId: String
+    var userId: String = ""
 
     // 자대 대학교 유저 TOP3 그래프 높이 list
     var universityUserGraphHeightList = emptyList<Dp>()
@@ -246,7 +247,7 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getAllPlanetUserRanking() {
+    suspend fun getAllPlanetUserRanking() {
         getAllPlanetUserRankUseCase().distinctUntilChanged().cachedIn(viewModelScope).collect {
             _totalPlanetRankingUser.value = it
         }
@@ -281,7 +282,7 @@ class MainViewModel @Inject constructor(
     }
 
 
-    private suspend fun getTop5SeasonUser() {
+    suspend fun getTop5SeasonUser(userId: String) {
         when (val apiState = getHigherSeasonRankUseCase(userId).first()) {
             is ApiState.Success<*> -> {
                 val result = apiState.value as List<Map<Int, SeasonUser>>
@@ -298,7 +299,7 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getAllSeasonUser() {
+    suspend fun getAllSeasonUser() {
         getAllSeasonRankUseCase().distinctUntilChanged().cachedIn(viewModelScope).collect {
             _totalSeasonUser.value = it
         }
@@ -319,7 +320,7 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getTop3Universities() {
+    suspend fun getTop3Universities() {
         when (val apiState = getHigherUniversitiesUseCase().first()) {
             is ApiState.Success<*> -> {
                 (apiState.value as List<University>).forEach { university ->
@@ -367,7 +368,7 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getUniversityMyRanking() {
+    suspend fun getUniversityMyRanking(userId: String) {
         when (val apiState = getMyUniversityRankUseCase(userId).first()) {
             is ApiState.Success<*> -> {
                 _myUniversityRank.emit(apiState.value as UniversityUser)

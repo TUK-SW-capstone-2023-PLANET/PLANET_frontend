@@ -22,9 +22,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.planet.R
 import androidx.compose.ui.text.TextStyle
+import com.example.planet.presentation.util.noRippleClickable
 
 @Composable
-fun PloggingResultTopAppBar() {
+fun PloggingResultTopAppBar(onDone: (Boolean) -> Unit) {
     val textStyle = TextStyle(
         color = colorResource(id = R.color.font_background_color1),
         fontSize = 15.sp,
@@ -52,7 +53,7 @@ fun PloggingResultTopAppBar() {
                 imageVector = Icons.Default.Done,
                 contentDescription = null,
                 tint = iconColor,
-                modifier = Modifier.size(20.dp)
+                modifier = Modifier.size(20.dp).noRippleClickable { onDone(true) }
             )
         }
     }

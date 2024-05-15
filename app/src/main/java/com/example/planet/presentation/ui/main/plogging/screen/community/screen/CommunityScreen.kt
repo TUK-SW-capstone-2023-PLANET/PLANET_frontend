@@ -107,17 +107,8 @@ fun CommunityScreen(
                 fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold
             )
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(bottom = 23.dp)
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.fire_icon),
-                    contentDescription = null,
-                    modifier = Modifier.size(25.dp)
-                )
-                Text(text = "핫 게시글", style = titleStyle)
-            }
+
+            Text(text = "인기 게시글", style = titleStyle, modifier = Modifier.padding(bottom = 23.dp))
             val dummyDate = listOf(
                 PostingInfo(
                     painterResource(id = R.drawable.temporary_user_icon),

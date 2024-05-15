@@ -9,7 +9,7 @@ data class PloggingInfo(
     val trash: List<Map<String, Int>>,
     val distance: Double,
     val kcal: Double,
-    val speed : Long,
+    val speed : Int,
     val score: Int,
     val ploggingTime: Long   // 초 단위로 전달
 )

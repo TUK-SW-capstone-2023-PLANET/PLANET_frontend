@@ -21,23 +21,31 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
+import com.example.planet.TAG
 import com.example.planet.presentation.ui.main.plogging.navigation.NavigationGraph
 import com.example.planet.presentation.ui.main.plogging.screen.community.screen.CommunityActivity
+import com.example.planet.presentation.ui.main.plogging.screen.user.screen.UserActivity
 import com.example.planet.presentation.ui.plogging.screen.MapActivity
 import com.example.planet.presentation.ui.ui.theme.MyApplicationTheme
-import com.example.planet.presentation.ui.main.plogging.screen.user.screen.UserActivity
 import com.example.planet.presentation.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
 
     private val mainViewModel by viewModels<MainViewModel>()
+//    async(Dispatchers.IO) { getUniversityMyRanking() },
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d(TAG, "MainActivity onCreate()")
+
         setContent {
             val navController = rememberNavController()
             mainViewModel
@@ -50,6 +58,17 @@ class MainActivity : ComponentActivity() {
                     startUserActivity = { startUserActivity() },
                     startCommunityActivity = { board -> startCommunityActivity(board) }
                 )
+            }
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if (intent.getBooleanExtra("API_call", false) && mainViewModel.userId.isNotEmpty()) {
+            lifecycleScope.launch {
+                mainViewModel.getUniversityMyRanking(mainViewModel.userId)
+                mainViewModel.getTop3Universities()
+                mainViewModel.getTop5SeasonUser(mainViewModel.userId)
             }
         }
     }

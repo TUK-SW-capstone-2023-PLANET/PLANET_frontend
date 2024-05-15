@@ -29,7 +29,7 @@ fun UniversityBoardScreen(
 ) {
     BackHandler {
         if (viewModel.boardDialogState) viewModel.boardDialogState = false
-        else navController.popBackStack()
+        else onBack()
     }
 
     if (viewModel.boardDialogState) {

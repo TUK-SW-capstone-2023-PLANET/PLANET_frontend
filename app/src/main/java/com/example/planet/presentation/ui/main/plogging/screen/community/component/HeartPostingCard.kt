@@ -29,12 +29,12 @@ import androidx.compose.ui.unit.sp
 import com.example.planet.R
 
 @Composable
-fun HeartPostingCard(
+fun VisitPostingCard(
     text: String,
     count: Int,
     modifier: Modifier
 ) {
-    val containerColor = Color(0xFFFFD3D3)
+    val containerColor = Color(0xFFFFACA3)
     val iconColor = colorResource(id = R.color.red)
 
     val textStyle = TextStyle(
@@ -85,7 +85,7 @@ fun HeartPostingCard(
     }
 }
 @Composable
-fun VisitPostingCard(
+fun HeartPostingCard(
     text: String,
     count: Int,
     modifier: Modifier

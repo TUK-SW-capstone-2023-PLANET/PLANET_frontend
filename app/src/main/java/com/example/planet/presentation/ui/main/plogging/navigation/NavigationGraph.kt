@@ -35,8 +35,6 @@ fun NavigationGraph(
     startUserActivity: () -> Unit,
     startCommunityActivity: (String) -> Unit,
 ) {
-
-
     Scaffold(
         bottomBar = {
             BottomNavigation(navController = navController)
