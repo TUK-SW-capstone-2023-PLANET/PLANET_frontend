@@ -17,7 +17,7 @@ class UserRepositoryImpl @Inject constructor(
 ) : UserRepository {
 
     // 유저 정보 조회
-    override suspend fun getUserInfo(userId: Int): Flow<ApiState> = flow {
+    override suspend fun getUserInfo(userId: Long): Flow<ApiState> = flow {
         kotlin.runCatching {
             mainApi.getUserInfo(userId = userId)
         }.onSuccess {

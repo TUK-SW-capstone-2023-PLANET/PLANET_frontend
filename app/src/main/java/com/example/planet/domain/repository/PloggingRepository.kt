@@ -9,7 +9,7 @@ import okhttp3.MultipartBody
 interface PloggingRepository {
     suspend fun getAllTrashCanLocation(): Flow<ApiState>
 
-    suspend fun getPloggingId(userId: Int): Flow<ApiState>
+    suspend fun getPloggingId(userId: Long): Flow<ApiState>
 
     suspend fun postTrashImages(file: MultipartBody.Part): Flow<ApiState>
 

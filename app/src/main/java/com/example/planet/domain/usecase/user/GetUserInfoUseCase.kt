@@ -7,6 +7,6 @@ import javax.inject.Inject
 
 class GetUserInfoUseCase @Inject constructor(private val userRepository: UserRepository) {
     suspend operator fun invoke(userId: Long): Flow<ApiState> {
-        return userRepository.getUserInfo(userId.toInt())
+        return userRepository.getUserInfo(userId)
     }
 }

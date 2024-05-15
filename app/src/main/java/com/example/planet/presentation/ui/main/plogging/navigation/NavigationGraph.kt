@@ -82,7 +82,6 @@ fun NavigationGraph(
                     PlanetRankingScreen(mainViewModel = mainViewModel)
                 }
                 ScreenNav.SeasonRankingScreen -> {
-
                     SeasonRankingScreen(mainViewModel = mainViewModel)
                 }
                 ScreenNav.TierScreen -> {}

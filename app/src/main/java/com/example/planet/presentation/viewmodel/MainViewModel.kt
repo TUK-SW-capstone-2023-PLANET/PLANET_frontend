@@ -74,17 +74,18 @@ class MainViewModel @Inject constructor(
 ) : ViewModel() {
     init {
         viewModelScope.launch {
+            Log.d(TAG, "ViewModel init() 호출")
             async(Dispatchers.IO) { getUserToken() }.await()
             listOf(
-                async(Dispatchers.IO) { getTop5SeasonUser(userId) },
-                async(Dispatchers.IO) { getTop4UniversityUser() },
+                async(Dispatchers.IO) { getTop5SeasonUser() },
+//                async(Dispatchers.IO) { getTop4UniversityUser() },
                 async(Dispatchers.IO) { getUniversityMyRanking(userId) },
                 async(Dispatchers.IO) { getMySeasonRanking() },
                 async(Dispatchers.IO) { getMyPlanetRanking() },
                 async(Dispatchers.IO) { getMyUniversityInfo() },
                 async(Dispatchers.IO) { getTopBanner() },
                 async(Dispatchers.IO) { getTop3PlanetUser() },
-                async(Dispatchers.IO) { getTop3Universities() }
+//                async(Dispatchers.IO) { getTop3Universities() }
             ).awaitAll()
 
             launch(Dispatchers.IO) { getAllSeasonUser() }
@@ -129,11 +130,9 @@ class MainViewModel @Inject constructor(
 
     var higherMyUniversityUsers by mutableStateOf(emptyList<ExpandedUniversityUser>())
 
-    private val _higherUniversity = mutableStateListOf<University>()
-    val higherUniversity: List<University> = _higherUniversity
+    var higherUniversity by mutableStateOf(emptyList<University>())
 
-    private val _higherSeasonUsers = mutableStateListOf<SeasonUser>()
-    val higherSeasonUsers: List<SeasonUser> = _higherSeasonUsers
+    var higherSeasonUsers by mutableStateOf(emptyList<SeasonUser>())
 
     private val _higherPlanetUsers = mutableStateListOf<HigherPlanetUser>()
     val higherPlanetUsers: List<HigherPlanetUser> = _higherPlanetUsers
@@ -282,13 +281,11 @@ class MainViewModel @Inject constructor(
     }
 
 
-    suspend fun getTop5SeasonUser(userId: Long) {
+    suspend fun getTop5SeasonUser() {
         when (val apiState = getHigherSeasonRankUseCase(userId).first()) {
             is ApiState.Success<*> -> {
                 val result = apiState.value as List<Map<Int, SeasonUser>>
-                result[0].values.forEach {
-                    _higherSeasonUsers.add(it)
-                }
+                higherSeasonUsers = result[0].values.toList()
             }
 
             is ApiState.Error -> {
@@ -323,9 +320,7 @@ class MainViewModel @Inject constructor(
     suspend fun getTop3Universities() {
         when (val apiState = getHigherUniversitiesUseCase().first()) {
             is ApiState.Success<*> -> {
-                (apiState.value as List<University>).forEach { university ->
-                    _higherUniversity.add(university)
-                }
+                higherUniversity = (apiState.value as List<University>)
                 universityGraphHeightList = getGraphHeightList1(list = higherUniversity)
             }
 
@@ -350,13 +345,24 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getTop4UniversityUser() {
+    suspend fun getTop4UniversityUser() {
         when (val apiState = getHigherUniversityUserRankUseCase(userId).first()) {
             is ApiState.Success<*> -> {
+                Log.d("daeYoung", "getUniversityUserTop4Ranking() 호출")
                 val result = apiState.value as List<Map<Int, ExpandedUniversityUser>>
-                result[0].values.forEach { university ->
-                    higherMyUniversityUsers = higherMyUniversityUsers + university
-                }
+                higherMyUniversityUsers = result[0].values.toList()
+//                if (higherMyUniversityUsers.isNotEmpty()) {
+//                    var list = emptyList<ExpandedUniversityUser>()
+//                    result[0].values.forEach { university ->
+//                        list = list + university
+//                    }
+//                    higherMyUniversityUsers = list
+//                } else {
+//                    result[0].values.forEach { university ->
+//                        higherMyUniversityUsers = higherMyUniversityUsers + university
+//                    }
+//                }
+
                 universityUserGraphHeightList = getGraphHeightList(list = higherMyUniversityUsers)
             }
 

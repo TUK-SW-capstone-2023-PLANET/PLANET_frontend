@@ -1,7 +1,7 @@
 package com.example.planet.data.remote.dto.response.user
 
 data class UserInfo(
-    var userId: Int = 0,
+    var userId: Long = 0,
     var email: String = "",
     var passwd: String = "",
     var nickName: String = "",

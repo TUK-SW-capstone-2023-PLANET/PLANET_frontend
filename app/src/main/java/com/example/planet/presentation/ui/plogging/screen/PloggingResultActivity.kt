@@ -55,9 +55,10 @@ class PloggingResultActivity : ComponentActivity() {
     }
 
     private fun startMainActivity(isApiCall: Boolean = true) {
-        val intent = Intent(this, MainActivity::class.java).apply {
-            this.putExtra("API_call", isApiCall)
-        }
-        startActivity(intent)
+//        val intent = Intent(this, MainActivity::class.java).apply {
+//            this.putExtra("API_call", isApiCall)
+//        }
+////        startActivity(intent)
+        finish()
     }
 }

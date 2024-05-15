@@ -4,7 +4,7 @@ import com.example.planet.data.remote.dto.Location
 
 data class PloggingInfo(
     val ploggingId: Int,
-    val userId: Int,
+    val userId: Long,
     val location: List<Location>,
     val trash: List<Map<String, Int>>,
     val distance: Double,

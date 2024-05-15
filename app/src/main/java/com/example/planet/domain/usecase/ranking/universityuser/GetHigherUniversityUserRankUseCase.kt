@@ -7,7 +7,7 @@ import javax.inject.Inject
 
 class GetHigherUniversityUserRankUseCase @Inject constructor(private val rankRepository: RankRepository) {
     suspend operator fun invoke(userId: Long): Flow<ApiState> {
-        return rankRepository.getUniversityTop4User(userId.toInt())
+        return rankRepository.getUniversityTop4User(userId)
     }
 
 }

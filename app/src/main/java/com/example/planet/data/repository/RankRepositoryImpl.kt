@@ -35,7 +35,7 @@ class RankRepositoryImpl @Inject constructor(private val mainApi: MainApi) :
         }
     }.flowOn(Dispatchers.IO)
 
-    override suspend fun getMyPlanetRanking(userId: Int): Flow<ApiState> = flow {
+    override suspend fun getMyPlanetRanking(userId: Long): Flow<ApiState> = flow {
         kotlin.runCatching {
             mainApi.getMyPlanetRanking(userId = userId)
         }.onSuccess {
@@ -55,7 +55,7 @@ class RankRepositoryImpl @Inject constructor(private val mainApi: MainApi) :
 
     // Season 관련 ---------------------------------------------------------------------------------
     // 자대 대학교 나의 랭킹 정보 조회
-    override suspend fun getMySeasonRanking(userId: Int): Flow<ApiState> = flow {
+    override suspend fun getMySeasonRanking(userId: Long): Flow<ApiState> = flow {
         kotlin.runCatching {
             mainApi.getMySeasonRanking(userId = userId)
         }.onSuccess {
@@ -66,7 +66,7 @@ class RankRepositoryImpl @Inject constructor(private val mainApi: MainApi) :
     }.flowOn(Dispatchers.IO)
 
     // 시즌 유저 랭킹 5명 조회
-    override suspend fun getSeasonTop5UserInfo(userId: Int): Flow<ApiState> = flow {
+    override suspend fun getSeasonTop5UserInfo(userId: Long): Flow<ApiState> = flow {
         kotlin.runCatching {
             mainApi.getSeasonTop5UserInfo(userId = userId)
         }.onSuccess {
@@ -111,7 +111,7 @@ class RankRepositoryImpl @Inject constructor(private val mainApi: MainApi) :
     }
 
     // 나의 대학교 정보 조회
-    override fun getMyUniversityInfo(userId: Int): Flow<ApiState> = flow {
+    override fun getMyUniversityInfo(userId: Long): Flow<ApiState> = flow {
         kotlin.runCatching {
             mainApi.getMyUniversityInfo(userId = userId)
         }.onSuccess {
@@ -123,7 +123,7 @@ class RankRepositoryImpl @Inject constructor(private val mainApi: MainApi) :
 
 
     // 대학교 유저 랭킹 4개 조회
-    override suspend fun getUniversityTop4User(userId: Int): Flow<ApiState> = flow {
+    override suspend fun getUniversityTop4User(userId: Long): Flow<ApiState> = flow {
         kotlin.runCatching {
             mainApi.getUniversityTop4UserRanking(userId = userId)
         }.onSuccess {
@@ -134,7 +134,7 @@ class RankRepositoryImpl @Inject constructor(private val mainApi: MainApi) :
     }.flowOn(Dispatchers.IO)
 
     // 자대 대학교 나의 랭킹 정보 조회
-    override suspend fun getUniversityMyRanking(userId: Int): Flow<ApiState> = flow {
+    override suspend fun getUniversityMyRanking(userId: Long): Flow<ApiState> = flow {
         kotlin.runCatching {
             mainApi.getUniversityMyRanking(userId = userId)
         }.onSuccess {

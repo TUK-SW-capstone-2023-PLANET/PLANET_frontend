@@ -7,6 +7,6 @@ import javax.inject.Inject
 
 class GetMyPlanetRankUseCase @Inject constructor(private val rankRepository: RankRepository) {
     suspend operator fun invoke(userId: Long): Flow<ApiState> {
-        return rankRepository.getMyPlanetRanking(userId.toInt())
+        return rankRepository.getMyPlanetRanking(userId)
     }
 }

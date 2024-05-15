@@ -7,6 +7,6 @@ import javax.inject.Inject
 
 class GetHigherSeasonRankUseCase @Inject constructor(private val rankRepository: RankRepository) {
     suspend operator fun invoke(userId: Long): Flow<ApiState> {
-        return rankRepository.getSeasonTop5UserInfo(userId.toInt())
+        return rankRepository.getSeasonTop5UserInfo(userId)
     }
 }

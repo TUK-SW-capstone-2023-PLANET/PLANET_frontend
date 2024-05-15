@@ -27,7 +27,7 @@ class PloggingRepositoryImpl @Inject constructor(
         }
     }.flowOn(Dispatchers.IO)
 
-    override suspend fun getPloggingId(userId: Int): Flow<ApiState> = flow {
+    override suspend fun getPloggingId(userId: Long): Flow<ApiState> = flow {
         kotlin.runCatching {
             mainApi.getPloggingId(userId = userId)
         }.onSuccess {

@@ -64,14 +64,40 @@ class MainActivity : ComponentActivity() {
 
     override fun onStart() {
         super.onStart()
-        if (intent.getBooleanExtra("API_call", false) && mainViewModel.userId != 0L) {
-            lifecycleScope.launch {
-                mainViewModel.getUniversityMyRanking(mainViewModel.userId)
-                mainViewModel.getTop3Universities()
-                mainViewModel.getTop5SeasonUser(mainViewModel.userId)
-            }
-        }
+        Log.d(TAG, "MainActivity onStart()")
+
+//        if (intent.getBooleanExtra("API_call", false) && mainViewModel.userId != 0L) {
+//            lifecycleScope.launch {
+//                mainViewModel.getUniversityMyRanking(mainViewModel.userId)
+//                mainViewModel.getTop3Universities()
+////                mainViewModel.getTop5SeasonUser(mainViewModel.userId)
+//            }
+//        }
     }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d(TAG, "MainActivity onResume()")
+
+    }
+    override fun onPause() {
+        super.onPause()
+        Log.d(TAG, "MainActivity onPause()")
+
+    }
+    override fun onStop() {
+        super.onStop()
+        Log.d(TAG, "MainActivity onStop()")
+
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d(TAG, "MainActivity onCreate()")
+
+    }
+
+
 
     private fun startMapActivity() {
         val intent = Intent(this, MapActivity::class.java)

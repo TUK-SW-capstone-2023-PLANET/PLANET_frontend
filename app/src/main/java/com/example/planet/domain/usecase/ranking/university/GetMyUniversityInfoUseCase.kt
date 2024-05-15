@@ -7,6 +7,6 @@ import javax.inject.Inject
 
 class GetMyUniversityInfoUseCase @Inject constructor(private val rankRepository: RankRepository) {
     operator fun invoke(userId: Long): Flow<ApiState> {
-        return rankRepository.getMyUniversityInfo(userId.toInt())
+        return rankRepository.getMyUniversityInfo(userId)
     }
 }

@@ -64,7 +64,7 @@ class PloggingViewModel @Inject constructor(
         }
     }
 
-    var userId: Int = 0                                         // userToken
+    var userId: Long = 0                                         // userToken
 
     var ploggingId: Int = 0                                     // 플로깅 PK
     private lateinit var timerJob: Job                                  // 타이머 코루틴
@@ -155,7 +155,7 @@ class PloggingViewModel @Inject constructor(
     private suspend fun getUserToken(userTokenKey: String = "userToken") {
         when (val result = getUserTokenUseCase(userTokenKey).first()) {
             is ApiState.Success<*> -> {
-                userId = (result.value as String).toInt()
+                userId = result.value as Long
             }
 
             is ApiState.Error -> {

@@ -29,6 +29,7 @@ import com.example.planet.R
 import com.example.planet.TAG
 import com.example.planet.component.main.plogging.MainTopBanner
 import com.example.planet.presentation.ui.main.plogging.screen.home.component.MainTapRow
+import com.example.planet.presentation.ui.main.plogging.screen.ranking.data.ScreenNav
 import com.example.planet.presentation.viewmodel.MainViewModel
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -77,11 +78,12 @@ fun MainScreen(
                 when (page) {
                     0 -> PloggingHelpScreen()
                     1 -> UniversityScreen(
+                        mainViewModel = mainViewModel,
                         universityUserList = { mainViewModel.higherMyUniversityUsers },
                         universityList = { mainViewModel.higherUniversity },
                         graphHeightList = { mainViewModel.universityGraphHeightList },
-                        navController = navController,
-                    )
+                        goUniversityScreen = { screen -> mainViewModel.showRankingScreen = screen }
+                    ) { screen -> mainViewModel.showRankingScreen = screen }
                     2 -> SeasonScreen(navController = navController, mainViewModel = mainViewModel)
                     3 -> TestScreen()
                 }

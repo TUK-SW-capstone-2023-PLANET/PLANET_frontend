@@ -1,7 +1,7 @@
 package com.example.planet.data.remote.dto.request.plogging
 
 data class TrashImageUrlInfo(
-    val userId: Int,
+    val userId: Long,
     val ploggingId: Int,
     val imageUrl: String,
     val longitude: Double,

@@ -44,7 +44,7 @@ interface MainApi {
     suspend fun getAllTrashCanLocation(): List<TrashCan>
 
     @GET("/plogging/user/{userId}")
-    suspend fun getPloggingId(@Path("userId") userId: Int): PloggingId
+    suspend fun getPloggingId(@Path("userId") userId: Long): PloggingId
 
     @Multipart
     @POST("/image")
@@ -70,7 +70,7 @@ interface MainApi {
 
     // 나의 대학교 랭킹 조회
     @GET("/university/rank/user/{userId}")
-    suspend fun getMyUniversityInfo(@Path("userId") userId: Int): University
+    suspend fun getMyUniversityInfo(@Path("userId") userId: Long): University
 
 
     // 대학교 랭킹 전체 조회
@@ -81,27 +81,27 @@ interface MainApi {
     // 자대 대학교 유저 랭킹 전체 조회
     @GET("/user/{userId}/rank/all/university")
     suspend fun getAllUniversityUserRanking(
-        @Path("userId") userId: Int = 0,
+        @Path("userId") userId: Long = 0,
         @Query("page") page: Int
     ): PagingUniversityUser
 
     // 자대 대학교 유저 랭킹 상위 4명 조회
     @GET("/user/{userId}/rank/university/4")
-    suspend fun getUniversityTop4UserRanking(@Path("userId") userId: Int): List<Map<Int, ExpandedUniversityUser>>
+    suspend fun getUniversityTop4UserRanking(@Path("userId") userId: Long): List<Map<Int, ExpandedUniversityUser>>
 
     // 자대 대학교 나의 랭킹 정보 조회
     @GET("/user/{userId}/rank/university")
-    suspend fun getUniversityMyRanking(@Path("userId") userId: Int): UniversityUser
+    suspend fun getUniversityMyRanking(@Path("userId") userId: Long): UniversityUser
 
 
     // Season 관련 ---------------------------------------------------------------------------------
     // 나의 시즌 랭킹 정보 조회
     @GET("/season/user/{userId}/rank")
-    suspend fun getMySeasonRanking(@Path("userId") userId: Int): SeasonUser
+    suspend fun getMySeasonRanking(@Path("userId") userId: Long): SeasonUser
 
     // 시즌 유저 랭킹 5명 조회
     @GET("/season/user/{userId}/rank/5")
-    suspend fun getSeasonTop5UserInfo(@Path("userId") userId: Int): List<Map<Int, SeasonUser>>
+    suspend fun getSeasonTop5UserInfo(@Path("userId") userId: Long): List<Map<Int, SeasonUser>>
 
     // 시즌 유저 랭킹 전체 조회
     @GET("/season/rank/all")
@@ -115,7 +115,7 @@ interface MainApi {
 
     // 나의 시즌 랭킹 정보 조회
     @GET("/user/{userId}/rank")
-    suspend fun getMyPlanetRanking(@Path("userId") userId: Int): PlanetRankingUser
+    suspend fun getMyPlanetRanking(@Path("userId") userId: Long): PlanetRankingUser
 
     // 플래넷 유저 랭킹 전체 조회
     @GET("/user/rank/all")
@@ -126,7 +126,7 @@ interface MainApi {
 
     // 유저 정보 조회
     @GET("/user/{userId}")
-    suspend fun getUserInfo(@Path("userId")userId: Int ): UserInfo
+    suspend fun getUserInfo(@Path("userId")userId: Long ): UserInfo
 
     // 유저 정보 수정 TODO(UserInfoResponse 수정하면 UserId로 바꿀 것)
     @PUT("/user")

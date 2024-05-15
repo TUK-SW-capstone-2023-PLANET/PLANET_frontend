@@ -14,17 +14,17 @@ interface RankRepository {
     // 플래넷 유저 랭킹 Top3 조회
     suspend fun getTop3PlanetUser(): Flow<ApiState>
 
-    suspend fun getMyPlanetRanking(userId: Int = 0): Flow<ApiState>
+    suspend fun getMyPlanetRanking(userId: Long = 0): Flow<ApiState>
 
     // 플래넷 유저 랭킹 전체 조회
     fun getAllPlanetUserRanking(): Flow<PagingData<PlanetRankingUser>>
 
     // Season 관련 ---------------------------------------------------------------------------------
     // 자대 대학교 나의 랭킹 정보 조회
-    suspend fun getMySeasonRanking(userId: Int = 0): Flow<ApiState>
+    suspend fun getMySeasonRanking(userId: Long = 0): Flow<ApiState>
 
     // 시즌 유저 랭킹 5명 조회
-    suspend fun getSeasonTop5UserInfo(userId: Int = 0): Flow<ApiState>
+    suspend fun getSeasonTop5UserInfo(userId: Long = 0): Flow<ApiState>
 
     fun getAllSeasonUser(): Flow<PagingData<SeasonUser>>
 
@@ -46,12 +46,12 @@ interface RankRepository {
     fun getAllUniversityUser(): Flow<PagingData<UniversityUser>>
 
     // 나의 대학교 정보 조회
-    fun getMyUniversityInfo(userId: Int): Flow<ApiState>
+    fun getMyUniversityInfo(userId: Long): Flow<ApiState>
 
 
     // 대학교 유저 랭킹 4개 조회
-    suspend fun getUniversityTop4User(userId: Int = 0): Flow<ApiState>
+    suspend fun getUniversityTop4User(userId: Long = 0): Flow<ApiState>
 
     // 자대 대학교 나의 랭킹 정보 조회
-    suspend fun getUniversityMyRanking(userId: Int = 0): Flow<ApiState>
+    suspend fun getUniversityMyRanking(userId: Long = 0): Flow<ApiState>
 }
