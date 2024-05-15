@@ -5,9 +5,11 @@ import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.planet.TAG
@@ -36,6 +38,7 @@ import com.example.planet.presentation.util.toSecond
 import com.naver.maps.geometry.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
@@ -64,11 +67,12 @@ class PloggingViewModel @Inject constructor(
         }
     }
 
-    var userId: Long = 0                                         // userToken
+    var userId: Long = 0                                                // userToken
 
-    var ploggingId: Int = 0                                     // 플로깅 PK
+    var ploggingId: Int = 0                                             // 플로깅 PK
     private lateinit var timerJob: Job                                  // 타이머 코루틴
-    private lateinit var distanceCalculateJob: Job                      // 1초마다 위도,경도의 거리를 계산하는 코루틴
+    private lateinit var distanceCalcJob: Job                           // 1초마다 위도,경도의 거리를 계산하는 코루틴
+    private lateinit var ploggingLogJob: Job                           // 1초마다 위도,경도의 거리를 계산하는 코루틴
     private var milliseconds: Long = 0L                                 // 타이머 시간
     private val distanceManager = DistanceManager                       // 거리 계산 객체
     private val weight: Double = 70.0                                   // 사용자의 몸무계
@@ -124,7 +128,10 @@ class PloggingViewModel @Inject constructor(
         if (minSpeed.value == 0.0) {
             0.0
         } else {
-            Log.d(TAG, "kacl: ${(0.005 * met.value * (3.5 * weight * milliseconds.toSecond())) / 60}")
+            Log.d(
+                TAG,
+                "kacl: ${(0.005 * met.value * (3.5 * weight * milliseconds.toSecond())) / 60}"
+            )
             ((0.005 * met.value * (3.5 * weight * milliseconds.toSecond())) / 60).roundToDouble()
         }
     }
@@ -135,7 +142,7 @@ class PloggingViewModel @Inject constructor(
 
     private val _pace = derivedStateOf {                                // 평균 페이스, 1km 기준으로 측정
         if (minSpeed.value > 0.0) {
-            return@derivedStateOf (1000 / minSpeed.value).toInt() to (60000 / minSpeed.value - (1000 / minSpeed.value).toInt()*60).toInt()
+            return@derivedStateOf (1000 / minSpeed.value).toInt() to (60000 / minSpeed.value - (1000 / minSpeed.value).toInt() * 60).toInt()
         } else {
             return@derivedStateOf 0 to 0
         }
@@ -150,7 +157,7 @@ class PloggingViewModel @Inject constructor(
 
     val ploggingLog = mutableListOf<Location>()
     var trashItems = mutableStateListOf<Map<String, Int>>()
-    var trashList = mutableStateOf(emptyList<Trash>())
+    var trashList by mutableStateOf(emptyList<Trash>())
 
     private suspend fun getUserToken(userTokenKey: String = "userToken") {
         when (val result = getUserTokenUseCase(userTokenKey).first()) {
@@ -198,6 +205,8 @@ class PloggingViewModel @Inject constructor(
 
     fun endTimer() {
         timerJob.cancel()
+        distanceCalcJob.cancel()
+        ploggingLogJob.cancel()
         _formattedTime.value = "00 : 00"
         _hour.value = "0"
     }
@@ -212,29 +221,54 @@ class PloggingViewModel @Inject constructor(
     }
 
     private fun storePloggingLog(location: Location) {  // 지난 플로깅 로그(위도 경도) 기록
+        Log.d(TAG, "ploggingLog: $location")
         ploggingLog.add(location)
     }
 
     fun distanceCalculate() {
-//        Log.d(
-//            TAG,
-//            "distance: ${distance.value}\nminSpeed: ${minSpeed.value}\nMET: $met\nkcal: ${kcal.value}\npace: ${pace.value}"
-//        )
-        if (currentLatLng != null && pastLatLng != null) {
-            storePloggingLog(location = Location(pastLatLng!!.latitude, pastLatLng!!.longitude))
-            if (currentLatLng!!.latitude != pastLatLng!!.latitude || currentLatLng!!.longitude != pastLatLng!!.longitude) {
-                val distance = distanceManager.getDistance(
-                    pastLatLng!!.latitude,
-                    pastLatLng!!.longitude,
-                    currentLatLng!!.latitude,
-                    currentLatLng!!.longitude
-                )
-                if (distance <= 9.0) {              // 1초 동안 1m 이하 거리이동만 측정
-                    _distance.value += distance / 1000.0
+        viewModelScope.launch(Dispatchers.IO) {
+            distanceCalcJob = launch(Dispatchers.IO) {
+                while (true) {
+                    currentLatLng?.let {
+                        storePloggingLog(
+                            location = Location(it.latitude, it.longitude)
+                        )
+                    }
+                    Log.d(
+                        TAG,
+                        "distance: ${distance.value}\nminSpeed: ${minSpeed.value}\nMET: $met\nkcal: ${kcal.value}\npace: ${pace.value}"
+                    )
+                    delay(5000)
+                }
+            }
+            ploggingLogJob = launch(Dispatchers.IO) {
+                while (true) {
+                    if (currentLatLng != null && pastLatLng != null) {
+                        Log.d(
+                            TAG,
+                            "거리 계산 if문 들어가기 전: $distance\n currentLatLng: $currentLatLng\n pastLatLng: $pastLatLng"
+                        )
+                        if (currentLatLng!!.latitude != pastLatLng!!.latitude || currentLatLng!!.longitude != pastLatLng!!.longitude) {
+                            val distance = distanceManager.getDistance(
+                                pastLatLng!!.latitude,
+                                pastLatLng!!.longitude,
+                                currentLatLng!!.latitude,
+                                currentLatLng!!.longitude
+                            )
+                            Log.d(TAG, "거리 계산 if문 안: $distance")
+                            if (distance <= 9.0) {              // 1초 동안 1m 이하 거리이동만 측정
+                                _distance.value += distance / 1000.0
+                            }
+                            pastLatLng = currentLatLng
+                        }
+                        delay(1000)
+                    }
+
                 }
             }
         }
     }
+
 
     fun kcalCalculate() {
         _totalKcal.value += kcal.value
@@ -303,8 +337,6 @@ class PloggingViewModel @Inject constructor(
 
     fun postImage() {
         var trashCanLatLng: LatLng
-
-
         viewModelScope.launch {
             val path = context.externalCacheDir
             Log.d(TAG, "path?.listFiles(): ${path}")
@@ -322,7 +354,8 @@ class PloggingViewModel @Inject constructor(
                         val result = (apiState.value as TrashImage)
                         if (result.trash.isEmpty()) {
                             Log.d("daeYoung", "postImage() empty 블럭 실행")
-                            Toast.makeText(context, "쓰레기를 인식할 수 없습니다.", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, "쓰레기를 인식할 수 없습니다.", Toast.LENGTH_SHORT)
+                                .show()
                         } else {
                             val trashNameList = result.trash.keys.toList()
                             val trashCountList = result.trash.values.toList()
@@ -373,9 +406,8 @@ class PloggingViewModel @Inject constructor(
         when (val apiState =
             postTrashImageUrlUseCase(trashImageUrl).first()) {
             is ApiState.Success<*> -> {
-                val result = apiState.value as List<Trash>
-                result.forEach { trash ->
-                    trashList.value = trashList.value + trash
+                trashList = apiState.value as List<Trash>
+                trashList.forEach { trash ->
                     _totalTrashCount.value += trash.count
                     _totalTrashScore.value += trash.score
                 }
@@ -391,69 +423,16 @@ class PloggingViewModel @Inject constructor(
     }
 
     suspend fun postPlogging(): Int {
-        val list = listOf(
-            Location(37.5660645, 126.9826732),
-            Location(37.5660294, 126.9826723),
-            Location(37.5658526, 126.9826611),
-            Location(37.5658040, 126.9826580),
-            Location(37.5657697, 126.9826560),
-            Location(37.5654413, 126.9825880),
-            Location(37.5652157, 126.9825273),
-            Location(37.5650560, 126.9824843),
-            Location(37.5647789, 126.9824114),
-            Location(37.5646788, 126.9823861),
-            Location(37.5644062, 126.9822963),
-            Location(37.5642519, 126.9822566),
-            Location(37.5641517, 126.9822312),
-            Location(37.5639965, 126.9821915),
-            Location(37.5636536, 126.9820920),
-            Location(37.5634424, 126.9820244),
-            Location(37.5633241, 126.9819890),
-            Location(37.5632772, 126.9819712),
-            Location(37.5629404, 126.9818433),
-            Location(37.5627733, 126.9817584),
-            Location(37.5626694, 126.9816980),
-            Location(37.5624588, 126.9815738),
-            Location(37.5620376, 126.9813140),
-            Location(37.5619426, 126.9812252),
-            Location(37.5613227, 126.9814831),
-            Location(37.5611995, 126.9815372),
-            Location(37.5609414, 126.9816749),
-            Location(37.5606785, 126.9817390),
-            Location(37.5605659, 126.9817499),
-            Location(37.5604892, 126.9817459),
-            Location(37.5604540, 126.9817360),
-            Location(37.5603484, 126.9816993),
-            Location(37.5602092, 126.9816097),
-            Location(37.5600048, 126.9814390),
-            Location(37.5599702, 126.9813612),
-            Location(37.5599401, 126.9812923),
-            Location(37.5597114, 126.9807346),
-            Location(37.5596905, 126.9806826),
-            Location(37.5596467, 126.9805663),
-            Location(37.5595203, 126.9801199),
-            Location(37.5594901, 126.9800149),
-            Location(37.5594544, 126.9798883),
-            Location(37.5594186, 126.9797436),
-            Location(37.5593948, 126.9796634),
-            Location(37.5593132, 126.9793526),
-            Location(37.5592831, 126.9792622),
-            Location(37.5590904, 126.9788854),
-            Location(37.5589081, 126.9786365),
-            Location(37.5587088, 126.9784125),
-            Location(37.5586699, 126.9783698),
-        )
 
         var trashMapList: MutableList<Map<String, Int>> = mutableListOf()
-        trashList.value.forEach { trash ->
+        trashList.forEach { trash ->
             trashMapList.add(mapOf(trash.name to trash.count))
         }
 
         val ploggingInfo = PloggingInfo(
             ploggingId = ploggingId,
             userId = userId,
-//            location = ploggingLog,
-            location = list,
+            location = ploggingLog,
             trash = trashMapList,
             distance = distance.value,
             kcal = kcal.value,

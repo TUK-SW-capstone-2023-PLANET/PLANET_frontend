@@ -1,5 +1,6 @@
 package com.example.planet.component.common
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -33,6 +34,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.planet.R
+import com.example.planet.TAG
 import com.example.planet.presentation.viewmodel.PloggingViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch

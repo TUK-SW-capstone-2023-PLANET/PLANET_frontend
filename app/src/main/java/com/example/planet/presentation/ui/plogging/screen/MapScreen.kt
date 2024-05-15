@@ -98,17 +98,9 @@ fun MapScreen(
             uiSettings = mapUiSettings,
             // 현재유저의 LatLng 찾는 콜백함수
             onLocationChange = { location ->
-//                if (mapViewModel.currentLatLng != null) {
-//                    if (mapViewModel.pastLatLng == null) {
-//                        mapViewModel.pastLatLng = mapViewModel.currentLatLng
-//                    }
-//                    else if (mapViewModel.currentLatLng!!.latitude != mapViewModel.pastLatLng!!.latitude || mapViewModel.currentLatLng!!.longitude != mapViewModel.pastLatLng!!.longitude) {
-//                        mapViewModel.pastLatLng = mapViewModel.currentLatLng
-//                    }
-//                }
-//                        Log.d(TAG, "${DistanceManager.getDistance(37.638591, 127.026325, 37.643801, 127.031755).toString()}")
-//                        Log.d(TAG, "${DistanceManager.getDistance(37.4021, 127.1108, 37.3944, 127.1108).toString()}")
+
                 ploggingViewModel.currentLatLng = LatLng(location.latitude, location.longitude)
+                if (ploggingViewModel.pastLatLng == null) ploggingViewModel.pastLatLng = ploggingViewModel.currentLatLng
             }) {
 
             NaverMapClustering(items = ploggingViewModel.trashCanItem)

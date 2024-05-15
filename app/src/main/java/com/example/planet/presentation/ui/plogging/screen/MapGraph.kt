@@ -42,9 +42,7 @@ import com.example.planet.TAG
 import com.example.planet.component.common.PloggingDialog
 import com.example.planet.component.map.common.LockButton
 import com.example.planet.data.map.Tabltem
-import com.example.planet.data.remote.dto.response.plogging.Trash
 import com.example.planet.presentation.viewmodel.PloggingViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -81,11 +79,7 @@ fun MapGraph(ploggingViewModel: PloggingViewModel = viewModel(), onClick: (Int) 
     }
 
     LaunchedEffect(Unit) {
-        while (true) {
-            ploggingViewModel.pastLatLng = ploggingViewModel.currentLatLng
-            delay(1000)
-            ploggingViewModel.distanceCalculate()
-        }
+        ploggingViewModel.distanceCalculate()
     }
     LaunchedEffect(ploggingViewModel.kcal.value) {
         ploggingViewModel.kcalCalculate()
@@ -154,13 +148,17 @@ fun MapGraph(ploggingViewModel: PloggingViewModel = viewModel(), onClick: (Int) 
             }
             HorizontalPager(state = pagerState) { index ->
                 when (index) {
-                    0 -> MapScreen(ploggingViewModel = ploggingViewModel, cameraLauncher = cameraLauncher)
+                    0 -> MapScreen(
+                        ploggingViewModel = ploggingViewModel,
+                        cameraLauncher = cameraLauncher
+                    )
+
                     1 -> RecordScreen(
                         ploggingViewModel = ploggingViewModel,
                         cameraLauncher = cameraLauncher
                     )
 
-                    2 -> TrashListScreen(trashList = ploggingViewModel.trashList.value)
+                    2 -> TrashListScreen(trashList = ploggingViewModel.trashList)
                 }
             }
         }
