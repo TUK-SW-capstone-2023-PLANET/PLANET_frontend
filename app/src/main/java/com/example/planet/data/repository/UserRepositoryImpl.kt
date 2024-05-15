@@ -40,10 +40,10 @@ class UserRepositoryImpl @Inject constructor(
     // 사용자 토큰을 불러옴
     override fun getUserPref(
         userToken: String,
-        defaultValue: String,
+        defaultValue: Long,
     ): Flow<ApiState> =
         flow {
-            runCatching { sharedPreferences.getString(userToken, defaultValue) }.onSuccess {
+            runCatching { sharedPreferences.getLong(userToken, defaultValue) }.onSuccess {
                 emit(ApiState.Success(it))
             }.onFailure { error ->
                 error.message?.let { emit(ApiState.Error(it)) }
@@ -52,9 +52,9 @@ class UserRepositoryImpl @Inject constructor(
 
 
     // 사용자 토큰을 저장
-    override fun setUserPrefs(value: String): Flow<ApiState> = flow {
+    override fun setUserPrefs(value: Long): Flow<ApiState> = flow {
         runCatching {
-            sharedPreferences.edit().putString("userToken", value).apply()
+            sharedPreferences.edit().putLong("userToken", value).apply()
         }.onSuccess {
             emit(ApiState.Success("success"))
         }.onFailure { error ->

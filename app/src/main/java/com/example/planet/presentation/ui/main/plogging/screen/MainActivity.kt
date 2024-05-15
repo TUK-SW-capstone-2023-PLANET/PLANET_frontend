@@ -64,7 +64,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onStart() {
         super.onStart()
-        if (intent.getBooleanExtra("API_call", false) && mainViewModel.userId.isNotEmpty()) {
+        if (intent.getBooleanExtra("API_call", false) && mainViewModel.userId != 0L) {
             lifecycleScope.launch {
                 mainViewModel.getUniversityMyRanking(mainViewModel.userId)
                 mainViewModel.getTop3Universities()

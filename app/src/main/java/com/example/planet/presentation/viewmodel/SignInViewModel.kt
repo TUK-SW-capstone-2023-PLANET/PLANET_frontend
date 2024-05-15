@@ -49,7 +49,7 @@ class SignInViewModel @Inject constructor(
                     Log.d(TAG, "login() 성공: $this")
                     if (this.success) {
                         goMainActivity()
-                        setUserToken(userId = this.userId.toString())
+                        setUserToken(userId = this.userId)
                         setAutoLogin(autoLoginState.value)
                     } else {
                         Toast.makeText(context, this.message, Toast.LENGTH_SHORT).show()
@@ -65,7 +65,7 @@ class SignInViewModel @Inject constructor(
         }
     }
 
-    private suspend fun setUserToken(userId: String) {
+    private suspend fun setUserToken(userId: Long) {
         when(val result = setUserTokenUseCase(userId).first()) {
             is ApiState.Success<*> -> {
                 Log.d(TAG, "setUserToken(): ${result.value}")

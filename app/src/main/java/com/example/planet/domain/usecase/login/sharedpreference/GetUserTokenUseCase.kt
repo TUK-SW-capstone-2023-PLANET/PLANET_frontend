@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class GetUserTokenUseCase @Inject constructor(private val userRepository: UserRepository) {
-    operator fun invoke(userToken: String = "userToken", defaultValue: String =""): Flow<ApiState> {
+    operator fun invoke(userToken: String = "userToken", defaultValue: Long = 0): Flow<ApiState> {
         return userRepository.getUserPref(userToken = userToken, defaultValue = defaultValue)
     }
 }

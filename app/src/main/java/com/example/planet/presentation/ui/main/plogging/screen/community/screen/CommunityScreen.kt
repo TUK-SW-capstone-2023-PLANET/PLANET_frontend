@@ -110,21 +110,21 @@ fun CommunityScreen(
 
             Text(text = "인기 게시글", style = titleStyle, modifier = Modifier.padding(bottom = 23.dp))
             val dummyDate = listOf(
-                PostingInfo(
+                PostingInfo1(
                     painterResource(id = R.drawable.temporary_user_icon),
                     "HappyBean",
                     "2024.04.29 01:28",
                     "플로깅 10년차의 플로깅 꿀팁!",
                     "10년차 플로거로 대표해서 글을 작성한다.\n 플로깅을 100% 즐기는 방식은 내 말만 따라하면 될 것이다."
                 ),
-                PostingInfo(
+                PostingInfo1(
                     painterResource(id = R.drawable.temporary_user_icon),
                     "HappyBean",
                     "2024.04.29 01:28",
                     "플로깅 10년차의 플로깅 꿀팁!",
                     "10년차 플로거로 대표해서 글을 작성한다.\n 플로깅을 100% 즐기는 방식은 내 말만 따라하면 될 것이다."
                 ),
-                PostingInfo(
+                PostingInfo1(
                     painterResource(id = R.drawable.temporary_user_icon),
                     "HappyBean",
                     "2024.04.29 01:28",
@@ -146,7 +146,7 @@ fun CommunityScreen(
     }
 }
 
-data class PostingInfo(
+data class PostingInfo1(
     val image: Painter,
     val name: String,
     val date: String,

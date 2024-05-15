@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class GetUserInfoUseCase @Inject constructor(private val userRepository: UserRepository) {
-    suspend operator fun invoke(userId: String): Flow<ApiState> {
+    suspend operator fun invoke(userId: Long): Flow<ApiState> {
         return userRepository.getUserInfo(userId.toInt())
     }
 }

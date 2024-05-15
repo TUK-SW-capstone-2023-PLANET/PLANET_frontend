@@ -168,6 +168,7 @@ fun PostingTopAppBar(
                     text = "완료",
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 15.sp,
+                    modifier = Modifier.noRippleClickable { onComplete() }
                 )
             }
             Text(

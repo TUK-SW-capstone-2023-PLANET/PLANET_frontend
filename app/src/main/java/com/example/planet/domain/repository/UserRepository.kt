@@ -12,12 +12,12 @@ interface UserRepository {
 
     fun getUserPref(
         userToken: String = "userToken",
-        defaultValue: String = "",
+        defaultValue: Long = 0,
     ): Flow<ApiState>
 
 
     // 사용자 토큰을 저장
-    fun setUserPrefs(value: String): Flow<ApiState>
+    fun setUserPrefs(value: Long): Flow<ApiState>
 
     // 자동 로그인 boolean 값 불러옴
     fun getAutoLoginPref(

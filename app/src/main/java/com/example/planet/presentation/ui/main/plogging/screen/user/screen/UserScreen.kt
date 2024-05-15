@@ -75,7 +75,6 @@ fun UserScreen(
             .verticalScroll(scrollState)
             .padding(horizontal = 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
     ) {
         Row(
             modifier = Modifier

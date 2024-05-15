@@ -7,11 +7,13 @@ import com.example.planet.data.remote.dto.request.plogging.TrashImageUrlInfo
 import com.example.planet.data.remote.dto.request.plogging.PloggingInfo
 import com.example.planet.data.remote.dto.Tier
 import com.example.planet.data.remote.dto.TrashCan
+import com.example.planet.data.remote.dto.request.post.PostingInfo
 import com.example.planet.data.remote.dto.request.signin.LoginInfo
 import com.example.planet.data.remote.dto.request.signup.PlanetUser
 import com.example.planet.data.remote.dto.response.plogging.PloggingId
 import com.example.planet.data.remote.dto.response.plogging.PloggingResult
 import com.example.planet.data.remote.dto.response.plogging.Trash
+import com.example.planet.data.remote.dto.response.post.PostStoreResponse
 import com.example.planet.data.remote.dto.response.signup.SignUpResponse
 import com.example.planet.data.remote.dto.response.ranking.planet.HigherPlanetUser
 import com.example.planet.data.remote.dto.response.ranking.planet.PagingPlanetUser
@@ -156,4 +158,7 @@ interface MainApi {
     @POST("/login/user")
     suspend fun postLogin(@Body loginInfo: LoginInfo): LoginResponse
 
+    // 게시글
+    @POST("/post")
+    suspend fun postPosting(@Body postInfo: PostingInfo): PostStoreResponse
 }

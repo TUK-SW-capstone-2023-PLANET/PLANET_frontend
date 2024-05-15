@@ -29,6 +29,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Remove
+import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.Photo
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -97,8 +99,11 @@ fun PostingScreen(
         PostingTopAppBar(
             modifier = Modifier,
             title = "글쓰기",
-            onBack = { navController.popBackStack() }) {
-            viewModel.postedDialogState = true
+            onBack = { navController.popBackStack() }
+        ) {
+            scope.launch {
+                viewModel.storePosting{ navController.popBackStack() }
+            }
         }
         Column(
             modifier = Modifier
@@ -131,7 +136,7 @@ fun PostingScreen(
                                 painter = rememberAsyncImagePainter(model = viewModel.postingImageList[it]),
                                 contentDescription = null,
                                 modifier = Modifier
-                                    .padding(end = if (it != 8) 10.dp else 0.dp)
+                                    .padding(end = 10.dp)
                                     .fillMaxSize()
                                     .aspectRatio(1f)
                                     .clip(RoundedCornerShape(6.dp)),
@@ -158,6 +163,31 @@ fun PostingScreen(
                                     imageVector = Icons.Default.Remove,
                                     contentDescription = null,
                                     modifier = Modifier.fillMaxSize()
+                                )
+                            }
+                        }
+                    }
+                    item {
+                        Card(
+                            modifier = Modifier
+                                .size(150.dp)
+                                .padding(end = 2.dp)
+                                .noRippleClickable {
+                                    takePhotoFromAlbumLauncher.launch(takePhotoFromAlbumIntent)
+                                },
+                            shape = RoundedCornerShape(6.dp),
+                            colors = CardDefaults.cardColors(
+                                containerColor = colorResource(id = R.color.font_background_color3),
+                                contentColor = Color.White
+                            ),
+                        ) {
+                            Box(modifier = Modifier.fillMaxSize()) {
+                                Icon(
+                                    imageVector = Icons.Outlined.Add,
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .size(40.dp)
+                                        .align(Alignment.Center)
                                 )
                             }
                         }

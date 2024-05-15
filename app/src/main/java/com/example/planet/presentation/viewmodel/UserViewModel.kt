@@ -44,7 +44,7 @@ class UserViewModel @Inject constructor(
 
     var dialogState by mutableStateOf(false)
 
-    private var userToken: String = "0"
+    private var userToken: Long = 0
     val maxNicknameTextLength = 20
     val maxDescribeTextLength = 20
 
@@ -109,7 +109,7 @@ class UserViewModel @Inject constructor(
     private suspend fun getUserToken() {
         when (val apiState = getUserTokenUseCase().first()) {
             is ApiState.Success<*> -> {
-                userToken = apiState.value as String
+                userToken = apiState.value as Long
             }
 
             is ApiState.Error -> {

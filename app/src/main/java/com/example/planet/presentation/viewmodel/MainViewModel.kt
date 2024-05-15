@@ -96,7 +96,7 @@ class MainViewModel @Inject constructor(
     }
 
     // userToken
-    var userId: String = ""
+    var userId: Long = 0
 
     // 자대 대학교 유저 TOP3 그래프 높이 list
     var universityUserGraphHeightList = emptyList<Dp>()
@@ -205,7 +205,7 @@ class MainViewModel @Inject constructor(
 
     private suspend fun getUserToken(userTokenKey: String = "userToken") {
         when (val result = getUserTokenUseCase(userTokenKey).first()) {
-            is ApiState.Success<*> -> { userId = result.value as String }
+            is ApiState.Success<*> -> { userId = result.value as Long }
 
             is ApiState.Error -> {
                 Log.d(TAG, "getUserToken() 실패: ${result.errMsg}")
@@ -282,7 +282,7 @@ class MainViewModel @Inject constructor(
     }
 
 
-    suspend fun getTop5SeasonUser(userId: String) {
+    suspend fun getTop5SeasonUser(userId: Long) {
         when (val apiState = getHigherSeasonRankUseCase(userId).first()) {
             is ApiState.Success<*> -> {
                 val result = apiState.value as List<Map<Int, SeasonUser>>
@@ -368,7 +368,7 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    suspend fun getUniversityMyRanking(userId: String) {
+    suspend fun getUniversityMyRanking(userId: Long) {
         when (val apiState = getMyUniversityRankUseCase(userId).first()) {
             is ApiState.Success<*> -> {
                 _myUniversityRank.emit(apiState.value as UniversityUser)

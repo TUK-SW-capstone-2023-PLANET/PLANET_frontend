@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class GetMyUniversityInfoUseCase @Inject constructor(private val rankRepository: RankRepository) {
-    operator fun invoke(userId: String): Flow<ApiState> {
+    operator fun invoke(userId: Long): Flow<ApiState> {
         return rankRepository.getMyUniversityInfo(userId.toInt())
     }
 }
