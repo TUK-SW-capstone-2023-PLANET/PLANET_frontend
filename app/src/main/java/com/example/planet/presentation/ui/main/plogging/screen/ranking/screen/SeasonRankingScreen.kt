@@ -11,8 +11,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,89 +44,101 @@ fun SeasonRankingScreen(mainViewModel: MainViewModel = hiltViewModel()) {
     val seasonUserList: LazyPagingItems<SeasonUser> =
         mainViewModel.totalSeasonUser.collectAsLazyPagingItems()
 
-
     BackHandler { mainViewModel.showRankingScreen = ScreenNav.HomeScreen }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        Row(
+    LaunchedEffect(Unit) {
+        mainViewModel.getAllSeasonUser()
+    }
+    if (seasonUserList.itemSnapshotList.items.isEmpty()) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            CircularProgressIndicator()
+        }
+    } else {
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 16.dp)
+                .fillMaxSize()
+                .padding(16.dp)
         ) {
-            Icon(imageVector = Icons.Default.ArrowBackIosNew,
-                contentDescription = null,
-                tint = colorResource(id = R.color.font_background_color1),
-                modifier = Modifier.noRippleClickable {
-                    mainViewModel.showRankingScreen = ScreenNav.HomeScreen
-                })
-        }
-        MiddleHead(
-            image = painterResource(id = R.drawable.plogging_ranking_season),
-            title = "Spring Season IV",
-            description = "아름다운 자연과 함께 봄의 주인공이 되어 보세요!",
-        )
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            verticalAlignment = Alignment.Bottom
-        ) {
-            TearProfile(
-                imageUrl = mainViewModel.higherSeasonUsers[2].tierImageUrl,
-                imageSize = 80.dp,
-                userName = mainViewModel.higherSeasonUsers[2].userName,
-                userScore = mainViewModel.higherSeasonUsers[2].score.numberComma()
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp)
+            ) {
+                Icon(imageVector = Icons.Default.ArrowBackIosNew,
+                    contentDescription = null,
+                    tint = colorResource(id = R.color.font_background_color1),
+                    modifier = Modifier.noRippleClickable {
+                        mainViewModel.showRankingScreen = ScreenNav.HomeScreen
+                    })
+            }
+            MiddleHead(
+                image = painterResource(id = R.drawable.plogging_ranking_season),
+                title = "Spring Season IV",
+                description = "아름다운 자연과 함께 봄의 주인공이 되어 보세요!",
             )
-            TearProfile(
-                imageUrl = mainViewModel.higherSeasonUsers[1].tierImageUrl,
-                imageSize = 95.dp,
-                userName = mainViewModel.higherSeasonUsers[1].userName,
-                userScore = mainViewModel.higherSeasonUsers[1].score.numberComma()
-            )
-            TearProfile(
-                imageUrl = mainViewModel.higherSeasonUsers[3].tierImageUrl,
-                imageSize = 80.dp,
-                userName = mainViewModel.higherSeasonUsers[3].userName,
-                userScore = mainViewModel.higherSeasonUsers[3].score.numberComma()
-            )
-        }
 
-        SearchTextField(
-            text = mainViewModel.searchText.value,
-            onValueChange = mainViewModel.changeSearchText,
-            fontSize = 12.sp,
-            placeholder = "search"
-        ) {
-            Icon(imageVector = Icons.Default.Search, contentDescription = null)
-        }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.Bottom
+            ) {
+                TearProfile(
+                    imageUrl = mainViewModel.higherSeasonUsers[2].tierImageUrl,
+                    imageSize = 80.dp,
+                    userName = mainViewModel.higherSeasonUsers[2].userName,
+                    userScore = mainViewModel.higherSeasonUsers[2].score.numberComma()
+                )
+                TearProfile(
+                    imageUrl = mainViewModel.higherSeasonUsers[1].tierImageUrl,
+                    imageSize = 95.dp,
+                    userName = mainViewModel.higherSeasonUsers[1].userName,
+                    userScore = mainViewModel.higherSeasonUsers[1].score.numberComma()
+                )
+                TearProfile(
+                    imageUrl = mainViewModel.higherSeasonUsers[3].tierImageUrl,
+                    imageSize = 80.dp,
+                    userName = mainViewModel.higherSeasonUsers[3].userName,
+                    userScore = mainViewModel.higherSeasonUsers[3].score.numberComma()
+                )
+            }
 
-        SeasonTitleRow()
-        mainViewModel.mySeasonRank.collectAsStateWithLifecycle().value?.let { myRank ->
-            SeasonContentRow(
-                rank = myRank.rank,
-                nickname = myRank.userName,
-                tier = myRank.tierImageUrl,
-                score = myRank.score.numberComma(),
-                universityLogo = myRank.universityLogo,
-                color = colorResource(id = R.color.main_color4)
-            )
-        }
+            SearchTextField(
+                text = mainViewModel.searchText.value,
+                onValueChange = mainViewModel.changeSearchText,
+                fontSize = 12.sp,
+                placeholder = "search"
+            ) {
+                Icon(imageVector = Icons.Default.Search, contentDescription = null)
+            }
+
+            SeasonTitleRow()
+            mainViewModel.mySeasonRank.collectAsStateWithLifecycle().value?.let { myRank ->
+                SeasonContentRow(
+                    rank = myRank.rank,
+                    nickname = myRank.userName,
+                    tier = myRank.tierImageUrl,
+                    score = myRank.score.numberComma(),
+                    universityLogo = myRank.universityLogo,
+                    color = colorResource(id = R.color.main_color4)
+                )
+            }
 
 
-        LazyColumn(modifier = Modifier.fillMaxSize()) {
-            items(seasonUserList.itemCount) { index ->
-                seasonUserList[index]?.let {
-                    SeasonContentRow(
-                        rank = it.rank,
-                        nickname = it.userName,
-                        tier = it.tierImageUrl,
-                        score = it.score.numberComma(),
-                        universityLogo = it.universityLogo,
-                    )
+            LazyColumn(modifier = Modifier.fillMaxSize()) {
+                items(seasonUserList.itemCount) { index ->
+                    seasonUserList[index]?.let {
+                        SeasonContentRow(
+                            rank = it.rank,
+                            nickname = it.userName,
+                            tier = it.tierImageUrl,
+                            score = it.score.numberComma(),
+                            universityLogo = it.universityLogo,
+                        )
+                    }
                 }
             }
         }

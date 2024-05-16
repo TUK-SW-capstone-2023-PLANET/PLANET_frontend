@@ -62,7 +62,7 @@ fun PostedInfoScreen(
         DialogComponent(
             title = "게시판 메뉴",
             text1 = "신고하기",
-            text2 = "삭제하기",
+            text2 = if (viewModel.postedInfo.userId == viewModel.userId) "삭제하기" else "",
             text2Color = colorResource(id = R.color.red),
             closeDialog = { viewModel.postedDialogState = false },
             onClick1 = { },

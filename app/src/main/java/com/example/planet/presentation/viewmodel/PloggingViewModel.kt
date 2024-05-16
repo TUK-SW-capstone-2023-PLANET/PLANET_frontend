@@ -74,7 +74,7 @@ class PloggingViewModel @Inject constructor(
     private lateinit var ploggingLogJob: Job                           // 1초마다 위도,경도의 거리를 계산하는 코루틴
     private var milliseconds: Long = 0L                                 // 타이머 시간
     private val distanceManager = DistanceManager                       // 거리 계산 객체
-    private val weight: Double = 70.0                                   // 사용자의 몸무계
+    private var weight: Double = 70.0                                   // 사용자의 몸무계
     var currentLatLng: LatLng? = null
     var pastLatLng: LatLng? = null
 
@@ -123,7 +123,7 @@ class PloggingViewModel @Inject constructor(
     }
     val met: State<Double> = _met
 
-    private val _kcal = derivedStateOf {
+    val kcal by derivedStateOf {
         if (minSpeed.value == 0.0) {
             0.0
         } else {
@@ -134,10 +134,6 @@ class PloggingViewModel @Inject constructor(
             ((0.005 * met.value * (3.5 * weight * milliseconds.toSecond())) / 60).roundToDouble()
         }
     }
-    val kcal: State<Double> = _kcal
-
-    private val _totalKcal = mutableDoubleStateOf(0.0)
-    val totalKcal: State<Double> = _totalKcal
 
     private val _pace = derivedStateOf {                                // 평균 페이스, 1km 기준으로 측정
         if (minSpeed.value > 0.0) {
@@ -235,7 +231,7 @@ class PloggingViewModel @Inject constructor(
                     }
                     Log.d(
                         TAG,
-                        "distance: ${distance.value}\nminSpeed: ${minSpeed.value}\nMET: $met\nkcal: ${kcal.value}\npace: ${pace.value}"
+                        "distance: ${distance.value}\nminSpeed: ${minSpeed.value}\nMET: $met\nkcal: ${kcal}\npace: ${pace.value}"
                     )
                     delay(5000)
                 }
@@ -243,10 +239,6 @@ class PloggingViewModel @Inject constructor(
             ploggingLogJob = launch(Dispatchers.IO) {
                 while (true) {
                     if (currentLatLng != null && pastLatLng != null) {
-                        Log.d(
-                            TAG,
-                            "거리 계산 if문 들어가기 전: $distance\n currentLatLng: $currentLatLng\n pastLatLng: $pastLatLng"
-                        )
                         if (currentLatLng!!.latitude != pastLatLng!!.latitude || currentLatLng!!.longitude != pastLatLng!!.longitude) {
                             val distance = distanceManager.getDistance(
                                 pastLatLng!!.latitude,
@@ -269,10 +261,6 @@ class PloggingViewModel @Inject constructor(
     }
 
 
-    fun kcalCalculate() {
-        _totalKcal.value += kcal.value
-    }
-
     fun roundDistance(): String {
         val formatDistance = round(distance.value * 100) / 100
         return formatDistance.toString()
@@ -280,13 +268,13 @@ class PloggingViewModel @Inject constructor(
 
 
     fun roundKcal(): String =
-        round(totalKcal.value).toString()
+        round(kcal).toString()
 
     fun formatTrashScore(): String =
         totalTrashScore.value.numberComma()
 
 
-    fun paceToSecond() = pace.value.second + (pace.value.first * 60)
+    private fun paceFormatString() = "${pace.value.second}'${(pace.value.first)}\""
 
 
     fun getAllTrashCanLocation() {
@@ -322,6 +310,7 @@ class PloggingViewModel @Inject constructor(
             when (val apiState = getPloggingIdUseCase.invoke(userId).first()) {
                 is ApiState.Success<*> -> {
                     ploggingId = (apiState.value as PloggingId).ploggingId
+                    weight = (apiState.value).weight
                     Log.d(TAG, "getPloggingId: $ploggingId")
                 }
 
@@ -439,8 +428,8 @@ class PloggingViewModel @Inject constructor(
             location = ploggingLog,
             trash = trashMapList,
             distance = distance.value,
-            kcal = kcal.value,
-            speed = paceToSecond(),
+            kcal = kcal,
+            pace = paceFormatString(),
             score = totalTrashScore.value,
             ploggingTime = milliseconds / 1000,
         )

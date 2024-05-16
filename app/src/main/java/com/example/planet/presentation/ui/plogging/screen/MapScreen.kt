@@ -73,7 +73,7 @@ fun MapScreen(
     val cameraPositionState = rememberCameraPositionState()
 
     val cameraPosition =
-        CameraPosition(LatLng(ploggingViewModel.currentLatLng?.latitude ?: 0.0, ploggingViewModel.currentLatLng?.longitude ?: 0.0), 14.0)
+        CameraPosition(LatLng(ploggingViewModel.currentLatLng?.latitude ?: 0.0, ploggingViewModel.currentLatLng?.longitude ?: 0.0), 16.0)
     cameraPositionState.position.target // 카메라의 현재 위치
 
     DisposableEffect(Unit) {

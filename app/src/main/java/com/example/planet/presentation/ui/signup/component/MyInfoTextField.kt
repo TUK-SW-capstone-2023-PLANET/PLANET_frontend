@@ -46,7 +46,7 @@ fun MyInfoTextField(
             ),
             suffix = {
                 Text(
-                    text = "CM",
+                    text = "KG",
                     modifier = Modifier,
                     style = LocalTextStyle.current.copy(
                         fontSize = 14.sp,

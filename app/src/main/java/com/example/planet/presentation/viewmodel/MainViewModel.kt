@@ -88,7 +88,7 @@ class MainViewModel @Inject constructor(
                 async(Dispatchers.IO) { getTop3Universities() }
             ).awaitAll()
 
-            launch(Dispatchers.IO) { getAllSeasonUser() }
+//            launch(Dispatchers.IO) { getAllSeasonUser() }
             launch(Dispatchers.IO) { getAllUniversities() }
             launch(Dispatchers.IO) { getAllPlanetUserRanking() }
             launch(Dispatchers.IO) { getAllUniversityUser() }

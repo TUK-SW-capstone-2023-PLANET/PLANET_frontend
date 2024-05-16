@@ -81,9 +81,6 @@ fun MapGraph(ploggingViewModel: PloggingViewModel = viewModel(), onClick: (Int) 
     LaunchedEffect(Unit) {
         ploggingViewModel.distanceCalculate()
     }
-    LaunchedEffect(ploggingViewModel.kcal.value) {
-        ploggingViewModel.kcalCalculate()
-    }
 
     DisposableEffect(Unit) {
         ploggingViewModel.startTimer()

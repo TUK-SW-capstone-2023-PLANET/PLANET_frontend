@@ -137,11 +137,11 @@ fun Long.secondsFormatTime(): String {
     return formatter
 }
 
-fun Double.paceFormat(): String {
-    val minutes = this.toInt()
-    val seconds = ((this - minutes) * 100).toInt()
-    return "$minutes\'$seconds\""
-}
+//fun Double.paceFormat(): String {
+//    val minutes = this.toInt()
+//    val seconds = ((this - minutes) * 100).toInt()
+//    return "$minutes\'$seconds\""
+//}
 
 fun Long.toSecond(): Long = this / 1000
 
