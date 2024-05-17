@@ -7,13 +7,14 @@ import com.example.planet.data.remote.dto.request.plogging.TrashImageUrlInfo
 import com.example.planet.data.remote.dto.request.plogging.PloggingInfo
 import com.example.planet.data.remote.dto.Tier
 import com.example.planet.data.remote.dto.TrashCan
+import com.example.planet.data.remote.dto.request.post.PostId
 import com.example.planet.data.remote.dto.request.post.PostingInfo
 import com.example.planet.data.remote.dto.request.signin.LoginInfo
 import com.example.planet.data.remote.dto.request.signup.PlanetUser
 import com.example.planet.data.remote.dto.response.plogging.PloggingId
 import com.example.planet.data.remote.dto.response.plogging.PloggingResult
 import com.example.planet.data.remote.dto.response.plogging.Trash
-import com.example.planet.data.remote.dto.response.post.PostStoreResponse
+import com.example.planet.data.remote.dto.response.post.PostResponse
 import com.example.planet.data.remote.dto.response.post.PostedInfo
 import com.example.planet.data.remote.dto.response.signup.SignUpResponse
 import com.example.planet.data.remote.dto.response.ranking.planet.HigherPlanetUser
@@ -161,8 +162,11 @@ interface MainApi {
 
     // 게시글
     @POST("/post")
-    suspend fun postPosting(@Body postInfo: PostingInfo): PostStoreResponse
+    suspend fun postPosting(@Body postInfo: PostingInfo): PostResponse
 
     @GET("/post")
     suspend fun getPosted(@Query("postId") postId: Long, @Query("userId") userId: Long ): PostedInfo
+
+    @POST("/post-heart")
+    suspend fun postBoardHeartSave(@Body postId: PostId): PostResponse
 }

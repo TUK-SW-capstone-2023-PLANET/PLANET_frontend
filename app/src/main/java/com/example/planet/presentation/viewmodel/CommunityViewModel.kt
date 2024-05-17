@@ -11,15 +11,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.planet.TAG
 import com.example.planet.data.remote.dto.ApiState
-import com.example.planet.data.remote.dto.ImageUrl
+import com.example.planet.data.remote.dto.request.post.PostId
 import com.example.planet.data.remote.dto.request.post.PostingInfo
-import com.example.planet.data.remote.dto.response.post.PostStoreResponse
+import com.example.planet.data.remote.dto.response.post.PostResponse
 import com.example.planet.data.remote.dto.response.post.PostedInfo
-import com.example.planet.data.remote.dto.response.ranking.season.SeasonUser
 import com.example.planet.domain.usecase.login.sharedpreference.GetUserTokenUseCase
 import com.example.planet.domain.usecase.post.GetPostedInfoUseCase
+import com.example.planet.domain.usecase.post.PostBoardHeartSaveUseCase
 import com.example.planet.domain.usecase.post.PostPostingStoreUseCase
-import com.example.planet.presentation.util.asMultipart
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.first
@@ -31,10 +30,12 @@ class CommunityViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val getUserTokenUseCase: GetUserTokenUseCase,
     private val postPostingStoreUseCase: PostPostingStoreUseCase,
-    private val getPostedInfoUseCase: GetPostedInfoUseCase
+    private val getPostedInfoUseCase: GetPostedInfoUseCase,
+    private val postBoardHeartSaveUseCase: PostBoardHeartSaveUseCase,
 ) : ViewModel() {
 
     var userId: Long = 0L
+    var testPostId: Long = 1720021919
 
     var postedDialogState by mutableStateOf(false)
     var boardDialogState by mutableStateOf(false)
@@ -96,7 +97,7 @@ class CommunityViewModel @Inject constructor(
         )
         when (val apiState = postPostingStoreUseCase(postingInfo).first()) {
             is ApiState.Success<*> -> {
-                apiState.value as PostStoreResponse
+                apiState.value as PostResponse
                 Toast.makeText(context, "게시물 저장", Toast.LENGTH_SHORT).show()
                 onBack()
             }
@@ -119,6 +120,21 @@ class CommunityViewModel @Inject constructor(
             ApiState.Loading -> TODO()
         }
     }
+
+    suspend fun boardHeartSave(postId: PostId) {
+
+        when (val apiState = postBoardHeartSaveUseCase(postId).first()) {
+            is ApiState.Success<*> -> {
+                postedInfo = postedInfo.copy(heart = true)
+            }
+            is ApiState.Error -> {
+                Log.d("daeYoung", "getPostedInfo() 실패: ${apiState.errMsg}")
+            }
+            ApiState.Loading -> TODO()
+        }
+    }
+
+
 }
 
 
