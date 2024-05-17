@@ -2,6 +2,7 @@ package com.example.planet.presentation.ui.main.plogging.screen.community.screen
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -79,25 +80,14 @@ fun PostedInfoScreen(
             onBack = { navController.popBackStack() }) {
             viewModel.postedDialogState = true
         }
-        Box(modifier = Modifier.fillMaxSize()) {
-            CommentTextField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(color = MaterialTheme.colorScheme.background)
-                    .padding(horizontal = 20.dp, vertical = 10.dp)
-                    .align(Alignment.BottomCenter)
-                    .zIndex(1f),
-                postId = viewModel.testPostId,
-                text = viewModel.postingCommentInput,
-                onTextChange = { viewModel.postingCommentInput = it }
-            ) {
-                scope.launch { viewModel.saveComment(it) }
-            }
+        Column(modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.SpaceBetween) {
+
             Column(
                 modifier = Modifier
                     .verticalScroll(scrollState)
                     .padding(top = 18.dp)
-                    .fillMaxSize()
+                    .weight(1f)
             ) {
                 Column(
                     modifier = Modifier
@@ -139,6 +129,19 @@ fun PostedInfoScreen(
                         )
                     }
                 }
+            }
+            CommentTextField(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(color = MaterialTheme.colorScheme.background)
+                    .padding(horizontal = 20.dp, vertical = 10.dp)
+//                    .align(Alignment.BottomCenter)
+                    .zIndex(1f),
+                postId = viewModel.testPostId,
+                text = viewModel.postingCommentInput,
+                onTextChange = { viewModel.postingCommentInput = it }
+            ) {
+                scope.launch { viewModel.saveComment(it) }
             }
         }
 

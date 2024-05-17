@@ -14,6 +14,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -56,7 +57,7 @@ fun CommentCard(image: Painter, name: String, content: String, date: String, hea
     val heartCountTextStyle = TextStyle(
         fontSize = 8.sp,
         fontWeight = FontWeight.SemiBold,
-        color = colorResource(id = R.color.font_background_color3)
+        color = colorResource(id = R.color.red)
     )
 
     var isFavorite by remember {
@@ -71,7 +72,7 @@ fun CommentCard(image: Painter, name: String, content: String, date: String, hea
         color = colorResource(id = R.color.font_background_color3)
     )
 
-    val imageSize = 35.dp
+    val imageSize = 38.dp
 
     Row(
         modifier = Modifier
@@ -100,23 +101,30 @@ fun CommentCard(image: Painter, name: String, content: String, date: String, hea
                     )
                     Text(text = date, style = dateTextStyle)
                 }
-                Text(text = content, style = contentTextStyle)
+                Text(
+                    text = content,
+                    style = contentTextStyle,
+                    modifier = Modifier.padding(bottom = 3.dp)
+                )
+                Row {
+                    Icon(
+                        imageVector = Icons.Outlined.FavoriteBorder,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .padding(end = 2.dp)
+                            .size(10.dp),
+                        tint = colorResource(id = R.color.red)
+                    )
+                    Text(text = heartCount.toString(), style = heartCountTextStyle)
+                }
             }
         }
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Icon(
-                imageVector = if (!isFavorite) Icons.Outlined.FavoriteBorder else Icons.Default.Favorite,
-                contentDescription = null,
-                modifier = Modifier
-                    .padding(bottom = 5.dp)
-                    .size(20.dp)
-                    .noRippleClickable { isFavorite = !isFavorite },
-                tint = if (!isFavorite) colorResource(id = R.color.font_background_color3) else colorResource(
-                    id = R.color.red
-                )
-            )
-            Text(text = heartCount.toString(), style = heartCountTextStyle)
-        }
+        Icon(
+            imageVector = Icons.Default.MoreVert,
+            contentDescription = null,
+            modifier = Modifier.size(18.dp),
+            tint = colorResource(id = R.color.font_background_color1)
+        )
     }
 
 }
