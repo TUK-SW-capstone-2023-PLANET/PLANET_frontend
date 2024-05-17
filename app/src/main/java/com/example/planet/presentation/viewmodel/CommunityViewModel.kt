@@ -45,8 +45,9 @@ class CommunityViewModel @Inject constructor(
     var postedDialogState by mutableStateOf(false)
     var boardDialogState by mutableStateOf(false)
 
-    var postingTitleInput by mutableStateOf("a")
+    var postingTitleInput by mutableStateOf("")
     var postingContentInput by mutableStateOf("")
+    var postingCommentInput by mutableStateOf("")
 
     var postingImageList by mutableStateOf(emptyList<Uri>())
 
@@ -150,10 +151,15 @@ class CommunityViewModel @Inject constructor(
         }
     }
 
-    suspend fun saveComment(comment: CommentInfo) {
+    suspend fun saveComment(postId: Long) {
+        val comment = CommentInfo(
+            userId = userId,
+            postId = postId,
+            content = postingCommentInput
+        )
         when (val apiState = postCommentSaveUseCase(comment).first()) {
             is ApiState.Success<*> -> {
-                postedInfo = postedInfo.copy(heart = false)
+                postingCommentInput = ""
             }
             is ApiState.Error -> {
                 Log.d("daeYoung", "deleteBoardHeart() 실패: ${apiState.errMsg}")

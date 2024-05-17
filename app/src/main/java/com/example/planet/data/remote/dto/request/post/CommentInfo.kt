@@ -1,7 +1,7 @@
 package com.example.planet.data.remote.dto.request.post
 
 data class CommentInfo(
-    val postId: String,
-    val userId: String,
+    val postId: Long,
+    val userId: Long,
     val content: String
 )
