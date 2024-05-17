@@ -14,7 +14,7 @@ import javax.inject.Inject
 class PostingRepositoryImpl @Inject constructor(
     private val mainApi: MainApi,
 ): PostingRepository {
-    override suspend fun postPostingStore(postingInfo: PostingInfo): Flow<ApiState> = flow {
+    override suspend fun postPostingSave(postingInfo: PostingInfo): Flow<ApiState> = flow {
         kotlin.runCatching {
             mainApi.postPosting(postingInfo)
         }.onSuccess {
@@ -43,4 +43,15 @@ class PostingRepositoryImpl @Inject constructor(
             error.message?.let { emit(ApiState.Error(it)) }
         }
     }.flowOn(Dispatchers.IO)
+
+    override suspend fun deleteBoardHeartSave(postId: PostId): Flow<ApiState> = flow {
+        kotlin.runCatching {
+            mainApi.deleteBoardHeartSave(postId)
+        }.onSuccess {
+            emit(ApiState.Success(it))
+        }.onFailure { error ->
+            error.message?.let { emit(ApiState.Error(it)) }
+        }
+    }.flowOn(Dispatchers.IO)
+    
 }

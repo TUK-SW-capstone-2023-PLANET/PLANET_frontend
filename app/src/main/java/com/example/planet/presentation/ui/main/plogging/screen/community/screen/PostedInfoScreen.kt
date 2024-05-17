@@ -83,11 +83,8 @@ fun PostedInfoScreen(
                 ) {
                     val postId = PostId(viewModel.userId, viewModel.testPostId)
                     scope.launch {
-                        if (!viewModel.postedInfo.heart) {
-                            viewModel.boardHeartSave(postId)
-                        } else {
-                            viewModel.postedInfo = viewModel.postedInfo.copy(heart = it)
-                        }
+                        if (!viewModel.postedInfo.heart) { viewModel.saveBoardHeart(postId) }
+                        else { viewModel.deleteBoardHeart(postId) }
                     }
                 }
             }

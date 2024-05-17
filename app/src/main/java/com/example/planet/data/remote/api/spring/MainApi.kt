@@ -33,7 +33,9 @@ import com.example.planet.data.remote.dto.response.user.UserInfo
 import com.example.planet.data.remote.dto.response.user.UserInfoResponse
 import okhttp3.MultipartBody
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.HTTP
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.PUT
@@ -169,4 +171,7 @@ interface MainApi {
 
     @POST("/post-heart")
     suspend fun postBoardHeartSave(@Body postId: PostId): PostResponse
+
+    @HTTP(method = "DELETE", path = "/post-heart", hasBody = true)
+    suspend fun deleteBoardHeartSave(@Body postId: PostId): PostResponse
 }

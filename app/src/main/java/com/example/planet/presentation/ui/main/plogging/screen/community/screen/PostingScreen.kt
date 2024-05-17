@@ -102,7 +102,7 @@ fun PostingScreen(
             onBack = { navController.popBackStack() }
         ) {
             scope.launch {
-                viewModel.storePosting{ navController.popBackStack() }
+                viewModel.savePosting{ navController.popBackStack() }
             }
         }
         Column(

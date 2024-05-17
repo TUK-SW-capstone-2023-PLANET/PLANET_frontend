@@ -7,9 +7,10 @@ import kotlinx.coroutines.flow.Flow
 import retrofit2.http.Query
 
 interface PostingRepository {
-    suspend fun postPostingStore(postingInfo: PostingInfo): Flow<ApiState>
+    suspend fun postPostingSave(postingInfo: PostingInfo): Flow<ApiState>
 
     suspend fun getPostedInfo(postId: Long, userId: Long): Flow<ApiState>
     suspend fun postBoardHeartSave(postId: PostId): Flow<ApiState>
-
+    suspend fun deleteBoardHeartSave(postId: PostId): Flow<ApiState>
+    
 }

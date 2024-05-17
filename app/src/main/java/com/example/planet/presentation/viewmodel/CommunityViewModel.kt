@@ -16,9 +16,10 @@ import com.example.planet.data.remote.dto.request.post.PostingInfo
 import com.example.planet.data.remote.dto.response.post.PostResponse
 import com.example.planet.data.remote.dto.response.post.PostedInfo
 import com.example.planet.domain.usecase.login.sharedpreference.GetUserTokenUseCase
+import com.example.planet.domain.usecase.post.DeleteBoardHeartSaveUseCase
 import com.example.planet.domain.usecase.post.GetPostedInfoUseCase
 import com.example.planet.domain.usecase.post.PostBoardHeartSaveUseCase
-import com.example.planet.domain.usecase.post.PostPostingStoreUseCase
+import com.example.planet.domain.usecase.post.PostPostingSaveUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.first
@@ -29,9 +30,10 @@ import javax.inject.Inject
 class CommunityViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val getUserTokenUseCase: GetUserTokenUseCase,
-    private val postPostingStoreUseCase: PostPostingStoreUseCase,
+    private val postPostingSaveUseCase: PostPostingSaveUseCase,
     private val getPostedInfoUseCase: GetPostedInfoUseCase,
     private val postBoardHeartSaveUseCase: PostBoardHeartSaveUseCase,
+    private val deleteBoardHeartSaveUseCase: DeleteBoardHeartSaveUseCase
 ) : ViewModel() {
 
     var userId: Long = 0L
@@ -84,7 +86,7 @@ class CommunityViewModel @Inject constructor(
         }
     }
 
-    suspend fun storePosting(onBack: () -> Unit) {
+    suspend fun savePosting(onBack: () -> Unit) {
         val postingInfo = PostingInfo(
             userId = userId,
             // TODO: 승민이가 멀티파일 리스트 api 만들면 수정
@@ -95,14 +97,14 @@ class CommunityViewModel @Inject constructor(
             title = postingTitleInput,
             content = postingContentInput
         )
-        when (val apiState = postPostingStoreUseCase(postingInfo).first()) {
+        when (val apiState = postPostingSaveUseCase(postingInfo).first()) {
             is ApiState.Success<*> -> {
                 apiState.value as PostResponse
                 Toast.makeText(context, "게시물 저장", Toast.LENGTH_SHORT).show()
                 onBack()
             }
             is ApiState.Error -> {
-                Log.d("daeYoung", "storePosting() 실패: ${apiState.errMsg}")
+                Log.d("daeYoung", "savePosting() 실패: ${apiState.errMsg}")
             }
             ApiState.Loading -> TODO()
         }
@@ -121,20 +123,32 @@ class CommunityViewModel @Inject constructor(
         }
     }
 
-    suspend fun boardHeartSave(postId: PostId) {
+    suspend fun saveBoardHeart(postId: PostId) {
 
         when (val apiState = postBoardHeartSaveUseCase(postId).first()) {
             is ApiState.Success<*> -> {
                 postedInfo = postedInfo.copy(heart = true)
             }
             is ApiState.Error -> {
-                Log.d("daeYoung", "getPostedInfo() 실패: ${apiState.errMsg}")
+                Log.d("daeYoung", "saveBoardHeart() 실패: ${apiState.errMsg}")
+            }
+            ApiState.Loading -> TODO()
+        }
+    }
+    suspend fun deleteBoardHeart(postId: PostId) {
+
+        when (val apiState = deleteBoardHeartSaveUseCase(postId).first()) {
+            is ApiState.Success<*> -> {
+                postedInfo = postedInfo.copy(heart = false)
+            }
+            is ApiState.Error -> {
+                Log.d("daeYoung", "deleteBoardHeart() 실패: ${apiState.errMsg}")
             }
             ApiState.Loading -> TODO()
         }
     }
 
-
+    
 }
 
 

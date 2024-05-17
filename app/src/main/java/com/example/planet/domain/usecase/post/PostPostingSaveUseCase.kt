@@ -6,8 +6,8 @@ import com.example.planet.domain.repository.PostingRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class PostPostingStoreUseCase @Inject constructor(private val postingRepository: PostingRepository) {
+class PostPostingSaveUseCase @Inject constructor(private val postingRepository: PostingRepository) {
     suspend operator fun invoke(postingInfo: PostingInfo): Flow<ApiState> {
-        return postingRepository.postPostingStore(postingInfo)
+        return postingRepository.postPostingSave(postingInfo)
     }
 }
