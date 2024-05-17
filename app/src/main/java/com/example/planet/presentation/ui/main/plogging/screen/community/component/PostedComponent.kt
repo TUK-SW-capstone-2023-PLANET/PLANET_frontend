@@ -1,7 +1,9 @@
 package com.example.planet.presentation.ui.main.plogging.screen.community.component
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -20,6 +22,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -43,27 +46,26 @@ import com.example.planet.presentation.util.noRippleClickable
 
 @Composable
 fun CommentCard(image: Painter, name: String, content: String, date: String, heartCount: Int) {
+    var dropDownMenuState by remember {
+        mutableStateOf(false)
+    }
+
     val nameTextStyle = TextStyle(
-        fontSize = 12.sp,
+        fontSize = 13.sp,
         fontWeight = FontWeight.SemiBold
     )
     val dateTextStyle = TextStyle(
-        fontSize = 6.sp,
+        fontSize = 8.sp,
         color = colorResource(id = R.color.font_background_color2)
     )
     val contentTextStyle = TextStyle(
-        fontSize = 10.sp,
+        fontSize = 11.sp,
     )
     val heartCountTextStyle = TextStyle(
         fontSize = 8.sp,
         fontWeight = FontWeight.SemiBold,
         color = colorResource(id = R.color.red)
     )
-
-    var isFavorite by remember {
-        mutableStateOf(false)
-    }
-
 
     HorizontalDivider(
         thickness = 1.dp,
@@ -119,14 +121,22 @@ fun CommentCard(image: Painter, name: String, content: String, date: String, hea
                 }
             }
         }
-        Icon(
-            imageVector = Icons.Default.MoreVert,
-            contentDescription = null,
-            modifier = Modifier.size(18.dp),
-            tint = colorResource(id = R.color.font_background_color1)
-        )
+        Box(modifier = Modifier) {
+            Icon(
+                imageVector = Icons.Default.MoreVert,
+                contentDescription = null,
+                modifier = Modifier
+                    .size(18.dp)
+                    .noRippleClickable { dropDownMenuState = true },
+                tint = colorResource(id = R.color.font_background_color1)
+            )
+            CommentDropDownMenu(
+                expanded = dropDownMenuState,
+                onDismissRequest = { dropDownMenuState = false },
+                modifier = Modifier.background(color = MaterialTheme.colorScheme.background)
+            )
+        }
     }
-
 }
 
 

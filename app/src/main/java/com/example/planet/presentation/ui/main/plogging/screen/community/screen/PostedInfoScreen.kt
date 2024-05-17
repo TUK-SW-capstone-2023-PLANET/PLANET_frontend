@@ -163,8 +163,6 @@ fun CommentTextField(
         fontWeight = FontWeight.SemiBold
     )
 
-
-
     TextField(
         value = text,
         onValueChange = { onTextChange(it) },
