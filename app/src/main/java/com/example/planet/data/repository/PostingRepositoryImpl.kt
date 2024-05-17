@@ -2,6 +2,7 @@ package com.example.planet.data.repository
 
 import com.example.planet.data.remote.api.spring.MainApi
 import com.example.planet.data.remote.dto.ApiState
+import com.example.planet.data.remote.dto.request.post.CommentInfo
 import com.example.planet.data.remote.dto.request.post.PostId
 import com.example.planet.data.remote.dto.request.post.PostingInfo
 import com.example.planet.domain.repository.PostingRepository
@@ -53,5 +54,14 @@ class PostingRepositoryImpl @Inject constructor(
             error.message?.let { emit(ApiState.Error(it)) }
         }
     }.flowOn(Dispatchers.IO)
-    
+
+    override suspend fun postCommentSave(comment: CommentInfo): Flow<ApiState> = flow {
+        kotlin.runCatching {
+            mainApi.postComment(comment)
+        }.onSuccess {
+            emit(ApiState.Success(it))
+        }.onFailure { error ->
+            error.message?.let { emit(ApiState.Error(it)) }
+        }
+    }.flowOn(Dispatchers.IO)
 }

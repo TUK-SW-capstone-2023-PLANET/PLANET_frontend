@@ -2,21 +2,22 @@ package com.example.planet.data.remote.api.spring
 
 import com.example.planet.data.remote.dto.Advertisement
 import com.example.planet.data.remote.dto.ImageUrl
-import com.example.planet.data.remote.dto.response.plogging.PloggingComplete
-import com.example.planet.data.remote.dto.request.plogging.TrashImageUrlInfo
-import com.example.planet.data.remote.dto.request.plogging.PloggingInfo
 import com.example.planet.data.remote.dto.Tier
 import com.example.planet.data.remote.dto.TrashCan
+import com.example.planet.data.remote.dto.request.plogging.PloggingInfo
+import com.example.planet.data.remote.dto.request.plogging.TrashImageUrlInfo
+import com.example.planet.data.remote.dto.request.post.CommentInfo
 import com.example.planet.data.remote.dto.request.post.PostId
 import com.example.planet.data.remote.dto.request.post.PostingInfo
 import com.example.planet.data.remote.dto.request.signin.LoginInfo
 import com.example.planet.data.remote.dto.request.signup.PlanetUser
+import com.example.planet.data.remote.dto.response.plogging.PloggingComplete
 import com.example.planet.data.remote.dto.response.plogging.PloggingId
 import com.example.planet.data.remote.dto.response.plogging.PloggingResult
 import com.example.planet.data.remote.dto.response.plogging.Trash
+import com.example.planet.data.remote.dto.response.post.CommentResponse
 import com.example.planet.data.remote.dto.response.post.PostResponse
 import com.example.planet.data.remote.dto.response.post.PostedInfo
-import com.example.planet.data.remote.dto.response.signup.SignUpResponse
 import com.example.planet.data.remote.dto.response.ranking.planet.HigherPlanetUser
 import com.example.planet.data.remote.dto.response.ranking.planet.PagingPlanetUser
 import com.example.planet.data.remote.dto.response.ranking.planet.PlanetRankingUser
@@ -28,12 +29,12 @@ import com.example.planet.data.remote.dto.response.ranking.universityuser.Expand
 import com.example.planet.data.remote.dto.response.ranking.universityuser.PagingUniversityUser
 import com.example.planet.data.remote.dto.response.ranking.universityuser.UniversityUser
 import com.example.planet.data.remote.dto.response.signin.LoginResponse
+import com.example.planet.data.remote.dto.response.signup.SignUpResponse
 import com.example.planet.data.remote.dto.response.signup.UserId
 import com.example.planet.data.remote.dto.response.user.UserInfo
 import com.example.planet.data.remote.dto.response.user.UserInfoResponse
 import okhttp3.MultipartBody
 import retrofit2.http.Body
-import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.HTTP
 import retrofit2.http.Multipart
@@ -174,4 +175,8 @@ interface MainApi {
 
     @HTTP(method = "DELETE", path = "/post-heart", hasBody = true)
     suspend fun deleteBoardHeartSave(@Body postId: PostId): PostResponse
+
+    // 댓글
+    @POST("/comment")
+    suspend fun postComment(@Body comment: CommentInfo): CommentResponse
 }

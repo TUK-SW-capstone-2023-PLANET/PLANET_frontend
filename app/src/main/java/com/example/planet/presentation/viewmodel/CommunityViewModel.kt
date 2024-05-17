@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.planet.TAG
 import com.example.planet.data.remote.dto.ApiState
+import com.example.planet.data.remote.dto.request.post.CommentInfo
 import com.example.planet.data.remote.dto.request.post.PostId
 import com.example.planet.data.remote.dto.request.post.PostingInfo
 import com.example.planet.data.remote.dto.response.post.PostResponse
@@ -19,6 +20,7 @@ import com.example.planet.domain.usecase.login.sharedpreference.GetUserTokenUseC
 import com.example.planet.domain.usecase.post.DeleteBoardHeartSaveUseCase
 import com.example.planet.domain.usecase.post.GetPostedInfoUseCase
 import com.example.planet.domain.usecase.post.PostBoardHeartSaveUseCase
+import com.example.planet.domain.usecase.post.PostCommentSaveUseCase
 import com.example.planet.domain.usecase.post.PostPostingSaveUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -33,7 +35,8 @@ class CommunityViewModel @Inject constructor(
     private val postPostingSaveUseCase: PostPostingSaveUseCase,
     private val getPostedInfoUseCase: GetPostedInfoUseCase,
     private val postBoardHeartSaveUseCase: PostBoardHeartSaveUseCase,
-    private val deleteBoardHeartSaveUseCase: DeleteBoardHeartSaveUseCase
+    private val deleteBoardHeartSaveUseCase: DeleteBoardHeartSaveUseCase,
+    private val postCommentSaveUseCase: PostCommentSaveUseCase,
 ) : ViewModel() {
 
     var userId: Long = 0L
@@ -136,7 +139,6 @@ class CommunityViewModel @Inject constructor(
         }
     }
     suspend fun deleteBoardHeart(postId: PostId) {
-
         when (val apiState = deleteBoardHeartSaveUseCase(postId).first()) {
             is ApiState.Success<*> -> {
                 postedInfo = postedInfo.copy(heart = false)
@@ -148,7 +150,17 @@ class CommunityViewModel @Inject constructor(
         }
     }
 
-    
+    suspend fun saveComment(comment: CommentInfo) {
+        when (val apiState = postCommentSaveUseCase(comment).first()) {
+            is ApiState.Success<*> -> {
+                postedInfo = postedInfo.copy(heart = false)
+            }
+            is ApiState.Error -> {
+                Log.d("daeYoung", "deleteBoardHeart() 실패: ${apiState.errMsg}")
+            }
+            ApiState.Loading -> TODO()
+        }
+    }
 }
 
 
