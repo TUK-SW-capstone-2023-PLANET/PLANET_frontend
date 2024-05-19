@@ -18,8 +18,10 @@ import com.example.planet.data.remote.dto.request.post.PostingInfo
 import com.example.planet.data.remote.dto.response.post.CommentInfo
 import com.example.planet.data.remote.dto.response.post.CommentResponse
 import com.example.planet.data.remote.dto.response.post.PostResponse
+import com.example.planet.data.remote.dto.response.post.Posted
 import com.example.planet.data.remote.dto.response.post.PostedInfo
 import com.example.planet.data.remote.dto.response.user.UserUniversityInfo
+import com.example.planet.domain.usecase.board.GetAllPostedUseCase
 import com.example.planet.domain.usecase.board.GetPopularPostedListUseCase
 import com.example.planet.domain.usecase.login.sharedpreference.GetUserTokenUseCase
 import com.example.planet.domain.usecase.post.DeleteCommentUseCase
@@ -47,6 +49,7 @@ class CommunityViewModel @Inject constructor(
     private val postCommentSaveUseCase: PostCommentSaveUseCase,
     private val getCommentListReadUseCase: GetCommentListReadUseCase,
     private val deleteCommentUseCase: DeleteCommentUseCase,
+    private val getAllPostedUseCase: GetAllPostedUseCase
 ) : ViewModel() {
 
     var userId: Long = 0L
@@ -65,6 +68,7 @@ class CommunityViewModel @Inject constructor(
     var postedInfo by mutableStateOf(PostedInfo())
 
     var commentList = mutableStateOf(emptyList<CommentInfo>())
+    var postedList by mutableStateOf(emptyList<Posted>())
 
     init {
         viewModelScope.launch {
@@ -219,6 +223,21 @@ class CommunityViewModel @Inject constructor(
             ApiState.Loading -> TODO()
         }
     }
+
+    suspend fun readAllPosted(type: String) {
+        when (val apiState = getAllPostedUseCase(type).first()) {
+            is ApiState.Success<*> -> {
+                postedList = (apiState.value as List<Posted>)
+
+            }
+            is ApiState.Error -> {
+                Log.d("daeYoung", "deleteComment() 실패: ${apiState.errMsg}")
+            }
+            ApiState.Loading -> TODO()
+        }
+    }
+
+
 
 
 

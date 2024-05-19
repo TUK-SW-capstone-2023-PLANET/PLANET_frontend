@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -97,14 +98,19 @@ fun CommentCard(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Row() {
-            Image(
-                painter = rememberAsyncImagePainter(model = image),
-                contentDescription = null,
+            Card(
+                shape = CircleShape,
                 modifier = Modifier
-                    .clip(CircleShape)
                     .padding(end = 16.dp)
                     .size(imageSize)
-            )
+            ) {
+                Image(
+                    painter = rememberAsyncImagePainter(model = image),
+                    contentDescription = null,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+
             Column(verticalArrangement = Arrangement.SpaceBetween) {
                 Row(
                     modifier = Modifier.padding(bottom = 6.dp),

@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
@@ -30,6 +31,10 @@ fun UniversityBoardScreen(
     BackHandler {
         if (viewModel.boardDialogState) viewModel.boardDialogState = false
         else onBack()
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.readAllPosted(viewModel.universityName)
     }
 
     if (viewModel.boardDialogState) {
@@ -67,15 +72,15 @@ fun UniversityBoardScreen(
             modifier = Modifier.padding(top = 10.dp, start = 10.dp, end = 10.dp)
         )
         LazyColumn(modifier = Modifier.fillMaxSize()) {
-            items(10) {
+            items(viewModel.postedList.size) {
                 PostingCard(
-                    title = "다들 뭐하고 있어?",
-                    content = "나 심심해",
-                    data = "16:37",
-                    name = "행복하지 않은 정대영",
-                    heartCount = 12,
-                    commentCount = 21,
-                    viewCount = 100,
+                    title = viewModel.postedList[it].title,
+                    content = viewModel.postedList[it].content,
+                    data = viewModel.postedList[it].uploadTime,
+                    name = viewModel.postedList[it].nickName,
+                    heartCount = viewModel.postedList[it].heartCount,
+                    commentCount = viewModel.postedList[it].commentCount,
+                    viewCount = viewModel.postedList[it].viewCount
                 ) {
                     navController.navigate("${CommunityNavItem.PostedInfoScreen.screenRoute}/대학교 게시판")
                 }

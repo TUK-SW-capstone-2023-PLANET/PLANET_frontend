@@ -1,6 +1,5 @@
 package com.example.planet.presentation.ui.main.plogging.screen.community.screen
 
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,13 +7,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.planet.R
-import com.example.planet.TAG
 import com.example.planet.presentation.ui.component.DialogComponent
 import com.example.planet.presentation.ui.main.plogging.screen.community.component.BulletinBoardTopAppBar
 import com.example.planet.presentation.ui.main.plogging.screen.community.component.HeartPostingCard
@@ -37,6 +36,10 @@ fun FreeBoardScreen(
     BackHandler {
         if (viewModel.boardDialogState) viewModel.boardDialogState = false
         else onBack()
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.readAllPosted("free")
     }
 
     if (viewModel.boardDialogState) {
@@ -75,15 +78,15 @@ fun FreeBoardScreen(
             modifier = Modifier.padding(top = 10.dp, start = 10.dp, end = 10.dp)
         )
         LazyColumn(modifier = Modifier.fillMaxSize()) {
-            items(10) {
+            items(viewModel.postedList.size) {
                 PostingCard(
-                    title = "다들 뭐하고 있어?",
-                    content = "나 심심해",
-                    data = "16:37",
-                    name = "행복하지 않은 정대영",
-                    heartCount = 12,
-                    commentCount = 21,
-                    viewCount = 100
+                    title = viewModel.postedList[it].title,
+                    content = viewModel.postedList[it].content,
+                    data = viewModel.postedList[it].uploadTime,
+                    name = viewModel.postedList[it].nickName,
+                    heartCount = viewModel.postedList[it].heartCount,
+                    commentCount = viewModel.postedList[it].commentCount,
+                    viewCount = viewModel.postedList[it].viewCount
                 ) {
                     scope.launch {
                         viewModel.getPostedInfo{

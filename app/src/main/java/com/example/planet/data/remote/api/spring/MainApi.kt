@@ -20,6 +20,7 @@ import com.example.planet.data.remote.dto.response.post.CommentInfo
 import com.example.planet.data.remote.dto.response.post.CommentResponse
 import com.example.planet.data.remote.dto.response.post.PopularPostedInfo
 import com.example.planet.data.remote.dto.response.post.PostResponse
+import com.example.planet.data.remote.dto.response.post.Posted
 import com.example.planet.data.remote.dto.response.post.PostedInfo
 import com.example.planet.data.remote.dto.response.ranking.planet.HigherPlanetUser
 import com.example.planet.data.remote.dto.response.ranking.planet.PagingPlanetUser
@@ -173,6 +174,9 @@ interface MainApi {
 
     @GET("/post/hot")
     suspend fun getPopularPosted(): List<PopularPostedInfo>
+
+    @GET("/post/{type}")
+    suspend fun getAllPosted(@Path("type") type: String): List<Posted>
 
 
     // 게시글
