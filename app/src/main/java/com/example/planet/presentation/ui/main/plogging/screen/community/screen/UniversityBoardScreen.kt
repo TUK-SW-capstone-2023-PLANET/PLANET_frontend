@@ -43,6 +43,7 @@ fun UniversityBoardScreen(
         listOf(
             async { viewModel.readAllPosted(viewModel.universityName) },
             async { viewModel.readViewPosted(viewModel.universityName) },
+            async { viewModel.readHotPosted(viewModel.universityName) }
         ).awaitAll()
     }
 
@@ -72,12 +73,14 @@ fun UniversityBoardScreen(
                 modifier = Modifier.padding(start = 19.dp, end = 19.dp, bottom = 10.dp)
             )
         }
+        if (viewModel.hotPosted != null) {
+            HeartPostingCard(
+                text = viewModel.hotPosted!!.title,
+                count = viewModel.hotPosted!!.heartCount,
+                modifier = Modifier.padding(horizontal = 19.dp)
+            )
+        }
 
-        HeartPostingCard(
-            text = "나랑 같이 플로깅 할래?",
-            count = 10,
-            modifier = Modifier.padding(horizontal = 19.dp)
-        )
         HorizontalDivider(
             thickness = 1.dp,
             color = colorResource(id = R.color.font_background_color3),

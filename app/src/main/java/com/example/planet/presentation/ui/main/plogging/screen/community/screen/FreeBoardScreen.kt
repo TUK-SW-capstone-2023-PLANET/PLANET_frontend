@@ -44,6 +44,7 @@ fun FreeBoardScreen(
         listOf(
             async { viewModel.readAllPosted("free") },
             async { viewModel.readViewPosted("free") },
+            async { viewModel.readHotPosted("free") }
         ).awaitAll()
     }
 
@@ -74,12 +75,14 @@ fun FreeBoardScreen(
             )
         }
 
+        if (viewModel.hotPosted != null) {
+            HeartPostingCard(
+                text = viewModel.hotPosted!!.title,
+                count = viewModel.hotPosted!!.heartCount,
+                modifier = Modifier.padding(horizontal = 19.dp)
+            )
+        }
 
-        HeartPostingCard(
-            text = "나랑 같이 플로깅 할래?",
-            count = 10,
-            modifier = Modifier.padding(horizontal = 19.dp)
-        )
         HorizontalDivider(
             thickness = 1.dp,
             color = colorResource(id = R.color.font_background_color3),

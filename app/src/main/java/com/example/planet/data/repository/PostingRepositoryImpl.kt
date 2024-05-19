@@ -117,4 +117,13 @@ class PostingRepositoryImpl @Inject constructor(
         }
     }.flowOn(Dispatchers.IO)
 
+    override suspend fun getHotPosted(type: String): Flow<ApiState> = flow {
+        kotlin.runCatching {
+            mainApi.getHotPosted(type)
+        }.onSuccess {
+            emit(ApiState.Success(it))
+        }.onFailure { error ->
+            error.message?.let { emit(ApiState.Error(it)) }
+        }
+    }.flowOn(Dispatchers.IO)
 }

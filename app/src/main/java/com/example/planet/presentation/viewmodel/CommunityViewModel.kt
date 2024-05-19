@@ -17,11 +17,13 @@ import com.example.planet.data.remote.dto.request.post.PostId
 import com.example.planet.data.remote.dto.request.post.PostingInfo
 import com.example.planet.data.remote.dto.response.post.CommentInfo
 import com.example.planet.data.remote.dto.response.post.CommentResponse
+import com.example.planet.data.remote.dto.response.post.HotPosted
 import com.example.planet.data.remote.dto.response.post.PostResponse
 import com.example.planet.data.remote.dto.response.post.Posted
 import com.example.planet.data.remote.dto.response.post.PostedInfo
 import com.example.planet.data.remote.dto.response.post.ViewPosted
 import com.example.planet.domain.usecase.board.GetAllPostedUseCase
+import com.example.planet.domain.usecase.board.GetHotPostedUseCase
 import com.example.planet.domain.usecase.board.GetViewPostedUseCase
 import com.example.planet.domain.usecase.login.sharedpreference.GetUserTokenUseCase
 import com.example.planet.domain.usecase.post.DeleteCommentUseCase
@@ -49,7 +51,8 @@ class CommunityViewModel @Inject constructor(
     private val getCommentListReadUseCase: GetCommentListReadUseCase,
     private val deleteCommentUseCase: DeleteCommentUseCase,
     private val getAllPostedUseCase: GetAllPostedUseCase,
-    private val getViewPostedUseCase: GetViewPostedUseCase
+    private val getViewPostedUseCase: GetViewPostedUseCase,
+    private val getHotPostedUseCase: GetHotPostedUseCase,
 ) : ViewModel() {
 
     var userId: Long = 0L
@@ -70,6 +73,7 @@ class CommunityViewModel @Inject constructor(
     var commentList = mutableStateOf(emptyList<CommentInfo>())
     var postedList by mutableStateOf(emptyList<Posted>())
     var viewPosted by mutableStateOf<ViewPosted?>(null)
+    var hotPosted by mutableStateOf<HotPosted?>(null)
 
 
     init {
@@ -238,6 +242,18 @@ class CommunityViewModel @Inject constructor(
         when (val apiState = getViewPostedUseCase(type).first()) {
             is ApiState.Success<*> -> {
                 viewPosted = (apiState.value as ViewPosted)
+            }
+            is ApiState.Error -> {
+                Log.d("daeYoung", "readViewPosted() 실패: ${apiState.errMsg}")
+            }
+            ApiState.Loading -> TODO()
+        }
+    }
+
+    suspend fun readHotPosted(type: String) {
+        when (val apiState = getHotPostedUseCase(type).first()) {
+            is ApiState.Success<*> -> {
+                hotPosted = (apiState.value as HotPosted)
             }
             is ApiState.Error -> {
                 Log.d("daeYoung", "readViewPosted() 실패: ${apiState.errMsg}")
