@@ -19,6 +19,7 @@ import com.example.planet.data.remote.dto.response.post.CommentInfo
 import com.example.planet.data.remote.dto.response.post.CommentResponse
 import com.example.planet.data.remote.dto.response.post.PostResponse
 import com.example.planet.data.remote.dto.response.post.PostedInfo
+import com.example.planet.data.remote.dto.response.user.UserUniversityInfo
 import com.example.planet.domain.usecase.login.sharedpreference.GetUserTokenUseCase
 import com.example.planet.domain.usecase.post.DeleteCommentUseCase
 import com.example.planet.domain.usecase.post.DeletePostedHeartSaveUseCase
@@ -27,6 +28,7 @@ import com.example.planet.domain.usecase.post.GetPostedInfoUseCase
 import com.example.planet.domain.usecase.post.PostPostedHeartSaveUseCase
 import com.example.planet.domain.usecase.post.PostCommentSaveUseCase
 import com.example.planet.domain.usecase.post.PostPostingSaveUseCase
+import com.example.planet.domain.usecase.user.GetMyUniversityUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.first
@@ -97,6 +99,14 @@ class CommunityViewModel @Inject constructor(
             }
             ApiState.Loading -> TODO()
         }
+    }
+
+    suspend fun getMyUniversity() {
+
+    }
+
+    suspend fun readPopularBoard() {
+
     }
 
     suspend fun savePosting(onBack: () -> Unit) {
@@ -207,6 +217,9 @@ class CommunityViewModel @Inject constructor(
             ApiState.Loading -> TODO()
         }
     }
+
+
+
 
 
 

@@ -69,7 +69,6 @@ fun PostingScreen(
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
 
-
     val takePhotoFromAlbumLauncher = // 갤러리에서 사진 가져오기
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
@@ -117,6 +116,7 @@ fun PostingScreen(
             if (viewModel.postingImageList.isEmpty()) {
                 Image(
                     painter = painterResource(id = R.drawable.empty_image),
+//                    painter = painterResource(id = assets),
                     contentDescription = null,
                     modifier = Modifier
                         .size(160.dp)

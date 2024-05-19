@@ -8,8 +8,6 @@ interface UserRepository {
     suspend fun getUserInfo(userId: Long): Flow<ApiState>
     suspend fun putUserInfo(userInfo: UserInfo): Flow<ApiState>
 
-
-
     fun getUserPref(
         userToken: String = "userToken",
         defaultValue: Long = 0,
@@ -29,4 +27,7 @@ interface UserRepository {
 
     // 로그아웃
     fun logout()
+
+    // 나의 대학교 정보 얻어오기
+    fun getMyUniversityInfo(userId: Long): Flow<ApiState>
 }

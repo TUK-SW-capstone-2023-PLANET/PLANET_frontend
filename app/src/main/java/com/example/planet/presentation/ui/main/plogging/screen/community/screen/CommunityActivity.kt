@@ -21,7 +21,6 @@ import dagger.hilt.android.AndroidEntryPoint
 class CommunityActivity : ComponentActivity() {
     private val communityViewModel by viewModels<CommunityViewModel>()
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

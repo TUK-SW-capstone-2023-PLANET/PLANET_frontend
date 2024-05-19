@@ -35,6 +35,7 @@ import com.example.planet.data.remote.dto.response.signup.SignUpResponse
 import com.example.planet.data.remote.dto.response.signup.UserId
 import com.example.planet.data.remote.dto.response.user.UserInfo
 import com.example.planet.data.remote.dto.response.user.UserInfoResponse
+import com.example.planet.data.remote.dto.response.user.UserUniversityInfo
 import okhttp3.MultipartBody
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -164,6 +165,10 @@ interface MainApi {
 
     @POST("/login/user")
     suspend fun postLogin(@Body loginInfo: LoginInfo): LoginResponse
+
+    // 게시판
+    @GET("/user/{userId}/university")
+    suspend fun getUniversityName(@Path("userId") userId: Long): UserUniversityInfo
 
     // 게시글
     @POST("/post")

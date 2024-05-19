@@ -1,8 +1,6 @@
 package com.example.planet.presentation.ui.main.plogging.screen.community.screen
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -10,38 +8,41 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.planet.R
-import com.example.planet.presentation.ui.main.plogging.screen.community.component.BulletinBoardCard
 import com.example.planet.presentation.ui.main.plogging.screen.community.component.BulletinBoardChoiceTitle
+import com.example.planet.presentation.ui.main.plogging.screen.community.component.FreeBoardCard
 import com.example.planet.presentation.ui.main.plogging.screen.community.component.HotPostingCard
+import com.example.planet.presentation.ui.main.plogging.screen.community.component.UniversityBoardCard
 import com.example.planet.presentation.ui.main.plogging.screen.community.navigation.CommunityNavItem
+import com.example.planet.presentation.viewmodel.MainViewModel
 
 @Composable
 fun CommunityScreen(
+    mainViewModel: MainViewModel,
     startCommunityActivity: (String) -> Unit,
 ) {
     val scrollState = rememberScrollState()
+    val universityLogo = mainViewModel.universityInfo.collectAsStateWithLifecycle().value?.universityLogo
+
+    LaunchedEffect(Unit) {
+        mainViewModel.getUniversityName()
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -61,17 +62,17 @@ fun CommunityScreen(
                     .fillMaxWidth()
                     .padding(horizontal = 10.dp)
             ) {
-                BulletinBoardCard(
+                FreeBoardCard(
                     title = "자유 게시판",
                     description = "플로깅 회원들 모두와\n" + "소통이 가능한 게시판",
                     image = painterResource(id = R.drawable.free_bulletinboard),
                     modifier = Modifier.weight(1f)
                 ) { startCommunityActivity(CommunityNavItem.FreeBoardScreen.screenRoute) }
                 Spacer(modifier = Modifier.width(20.dp))
-                BulletinBoardCard(
+                UniversityBoardCard(
                     title = "대학교 게시판",
                     description = "자대 학생들끼리\n" + "소통이 가능한 게시판",
-                    image = painterResource(id = R.drawable.university1),
+                    image = universityLogo,
                     modifier = Modifier.weight(1f)
                 ) { startCommunityActivity(CommunityNavItem.UniversityBoardScreen.screenRoute) }
             }

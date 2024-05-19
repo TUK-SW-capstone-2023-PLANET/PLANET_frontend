@@ -90,4 +90,15 @@ class UserRepositoryImpl @Inject constructor(
     override fun logout() {
         sharedPreferences.edit().clear().apply()
     }
+
+    // 나의 대학교 정보 얻어오기
+    override fun getMyUniversityInfo(userId: Long): Flow<ApiState> = flow {
+        kotlin.runCatching {
+            mainApi.getUniversityName(userId = userId)
+        }.onSuccess {
+            emit(ApiState.Success(it))
+        }.onFailure { error ->
+            error.message?.let { emit(ApiState.Error(it)) }
+        }
+    }.flowOn(Dispatchers.IO)
 }

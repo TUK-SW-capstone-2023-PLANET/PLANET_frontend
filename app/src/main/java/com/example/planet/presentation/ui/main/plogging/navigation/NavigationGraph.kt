@@ -5,8 +5,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -25,6 +27,7 @@ import com.example.planet.presentation.ui.main.plogging.screen.ranking.screen.Un
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.screen.UniversityRankingScreen
 import com.example.planet.presentation.ui.main.plogging.screen.user.screen.UserScreen
 import com.example.planet.presentation.viewmodel.MainViewModel
+import kotlinx.coroutines.launch
 
 
 @Composable
@@ -35,6 +38,8 @@ fun NavigationGraph(
     startUserActivity: () -> Unit,
     startCommunityActivity: (String) -> Unit,
 ) {
+    val scope = rememberCoroutineScope()
+
     Scaffold(
         bottomBar = {
             BottomNavigation(navController = navController)
@@ -46,7 +51,7 @@ fun NavigationGraph(
                 .padding(it),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            when(mainViewModel.showRankingScreen) {
+            when (mainViewModel.showRankingScreen) {
                 ScreenNav.HomeScreen -> {
                     MainTopSwitch(mainViewModel = mainViewModel)
                     NavHost(
@@ -57,7 +62,7 @@ fun NavigationGraph(
                             MainScreen(
                                 navController = navController,
                                 mainViewModel = mainViewModel
-                            ){ startMapActivity() }
+                            ) { startMapActivity() }
                         }
                         composable(BottomNavItem.RankingScreen.screenRoute) {
                             RankingScreen(mainViewModel = mainViewModel)
@@ -71,23 +76,29 @@ fun NavigationGraph(
                             MessageScreen()
                         }
                         composable(BottomNavItem.CommunityScreen.screenRoute) {
-                            CommunityScreen{ board -> startCommunityActivity(board) }
+                            CommunityScreen(mainViewModel = mainViewModel) {
+                                board -> startCommunityActivity(board)
+                            }
                         }
                         composable(ScreenNav.TierScreen.screenRoute) {
                             TierScreen(tierList = mainViewModel.tierList.value)
                         }
                     }
                 }
+
                 ScreenNav.PlanetRankingScreen -> {
                     PlanetRankingScreen(mainViewModel = mainViewModel)
                 }
+
                 ScreenNav.SeasonRankingScreen -> {
                     SeasonRankingScreen(mainViewModel = mainViewModel)
                 }
+
                 ScreenNav.TierScreen -> {}
                 ScreenNav.UniversityIndividualRankingScreen -> {
                     UniversityIndividualRankingScreen(mainViewModel = mainViewModel)
                 }
+
                 ScreenNav.UniversityRankingScreen -> {
                     UniversityRankingScreen(mainViewModel = mainViewModel)
                 }

@@ -24,6 +24,7 @@ import com.example.planet.data.remote.dto.response.ranking.universityuser.Expand
 import com.example.planet.data.remote.dto.response.ranking.universityuser.UniversityUser
 import com.example.planet.data.remote.dto.response.signup.UserId
 import com.example.planet.data.remote.dto.response.user.UserInfo
+import com.example.planet.data.remote.dto.response.user.UserUniversityInfo
 import com.example.planet.domain.usecase.GetBannerUseCase
 import com.example.planet.domain.usecase.GetTierListUseCase
 import com.example.planet.domain.usecase.login.sharedpreference.GetUserTokenUseCase
@@ -39,6 +40,7 @@ import com.example.planet.domain.usecase.ranking.university.GetMyUniversityInfoU
 import com.example.planet.domain.usecase.ranking.university.GetMyUniversityRankUseCase
 import com.example.planet.domain.usecase.ranking.universityuser.GetAllUniversityUserRankUseCase
 import com.example.planet.domain.usecase.ranking.universityuser.GetHigherUniversityUserRankUseCase
+import com.example.planet.domain.usecase.user.GetMyUniversityUseCase
 import com.example.planet.domain.usecase.user.GetUserInfoUseCase
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.data.ScreenNav
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -70,8 +72,9 @@ class MainViewModel @Inject constructor(
     private val getTierListUseCase: GetTierListUseCase,
     private val getMyUniversityInfoUseCase: GetMyUniversityInfoUseCase,
     private val getUserInfoUseCase: GetUserInfoUseCase,
-    private val getUserTokenUseCase: GetUserTokenUseCase
-) : ViewModel() {
+    private val getUserTokenUseCase: GetUserTokenUseCase,
+    private val getMyUniversityUseCase: GetMyUniversityUseCase,
+    ) : ViewModel() {
     init {
         viewModelScope.launch {
             Log.d(TAG, "ViewModel init() 호출")
@@ -163,6 +166,10 @@ class MainViewModel @Inject constructor(
     val searchText: State<String> = _searchText
 
     var showRankingScreen: ScreenNav by mutableStateOf(ScreenNav.HomeScreen)
+
+    private val _universityInfo = MutableStateFlow<UserUniversityInfo?>(null)
+    val universityInfo: StateFlow<UserUniversityInfo?> = _universityInfo.asStateFlow()
+
 
     fun changePloggingScreen() {
         _ploggingOrRecordSwitch.value = false
@@ -416,5 +423,18 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    suspend fun getUniversityName() {
+        when (val apiState = getMyUniversityUseCase(userId).first()) {
+            is ApiState.Success<*> -> {
+                _universityInfo.emit((apiState.value as UserUniversityInfo))
+                Log.d("daeYoung", "getUniversityName() 성공: ${universityInfo.value}")
+
+            }
+            is ApiState.Error -> {
+                Log.d("daeYoung", "getUniversityName() 실패: ${apiState.errMsg}")
+            }
+            ApiState.Loading -> TODO()
+        }
+    }
 
 }

@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -22,6 +23,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberAsyncImagePainter
 import com.example.planet.R
 
 @Composable
@@ -35,7 +37,7 @@ fun BulletinBoardChoiceTitle(text: String) {
 }
 
 @Composable
-fun BulletinBoardCard(title: String, description: String, image: Painter, modifier: Modifier, onClick: () -> Unit) {
+fun FreeBoardCard(title: String, description: String, image: Painter, modifier: Modifier, onClick: () -> Unit) {
     Card(
         modifier = modifier
             .aspectRatio(0.95f),
@@ -57,6 +59,55 @@ fun BulletinBoardCard(title: String, description: String, image: Painter, modifi
                 contentDescription = null,
                 modifier = Modifier.weight(1f)
             )
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = title,
+                style = TextStyle(
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.SemiBold
+                ),
+                modifier = Modifier.padding(bottom = 4.dp)
+            )
+            Text(
+                text = description,
+                style = TextStyle(
+                    fontSize = 10.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = colorResource(id = R.color.font_background_color1)
+                )
+            )
+        }
+    }
+}
+
+@Composable
+fun UniversityBoardCard(title: String, description: String, image: String?, modifier: Modifier, onClick: () -> Unit) {
+    Card(
+        modifier = modifier
+            .aspectRatio(0.95f),
+        shape = RoundedCornerShape(15.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = Color.White,
+            contentColor = Color.Black
+        )
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .clickable { onClick() }
+                .padding(top = 20.dp, bottom = 19.dp, start = 30.dp, end = 30.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            if (image != null) {
+                Image(
+                    painter = rememberAsyncImagePainter(model = image),
+                    contentDescription = null,
+                    modifier = Modifier.weight(1f)
+                )
+            } else {
+                CircularProgressIndicator(modifier = Modifier.weight(1f))
+            }
+
             Spacer(modifier = Modifier.height(16.dp))
             Text(
                 text = title,
