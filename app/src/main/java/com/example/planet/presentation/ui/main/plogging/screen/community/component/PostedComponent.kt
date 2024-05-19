@@ -33,7 +33,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -45,7 +44,7 @@ import com.example.planet.R
 import com.example.planet.presentation.util.noRippleClickable
 
 @Composable
-fun CommentCard(image: Painter, name: String, content: String, date: String, heartCount: Int) {
+fun CommentCard(image: String, name: String, content: String, date: String, heartCount: Int) {
     var dropDownMenuState by remember {
         mutableStateOf(false)
     }
@@ -84,7 +83,7 @@ fun CommentCard(image: Painter, name: String, content: String, date: String, hea
     ) {
         Row() {
             Image(
-                painter = image,
+                painter = rememberAsyncImagePainter(model = image),
                 contentDescription = null,
                 modifier = Modifier
                     .clip(CircleShape)

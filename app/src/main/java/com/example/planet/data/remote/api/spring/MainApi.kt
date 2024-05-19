@@ -6,7 +6,7 @@ import com.example.planet.data.remote.dto.Tier
 import com.example.planet.data.remote.dto.TrashCan
 import com.example.planet.data.remote.dto.request.plogging.PloggingInfo
 import com.example.planet.data.remote.dto.request.plogging.TrashImageUrlInfo
-import com.example.planet.data.remote.dto.request.post.CommentInfo
+import com.example.planet.data.remote.dto.request.post.CommentRequest
 import com.example.planet.data.remote.dto.request.post.PostId
 import com.example.planet.data.remote.dto.request.post.PostingInfo
 import com.example.planet.data.remote.dto.request.signin.LoginInfo
@@ -15,6 +15,7 @@ import com.example.planet.data.remote.dto.response.plogging.PloggingComplete
 import com.example.planet.data.remote.dto.response.plogging.PloggingId
 import com.example.planet.data.remote.dto.response.plogging.PloggingResult
 import com.example.planet.data.remote.dto.response.plogging.Trash
+import com.example.planet.data.remote.dto.response.post.CommentInfo
 import com.example.planet.data.remote.dto.response.post.CommentResponse
 import com.example.planet.data.remote.dto.response.post.PostResponse
 import com.example.planet.data.remote.dto.response.post.PostedInfo
@@ -178,5 +179,8 @@ interface MainApi {
 
     // 댓글
     @POST("/comment")
-    suspend fun postComment(@Body comment: CommentInfo): CommentResponse
+    suspend fun postComment(@Body comment: CommentRequest): CommentResponse
+
+    @GET("/comment")
+    suspend fun getComment(@Query("postId") postId: Long, @Query("userId") userId: Long): List<CommentInfo>
 }

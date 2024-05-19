@@ -11,13 +11,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.planet.TAG
 import com.example.planet.data.remote.dto.ApiState
-import com.example.planet.data.remote.dto.request.post.CommentInfo
+import com.example.planet.data.remote.dto.request.post.CommentRequest
 import com.example.planet.data.remote.dto.request.post.PostId
 import com.example.planet.data.remote.dto.request.post.PostingInfo
+import com.example.planet.data.remote.dto.response.post.CommentInfo
 import com.example.planet.data.remote.dto.response.post.PostResponse
 import com.example.planet.data.remote.dto.response.post.PostedInfo
 import com.example.planet.domain.usecase.login.sharedpreference.GetUserTokenUseCase
 import com.example.planet.domain.usecase.post.DeleteBoardHeartSaveUseCase
+import com.example.planet.domain.usecase.post.GetCommentListReadUseCase
 import com.example.planet.domain.usecase.post.GetPostedInfoUseCase
 import com.example.planet.domain.usecase.post.PostBoardHeartSaveUseCase
 import com.example.planet.domain.usecase.post.PostCommentSaveUseCase
@@ -37,6 +39,7 @@ class CommunityViewModel @Inject constructor(
     private val postBoardHeartSaveUseCase: PostBoardHeartSaveUseCase,
     private val deleteBoardHeartSaveUseCase: DeleteBoardHeartSaveUseCase,
     private val postCommentSaveUseCase: PostCommentSaveUseCase,
+    private val getCommentListReadUseCase: GetCommentListReadUseCase,
 ) : ViewModel() {
 
     var userId: Long = 0L
@@ -52,6 +55,8 @@ class CommunityViewModel @Inject constructor(
     var postingImageList by mutableStateOf(emptyList<Uri>())
 
     var postedInfo by mutableStateOf(PostedInfo())
+
+    var commentList = mutableStateOf(emptyList<CommentInfo>())
 
     init {
         viewModelScope.launch {
@@ -151,8 +156,8 @@ class CommunityViewModel @Inject constructor(
         }
     }
 
-    suspend fun saveComment(postId: Long) {
-        val comment = CommentInfo(
+    suspend fun saveComment(postId: Long, keyboardOnHide: () -> Unit) {
+        val comment = CommentRequest(
             userId = userId,
             postId = postId,
             content = postingCommentInput
@@ -160,9 +165,23 @@ class CommunityViewModel @Inject constructor(
         when (val apiState = postCommentSaveUseCase(comment).first()) {
             is ApiState.Success<*> -> {
                 postingCommentInput = ""
+                readCommentList()
+                keyboardOnHide()
             }
             is ApiState.Error -> {
                 Log.d("daeYoung", "deleteBoardHeart() 실패: ${apiState.errMsg}")
+            }
+            ApiState.Loading -> TODO()
+        }
+    }
+
+    suspend fun readCommentList() {
+        when (val apiState = getCommentListReadUseCase(postId = testPostId , userId = userId).first()) {
+            is ApiState.Success<*> -> {
+                commentList.value = apiState.value as List<CommentInfo>
+            }
+            is ApiState.Error -> {
+                Log.d("daeYoung", "readCommentList() 실패: ${apiState.errMsg}")
             }
             ApiState.Loading -> TODO()
         }

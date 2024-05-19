@@ -1,5 +1,6 @@
 package com.example.planet.presentation.ui.main.plogging.screen.community.screen
 
+import android.accessibilityservice.AccessibilityService.SoftKeyboardController
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -17,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -25,6 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -52,6 +55,11 @@ fun PostedInfoScreen(
 ) {
     val scrollState = rememberScrollState()
     val scope = rememberCoroutineScope()
+    val keyBoardController = LocalSoftwareKeyboardController.current
+
+    LaunchedEffect(Unit) {
+        viewModel.readCommentList()
+    }
 
     if (viewModel.postedDialogState) {
         DialogComponent(
@@ -117,15 +125,14 @@ fun PostedInfoScreen(
                         }
                     }
                 }
-
                 Column {
-                    repeat(viewModel.postedInfo.commentCount) {
+                    viewModel.commentList.value.forEach { comment ->
                         CommentCard(
-                            image = painterResource(id = R.drawable.temporary_user_icon),
-                            name = "행복한 티노",
-                            content = "49 육회포자로 와라",
-                            date = "35분 전",
-                            heartCount = 21
+                            image = comment.imageUrl,
+                            name = comment.nickName,
+                            content = comment.content,
+                            date = comment.uploadTime,
+                            heartCount = comment.heartCount
                         )
                     }
                 }
@@ -141,7 +148,7 @@ fun PostedInfoScreen(
                 text = viewModel.postingCommentInput,
                 onTextChange = { viewModel.postingCommentInput = it }
             ) {
-                scope.launch { viewModel.saveComment(it) }
+                scope.launch { viewModel.saveComment(it){keyBoardController?.hide()} }
             }
         }
 
