@@ -106,4 +106,15 @@ class PostingRepositoryImpl @Inject constructor(
             error.message?.let { emit(ApiState.Error(it)) }
         }
     }.flowOn(Dispatchers.IO)
+
+    override suspend fun getViewPosted(type: String): Flow<ApiState> = flow {
+        kotlin.runCatching {
+            mainApi.getViewPosted(type)
+        }.onSuccess {
+            emit(ApiState.Success(it))
+        }.onFailure { error ->
+            error.message?.let { emit(ApiState.Error(it)) }
+        }
+    }.flowOn(Dispatchers.IO)
+
 }

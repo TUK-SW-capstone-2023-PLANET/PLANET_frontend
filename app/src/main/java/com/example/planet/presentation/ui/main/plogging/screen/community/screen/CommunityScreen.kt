@@ -109,7 +109,7 @@ fun CommunityScreen(
 
             Text(text = "인기 게시글", style = titleStyle, modifier = Modifier.padding(bottom = 23.dp))
             if (mainViewModel.popularPosted.isNotEmpty()) {
-                mainViewModel.popularPosted.forEach {
+                mainViewModel.popularPosted.subList(0,3).forEach {
                     HotPostingCard(
                         image = it.imageUrl,
                         name = it.nickName,

@@ -97,7 +97,7 @@ fun CommentCard(
             .padding(vertical = 15.dp, horizontal = 20.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Row() {
+        Row {
             Card(
                 shape = CircleShape,
                 modifier = Modifier

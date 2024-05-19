@@ -20,18 +20,17 @@ import com.example.planet.data.remote.dto.response.post.CommentResponse
 import com.example.planet.data.remote.dto.response.post.PostResponse
 import com.example.planet.data.remote.dto.response.post.Posted
 import com.example.planet.data.remote.dto.response.post.PostedInfo
-import com.example.planet.data.remote.dto.response.user.UserUniversityInfo
+import com.example.planet.data.remote.dto.response.post.ViewPosted
 import com.example.planet.domain.usecase.board.GetAllPostedUseCase
-import com.example.planet.domain.usecase.board.GetPopularPostedListUseCase
+import com.example.planet.domain.usecase.board.GetViewPostedUseCase
 import com.example.planet.domain.usecase.login.sharedpreference.GetUserTokenUseCase
 import com.example.planet.domain.usecase.post.DeleteCommentUseCase
 import com.example.planet.domain.usecase.post.DeletePostedHeartSaveUseCase
 import com.example.planet.domain.usecase.post.GetCommentListReadUseCase
 import com.example.planet.domain.usecase.post.GetPostedInfoUseCase
-import com.example.planet.domain.usecase.post.PostPostedHeartSaveUseCase
 import com.example.planet.domain.usecase.post.PostCommentSaveUseCase
+import com.example.planet.domain.usecase.post.PostPostedHeartSaveUseCase
 import com.example.planet.domain.usecase.post.PostPostingSaveUseCase
-import com.example.planet.domain.usecase.user.GetMyUniversityUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.first
@@ -49,11 +48,12 @@ class CommunityViewModel @Inject constructor(
     private val postCommentSaveUseCase: PostCommentSaveUseCase,
     private val getCommentListReadUseCase: GetCommentListReadUseCase,
     private val deleteCommentUseCase: DeleteCommentUseCase,
-    private val getAllPostedUseCase: GetAllPostedUseCase
+    private val getAllPostedUseCase: GetAllPostedUseCase,
+    private val getViewPostedUseCase: GetViewPostedUseCase
 ) : ViewModel() {
 
     var userId: Long = 0L
-    var testPostId: Long = 1720021919
+//    var currentPostId: Long = 0
     var universityName = ""
 
     var postedDialogState by mutableStateOf(false)
@@ -69,6 +69,8 @@ class CommunityViewModel @Inject constructor(
 
     var commentList = mutableStateOf(emptyList<CommentInfo>())
     var postedList by mutableStateOf(emptyList<Posted>())
+    var viewPosted by mutableStateOf<ViewPosted?>(null)
+
 
     init {
         viewModelScope.launch {
@@ -107,14 +109,6 @@ class CommunityViewModel @Inject constructor(
         }
     }
 
-    suspend fun getMyUniversity() {
-
-    }
-
-    suspend fun readPopularBoard() {
-
-    }
-
     suspend fun savePosting(onBack: () -> Unit) {
         val postingInfo = PostingInfo(
             userId = userId,
@@ -139,8 +133,8 @@ class CommunityViewModel @Inject constructor(
         }
     }
 
-    suspend fun getPostedInfo(goPostedInfoScreen: () -> Unit) {
-        when (val apiState = getPostedInfoUseCase(postId = 1720021919, userId = userId).first()) {
+    suspend fun getPostedInfo(postId: Long, goPostedInfoScreen: () -> Unit) {
+        when (val apiState = getPostedInfoUseCase(postId = postId, userId = userId).first()) {
             is ApiState.Success<*> -> {
                 postedInfo = apiState.value as PostedInfo
                 goPostedInfoScreen()
@@ -152,7 +146,8 @@ class CommunityViewModel @Inject constructor(
         }
     }
 
-    suspend fun savePostedHeart(postId: PostId) {
+    suspend fun savePostedHeart(postId: Long) {
+        val postId = PostId(userId, postId)
 
         when (val apiState = postPostedHeartSaveUseCase(postId).first()) {
             is ApiState.Success<*> -> {
@@ -164,7 +159,9 @@ class CommunityViewModel @Inject constructor(
             ApiState.Loading -> TODO()
         }
     }
-    suspend fun deletePostedHeart(postId: PostId) {
+    suspend fun deletePostedHeart(postId: Long) {
+        val postId = PostId(userId, postId)
+
         when (val apiState = deletePostedHeartSaveUseCase(postId).first()) {
             is ApiState.Success<*> -> {
                 postedInfo = postedInfo.copy(heart = false)
@@ -185,18 +182,18 @@ class CommunityViewModel @Inject constructor(
         when (val apiState = postCommentSaveUseCase(comment).first()) {
             is ApiState.Success<*> -> {
                 postingCommentInput = ""
-                readCommentList()
+                readCommentList(postedInfo.postId)
                 keyboardOnHide()
             }
             is ApiState.Error -> {
-                Log.d("daeYoung", "deletePostedHeart() 실패: ${apiState.errMsg}")
+                Log.d("daeYoung", "saveComment() 실패: ${apiState.errMsg}")
             }
             ApiState.Loading -> TODO()
         }
     }
 
-    suspend fun readCommentList() {
-        when (val apiState = getCommentListReadUseCase(postId = testPostId , userId = userId).first()) {
+    suspend fun readCommentList(postId: Long) {
+        when (val apiState = getCommentListReadUseCase(postId = postId , userId = userId).first()) {
             is ApiState.Success<*> -> {
                 commentList.value = apiState.value as List<CommentInfo>
             }
@@ -213,7 +210,7 @@ class CommunityViewModel @Inject constructor(
         when (val apiState = deleteCommentUseCase(commentId).first()) {
             is ApiState.Success<*> -> {
                 if((apiState.value as CommentResponse).message == "댓글 삭제 성공") {
-                    readCommentList()
+                    readCommentList(postedInfo.postId)
                     menuOnHide()
                 }
             }
@@ -231,13 +228,23 @@ class CommunityViewModel @Inject constructor(
 
             }
             is ApiState.Error -> {
-                Log.d("daeYoung", "deleteComment() 실패: ${apiState.errMsg}")
+                Log.d("daeYoung", "readAllPosted() 실패: ${apiState.errMsg}")
             }
             ApiState.Loading -> TODO()
         }
     }
 
-
+    suspend fun readViewPosted(type: String) {
+        when (val apiState = getViewPostedUseCase(type).first()) {
+            is ApiState.Success<*> -> {
+                viewPosted = (apiState.value as ViewPosted)
+            }
+            is ApiState.Error -> {
+                Log.d("daeYoung", "readViewPosted() 실패: ${apiState.errMsg}")
+            }
+            ApiState.Loading -> TODO()
+        }
+    }
 
 
 

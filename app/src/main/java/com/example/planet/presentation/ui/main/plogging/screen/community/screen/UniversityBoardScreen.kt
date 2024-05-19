@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
@@ -20,6 +21,9 @@ import com.example.planet.presentation.ui.main.plogging.screen.community.compone
 import com.example.planet.presentation.ui.main.plogging.screen.community.component.VisitPostingCard
 import com.example.planet.presentation.ui.main.plogging.screen.community.navigation.CommunityNavItem
 import com.example.planet.presentation.viewmodel.CommunityViewModel
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.launch
 
 @Composable
 fun UniversityBoardScreen(
@@ -28,13 +32,18 @@ fun UniversityBoardScreen(
     onBack: () -> Unit,
     onSearch: () -> Unit
 ) {
+    val scope = rememberCoroutineScope()
+
     BackHandler {
         if (viewModel.boardDialogState) viewModel.boardDialogState = false
         else onBack()
     }
 
     LaunchedEffect(Unit) {
-        viewModel.readAllPosted(viewModel.universityName)
+        listOf(
+            async { viewModel.readAllPosted(viewModel.universityName) },
+            async { viewModel.readViewPosted(viewModel.universityName) },
+        ).awaitAll()
     }
 
     if (viewModel.boardDialogState) {
@@ -55,11 +64,14 @@ fun UniversityBoardScreen(
             onSearch = { onSearch() }) {
             viewModel.boardDialogState = true
         }
-        VisitPostingCard(
-            text = "플로깅 10년차의 플로깅 꿀팁",
-            count = 10,
-            modifier = Modifier.padding(start = 19.dp, end = 19.dp, bottom = 10.dp)
-        )
+
+        if (viewModel.viewPosted != null) {
+            VisitPostingCard(
+                text = viewModel.viewPosted!!.title,
+                count = viewModel.viewPosted!!.viewCount,
+                modifier = Modifier.padding(start = 19.dp, end = 19.dp, bottom = 10.dp)
+            )
+        }
 
         HeartPostingCard(
             text = "나랑 같이 플로깅 할래?",
@@ -82,7 +94,11 @@ fun UniversityBoardScreen(
                     commentCount = viewModel.postedList[it].commentCount,
                     viewCount = viewModel.postedList[it].viewCount
                 ) {
-                    navController.navigate("${CommunityNavItem.PostedInfoScreen.screenRoute}/대학교 게시판")
+                    scope.launch {
+                        viewModel.getPostedInfo(postId = viewModel.postedList[it].postId){
+                            navController.navigate("${CommunityNavItem.PostedInfoScreen.screenRoute}/대학교 게시판")
+                        }
+                    }
                 }
             }
         }

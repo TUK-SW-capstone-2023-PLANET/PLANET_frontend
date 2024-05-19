@@ -21,6 +21,8 @@ import com.example.planet.presentation.ui.main.plogging.screen.community.compone
 import com.example.planet.presentation.ui.main.plogging.screen.community.component.VisitPostingCard
 import com.example.planet.presentation.ui.main.plogging.screen.community.navigation.CommunityNavItem
 import com.example.planet.presentation.viewmodel.CommunityViewModel
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 
 @Composable
@@ -39,7 +41,10 @@ fun FreeBoardScreen(
     }
 
     LaunchedEffect(Unit) {
-        viewModel.readAllPosted("free")
+        listOf(
+            async { viewModel.readAllPosted("free") },
+            async { viewModel.readViewPosted("free") },
+        ).awaitAll()
     }
 
     if (viewModel.boardDialogState) {
@@ -61,11 +66,14 @@ fun FreeBoardScreen(
             onSearch = { onSearch() }) {
             viewModel.boardDialogState = true
         }
-        VisitPostingCard(
-            text = "플로깅 10년차의 플로깅 꿀팁",
-            count = 10,
-            modifier = Modifier.padding(start = 19.dp, end = 19.dp, bottom = 10.dp)
-        )
+        if (viewModel.viewPosted != null) {
+            VisitPostingCard(
+                text = viewModel.viewPosted!!.title,
+                count = viewModel.viewPosted!!.viewCount,
+                modifier = Modifier.padding(start = 19.dp, end = 19.dp, bottom = 10.dp)
+            )
+        }
+
 
         HeartPostingCard(
             text = "나랑 같이 플로깅 할래?",
@@ -89,7 +97,7 @@ fun FreeBoardScreen(
                     viewCount = viewModel.postedList[it].viewCount
                 ) {
                     scope.launch {
-                        viewModel.getPostedInfo{
+                        viewModel.getPostedInfo(postId = viewModel.postedList[it].postId){
                             navController.navigate("${CommunityNavItem.PostedInfoScreen.screenRoute}/자유 게시판")
                         }
                     }

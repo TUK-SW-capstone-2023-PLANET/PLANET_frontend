@@ -18,10 +18,12 @@ import com.example.planet.data.remote.dto.response.plogging.PloggingResult
 import com.example.planet.data.remote.dto.response.plogging.Trash
 import com.example.planet.data.remote.dto.response.post.CommentInfo
 import com.example.planet.data.remote.dto.response.post.CommentResponse
+import com.example.planet.data.remote.dto.response.post.PopularPosted
 import com.example.planet.data.remote.dto.response.post.PopularPostedInfo
 import com.example.planet.data.remote.dto.response.post.PostResponse
 import com.example.planet.data.remote.dto.response.post.Posted
 import com.example.planet.data.remote.dto.response.post.PostedInfo
+import com.example.planet.data.remote.dto.response.post.ViewPosted
 import com.example.planet.data.remote.dto.response.ranking.planet.HigherPlanetUser
 import com.example.planet.data.remote.dto.response.ranking.planet.PagingPlanetUser
 import com.example.planet.data.remote.dto.response.ranking.planet.PlanetRankingUser
@@ -178,6 +180,11 @@ interface MainApi {
     @GET("/post/{type}")
     suspend fun getAllPosted(@Path("type") type: String): List<Posted>
 
+    @GET("/post/view/{type}")
+    suspend fun getViewPosted(@Path("type") type: String): ViewPosted
+
+    @GET("/post/hot/{type}")
+    suspend fun getHotPosted(@Path("type") type: String): PopularPosted
 
     // 게시글
     @POST("/post")

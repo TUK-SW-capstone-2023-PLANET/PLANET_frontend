@@ -49,6 +49,8 @@ fun VisitPostingCard(
         fontWeight = FontWeight.Normal
     )
 
+    val mappedCount = if ( count > 100 ) "100 +" else "$count"
+
     Row(
         modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
@@ -78,7 +80,7 @@ fun VisitPostingCard(
                     tint = iconColor,
                     modifier = Modifier.size(20.dp)
                 )
-                Text(text = "$count +", style = countStyle)
+                Text(text = mappedCount, style = countStyle)
             }
         }
 
@@ -104,6 +106,8 @@ fun HeartPostingCard(
         color = Color(0xFFFF0000),
         fontWeight = FontWeight.Normal
     )
+
+    val mappedCount = if ( count > 100 ) "100 +" else "$count"
 
     Row(
         modifier = modifier.fillMaxWidth(),
@@ -134,7 +138,7 @@ fun HeartPostingCard(
                     tint = iconColor,
                     modifier = Modifier.size(20.dp)
                 )
-                Text(text = "$count +", style = countStyle)
+                Text(text = mappedCount, style = countStyle)
             }
         }
 

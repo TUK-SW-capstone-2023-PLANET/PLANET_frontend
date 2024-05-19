@@ -58,7 +58,7 @@ fun PostedInfoScreen(
     val keyBoardController = LocalSoftwareKeyboardController.current
 
     LaunchedEffect(Unit) {
-        viewModel.readCommentList()
+        viewModel.readCommentList(viewModel.postedInfo.postId)
     }
 
     if (viewModel.postedDialogState) {
@@ -115,12 +115,11 @@ fun PostedInfoScreen(
                         personCount = viewModel.postedInfo.viewCount,
                         isFavorite = viewModel.postedInfo.heart
                     ) {
-                        val postId = PostId(viewModel.userId, viewModel.testPostId)
                         scope.launch {
                             if (!viewModel.postedInfo.heart) {
-                                viewModel.savePostedHeart(postId)
+                                viewModel.savePostedHeart(viewModel.postedInfo.postId)
                             } else {
-                                viewModel.deletePostedHeart(postId)
+                                viewModel.deletePostedHeart(viewModel.postedInfo.postId)
                             }
                         }
                     }
@@ -148,7 +147,7 @@ fun PostedInfoScreen(
                     .padding(horizontal = 20.dp, vertical = 10.dp)
 //                    .align(Alignment.BottomCenter)
                     .zIndex(1f),
-                postId = viewModel.testPostId,
+                postId = viewModel.postedInfo.postId,
                 text = viewModel.postingCommentInput,
                 onTextChange = { viewModel.postingCommentInput = it }
             ) {

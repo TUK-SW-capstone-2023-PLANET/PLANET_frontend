@@ -67,7 +67,6 @@ fun PostingScreen(
 ) {
     val scrollState = rememberScrollState()
     val scope = rememberCoroutineScope()
-    val context = LocalContext.current
 
     val takePhotoFromAlbumLauncher = // 갤러리에서 사진 가져오기
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -77,8 +76,7 @@ fun PostingScreen(
                     val uri = result.data?.clipData?.getItemAt(i)?.uri!!
                     viewModel.postingImageList += uri
                 }
-            } else if (result.resultCode != Activity.RESULT_CANCELED) {
-            }
+            } else if (result.resultCode != Activity.RESULT_CANCELED) { }
         }
     val takePhotoFromAlbumIntent =
         Intent(Intent.ACTION_GET_CONTENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI).apply {
