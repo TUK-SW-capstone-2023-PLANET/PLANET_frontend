@@ -28,6 +28,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,9 +43,23 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.example.planet.R
 import com.example.planet.presentation.util.noRippleClickable
+import com.example.planet.presentation.viewmodel.CommunityViewModel
+import kotlinx.coroutines.launch
 
 @Composable
-fun CommentCard(image: String, name: String, content: String, date: String, heartCount: Int) {
+fun CommentCard(
+    viewModel: CommunityViewModel,
+    commentId: Long,
+    userId: Long,
+    myUserId: Long,
+    image: String,
+    name: String,
+    content: String,
+    date: String,
+    heartCount: Int
+) {
+    var scope = rememberCoroutineScope()
+
     var dropDownMenuState by remember {
         mutableStateOf(false)
     }
@@ -132,7 +147,17 @@ fun CommentCard(image: String, name: String, content: String, date: String, hear
             CommentDropDownMenu(
                 expanded = dropDownMenuState,
                 onDismissRequest = { dropDownMenuState = false },
-                modifier = Modifier.background(color = MaterialTheme.colorScheme.background)
+                modifier = Modifier.background(color = MaterialTheme.colorScheme.background),
+                isMyComment = { userId == myUserId },
+                onSend = {},
+                onFavorite = {},
+                onDeleteFavorite = {},
+                onDeleteComment = {
+                    scope.launch {
+                        viewModel.deleteComment(commentId) { dropDownMenuState = false }
+                    }
+                },
+                onReport = {}
             )
         }
     }

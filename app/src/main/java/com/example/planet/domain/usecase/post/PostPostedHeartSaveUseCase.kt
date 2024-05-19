@@ -6,8 +6,8 @@ import com.example.planet.domain.repository.PostingRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class DeleteBoardHeartSaveUseCase @Inject constructor(private val postingRepository: PostingRepository) {
+class PostPostedHeartSaveUseCase @Inject constructor(private val postingRepository: PostingRepository) {
     suspend operator fun invoke(postId: PostId): Flow<ApiState> {
-        return postingRepository.deleteBoardHeartSave(postId)
+        return postingRepository.postBoardHeartSave(postId)
     }
 }

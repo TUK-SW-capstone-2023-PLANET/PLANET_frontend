@@ -6,6 +6,7 @@ import com.example.planet.data.remote.dto.Tier
 import com.example.planet.data.remote.dto.TrashCan
 import com.example.planet.data.remote.dto.request.plogging.PloggingInfo
 import com.example.planet.data.remote.dto.request.plogging.TrashImageUrlInfo
+import com.example.planet.data.remote.dto.request.post.CommentId
 import com.example.planet.data.remote.dto.request.post.CommentRequest
 import com.example.planet.data.remote.dto.request.post.PostId
 import com.example.planet.data.remote.dto.request.post.PostingInfo
@@ -175,7 +176,7 @@ interface MainApi {
     suspend fun postBoardHeartSave(@Body postId: PostId): PostResponse
 
     @HTTP(method = "DELETE", path = "/post-heart", hasBody = true)
-    suspend fun deleteBoardHeartSave(@Body postId: PostId): PostResponse
+    suspend fun deletePostedHeartSave(@Body postId: PostId): PostResponse
 
     // 댓글
     @POST("/comment")
@@ -183,4 +184,7 @@ interface MainApi {
 
     @GET("/comment")
     suspend fun getComment(@Query("postId") postId: Long, @Query("userId") userId: Long): List<CommentInfo>
+
+    @HTTP(method = "DELETE", path = "/comment", hasBody = true)
+    suspend fun deleteComment(@Body commentId: CommentId): CommentResponse
 }

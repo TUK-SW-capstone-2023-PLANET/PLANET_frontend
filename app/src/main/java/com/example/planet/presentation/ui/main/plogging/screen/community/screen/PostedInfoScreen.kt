@@ -118,9 +118,9 @@ fun PostedInfoScreen(
                         val postId = PostId(viewModel.userId, viewModel.testPostId)
                         scope.launch {
                             if (!viewModel.postedInfo.heart) {
-                                viewModel.saveBoardHeart(postId)
+                                viewModel.savePostedHeart(postId)
                             } else {
-                                viewModel.deleteBoardHeart(postId)
+                                viewModel.deletePostedHeart(postId)
                             }
                         }
                     }
@@ -128,6 +128,10 @@ fun PostedInfoScreen(
                 Column {
                     viewModel.commentList.value.forEach { comment ->
                         CommentCard(
+                            viewModel = viewModel,
+                            commentId = comment.commentId,
+                            userId = comment.userId,
+                            myUserId = viewModel.userId,
                             image = comment.imageUrl,
                             name = comment.nickName,
                             content = comment.content,

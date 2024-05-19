@@ -20,7 +20,12 @@ fun CommentDropDownMenu(
     expanded: Boolean,
     onDismissRequest: () -> Unit,
     modifier: Modifier,
-//    offset: DpOffset,
+    isMyComment: () -> Boolean,
+    onSend: () -> Unit,
+    onFavorite: () -> Unit,
+    onDeleteFavorite: () -> Unit,
+    onDeleteComment: () -> Unit,
+    onReport: () -> Unit
 ) {
     val textStyle = TextStyle(
         fontSize = 11.sp,
@@ -61,13 +66,16 @@ fun CommentDropDownMenu(
                 modifier = Modifier.fillMaxWidth()
             )
         }, onClick = { /*TODO*/ })
-        // TODO: userId와 비교해서 동일하면 보이게함 
-        DropdownMenuItem(text = {
-            Text(
-                text = "삭제하기",
-                style = deleteTextStyle,
-                modifier = Modifier.fillMaxWidth()
-            )
-        }, onClick = { /*TODO*/ })
+        // TODO: userId와 비교해서 동일하면 보이게함
+        if (isMyComment()) {
+            DropdownMenuItem(text = {
+                Text(
+                    text = "삭제하기",
+                    style = deleteTextStyle,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }, onClick = { onDeleteComment() })
+        }
+
     }
 }

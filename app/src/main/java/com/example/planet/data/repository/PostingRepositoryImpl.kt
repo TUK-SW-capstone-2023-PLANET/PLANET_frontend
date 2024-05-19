@@ -2,6 +2,7 @@ package com.example.planet.data.repository
 
 import com.example.planet.data.remote.api.spring.MainApi
 import com.example.planet.data.remote.dto.ApiState
+import com.example.planet.data.remote.dto.request.post.CommentId
 import com.example.planet.data.remote.dto.request.post.CommentRequest
 import com.example.planet.data.remote.dto.request.post.PostId
 import com.example.planet.data.remote.dto.request.post.PostingInfo
@@ -46,9 +47,9 @@ class PostingRepositoryImpl @Inject constructor(
         }
     }.flowOn(Dispatchers.IO)
 
-    override suspend fun deleteBoardHeartSave(postId: PostId): Flow<ApiState> = flow {
+    override suspend fun deletePostedHeartSave(postId: PostId): Flow<ApiState> = flow {
         kotlin.runCatching {
-            mainApi.deleteBoardHeartSave(postId)
+            mainApi.deletePostedHeartSave(postId)
         }.onSuccess {
             emit(ApiState.Success(it))
         }.onFailure { error ->
@@ -69,6 +70,16 @@ class PostingRepositoryImpl @Inject constructor(
     override suspend fun getCommentRead(postId: Long, userId: Long): Flow<ApiState> = flow {
         kotlin.runCatching {
             mainApi.getComment(postId = postId, userId = userId)
+        }.onSuccess {
+            emit(ApiState.Success(it))
+        }.onFailure { error ->
+            error.message?.let { emit(ApiState.Error(it)) }
+        }
+    }.flowOn(Dispatchers.IO)
+
+    override suspend fun deleteComment(commentId: CommentId): Flow<ApiState> = flow {
+        kotlin.runCatching {
+            mainApi.deleteComment(commentId)
         }.onSuccess {
             emit(ApiState.Success(it))
         }.onFailure { error ->

@@ -11,17 +11,20 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.planet.TAG
 import com.example.planet.data.remote.dto.ApiState
+import com.example.planet.data.remote.dto.request.post.CommentId
 import com.example.planet.data.remote.dto.request.post.CommentRequest
 import com.example.planet.data.remote.dto.request.post.PostId
 import com.example.planet.data.remote.dto.request.post.PostingInfo
 import com.example.planet.data.remote.dto.response.post.CommentInfo
+import com.example.planet.data.remote.dto.response.post.CommentResponse
 import com.example.planet.data.remote.dto.response.post.PostResponse
 import com.example.planet.data.remote.dto.response.post.PostedInfo
 import com.example.planet.domain.usecase.login.sharedpreference.GetUserTokenUseCase
-import com.example.planet.domain.usecase.post.DeleteBoardHeartSaveUseCase
+import com.example.planet.domain.usecase.post.DeleteCommentUseCase
+import com.example.planet.domain.usecase.post.DeletePostedHeartSaveUseCase
 import com.example.planet.domain.usecase.post.GetCommentListReadUseCase
 import com.example.planet.domain.usecase.post.GetPostedInfoUseCase
-import com.example.planet.domain.usecase.post.PostBoardHeartSaveUseCase
+import com.example.planet.domain.usecase.post.PostPostedHeartSaveUseCase
 import com.example.planet.domain.usecase.post.PostCommentSaveUseCase
 import com.example.planet.domain.usecase.post.PostPostingSaveUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -36,10 +39,11 @@ class CommunityViewModel @Inject constructor(
     private val getUserTokenUseCase: GetUserTokenUseCase,
     private val postPostingSaveUseCase: PostPostingSaveUseCase,
     private val getPostedInfoUseCase: GetPostedInfoUseCase,
-    private val postBoardHeartSaveUseCase: PostBoardHeartSaveUseCase,
-    private val deleteBoardHeartSaveUseCase: DeleteBoardHeartSaveUseCase,
+    private val postPostedHeartSaveUseCase: PostPostedHeartSaveUseCase,
+    private val deletePostedHeartSaveUseCase: DeletePostedHeartSaveUseCase,
     private val postCommentSaveUseCase: PostCommentSaveUseCase,
     private val getCommentListReadUseCase: GetCommentListReadUseCase,
+    private val deleteCommentUseCase: DeleteCommentUseCase,
 ) : ViewModel() {
 
     var userId: Long = 0L
@@ -132,25 +136,25 @@ class CommunityViewModel @Inject constructor(
         }
     }
 
-    suspend fun saveBoardHeart(postId: PostId) {
+    suspend fun savePostedHeart(postId: PostId) {
 
-        when (val apiState = postBoardHeartSaveUseCase(postId).first()) {
+        when (val apiState = postPostedHeartSaveUseCase(postId).first()) {
             is ApiState.Success<*> -> {
                 postedInfo = postedInfo.copy(heart = true)
             }
             is ApiState.Error -> {
-                Log.d("daeYoung", "saveBoardHeart() 실패: ${apiState.errMsg}")
+                Log.d("daeYoung", "savePostedHeart() 실패: ${apiState.errMsg}")
             }
             ApiState.Loading -> TODO()
         }
     }
-    suspend fun deleteBoardHeart(postId: PostId) {
-        when (val apiState = deleteBoardHeartSaveUseCase(postId).first()) {
+    suspend fun deletePostedHeart(postId: PostId) {
+        when (val apiState = deletePostedHeartSaveUseCase(postId).first()) {
             is ApiState.Success<*> -> {
                 postedInfo = postedInfo.copy(heart = false)
             }
             is ApiState.Error -> {
-                Log.d("daeYoung", "deleteBoardHeart() 실패: ${apiState.errMsg}")
+                Log.d("daeYoung", "deletePostedHeart() 실패: ${apiState.errMsg}")
             }
             ApiState.Loading -> TODO()
         }
@@ -169,7 +173,7 @@ class CommunityViewModel @Inject constructor(
                 keyboardOnHide()
             }
             is ApiState.Error -> {
-                Log.d("daeYoung", "deleteBoardHeart() 실패: ${apiState.errMsg}")
+                Log.d("daeYoung", "deletePostedHeart() 실패: ${apiState.errMsg}")
             }
             ApiState.Loading -> TODO()
         }
@@ -186,11 +190,24 @@ class CommunityViewModel @Inject constructor(
             ApiState.Loading -> TODO()
         }
     }
+
+    suspend fun deleteComment(commentId: Long, menuOnHide: () -> Unit) {
+        val commentId = CommentId(commentId, userId)
+
+        when (val apiState = deleteCommentUseCase(commentId).first()) {
+            is ApiState.Success<*> -> {
+                if((apiState.value as CommentResponse).message == "댓글 삭제 성공") {
+                    readCommentList()
+                    menuOnHide()
+                }
+            }
+            is ApiState.Error -> {
+                Log.d("daeYoung", "deleteComment() 실패: ${apiState.errMsg}")
+            }
+            ApiState.Loading -> TODO()
+        }
+    }
+
+
+
 }
-
-
-data class PostingData(
-    val imageList: List<String>,
-    val title: String,
-    val content: String
-)
