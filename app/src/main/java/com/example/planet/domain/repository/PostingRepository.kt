@@ -17,5 +17,8 @@ interface PostingRepository {
     suspend fun postCommentSave(comment: CommentRequest): Flow<ApiState>
     suspend fun getCommentRead(postId: Long, userId: Long): Flow<ApiState>
     suspend fun deleteComment(commentId: CommentId): Flow<ApiState>
+    suspend fun getPopularPostedList(): Flow<ApiState>
+
+
 
 }

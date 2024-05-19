@@ -86,4 +86,14 @@ class PostingRepositoryImpl @Inject constructor(
             error.message?.let { emit(ApiState.Error(it)) }
         }
     }.flowOn(Dispatchers.IO)
+
+    override suspend fun getPopularPostedList(): Flow<ApiState> = flow {
+        kotlin.runCatching {
+            mainApi.getPopularPosted()
+        }.onSuccess {
+            emit(ApiState.Success(it))
+        }.onFailure { error ->
+            error.message?.let { emit(ApiState.Error(it)) }
+        }
+    }.flowOn(Dispatchers.IO)
 }

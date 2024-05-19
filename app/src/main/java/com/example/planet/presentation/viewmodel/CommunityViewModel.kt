@@ -20,6 +20,7 @@ import com.example.planet.data.remote.dto.response.post.CommentResponse
 import com.example.planet.data.remote.dto.response.post.PostResponse
 import com.example.planet.data.remote.dto.response.post.PostedInfo
 import com.example.planet.data.remote.dto.response.user.UserUniversityInfo
+import com.example.planet.domain.usecase.board.GetPopularPostedListUseCase
 import com.example.planet.domain.usecase.login.sharedpreference.GetUserTokenUseCase
 import com.example.planet.domain.usecase.post.DeleteCommentUseCase
 import com.example.planet.domain.usecase.post.DeletePostedHeartSaveUseCase
@@ -50,6 +51,7 @@ class CommunityViewModel @Inject constructor(
 
     var userId: Long = 0L
     var testPostId: Long = 1720021919
+    var universityName = ""
 
     var postedDialogState by mutableStateOf(false)
     var boardDialogState by mutableStateOf(false)
@@ -217,9 +219,6 @@ class CommunityViewModel @Inject constructor(
             ApiState.Loading -> TODO()
         }
     }
-
-
-
 
 
 

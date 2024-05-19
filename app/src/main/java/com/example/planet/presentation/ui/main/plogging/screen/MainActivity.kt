@@ -55,7 +55,7 @@ class MainActivity : ComponentActivity() {
                     mainViewModel = mainViewModel,
                     startMapActivity = { startMapActivity() },
                     startUserActivity = { startUserActivity() },
-                    startCommunityActivity = { board -> startCommunityActivity(board) }
+                    startCommunityActivity = { board, universityName -> startCommunityActivity(board, universityName) }
                 )
             }
         }
@@ -64,14 +64,6 @@ class MainActivity : ComponentActivity() {
     override fun onStart() {
         super.onStart()
         Log.d(TAG, "MainActivity onStart()")
-
-//        if (intent.getBooleanExtra("API_call", false) && mainViewModel.userId != 0L) {
-//            lifecycleScope.launch {
-//                mainViewModel.getUniversityMyRanking(mainViewModel.userId)
-//                mainViewModel.getTop3Universities()
-////                mainViewModel.getTop5SeasonUser(mainViewModel.userId)
-//            }
-//        }
     }
 
     override fun onResume() {
@@ -108,10 +100,10 @@ class MainActivity : ComponentActivity() {
         startActivity(intent)
     }
 
-    private fun startCommunityActivity(bulletinBoard: String) {
+    private fun startCommunityActivity(bulletinBoard: String, universityName: String) {
         val intent = Intent(this, CommunityActivity::class.java).apply {
             this.putExtra("board", bulletinBoard)
-        }
+            this.putExtra("university", universityName) }
         startActivity(intent)
     }
 }

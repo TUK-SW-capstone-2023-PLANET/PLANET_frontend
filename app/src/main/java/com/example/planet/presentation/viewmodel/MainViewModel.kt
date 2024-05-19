@@ -16,6 +16,9 @@ import com.example.planet.TAG
 import com.example.planet.data.remote.dto.Advertisement
 import com.example.planet.data.remote.dto.ApiState
 import com.example.planet.data.remote.dto.Tier
+import com.example.planet.data.remote.dto.request.post.CommentId
+import com.example.planet.data.remote.dto.response.post.CommentResponse
+import com.example.planet.data.remote.dto.response.post.PopularPostedInfo
 import com.example.planet.data.remote.dto.response.ranking.planet.HigherPlanetUser
 import com.example.planet.data.remote.dto.response.ranking.planet.PlanetRankingUser
 import com.example.planet.data.remote.dto.response.ranking.season.SeasonUser
@@ -27,6 +30,7 @@ import com.example.planet.data.remote.dto.response.user.UserInfo
 import com.example.planet.data.remote.dto.response.user.UserUniversityInfo
 import com.example.planet.domain.usecase.GetBannerUseCase
 import com.example.planet.domain.usecase.GetTierListUseCase
+import com.example.planet.domain.usecase.board.GetPopularPostedListUseCase
 import com.example.planet.domain.usecase.login.sharedpreference.GetUserTokenUseCase
 import com.example.planet.domain.usecase.ranking.planet.GetAllPlanetUserRankUseCase
 import com.example.planet.domain.usecase.ranking.planet.GetHigherPlanetUserUseCase
@@ -74,6 +78,7 @@ class MainViewModel @Inject constructor(
     private val getUserInfoUseCase: GetUserInfoUseCase,
     private val getUserTokenUseCase: GetUserTokenUseCase,
     private val getMyUniversityUseCase: GetMyUniversityUseCase,
+    private val getPopularPostedListUseCase: GetPopularPostedListUseCase,
     ) : ViewModel() {
     init {
         viewModelScope.launch {
@@ -169,6 +174,8 @@ class MainViewModel @Inject constructor(
 
     private val _universityInfo = MutableStateFlow<UserUniversityInfo?>(null)
     val universityInfo: StateFlow<UserUniversityInfo?> = _universityInfo.asStateFlow()
+
+    var popularPosted by mutableStateOf(emptyList<PopularPostedInfo>())
 
 
     fun changePloggingScreen() {
@@ -427,11 +434,21 @@ class MainViewModel @Inject constructor(
         when (val apiState = getMyUniversityUseCase(userId).first()) {
             is ApiState.Success<*> -> {
                 _universityInfo.emit((apiState.value as UserUniversityInfo))
-                Log.d("daeYoung", "getUniversityName() 성공: ${universityInfo.value}")
-
             }
             is ApiState.Error -> {
                 Log.d("daeYoung", "getUniversityName() 실패: ${apiState.errMsg}")
+            }
+            ApiState.Loading -> TODO()
+        }
+    }
+
+    suspend fun readPopularPostedList() {
+        when (val apiState = getPopularPostedListUseCase().first()) {
+            is ApiState.Success<*> -> {
+                popularPosted = apiState.value as List<PopularPostedInfo>
+            }
+            is ApiState.Error -> {
+                Log.d("daeYoung", "deleteComment() 실패: ${apiState.errMsg}")
             }
             ApiState.Loading -> TODO()
         }

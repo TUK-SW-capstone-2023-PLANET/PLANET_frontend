@@ -240,7 +240,7 @@ fun PostedContent(
             PostingCardIcons(
                 heartCount = heartCount,
                 commentCount = commentCount,
-                personCount = personCount
+                viewCount = personCount
             )
         }
         PostedFavoriteButton(enabled = { isFavorite }) {

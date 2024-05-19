@@ -24,6 +24,8 @@ class CommunityActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        communityViewModel.universityName = intent.getStringExtra("university") ?: "한국공학대학교"
+
         setContent {
             val navController = rememberNavController()
             MyApplicationTheme {

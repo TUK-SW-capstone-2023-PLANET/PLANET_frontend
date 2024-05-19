@@ -29,7 +29,7 @@ fun PostingCard(
     name: String,
     heartCount: Int,
     commentCount: Int,
-    personCount: Int,
+    viewCount: Int,
     onClick: () -> Unit
 ) {
     val titleStyle = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
@@ -56,7 +56,7 @@ fun PostingCard(
                 PostingCardIcons(
                     heartCount = heartCount,
                     commentCount = commentCount,
-                    personCount = personCount
+                    viewCount = viewCount
                 )
             }
         }
@@ -69,46 +69,47 @@ fun PostingCard(
 }
 
 @Composable
-fun PostingCardIcons(heartCount: Int, commentCount: Int, personCount: Int) {
+fun PostingCardIcons(modifier: Modifier = Modifier, heartCount: Int, commentCount: Int, viewCount: Int) {
     val textStyle = TextStyle(
         fontSize = 10.sp,
         color = colorResource(id = R.color.font_background_color2)
     )
-
-    Row(modifier = Modifier.padding(end = 5.dp), verticalAlignment = Alignment.CenterVertically) {
-        Image(
-            painter = painterResource(id = R.drawable.heartborder_icon),
-            contentDescription = null,
-            modifier = Modifier.size(11.dp)
-        )
-        Text(
-            text = heartCount.toString(),
-            style = textStyle,
-            modifier = Modifier.padding(start = 2.dp)
-        )
-    }
-    Row(modifier = Modifier.padding(end = 5.dp), verticalAlignment = Alignment.CenterVertically) {
-        Image(
-            painter = painterResource(id = R.drawable.commentborder_icon),
-            contentDescription = null,
-            modifier = Modifier.size(11.dp)
-        )
-        Text(
-            text = commentCount.toString(),
-            style = textStyle,
-            modifier = Modifier.padding(start = 2.dp)
-        )
-    }
-    Row(verticalAlignment = Alignment.CenterVertically) {
-        Image(
-            painter = painterResource(id = R.drawable.personborder_icon),
-            contentDescription = null,
-            modifier = Modifier.size(11.dp)
-        )
-        Text(
-            text = personCount.toString(),
-            style = textStyle,
-            modifier = Modifier.padding(start = 2.dp)
-        )
+    Row(modifier = modifier) {
+        Row(modifier = Modifier.padding(end = 5.dp), verticalAlignment = Alignment.CenterVertically) {
+            Image(
+                painter = painterResource(id = R.drawable.heartborder_icon),
+                contentDescription = null,
+                modifier = Modifier.size(11.dp)
+            )
+            Text(
+                text = heartCount.toString(),
+                style = textStyle,
+                modifier = Modifier.padding(start = 2.dp)
+            )
+        }
+        Row(modifier = Modifier.padding(end = 5.dp), verticalAlignment = Alignment.CenterVertically) {
+            Image(
+                painter = painterResource(id = R.drawable.commentborder_icon),
+                contentDescription = null,
+                modifier = Modifier.size(11.dp)
+            )
+            Text(
+                text = commentCount.toString(),
+                style = textStyle,
+                modifier = Modifier.padding(start = 2.dp)
+            )
+        }
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Image(
+                painter = painterResource(id = R.drawable.personborder_icon),
+                contentDescription = null,
+                modifier = Modifier.size(11.dp)
+            )
+            Text(
+                text = viewCount.toString(),
+                style = textStyle,
+                modifier = Modifier.padding(start = 2.dp)
+            )
+        }
     }
 }

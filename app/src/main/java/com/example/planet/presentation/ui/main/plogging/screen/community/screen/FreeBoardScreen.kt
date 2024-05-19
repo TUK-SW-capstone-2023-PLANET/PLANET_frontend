@@ -83,7 +83,7 @@ fun FreeBoardScreen(
                     name = "행복하지 않은 정대영",
                     heartCount = 12,
                     commentCount = 21,
-                    personCount = 100
+                    viewCount = 100
                 ) {
                     scope.launch {
                         viewModel.getPostedInfo{

@@ -36,7 +36,7 @@ fun NavigationGraph(
     mainViewModel: MainViewModel = viewModel(),
     startMapActivity: () -> Unit,
     startUserActivity: () -> Unit,
-    startCommunityActivity: (String) -> Unit,
+    startCommunityActivity: (String, String) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
 
@@ -76,8 +76,8 @@ fun NavigationGraph(
                             MessageScreen()
                         }
                         composable(BottomNavItem.CommunityScreen.screenRoute) {
-                            CommunityScreen(mainViewModel = mainViewModel) {
-                                board -> startCommunityActivity(board)
+                            CommunityScreen(mainViewModel = mainViewModel) { board, universityName ->
+                                startCommunityActivity(board, universityName)
                             }
                         }
                         composable(ScreenNav.TierScreen.screenRoute) {

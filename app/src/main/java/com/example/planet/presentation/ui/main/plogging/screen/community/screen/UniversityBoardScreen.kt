@@ -75,7 +75,7 @@ fun UniversityBoardScreen(
                     name = "행복하지 않은 정대영",
                     heartCount = 12,
                     commentCount = 21,
-                    personCount = 100
+                    viewCount = 100,
                 ) {
                     navController.navigate("${CommunityNavItem.PostedInfoScreen.screenRoute}/대학교 게시판")
                 }

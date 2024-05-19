@@ -18,6 +18,7 @@ import com.example.planet.data.remote.dto.response.plogging.PloggingResult
 import com.example.planet.data.remote.dto.response.plogging.Trash
 import com.example.planet.data.remote.dto.response.post.CommentInfo
 import com.example.planet.data.remote.dto.response.post.CommentResponse
+import com.example.planet.data.remote.dto.response.post.PopularPostedInfo
 import com.example.planet.data.remote.dto.response.post.PostResponse
 import com.example.planet.data.remote.dto.response.post.PostedInfo
 import com.example.planet.data.remote.dto.response.ranking.planet.HigherPlanetUser
@@ -169,6 +170,10 @@ interface MainApi {
     // 게시판
     @GET("/user/{userId}/university")
     suspend fun getUniversityName(@Path("userId") userId: Long): UserUniversityInfo
+
+    @GET("/post/hot")
+    suspend fun getPopularPosted(): List<PopularPostedInfo>
+
 
     // 게시글
     @POST("/post")
