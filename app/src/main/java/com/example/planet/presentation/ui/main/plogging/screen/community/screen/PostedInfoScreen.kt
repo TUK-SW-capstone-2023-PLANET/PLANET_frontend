@@ -63,7 +63,11 @@ fun PostedInfoScreen(
             text2Color = colorResource(id = R.color.red),
             closeDialog = { viewModel.postedDialogState = false },
             onClick1 = { },
-            onClick2 = { }
+            onClick2 = {
+                scope.launch {
+                    viewModel.deletePosted(postId = viewModel.postedInfo.postId) { onBack() }
+                }
+            }
         )
     }
 

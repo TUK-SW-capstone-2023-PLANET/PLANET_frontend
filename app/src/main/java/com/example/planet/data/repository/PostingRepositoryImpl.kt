@@ -37,6 +37,16 @@ class PostingRepositoryImpl @Inject constructor(
         }
     }.flowOn(Dispatchers.IO)
 
+    override suspend fun deletePosted(postId: PostId): Flow<ApiState> = flow {
+        kotlin.runCatching {
+            mainApi.deletePosted(postId)
+        }.onSuccess {
+            emit(ApiState.Success(it))
+        }.onFailure { error ->
+            error.message?.let { emit(ApiState.Error(it)) }
+        }
+    }.flowOn(Dispatchers.IO)
+
     override suspend fun postBoardHeartSave(postId: PostId): Flow<ApiState> = flow {
         kotlin.runCatching {
             mainApi.postBoardHeartSave(postId)

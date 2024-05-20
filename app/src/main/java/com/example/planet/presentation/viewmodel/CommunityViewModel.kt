@@ -34,6 +34,7 @@ import com.example.planet.domain.usecase.login.sharedpreference.GetUserTokenUseC
 import com.example.planet.domain.usecase.post.DeleteCommentHeartUseCase
 import com.example.planet.domain.usecase.post.DeleteCommentUseCase
 import com.example.planet.domain.usecase.post.DeletePostedHeartSaveUseCase
+import com.example.planet.domain.usecase.post.DeletePostedUseCase
 import com.example.planet.domain.usecase.post.GetCommentListReadUseCase
 import com.example.planet.domain.usecase.post.GetPostedInfoUseCase
 import com.example.planet.domain.usecase.post.PostCommentHeartUseCase
@@ -56,6 +57,7 @@ class CommunityViewModel @Inject constructor(
     private val getUserTokenUseCase: GetUserTokenUseCase,
     private val postPostingSaveUseCase: PostPostingSaveUseCase,
     private val readPostedInfoUseCase: GetPostedInfoUseCase,
+    private val deletePostedUseCase: DeletePostedUseCase,
     private val postPostedHeartSaveUseCase: PostPostedHeartSaveUseCase,
     private val deletePostedHeartSaveUseCase: DeletePostedHeartSaveUseCase,
     private val postCommentSaveUseCase: PostCommentSaveUseCase,
@@ -195,6 +197,25 @@ class CommunityViewModel @Inject constructor(
             ApiState.Loading -> TODO()
         }
     }
+
+    suspend fun deletePosted(postId: Long, onBack: () -> Unit) {
+        val postId = PostId(postId = postId, userId = userId)
+
+        when (val apiState = deletePostedUseCase(postId).first()) {
+            is ApiState.Success<*> -> {
+                if ((apiState.value as PostResponse).message == "게시물 삭제 성공") {
+                    Toast.makeText(context, "게시글이 삭제되었습니다.", Toast.LENGTH_SHORT).show()
+                    onBack()
+                }
+            }
+            is ApiState.Error -> {
+                Log.d("daeYoung", "readPostedInfo() 실패: ${apiState.errMsg}")
+            }
+            ApiState.Loading -> TODO()
+        }
+    }
+
+
 
     suspend fun savePostedHeart(postId: Long) {
         val postId = PostId(userId, postId)

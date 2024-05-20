@@ -194,6 +194,9 @@ interface MainApi {
     @GET("/post")
     suspend fun getPosted(@Query("postId") postId: Long, @Query("userId") userId: Long ): PostedInfo
 
+    @HTTP(method = "DELETE", path = "/post", hasBody = true)
+    suspend fun deletePosted(@Body postId: PostId): PostResponse
+
     @POST("/post-heart")
     suspend fun postBoardHeartSave(@Body postId: PostId): PostResponse
 
