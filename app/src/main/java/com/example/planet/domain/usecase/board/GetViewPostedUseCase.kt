@@ -7,6 +7,6 @@ import javax.inject.Inject
 
 class GetViewPostedUseCase @Inject constructor(private val postingRepository: PostingRepository) {
     suspend operator fun invoke(type: String): Flow<ApiState> {
-        return postingRepository.getViewPosted(type)
+        return postingRepository.readViewPosted(type)
     }
 }

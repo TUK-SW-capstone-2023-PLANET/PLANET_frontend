@@ -15,4 +15,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="red">#FFFF5D5D</color>
     <color name="blue">#FF6B7AFC</color>
+    <color name="community_blue">#FF6B7FAC</color>
+
 </resources>

@@ -56,7 +56,7 @@ class CommunityViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val getUserTokenUseCase: GetUserTokenUseCase,
     private val postPostingSaveUseCase: PostPostingSaveUseCase,
-    private val readPostedInfoUseCase: GetPostedInfoUseCase,
+    private val getPostedInfoUseCase: GetPostedInfoUseCase,
     private val deletePostedUseCase: DeletePostedUseCase,
     private val postPostedHeartSaveUseCase: PostPostedHeartSaveUseCase,
     private val deletePostedHeartSaveUseCase: DeletePostedHeartSaveUseCase,
@@ -187,7 +187,7 @@ class CommunityViewModel @Inject constructor(
     }
 
     suspend fun readPostedInfo(postId: Long) {
-        when (val apiState = readPostedInfoUseCase(postId = postId, userId = userId).first()) {
+        when (val apiState = getPostedInfoUseCase(postId = postId, userId = userId).first()) {
             is ApiState.Success<*> -> {
                 postedInfo = apiState.value as PostedInfo
             }

@@ -97,7 +97,7 @@ class PostingRepositoryImpl @Inject constructor(
         }
     }.flowOn(Dispatchers.IO)
 
-    override suspend fun getPopularPostedList(): Flow<ApiState> = flow {
+    override suspend fun readPopularPostedList(): Flow<ApiState> = flow {
         kotlin.runCatching {
             mainApi.getPopularPosted()
         }.onSuccess {
@@ -107,9 +107,9 @@ class PostingRepositoryImpl @Inject constructor(
         }
     }.flowOn(Dispatchers.IO)
 
-    override suspend fun getAllPosted(type: String): Flow<ApiState> = flow {
+    override suspend fun readAllPosted(type: String): Flow<ApiState> = flow {
         kotlin.runCatching {
-            mainApi.getAllPosted(type)
+            mainApi.readAllPosted(type)
         }.onSuccess {
             emit(ApiState.Success(it))
         }.onFailure { error ->
@@ -117,9 +117,9 @@ class PostingRepositoryImpl @Inject constructor(
         }
     }.flowOn(Dispatchers.IO)
 
-    override suspend fun getViewPosted(type: String): Flow<ApiState> = flow {
+    override suspend fun readViewPosted(type: String): Flow<ApiState> = flow {
         kotlin.runCatching {
-            mainApi.getViewPosted(type)
+            mainApi.readViewPosted(type)
         }.onSuccess {
             emit(ApiState.Success(it))
         }.onFailure { error ->
@@ -127,9 +127,9 @@ class PostingRepositoryImpl @Inject constructor(
         }
     }.flowOn(Dispatchers.IO)
 
-    override suspend fun getHotPosted(type: String): Flow<ApiState> = flow {
+    override suspend fun readHotPosted(type: String): Flow<ApiState> = flow {
         kotlin.runCatching {
-            mainApi.getHotPosted(type)
+            mainApi.readHotPosted(type)
         }.onSuccess {
             emit(ApiState.Success(it))
         }.onFailure { error ->
@@ -150,6 +150,16 @@ class PostingRepositoryImpl @Inject constructor(
     override suspend fun deleteCommentHeart(commentId: CommentId) = flow {
         kotlin.runCatching {
             mainApi.deleteCommentHeart(commentId)
+        }.onSuccess {
+            emit(ApiState.Success(it))
+        }.onFailure { error ->
+            error.message?.let { emit(ApiState.Error(it)) }
+        }
+    }.flowOn(Dispatchers.IO)
+
+    override suspend fun readAllMyPosted(userId: Long, type: String) = flow {
+        kotlin.runCatching {
+            mainApi.readAllMyPosted(userId = userId, type = type)
         }.onSuccess {
             emit(ApiState.Success(it))
         }.onFailure { error ->

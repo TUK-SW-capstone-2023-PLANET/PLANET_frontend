@@ -54,9 +54,9 @@ fun MyPostedScreen(myWritedViewModel: MyWritedViewModel, onBack: () -> Unit) {
 //        MainTapRow(pagerState = pagerState, tabItems = tabItems)
         HorizontalPager(state = pagerState) { page ->
             when (page) {
-                0 -> AllPostedScreen()
-                1 -> AllPostedScreen()
-                2 -> AllPostedScreen()
+                0 -> AllPostedScreen(myWritedViewModel = myWritedViewModel)
+                1 -> AllPostedScreen(myWritedViewModel = myWritedViewModel)
+                2 -> AllPostedScreen(myWritedViewModel = myWritedViewModel)
             }
         }
     }

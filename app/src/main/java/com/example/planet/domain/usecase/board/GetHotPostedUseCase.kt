@@ -7,6 +7,6 @@ import javax.inject.Inject
 
 class GetHotPostedUseCase @Inject constructor(private val postingRepository: PostingRepository) {
     suspend operator fun invoke(type: String): Flow<ApiState> {
-        return postingRepository.getHotPosted(type)
+        return postingRepository.readHotPosted(type)
     }
 }

@@ -18,12 +18,13 @@ interface PostingRepository {
     suspend fun postCommentSave(comment: CommentRequest): Flow<ApiState>
     suspend fun getCommentRead(postId: Long, userId: Long): Flow<ApiState>
     suspend fun deleteComment(commentId: CommentId): Flow<ApiState>
-    suspend fun getPopularPostedList(): Flow<ApiState>
-    suspend fun getAllPosted(type: String): Flow<ApiState>
-    suspend fun getViewPosted(type: String): Flow<ApiState>
-    suspend fun getHotPosted(type: String): Flow<ApiState>
+    suspend fun readPopularPostedList(): Flow<ApiState>
+    suspend fun readAllPosted(type: String): Flow<ApiState>
+    suspend fun readViewPosted(type: String): Flow<ApiState>
+    suspend fun readHotPosted(type: String): Flow<ApiState>
     suspend fun postCommentHeart(commentId: CommentId): Flow<ApiState>
     suspend fun deleteCommentHeart(commentId: CommentId): Flow<ApiState>
+    suspend fun readAllMyPosted(userId: Long, type: String): Flow<ApiState>
 
 
 

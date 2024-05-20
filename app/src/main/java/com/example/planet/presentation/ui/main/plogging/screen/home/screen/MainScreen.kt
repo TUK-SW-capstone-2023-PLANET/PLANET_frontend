@@ -28,7 +28,6 @@ import androidx.navigation.NavHostController
 import com.example.planet.R
 import com.example.planet.TAG
 import com.example.planet.component.main.plogging.MainTopBanner
-import com.example.planet.presentation.ui.main.plogging.component.MainTapRow
 import com.example.planet.presentation.ui.main.plogging.component.MyTabRow
 import com.example.planet.presentation.viewmodel.MainViewModel
 

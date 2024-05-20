@@ -53,7 +53,7 @@ import kotlinx.coroutines.launch
 fun UserScreen(
     mainViewModel: MainViewModel,
     goUserActivity: () -> Unit,
-    goMyWritedActivity: (String) -> Unit,
+    goMyWritedActivity: (String, Long) -> Unit,
 ) {
     LaunchedEffect(Unit) {
         launch {
@@ -228,7 +228,7 @@ fun UserScreen(
             image = painterResource(id = R.drawable.communitylogo),
             title = "커뮤니티"
         )
-        Column(modifier = Modifier.clickable { goMyWritedActivity("posted") }) {
+        Column(modifier = Modifier.clickable { goMyWritedActivity("posted", mainViewModel.userId) }) {
             Text(
                 modifier = Modifier
                     .fillMaxWidth()

@@ -7,6 +7,6 @@ import javax.inject.Inject
 
 class GetPopularPostedListUseCase @Inject constructor(private val postingRepository: PostingRepository) {
     suspend operator fun invoke(): Flow<ApiState> {
-        return postingRepository.getPopularPostedList()
+        return postingRepository.readPopularPostedList()
     }
 }

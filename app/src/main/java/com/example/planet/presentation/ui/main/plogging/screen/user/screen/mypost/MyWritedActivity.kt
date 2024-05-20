@@ -19,6 +19,9 @@ class MyWritedActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        myWritedViewModel.userId = intent.getLongExtra("userId", 0L)
+
         setContent {
             MyApplicationTheme {
                 // A surface container using the 'background' color from the theme
