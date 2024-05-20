@@ -1,6 +1,7 @@
 package com.example.planet.presentation.ui.main.plogging.screen.community.component
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -32,7 +33,8 @@ import com.example.planet.R
 fun VisitPostingCard(
     text: String,
     count: Int,
-    modifier: Modifier
+    modifier: Modifier,
+    onClick: () -> Unit
 ) {
     val containerColor = Color(0xFFFFACA3)
     val iconColor = colorResource(id = R.color.red)
@@ -63,7 +65,8 @@ fun VisitPostingCard(
         )
         Card(
             modifier = Modifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .clickable { onClick() },
             shape = RoundedCornerShape(5.dp),
             colors = CardDefaults.cardColors(containerColor = containerColor)
         ) {
@@ -90,7 +93,8 @@ fun VisitPostingCard(
 fun HeartPostingCard(
     text: String,
     count: Int,
-    modifier: Modifier
+    modifier: Modifier,
+    onClick: () -> Unit
 ) {
     val containerColor = Color(0xFFFFD3D3)
     val iconColor = colorResource(id = R.color.red)
@@ -121,7 +125,8 @@ fun HeartPostingCard(
         )
         Card(
             modifier = Modifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .clickable { onClick() },
             shape = RoundedCornerShape(5.dp),
             colors = CardDefaults.cardColors(containerColor = containerColor)
         ) {

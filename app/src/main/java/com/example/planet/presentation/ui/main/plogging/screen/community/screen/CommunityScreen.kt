@@ -16,6 +16,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.colorResource
@@ -31,20 +32,21 @@ import com.example.planet.presentation.ui.main.plogging.screen.community.compone
 import com.example.planet.presentation.ui.main.plogging.screen.community.component.HotPostingCard
 import com.example.planet.presentation.ui.main.plogging.screen.community.component.UniversityBoardCard
 import com.example.planet.presentation.ui.main.plogging.screen.community.navigation.CommunityNavItem
-import com.example.planet.presentation.viewmodel.MainViewModel
+import com.example.planet.presentation.viewmodel.CommunityViewModel
 import kotlinx.coroutines.launch
 
 @Composable
 fun CommunityScreen(
-    mainViewModel: MainViewModel,
+    communityViewModel: CommunityViewModel,
+    startPostedInfoActivity: (Long, String) -> Unit,
     startCommunityActivity: (String, String) -> Unit,
 ) {
     val scrollState = rememberScrollState()
-    val universityInfo = mainViewModel.universityInfo.collectAsStateWithLifecycle().value
+    val universityInfo = communityViewModel.universityInfo.collectAsStateWithLifecycle().value
 
     LaunchedEffect(Unit) {
-        launch { mainViewModel.getUniversityName() }
-        launch { mainViewModel.readPopularPostedList() }
+        launch { communityViewModel.getUniversityName() }
+        launch { communityViewModel.readPopularPostedList() }
     }
 
     Column(
@@ -108,8 +110,8 @@ fun CommunityScreen(
             )
 
             Text(text = "인기 게시글", style = titleStyle, modifier = Modifier.padding(bottom = 23.dp))
-            if (mainViewModel.popularPosted.isNotEmpty()) {
-                mainViewModel.popularPosted.subList(0,3).forEach {
+            if (communityViewModel.popularPosted.isNotEmpty()) {
+                communityViewModel.popularPosted.subList(0,3).forEach {
                     HotPostingCard(
                         image = it.imageUrl,
                         name = it.nickName,
@@ -118,8 +120,10 @@ fun CommunityScreen(
                         content = it.content,
                         heartCount = it.heartCount,
                         commentCount = it.commentCount,
-                        viewCount = it.viewCount
-                    )
+                        viewCount = it.viewCount,
+                    ) {
+                        startPostedInfoActivity(it.postId, "자유 게시판")
+                    }
                 }
             } else {
                 CircularProgressIndicator()

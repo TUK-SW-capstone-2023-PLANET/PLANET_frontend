@@ -30,7 +30,8 @@ fun UniversityBoardScreen(
     viewModel: CommunityViewModel,
     navController: NavHostController,
     onBack: () -> Unit,
-    onSearch: () -> Unit
+    onSearch: () -> Unit,
+    startPostedInfoActivity: (Long, String) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
 
@@ -71,14 +72,30 @@ fun UniversityBoardScreen(
                 text = viewModel.viewPosted!!.title,
                 count = viewModel.viewPosted!!.viewCount,
                 modifier = Modifier.padding(start = 19.dp, end = 19.dp, bottom = 10.dp)
-            )
+            ) {
+                startPostedInfoActivity(viewModel.viewPosted!!.postId, "대학교 게시판")
+
+//                scope.launch {
+//                    viewModel.readPostedInfo(postId = viewModel.viewPosted!!.postId){
+//                        navController.navigate("${CommunityNavItem.PostedInfoScreen.screenRoute}/대학교 게시판")
+//                    }
+//                }
+            }
         }
         if (viewModel.hotPosted != null) {
             HeartPostingCard(
                 text = viewModel.hotPosted!!.title,
                 count = viewModel.hotPosted!!.heartCount,
                 modifier = Modifier.padding(horizontal = 19.dp)
-            )
+            ) {
+                startPostedInfoActivity(viewModel.hotPosted!!.postId, "대학교 게시판")
+
+//                scope.launch {
+//                    viewModel.readPostedInfo(postId = viewModel.hotPosted!!.postId){
+//                        navController.navigate("${CommunityNavItem.PostedInfoScreen.screenRoute}/자유 게시판")
+//                    }
+//                }
+            }
         }
 
         HorizontalDivider(
@@ -97,11 +114,7 @@ fun UniversityBoardScreen(
                     commentCount = viewModel.postedList[it].commentCount,
                     viewCount = viewModel.postedList[it].viewCount
                 ) {
-                    scope.launch {
-                        viewModel.getPostedInfo(postId = viewModel.postedList[it].postId){
-                            navController.navigate("${CommunityNavItem.PostedInfoScreen.screenRoute}/대학교 게시판")
-                        }
-                    }
+                    startPostedInfoActivity(viewModel.postedList[it].postId, "대학교 게시판")
                 }
             }
         }

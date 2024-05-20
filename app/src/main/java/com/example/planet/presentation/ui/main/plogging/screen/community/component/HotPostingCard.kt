@@ -1,13 +1,14 @@
 package com.example.planet.presentation.ui.main.plogging.screen.community.component
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
@@ -34,6 +35,7 @@ fun HotPostingCard(
     heartCount: Int,
     commentCount: Int,
     viewCount: Int,
+    onClick: () -> Unit
 ) {
     val nameTextStyle = TextStyle(fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
     val dateTextStyle = TextStyle(
@@ -44,7 +46,7 @@ fun HotPostingCard(
     val titleTextStyle = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
     val contentTextStyle = TextStyle(fontSize = 11.sp, fontWeight = FontWeight.Medium)
 
-    Column(modifier = modifier.wrapContentSize()) {
+    Column(modifier = modifier.fillMaxWidth().clickable { onClick() }) {
         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(bottom = 2.dp)) {
             Image(
                 painter = rememberAsyncImagePainter(model = image),
@@ -66,11 +68,11 @@ fun HotPostingCard(
         }
 
         PostingCardIcons(modifier = Modifier.padding(bottom = 16.dp), heartCount = heartCount, commentCount = commentCount, viewCount = viewCount)
-
-        HorizontalDivider(
-            thickness = 1.dp,
-            color = colorResource(id = R.color.font_background_color3),
-            modifier = Modifier.padding(bottom = 14.dp)
-        )
     }
+
+    HorizontalDivider(
+        thickness = 1.dp,
+        color = colorResource(id = R.color.font_background_color3),
+        modifier = Modifier.padding(bottom = 14.dp)
+    )
 }

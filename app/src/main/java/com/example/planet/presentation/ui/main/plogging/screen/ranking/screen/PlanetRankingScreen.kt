@@ -45,6 +45,7 @@ fun PlanetRankingScreen(mainViewModel: MainViewModel = hiltViewModel()) {
         mainViewModel.getAllPlanetUserRanking()
     }
 
+
     BackHandler { mainViewModel.showRankingScreen = ScreenNav.HomeScreen }
 
     Column(

@@ -7,6 +7,7 @@ const val SEASON_RANKING = "seasonRankingScreen"
 const val UNIVERSITY_RANKING = "universityRankingScreen"
 const val UNIVERSITY_INDIVIDUAL_RANKING = "universityIndividualRankingScreen"
 
+
 sealed class ScreenNav(val screenRoute: String) {
 
     data object HomeScreen : ScreenNav(

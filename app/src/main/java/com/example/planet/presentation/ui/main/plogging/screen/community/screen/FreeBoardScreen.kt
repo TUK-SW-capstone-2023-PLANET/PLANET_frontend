@@ -8,7 +8,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
@@ -23,17 +22,15 @@ import com.example.planet.presentation.ui.main.plogging.screen.community.navigat
 import com.example.planet.presentation.viewmodel.CommunityViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.launch
 
 @Composable
 fun FreeBoardScreen(
     viewModel: CommunityViewModel,
     navController: NavHostController,
     onBack: () -> Unit,
-    onSearch: () -> Unit
+    onSearch: () -> Unit,
+    startPostedInfoActivity: (Long, String) -> Unit,
 ) {
-
-    val scope = rememberCoroutineScope()
 
     BackHandler {
         if (viewModel.boardDialogState) viewModel.boardDialogState = false
@@ -72,7 +69,9 @@ fun FreeBoardScreen(
                 text = viewModel.viewPosted!!.title,
                 count = viewModel.viewPosted!!.viewCount,
                 modifier = Modifier.padding(start = 19.dp, end = 19.dp, bottom = 10.dp)
-            )
+            ) {
+                startPostedInfoActivity(viewModel.viewPosted!!.postId, "자유 게시판")
+            }
         }
 
         if (viewModel.hotPosted != null) {
@@ -80,7 +79,9 @@ fun FreeBoardScreen(
                 text = viewModel.hotPosted!!.title,
                 count = viewModel.hotPosted!!.heartCount,
                 modifier = Modifier.padding(horizontal = 19.dp)
-            )
+            ) {
+                startPostedInfoActivity(viewModel.hotPosted!!.postId, "자유 게시판")
+            }
         }
 
         HorizontalDivider(
@@ -99,11 +100,7 @@ fun FreeBoardScreen(
                     commentCount = viewModel.postedList[it].commentCount,
                     viewCount = viewModel.postedList[it].viewCount
                 ) {
-                    scope.launch {
-                        viewModel.getPostedInfo(postId = viewModel.postedList[it].postId){
-                            navController.navigate("${CommunityNavItem.PostedInfoScreen.screenRoute}/자유 게시판")
-                        }
-                    }
+                    startPostedInfoActivity(viewModel.postedList[it].postId, "자유 게시판")
                 }
             }
         }

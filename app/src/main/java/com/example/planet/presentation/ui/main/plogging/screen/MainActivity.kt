@@ -6,40 +6,24 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
 import com.example.planet.TAG
 import com.example.planet.presentation.ui.main.plogging.navigation.NavigationGraph
 import com.example.planet.presentation.ui.main.plogging.screen.community.screen.CommunityActivity
+import com.example.planet.presentation.ui.main.plogging.screen.community.screen.PostedInfoActivity
 import com.example.planet.presentation.ui.main.plogging.screen.user.screen.UserActivity
 import com.example.planet.presentation.ui.plogging.screen.MapActivity
 import com.example.planet.presentation.ui.ui.theme.MyApplicationTheme
+import com.example.planet.presentation.viewmodel.CommunityViewModel
 import com.example.planet.presentation.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
 
     private val mainViewModel by viewModels<MainViewModel>()
+    private val communityViewModel by viewModels<CommunityViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,9 +37,11 @@ class MainActivity : ComponentActivity() {
                 NavigationGraph(
                     navController = navController,
                     mainViewModel = mainViewModel,
+                    communityViewModel = communityViewModel,
                     startMapActivity = { startMapActivity() },
                     startUserActivity = { startUserActivity() },
-                    startCommunityActivity = { board, universityName -> startCommunityActivity(board, universityName) }
+                    startCommunityActivity = { board, universityName -> startCommunityActivity(board, universityName) },
+                    startPostedInfoActivity = { postId, board -> startPostedInfoActivity(postId, board) },
                 )
             }
         }
@@ -106,36 +92,14 @@ class MainActivity : ComponentActivity() {
             this.putExtra("university", universityName) }
         startActivity(intent)
     }
-}
 
-
-@Composable
-fun ScrollToTopDerivedAndRememberedCase(lazyListState: LazyListState = rememberLazyListState()) {
-    val isEnabledDerivedStateCase by remember { derivedStateOf { lazyListState.firstVisibleItemIndex > 0 } }
-//    val isEnabledRememberCase = remember(lazyListState.firstVisibleItemIndex) { lazyListState.firstVisibleItemIndex > 0}
-    val isEnabledRememberCase = remember { mutableStateOf(lazyListState.firstVisibleItemIndex > 0) }
-
-    Log.d(
-        "daeYoung",
-        "isEnabledDerivedStateCase: $isEnabledDerivedStateCase\nisEnabledRememberCase: ${isEnabledRememberCase.value}"
-    )
-//    Log.d("daeYoung", "isEnabledDerivedStateCase: $isEnabledDerivedStateCase")
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Bottom,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        LazyColumn(state = lazyListState, modifier = Modifier.weight(1f)) {
-            items(50) {
-                Text(text = "Text $it")
-            }
+    private fun startPostedInfoActivity(postId: Long, board: String) {
+        val intent = Intent(this, PostedInfoActivity::class.java).apply {
+            this.putExtra("postId", postId)
+            this.putExtra("board", board)
         }
-        Button(onClick = { /*TODO*/ }, enabled = isEnabledDerivedStateCase) {
-            Text(text = "Derived State Button")
-        }
-
-        Button(onClick = { /*TODO*/ }, enabled = isEnabledRememberCase.value) {
-            Text(text = "Remembered Button")
-        }
+        startActivity(intent)
     }
 }
+
+

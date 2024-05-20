@@ -1,10 +1,8 @@
 package com.example.planet.presentation.ui.main.plogging.screen.community.screen
 
-import android.accessibilityservice.AccessibilityService.SoftKeyboardController
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,12 +17,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -35,9 +28,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
-import androidx.navigation.NavHostController
 import com.example.planet.R
-import com.example.planet.data.remote.dto.request.post.PostId
 import com.example.planet.presentation.ui.component.DialogComponent
 import com.example.planet.presentation.ui.main.plogging.screen.community.component.CommentCard
 import com.example.planet.presentation.ui.main.plogging.screen.community.component.PostedContent
@@ -50,15 +41,15 @@ import kotlinx.coroutines.launch
 @Composable
 fun PostedInfoScreen(
     viewModel: CommunityViewModel,
-    navController: NavHostController,
-    appBarTitle: String
+    appBarTitle: String,
+    onBack: () -> Unit
 ) {
     val scrollState = rememberScrollState()
     val scope = rememberCoroutineScope()
     val keyBoardController = LocalSoftwareKeyboardController.current
 
     LaunchedEffect(Unit) {
-        viewModel.readCommentList(viewModel.postedInfo.postId)
+        viewModel.readCommentList(viewModel.currentPostId)
     }
 
     if (viewModel.postedDialogState) {
@@ -75,7 +66,7 @@ fun PostedInfoScreen(
 
     BackHandler {
         if (viewModel.postedDialogState) viewModel.postedDialogState = false
-        else navController.popBackStack()
+        else onBack()
     }
 
     Column(
@@ -85,7 +76,7 @@ fun PostedInfoScreen(
         PostedTopAppBar(
             modifier = Modifier,
             title = appBarTitle,
-            onBack = { navController.popBackStack() }) {
+            onBack = { onBack() }) {
             viewModel.postedDialogState = true
         }
         Column(modifier = Modifier.fillMaxSize(),
@@ -103,6 +94,7 @@ fun PostedInfoScreen(
                         .fillMaxWidth()
                 ) {
                     PostedMyProfileCard(
+                        image = viewModel.postedInfo.profileUrl,
                         name = viewModel.postedInfo.nickName,
                         date = viewModel.postedInfo.uploadTime
                     )

@@ -7,6 +7,6 @@ import javax.inject.Inject
 
 class GetPostedInfoUseCase @Inject constructor(private val postingRepository: PostingRepository) {
     suspend operator fun invoke(postId: Long, userId: Long): Flow<ApiState> {
-        return postingRepository.getPostedInfo(postId = postId, userId = userId)
+        return postingRepository.readPostedInfo(postId = postId, userId = userId)
     }
 }

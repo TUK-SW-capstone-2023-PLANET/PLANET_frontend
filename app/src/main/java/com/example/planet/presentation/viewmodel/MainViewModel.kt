@@ -77,8 +77,6 @@ class MainViewModel @Inject constructor(
     private val getMyUniversityInfoUseCase: GetMyUniversityInfoUseCase,
     private val getUserInfoUseCase: GetUserInfoUseCase,
     private val getUserTokenUseCase: GetUserTokenUseCase,
-    private val getMyUniversityUseCase: GetMyUniversityUseCase,
-    private val getPopularPostedListUseCase: GetPopularPostedListUseCase,
     ) : ViewModel() {
     init {
         viewModelScope.launch {
@@ -95,12 +93,6 @@ class MainViewModel @Inject constructor(
                 async(Dispatchers.IO) { getTop3PlanetUser() },
                 async(Dispatchers.IO) { getTop3Universities() }
             ).awaitAll()
-
-//            launch(Dispatchers.IO) { getAllSeasonUser() }
-            launch(Dispatchers.IO) { getAllUniversities() }
-            launch(Dispatchers.IO) { getAllPlanetUserRanking() }
-            launch(Dispatchers.IO) { getAllUniversityUser() }
-
         }
     }
 
@@ -172,10 +164,7 @@ class MainViewModel @Inject constructor(
 
     var showRankingScreen: ScreenNav by mutableStateOf(ScreenNav.HomeScreen)
 
-    private val _universityInfo = MutableStateFlow<UserUniversityInfo?>(null)
-    val universityInfo: StateFlow<UserUniversityInfo?> = _universityInfo.asStateFlow()
 
-    var popularPosted by mutableStateOf(emptyList<PopularPostedInfo>())
 
 
     fun changePloggingScreen() {
@@ -346,14 +335,14 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getAllUniversities() {
+    suspend fun getAllUniversities() {
         getAllUniversitiesUseCase().distinctUntilChanged().cachedIn(viewModelScope).collect {
             _totalUniversity.value = it
         }
     }
 
     // 자대 대학교 유저 랭킹 전체 조회
-    private suspend fun getAllUniversityUser() {
+    suspend fun getAllUniversityUser() {
         getAllUniversityUserRankUseCase().distinctUntilChanged().cachedIn(viewModelScope).collect {
             _totalUniversityUser.value = it
         }
@@ -430,28 +419,6 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    suspend fun getUniversityName() {
-        when (val apiState = getMyUniversityUseCase(userId).first()) {
-            is ApiState.Success<*> -> {
-                _universityInfo.emit((apiState.value as UserUniversityInfo))
-            }
-            is ApiState.Error -> {
-                Log.d("daeYoung", "getUniversityName() 실패: ${apiState.errMsg}")
-            }
-            ApiState.Loading -> TODO()
-        }
-    }
 
-    suspend fun readPopularPostedList() {
-        when (val apiState = getPopularPostedListUseCase().first()) {
-            is ApiState.Success<*> -> {
-                popularPosted = apiState.value as List<PopularPostedInfo>
-            }
-            is ApiState.Error -> {
-                Log.d("daeYoung", "deleteComment() 실패: ${apiState.errMsg}")
-            }
-            ApiState.Loading -> TODO()
-        }
-    }
 
 }

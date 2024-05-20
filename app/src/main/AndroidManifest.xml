@@ -24,6 +24,13 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".presentation.ui.main.plogging.screen.community.screen.PostedInfoActivity"
+            android:exported="false"
+            android:label="@string/title_activity_posted_info"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.MyApplication"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity
             android:name=".presentation.ui.main.plogging.screen.community.screen.CommunityActivity"
             android:exported="false"
             android:label="@string/title_activity_bulletin_board"

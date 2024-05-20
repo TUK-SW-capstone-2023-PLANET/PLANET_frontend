@@ -51,6 +51,7 @@ import com.example.planet.presentation.viewmodel.MainViewModel
 import com.example.planet.presentation.util.noRippleClickable
 import com.example.planet.presentation.util.numberComma
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 fun UniversityIndividualRankingScreen(mainViewModel: MainViewModel = hiltViewModel()) {
@@ -60,8 +61,13 @@ fun UniversityIndividualRankingScreen(mainViewModel: MainViewModel = hiltViewMod
     var visible by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        delay(200)
-        visible = true
+        launch {
+            mainViewModel.getAllUniversityUser()
+        }
+        launch {
+            delay(200)
+            visible = true
+        }
     }
 
     BackHandler { mainViewModel.showRankingScreen = ScreenNav.HomeScreen }

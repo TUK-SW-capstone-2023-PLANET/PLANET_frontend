@@ -171,7 +171,7 @@ fun CommentCard(
 
 
 @Composable
-fun PostedMyProfileCard(name: String, date: String) {
+fun PostedMyProfileCard(image: String, name: String, date: String) {
     val nameTextStyle =
         TextStyle(fontSize = 16.sp, color = colorResource(id = R.color.font_background_color1))
     val dateTextStyle =
@@ -188,11 +188,17 @@ fun PostedMyProfileCard(name: String, date: String) {
             .padding(bottom = 24.dp)
             .height(imageSize)
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.temporary_user_icon),
-            contentDescription = null,
+        Card(
+            shape = CircleShape,
             modifier = Modifier.size(imageSize)
-        )
+        ) {
+            Image(
+                painter = rememberAsyncImagePainter(model = image),
+                contentDescription = null,
+                modifier = Modifier.fillMaxSize()
+            )
+        }
+
         Column(
             modifier = Modifier
                 .fillMaxHeight()

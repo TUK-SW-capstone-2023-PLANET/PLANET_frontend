@@ -18,12 +18,15 @@ import com.example.planet.data.remote.dto.request.post.PostingInfo
 import com.example.planet.data.remote.dto.response.post.CommentInfo
 import com.example.planet.data.remote.dto.response.post.CommentResponse
 import com.example.planet.data.remote.dto.response.post.HotPosted
+import com.example.planet.data.remote.dto.response.post.PopularPostedInfo
 import com.example.planet.data.remote.dto.response.post.PostResponse
 import com.example.planet.data.remote.dto.response.post.Posted
 import com.example.planet.data.remote.dto.response.post.PostedInfo
 import com.example.planet.data.remote.dto.response.post.ViewPosted
+import com.example.planet.data.remote.dto.response.user.UserUniversityInfo
 import com.example.planet.domain.usecase.board.GetAllPostedUseCase
 import com.example.planet.domain.usecase.board.GetHotPostedUseCase
+import com.example.planet.domain.usecase.board.GetPopularPostedListUseCase
 import com.example.planet.domain.usecase.board.GetViewPostedUseCase
 import com.example.planet.domain.usecase.login.sharedpreference.GetUserTokenUseCase
 import com.example.planet.domain.usecase.post.DeleteCommentUseCase
@@ -33,8 +36,12 @@ import com.example.planet.domain.usecase.post.GetPostedInfoUseCase
 import com.example.planet.domain.usecase.post.PostCommentSaveUseCase
 import com.example.planet.domain.usecase.post.PostPostedHeartSaveUseCase
 import com.example.planet.domain.usecase.post.PostPostingSaveUseCase
+import com.example.planet.domain.usecase.user.GetMyUniversityUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -44,7 +51,7 @@ class CommunityViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val getUserTokenUseCase: GetUserTokenUseCase,
     private val postPostingSaveUseCase: PostPostingSaveUseCase,
-    private val getPostedInfoUseCase: GetPostedInfoUseCase,
+    private val readPostedInfoUseCase: GetPostedInfoUseCase,
     private val postPostedHeartSaveUseCase: PostPostedHeartSaveUseCase,
     private val deletePostedHeartSaveUseCase: DeletePostedHeartSaveUseCase,
     private val postCommentSaveUseCase: PostCommentSaveUseCase,
@@ -53,10 +60,12 @@ class CommunityViewModel @Inject constructor(
     private val getAllPostedUseCase: GetAllPostedUseCase,
     private val getViewPostedUseCase: GetViewPostedUseCase,
     private val getHotPostedUseCase: GetHotPostedUseCase,
+    private val getMyUniversityUseCase: GetMyUniversityUseCase,
+    private val getPopularPostedListUseCase: GetPopularPostedListUseCase,
 ) : ViewModel() {
 
     var userId: Long = 0L
-//    var currentPostId: Long = 0
+    var currentPostId: Long = 0
     var universityName = ""
 
     var postedDialogState by mutableStateOf(false)
@@ -74,6 +83,11 @@ class CommunityViewModel @Inject constructor(
     var postedList by mutableStateOf(emptyList<Posted>())
     var viewPosted by mutableStateOf<ViewPosted?>(null)
     var hotPosted by mutableStateOf<HotPosted?>(null)
+
+    private val _universityInfo = MutableStateFlow<UserUniversityInfo?>(null)
+    val universityInfo: StateFlow<UserUniversityInfo?> = _universityInfo.asStateFlow()
+
+    var popularPosted by mutableStateOf(emptyList<PopularPostedInfo>())
 
 
     init {
@@ -113,6 +127,30 @@ class CommunityViewModel @Inject constructor(
         }
     }
 
+    suspend fun getUniversityName() {
+        when (val apiState = getMyUniversityUseCase(userId).first()) {
+            is ApiState.Success<*> -> {
+                _universityInfo.emit((apiState.value as UserUniversityInfo))
+            }
+            is ApiState.Error -> {
+                Log.d("daeYoung", "getUniversityName() 실패: ${apiState.errMsg}")
+            }
+            ApiState.Loading -> TODO()
+        }
+    }
+
+    suspend fun readPopularPostedList() {
+        when (val apiState = getPopularPostedListUseCase().first()) {
+            is ApiState.Success<*> -> {
+                popularPosted = apiState.value as List<PopularPostedInfo>
+            }
+            is ApiState.Error -> {
+                Log.d("daeYoung", "deleteComment() 실패: ${apiState.errMsg}")
+            }
+            ApiState.Loading -> TODO()
+        }
+    }
+
     suspend fun savePosting(onBack: () -> Unit) {
         val postingInfo = PostingInfo(
             userId = userId,
@@ -137,14 +175,13 @@ class CommunityViewModel @Inject constructor(
         }
     }
 
-    suspend fun getPostedInfo(postId: Long, goPostedInfoScreen: () -> Unit) {
-        when (val apiState = getPostedInfoUseCase(postId = postId, userId = userId).first()) {
+    suspend fun readPostedInfo(postId: Long) {
+        when (val apiState = readPostedInfoUseCase(postId = postId, userId = userId).first()) {
             is ApiState.Success<*> -> {
                 postedInfo = apiState.value as PostedInfo
-                goPostedInfoScreen()
             }
             is ApiState.Error -> {
-                Log.d("daeYoung", "getPostedInfo() 실패: ${apiState.errMsg}")
+                Log.d("daeYoung", "readPostedInfo() 실패: ${apiState.errMsg}")
             }
             ApiState.Loading -> TODO()
         }
@@ -197,6 +234,7 @@ class CommunityViewModel @Inject constructor(
     }
 
     suspend fun readCommentList(postId: Long) {
+        Log.d("daeYoung", "readCommentList(): ${postId}}")
         when (val apiState = getCommentListReadUseCase(postId = postId , userId = userId).first()) {
             is ApiState.Success<*> -> {
                 commentList.value = apiState.value as List<CommentInfo>

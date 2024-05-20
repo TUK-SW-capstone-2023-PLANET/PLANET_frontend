@@ -5,10 +5,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -16,6 +14,7 @@ import androidx.navigation.compose.composable
 import com.example.planet.presentation.ui.main.plogging.component.BottomNavigation
 import com.example.planet.presentation.ui.main.plogging.component.MainTopSwitch
 import com.example.planet.presentation.ui.main.plogging.screen.community.screen.CommunityScreen
+import com.example.planet.presentation.ui.main.plogging.screen.community.screen.PostedInfoScreen
 import com.example.planet.presentation.ui.main.plogging.screen.home.screen.MainScreen
 import com.example.planet.presentation.ui.main.plogging.screen.home.screen.TierScreen
 import com.example.planet.presentation.ui.main.plogging.screen.message.MessageScreen
@@ -26,19 +25,20 @@ import com.example.planet.presentation.ui.main.plogging.screen.ranking.screen.Se
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.screen.UniversityIndividualRankingScreen
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.screen.UniversityRankingScreen
 import com.example.planet.presentation.ui.main.plogging.screen.user.screen.UserScreen
+import com.example.planet.presentation.viewmodel.CommunityViewModel
 import com.example.planet.presentation.viewmodel.MainViewModel
-import kotlinx.coroutines.launch
 
 
 @Composable
 fun NavigationGraph(
     navController: NavHostController,
     mainViewModel: MainViewModel = viewModel(),
+    communityViewModel: CommunityViewModel,
     startMapActivity: () -> Unit,
     startUserActivity: () -> Unit,
     startCommunityActivity: (String, String) -> Unit,
+    startPostedInfoActivity: (Long, String) -> Unit,
 ) {
-    val scope = rememberCoroutineScope()
 
     Scaffold(
         bottomBar = {
@@ -76,7 +76,10 @@ fun NavigationGraph(
                             MessageScreen()
                         }
                         composable(BottomNavItem.CommunityScreen.screenRoute) {
-                            CommunityScreen(mainViewModel = mainViewModel) { board, universityName ->
+                            CommunityScreen(
+                                communityViewModel = communityViewModel,
+                                startPostedInfoActivity = { postId, board -> startPostedInfoActivity(postId, board) },
+                            ) { board, universityName ->
                                 startCommunityActivity(board, universityName)
                             }
                         }
@@ -94,7 +97,6 @@ fun NavigationGraph(
                     SeasonRankingScreen(mainViewModel = mainViewModel)
                 }
 
-                ScreenNav.TierScreen -> {}
                 ScreenNav.UniversityIndividualRankingScreen -> {
                     UniversityIndividualRankingScreen(mainViewModel = mainViewModel)
                 }
@@ -102,6 +104,7 @@ fun NavigationGraph(
                 ScreenNav.UniversityRankingScreen -> {
                     UniversityRankingScreen(mainViewModel = mainViewModel)
                 }
+                else -> {}
             }
         }
     }

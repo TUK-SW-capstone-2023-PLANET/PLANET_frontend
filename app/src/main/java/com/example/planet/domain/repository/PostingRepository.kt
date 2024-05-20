@@ -11,7 +11,7 @@ import retrofit2.http.Query
 interface PostingRepository {
     suspend fun postPostingSave(postingInfo: PostingInfo): Flow<ApiState>
 
-    suspend fun getPostedInfo(postId: Long, userId: Long): Flow<ApiState>
+    suspend fun readPostedInfo(postId: Long, userId: Long): Flow<ApiState>
     suspend fun postBoardHeartSave(postId: PostId): Flow<ApiState>
     suspend fun deletePostedHeartSave(postId: PostId): Flow<ApiState>
     suspend fun postCommentSave(comment: CommentRequest): Flow<ApiState>

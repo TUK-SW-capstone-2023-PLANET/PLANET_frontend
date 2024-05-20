@@ -11,20 +11,42 @@ import com.example.planet.presentation.ui.main.plogging.screen.community.screen.
 import com.example.planet.presentation.viewmodel.CommunityViewModel
 
 @Composable
-fun CommunityNavGraph(viewModel: CommunityViewModel, navController: NavHostController, startRoute: String, activityFinish: () -> Unit) {
+fun CommunityNavGraph(
+    viewModel: CommunityViewModel,
+    navController: NavHostController,
+    startRoute: String,
+    activityFinish: () -> Unit,
+    startPostedInfoActivity: (Long, String) -> Unit,
+) {
     NavHost(
         navController = navController,
         startDestination = startRoute
     ) {
         composable(CommunityNavItem.FreeBoardScreen.screenRoute) {
-            FreeBoardScreen(viewModel = viewModel, navController = navController, onBack = { activityFinish() }) {}
+            FreeBoardScreen(
+                viewModel = viewModel,
+                navController = navController,
+                onBack = { activityFinish() },
+                onSearch = {}) { postId, board ->
+                startPostedInfoActivity(postId, board)
+            }
         }
         composable(CommunityNavItem.UniversityBoardScreen.screenRoute) {
-            UniversityBoardScreen(viewModel = viewModel, navController = navController, onBack = { activityFinish() }) { activityFinish() }
+            UniversityBoardScreen(
+                viewModel = viewModel,
+                navController = navController,
+                onBack = { activityFinish() },
+                onSearch = {}) { postId, board ->
+                startPostedInfoActivity(postId, board)
+            }
         }
-        composable("${CommunityNavItem.PostedInfoScreen.screenRoute}/{title}") {
-            PostedInfoScreen(viewModel = viewModel, navController = navController, appBarTitle = it.arguments?.getString("title") ?: "자유 게시판")
-        }
+//        composable("${CommunityNavItem.PostedInfoScreen.screenRoute}/{title}") {
+//            PostedInfoScreen(
+//                viewModel = viewModel,
+//                navController = navController,
+//                appBarTitle = it.arguments?.getString("title") ?: "자유 게시판"
+//            )
+//        }
         composable(CommunityNavItem.PostingScreen.screenRoute) {
             PostingScreen(viewModel = viewModel, navController = navController)
         }

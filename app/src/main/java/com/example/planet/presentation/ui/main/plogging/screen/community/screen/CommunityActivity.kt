@@ -1,5 +1,6 @@
 package com.example.planet.presentation.ui.main.plogging.screen.community.screen
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -27,6 +28,7 @@ class CommunityActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         communityViewModel.universityName = intent.getStringExtra("university") ?: "한국공학대학교"
+        communityViewModel.currentPostId
 
         setContent {
             val navController = rememberNavController()
@@ -42,10 +44,21 @@ class CommunityActivity : ComponentActivity() {
                         startRoute = intent.getStringExtra("board")
                             ?: CommunityNavItem.FreeBoardScreen.screenRoute,
                         activityFinish = { finish() }
-                    )
+                    ) { postId, board ->
+                        startPostedInfoActivity(postId, board)
+                    }
                 }
             }
         }
+    }
+
+    fun startPostedInfoActivity(postId: Long, board: String) {
+        val intent = Intent(this, PostedInfoActivity::class.java).apply {
+            this.putExtra("postId", postId)
+            this.putExtra("board", board)
+        }
+        startActivity(intent)
+
     }
 }
 

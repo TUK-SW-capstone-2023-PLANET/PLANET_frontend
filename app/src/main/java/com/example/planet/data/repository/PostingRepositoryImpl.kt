@@ -27,7 +27,7 @@ class PostingRepositoryImpl @Inject constructor(
         }
     }.flowOn(Dispatchers.IO)
 
-    override suspend fun getPostedInfo(postId: Long, userId: Long): Flow<ApiState> = flow {
+    override suspend fun readPostedInfo(postId: Long, userId: Long): Flow<ApiState> = flow {
         kotlin.runCatching {
             mainApi.getPosted(postId = postId, userId = userId)
         }.onSuccess {

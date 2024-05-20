@@ -13,6 +13,7 @@ import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
@@ -41,6 +42,10 @@ fun UniversityRankingScreen(mainViewModel: MainViewModel = hiltViewModel()) {
         mainViewModel.totalUniversity.collectAsLazyPagingItems()
 
     BackHandler { mainViewModel.showRankingScreen = ScreenNav.HomeScreen }
+
+    LaunchedEffect(Unit) {
+        mainViewModel.getAllUniversities()
+    }
 
     Column(
         modifier = Modifier
