@@ -58,7 +58,6 @@ class CommunityActivity : ComponentActivity() {
             this.putExtra("board", board)
         }
         startActivity(intent)
-
     }
 }
 

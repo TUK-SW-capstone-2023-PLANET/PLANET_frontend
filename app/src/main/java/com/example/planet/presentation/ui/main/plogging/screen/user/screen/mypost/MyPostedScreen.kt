@@ -11,6 +11,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -19,13 +20,25 @@ import com.example.planet.presentation.ui.component.SearchTextField
 import com.example.planet.presentation.ui.main.plogging.component.MyTabRow
 import com.example.planet.presentation.ui.main.plogging.screen.user.component.MyWritedTopAppBar
 import com.example.planet.presentation.viewmodel.MyWritedViewModel
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun MyPostedScreen(myWritedViewModel: MyWritedViewModel, onBack: () -> Unit) {
+fun MyPostedScreen(
+    myWritedViewModel: MyWritedViewModel,
+    title: String,
+    callAllAPIs: () -> Unit,
+    onBack: () -> Unit,
+    startPostedInfoActivity: (Long, String) -> Unit
+) {
     val scroll = rememberScrollState()
     val tabItems = listOf("전체", "자유", "대학교")
     val pagerState = rememberPagerState(initialPage = 0) { tabItems.size }
+
+    LaunchedEffect(Unit) {
+        callAllAPIs()
+    }
 
     Column(
         modifier = Modifier
@@ -34,7 +47,7 @@ fun MyPostedScreen(myWritedViewModel: MyWritedViewModel, onBack: () -> Unit) {
     ) {
         MyWritedTopAppBar(
             modifier = Modifier.padding(16.dp),
-            title = "내가 작성한 게시글",
+            title = title,
             onBack = { onBack() })
 
         Box(
@@ -54,9 +67,26 @@ fun MyPostedScreen(myWritedViewModel: MyWritedViewModel, onBack: () -> Unit) {
 //        MainTapRow(pagerState = pagerState, tabItems = tabItems)
         HorizontalPager(state = pagerState) { page ->
             when (page) {
-                0 -> AllPostedScreen(myWritedViewModel = myWritedViewModel)
-                1 -> AllPostedScreen(myWritedViewModel = myWritedViewModel)
-                2 -> AllPostedScreen(myWritedViewModel = myWritedViewModel)
+                0 -> AllPostedScreen(myWritedViewModel.allMyPosted) { postId, board ->
+                    startPostedInfoActivity(
+                        postId,
+                        board
+                    )
+                }
+
+                1 -> AllPostedScreen(myWritedViewModel.freeMyPosted) { postId, board ->
+                    startPostedInfoActivity(
+                        postId,
+                        board
+                    )
+                }
+
+                2 -> AllPostedScreen(myWritedViewModel.universityMyPosted) { postId, board ->
+                    startPostedInfoActivity(
+                        postId,
+                        board
+                    )
+                }
             }
         }
     }

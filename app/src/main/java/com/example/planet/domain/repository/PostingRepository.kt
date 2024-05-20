@@ -25,6 +25,9 @@ interface PostingRepository {
     suspend fun postCommentHeart(commentId: CommentId): Flow<ApiState>
     suspend fun deleteCommentHeart(commentId: CommentId): Flow<ApiState>
     suspend fun readAllMyPosted(userId: Long, type: String): Flow<ApiState>
+    suspend fun readAllMyComment(userId: Long, type: String): Flow<ApiState>
+
+
 
 
 

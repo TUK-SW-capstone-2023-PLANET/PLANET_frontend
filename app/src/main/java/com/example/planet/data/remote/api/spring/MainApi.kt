@@ -191,6 +191,9 @@ interface MainApi {
     @GET("/post/my/{userId}/{type}")
     suspend fun readAllMyPosted(@Path("userId") userId: Long, @Path("type") type: String): List<MyPostedInfo>
 
+    @GET("/post/my/comment/{userId}/{type}")
+    suspend fun readAllMyComment(@Path("userId") userId: Long, @Path("type") type: String): List<MyPostedInfo>
+
     // 게시글
     @POST("/post")
     suspend fun postPosting(@Body postInfo: PostingInfo): PostResponse
