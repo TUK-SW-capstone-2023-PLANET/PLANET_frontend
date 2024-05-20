@@ -209,4 +209,10 @@ interface MainApi {
 
     @HTTP(method = "DELETE", path = "/comment", hasBody = true)
     suspend fun deleteComment(@Body commentId: CommentId): CommentResponse
+
+    @POST("/comment-heart")
+    suspend fun postCommentHeart(@Body commentId: CommentId): CommentResponse
+
+    @HTTP(method = "DELETE", path = "/comment-heart", hasBody = true)
+    suspend fun deleteCommentHeart(@Body commentId: CommentId): CommentResponse
 }

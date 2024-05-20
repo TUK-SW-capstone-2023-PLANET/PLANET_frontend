@@ -126,4 +126,24 @@ class PostingRepositoryImpl @Inject constructor(
             error.message?.let { emit(ApiState.Error(it)) }
         }
     }.flowOn(Dispatchers.IO)
+
+    override suspend fun postCommentHeart(commentId: CommentId) = flow {
+        kotlin.runCatching {
+            mainApi.postCommentHeart(commentId)
+        }.onSuccess {
+            emit(ApiState.Success(it))
+        }.onFailure { error ->
+            error.message?.let { emit(ApiState.Error(it)) }
+        }
+    }.flowOn(Dispatchers.IO)
+
+    override suspend fun deleteCommentHeart(commentId: CommentId) = flow {
+        kotlin.runCatching {
+            mainApi.deleteCommentHeart(commentId)
+        }.onSuccess {
+            emit(ApiState.Success(it))
+        }.onFailure { error ->
+            error.message?.let { emit(ApiState.Error(it)) }
+        }
+    }.flowOn(Dispatchers.IO)
 }

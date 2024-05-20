@@ -21,11 +21,8 @@ interface PostingRepository {
     suspend fun getAllPosted(type: String): Flow<ApiState>
     suspend fun getViewPosted(type: String): Flow<ApiState>
     suspend fun getHotPosted(type: String): Flow<ApiState>
-
-
-
-
-
+    suspend fun postCommentHeart(commentId: CommentId): Flow<ApiState>
+    suspend fun deleteCommentHeart(commentId: CommentId): Flow<ApiState>
 
 
 

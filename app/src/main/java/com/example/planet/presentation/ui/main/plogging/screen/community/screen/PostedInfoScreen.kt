@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
@@ -29,6 +30,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.example.planet.R
+import com.example.planet.data.remote.dto.response.post.CommentInfo
+import com.example.planet.data.remote.dto.response.post.PostedInfo
 import com.example.planet.presentation.ui.component.DialogComponent
 import com.example.planet.presentation.ui.main.plogging.screen.community.component.CommentCard
 import com.example.planet.presentation.ui.main.plogging.screen.community.component.PostedContent
@@ -79,8 +82,10 @@ fun PostedInfoScreen(
             onBack = { onBack() }) {
             viewModel.postedDialogState = true
         }
-        Column(modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.SpaceBetween) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
 
             Column(
                 modifier = Modifier
@@ -88,49 +93,13 @@ fun PostedInfoScreen(
                     .padding(top = 18.dp)
                     .weight(1f)
             ) {
-                Column(
-                    modifier = Modifier
-                        .padding(start = 20.dp, end = 20.dp, bottom = 15.dp)
-                        .fillMaxWidth()
-                ) {
-                    PostedMyProfileCard(
-                        image = viewModel.postedInfo.profileUrl,
-                        name = viewModel.postedInfo.nickName,
-                        date = viewModel.postedInfo.uploadTime
-                    )
-                    PostedContent(
-                        title = viewModel.postedInfo.title,
-                        image = viewModel.postedInfo.imageUrl,
-                        content = viewModel.postedInfo.content,
-                        heartCount = viewModel.postedInfo.heartCount,
-                        commentCount = viewModel.postedInfo.commentCount,
-                        personCount = viewModel.postedInfo.viewCount,
-                        isFavorite = viewModel.postedInfo.heart
-                    ) {
-                        scope.launch {
-                            if (!viewModel.postedInfo.heart) {
-                                viewModel.savePostedHeart(viewModel.postedInfo.postId)
-                            } else {
-                                viewModel.deletePostedHeart(viewModel.postedInfo.postId)
-                            }
-                        }
-                    }
-                }
-                Column {
-                    viewModel.commentList.value.forEach { comment ->
-                        CommentCard(
-                            viewModel = viewModel,
-                            commentId = comment.commentId,
-                            userId = comment.userId,
-                            myUserId = viewModel.userId,
-                            image = comment.imageUrl,
-                            name = comment.nickName,
-                            content = comment.content,
-                            date = comment.uploadTime,
-                            heartCount = comment.heartCount
-                        )
-                    }
-                }
+                PostedArea(
+                    postedInfo = { viewModel.postedInfo },
+                    onFavorite = { viewModel.savePostedHeart(it) },
+                    onNotFavorite = { viewModel.deletePostedHeart(it) },
+                )
+
+                CommentArea(viewModel = viewModel, comment = { viewModel.commentList })
             }
             CommentTextField(
                 modifier = Modifier
@@ -143,11 +112,69 @@ fun PostedInfoScreen(
                 text = viewModel.postingCommentInput,
                 onTextChange = { viewModel.postingCommentInput = it }
             ) {
-                scope.launch { viewModel.saveComment(it){keyBoardController?.hide()} }
+                scope.launch { viewModel.saveComment(it) { keyBoardController?.hide() } }
             }
         }
 
 
+    }
+}
+
+@Composable
+fun CommentArea(viewModel: CommunityViewModel, comment: () -> List<CommentInfo>) {
+    Column {
+        comment().forEach { comment ->
+            CommentCard(
+                viewModel = viewModel,
+                commentId = comment.commentId,
+                userId = comment.userId,
+                myUserId = viewModel.userId,
+                image = comment.imageUrl,
+                name = comment.nickName,
+                content = comment.content,
+                date = comment.uploadTime,
+                isHeart = comment.heart,
+                heartCount = comment.heartCount
+            )
+        }
+    }
+}
+
+@Composable
+fun PostedArea(
+    postedInfo: () -> PostedInfo,
+    onFavorite: suspend (Long) -> Unit,
+    onNotFavorite: suspend (Long) -> Unit
+) {
+    val scope = rememberCoroutineScope()
+
+    Column(
+        modifier = Modifier
+            .padding(start = 20.dp, end = 20.dp, bottom = 15.dp)
+            .fillMaxWidth()
+    ) {
+        PostedMyProfileCard(
+            image = postedInfo().profileUrl,
+            name = postedInfo().nickName,
+            date = postedInfo().uploadTime
+        )
+        PostedContent(
+            title = postedInfo().title,
+            image = postedInfo().imageUrl,
+            content = postedInfo().content,
+            heartCount = postedInfo().heartCount,
+            commentCount = postedInfo().commentCount,
+            personCount = postedInfo().viewCount,
+            isFavorite = postedInfo().heart
+        ) {
+            scope.launch {
+                if (!postedInfo().heart) {
+                    onFavorite(postedInfo().postId)
+                } else {
+                    onNotFavorite(postedInfo().postId)
+                }
+            }
+        }
     }
 }
 

@@ -57,6 +57,7 @@ fun CommentCard(
     name: String,
     content: String,
     date: String,
+    isHeart: Boolean,
     heartCount: Int
 ) {
     var scope = rememberCoroutineScope()
@@ -154,10 +155,19 @@ fun CommentCard(
                 expanded = dropDownMenuState,
                 onDismissRequest = { dropDownMenuState = false },
                 modifier = Modifier.background(color = MaterialTheme.colorScheme.background),
+                isFavorite = { isHeart },
                 isMyComment = { userId == myUserId },
                 onSend = {},
-                onFavorite = {},
-                onDeleteFavorite = {},
+                onFavorite = {
+                    scope.launch {
+                        viewModel.saveCommentHeart(commentId)
+                    }
+                },
+                onDeleteFavorite = {
+                    scope.launch {
+                        viewModel.deleteCommentHeart(commentId)
+                    }
+                },
                 onDeleteComment = {
                     scope.launch {
                         viewModel.deleteComment(commentId) { dropDownMenuState = false }

@@ -5,8 +5,10 @@ import android.net.Uri
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.planet.TAG
@@ -29,10 +31,12 @@ import com.example.planet.domain.usecase.board.GetHotPostedUseCase
 import com.example.planet.domain.usecase.board.GetPopularPostedListUseCase
 import com.example.planet.domain.usecase.board.GetViewPostedUseCase
 import com.example.planet.domain.usecase.login.sharedpreference.GetUserTokenUseCase
+import com.example.planet.domain.usecase.post.DeleteCommentHeartUseCase
 import com.example.planet.domain.usecase.post.DeleteCommentUseCase
 import com.example.planet.domain.usecase.post.DeletePostedHeartSaveUseCase
 import com.example.planet.domain.usecase.post.GetCommentListReadUseCase
 import com.example.planet.domain.usecase.post.GetPostedInfoUseCase
+import com.example.planet.domain.usecase.post.PostCommentHeartUseCase
 import com.example.planet.domain.usecase.post.PostCommentSaveUseCase
 import com.example.planet.domain.usecase.post.PostPostedHeartSaveUseCase
 import com.example.planet.domain.usecase.post.PostPostingSaveUseCase
@@ -62,6 +66,8 @@ class CommunityViewModel @Inject constructor(
     private val getHotPostedUseCase: GetHotPostedUseCase,
     private val getMyUniversityUseCase: GetMyUniversityUseCase,
     private val getPopularPostedListUseCase: GetPopularPostedListUseCase,
+    private val postCommentHeartUseCase: PostCommentHeartUseCase,
+    private val deleteCommentHeartUseCase: DeleteCommentHeartUseCase,
 ) : ViewModel() {
 
     var userId: Long = 0L
@@ -79,7 +85,10 @@ class CommunityViewModel @Inject constructor(
 
     var postedInfo by mutableStateOf(PostedInfo())
 
-    var commentList = mutableStateOf(emptyList<CommentInfo>())
+    var commentList by mutableStateOf(emptyList<CommentInfo>())
+//    private var _commentList = mutableStateListOf<CommentInfo>()
+//    val commentList: List<CommentInfo> = _commentList
+
     var postedList by mutableStateOf(emptyList<Posted>())
     var viewPosted by mutableStateOf<ViewPosted?>(null)
     var hotPosted by mutableStateOf<HotPosted?>(null)
@@ -192,7 +201,9 @@ class CommunityViewModel @Inject constructor(
 
         when (val apiState = postPostedHeartSaveUseCase(postId).first()) {
             is ApiState.Success<*> -> {
-                postedInfo = postedInfo.copy(heart = true)
+                if ((apiState.value as PostResponse).message == "게시물 좋아요 저장 성공") {
+                    postedInfo = postedInfo.copy(heart = true, heartCount = postedInfo.heartCount + 1)
+                }
             }
             is ApiState.Error -> {
                 Log.d("daeYoung", "savePostedHeart() 실패: ${apiState.errMsg}")
@@ -205,7 +216,9 @@ class CommunityViewModel @Inject constructor(
 
         when (val apiState = deletePostedHeartSaveUseCase(postId).first()) {
             is ApiState.Success<*> -> {
-                postedInfo = postedInfo.copy(heart = false)
+                if ((apiState.value as PostResponse).message == "게시물 좋아요 삭제 성공") {
+                    postedInfo = postedInfo.copy(heart = false, heartCount = postedInfo.heartCount -1)
+                }
             }
             is ApiState.Error -> {
                 Log.d("daeYoung", "deletePostedHeart() 실패: ${apiState.errMsg}")
@@ -234,10 +247,13 @@ class CommunityViewModel @Inject constructor(
     }
 
     suspend fun readCommentList(postId: Long) {
-        Log.d("daeYoung", "readCommentList(): ${postId}}")
         when (val apiState = getCommentListReadUseCase(postId = postId , userId = userId).first()) {
             is ApiState.Success<*> -> {
-                commentList.value = apiState.value as List<CommentInfo>
+                commentList = (apiState.value as List<CommentInfo>)
+//                (apiState.value as List<CommentInfo>).forEach { comment ->
+//                    _commentList.add(comment)
+//                }
+                Log.d("daeYoung", "_commentList: ${commentList}")
             }
             is ApiState.Error -> {
                 Log.d("daeYoung", "readCommentList() 실패: ${apiState.errMsg}")
@@ -258,6 +274,48 @@ class CommunityViewModel @Inject constructor(
             }
             is ApiState.Error -> {
                 Log.d("daeYoung", "deleteComment() 실패: ${apiState.errMsg}")
+            }
+            ApiState.Loading -> TODO()
+        }
+    }
+
+    suspend fun saveCommentHeart(commentId: Long) {
+        val commentId = CommentId(commentId, userId)
+        when (val apiState = postCommentHeartUseCase(commentId).first()) {
+            is ApiState.Success<*> -> {
+                val result = (apiState.value as CommentResponse)
+                if (result.message == "댓글 좋아요 저장 성공") {
+                    commentList = commentList.map { comment ->
+                        if (comment.commentId == result.commentId) {
+                            comment.copy(heartCount = comment.heartCount + 1, heart = !comment.heart)
+                        } else comment
+                    }
+                }
+
+            }
+            is ApiState.Error -> {
+                Log.d("daeYoung", "saveCommentHeart() 실패: ${apiState.errMsg}")
+            }
+            ApiState.Loading -> TODO()
+        }
+    }
+
+    suspend fun deleteCommentHeart(commentId: Long) {
+        val commentId = CommentId(commentId, userId)
+        when (val apiState = deleteCommentHeartUseCase(commentId).first()) {
+            is ApiState.Success<*> -> {
+                val result = (apiState.value as CommentResponse)
+                if (result.message == "댓글 좋아요 삭제 성공") {
+                    commentList = commentList.map { comment ->
+                        if (comment.commentId == result.commentId) {
+                            comment.copy(heartCount = comment.heartCount -1, heart = !comment.heart)
+                        } else comment
+                    }
+                }
+
+            }
+            is ApiState.Error -> {
+                Log.d("daeYoung", "deleteCommentHeart() 실패: ${apiState.errMsg}")
             }
             ApiState.Loading -> TODO()
         }
@@ -299,6 +357,8 @@ class CommunityViewModel @Inject constructor(
             ApiState.Loading -> TODO()
         }
     }
+
+
 
 
 

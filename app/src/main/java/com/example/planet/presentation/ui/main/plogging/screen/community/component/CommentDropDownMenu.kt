@@ -20,6 +20,7 @@ fun CommentDropDownMenu(
     expanded: Boolean,
     onDismissRequest: () -> Unit,
     modifier: Modifier,
+    isFavorite: () -> Boolean,
     isMyComment: () -> Boolean,
     onSend: () -> Unit,
     onFavorite: () -> Unit,
@@ -54,11 +55,14 @@ fun CommentDropDownMenu(
             onClick = { /*TODO*/ })
         DropdownMenuItem(text = {
             Text(
-                text = "공감하기",
+                text = if (!isFavorite()) "공감하기" else "공감 취소",
                 style = textStyle,
                 modifier = Modifier.fillMaxWidth()
             )
-        }, onClick = { /*TODO*/ })
+        }, onClick = {
+            if (!isFavorite()) onFavorite()
+            else onDeleteFavorite()
+        })
         DropdownMenuItem(text = {
             Text(
                 text = "신고하기",
@@ -66,7 +70,6 @@ fun CommentDropDownMenu(
                 modifier = Modifier.fillMaxWidth()
             )
         }, onClick = { /*TODO*/ })
-        // TODO: userId와 비교해서 동일하면 보이게함
         if (isMyComment()) {
             DropdownMenuItem(text = {
                 Text(
