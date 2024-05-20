@@ -15,4 +15,5 @@
     <string name="title_activity_plogging_result">PloggingResultActivity</string>
     <string name="title_activity_bulletin_board">BulletinBoardActivity</string>
     <string name="title_activity_posted_info">PostedInfoActivity</string>
+    <string name="title_activity_my_writed">MyWritedActivity</string>
 </resources>

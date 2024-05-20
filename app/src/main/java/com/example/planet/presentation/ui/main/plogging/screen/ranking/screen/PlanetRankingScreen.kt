@@ -26,7 +26,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.planet.R
 import com.example.planet.data.remote.dto.response.ranking.planet.PlanetRankingUser
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.MiddleHead
-import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.SearchTextField
+import com.example.planet.presentation.ui.component.SearchTextField
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.TrophyProfile
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.UniversityIndividualContentRow
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.UniversityIndividualTitleRow
@@ -102,10 +102,10 @@ fun PlanetRankingScreen(mainViewModel: MainViewModel = hiltViewModel()) {
             text = mainViewModel.searchText.value,
             onValueChange = mainViewModel.changeSearchText,
             fontSize = 12.sp,
-            placeholder = "search"
-        ) {
-            Icon(imageVector = Icons.Default.Search, contentDescription = null)
-        }
+            placeholder = "search",
+            modifier = Modifier,
+            verticalSpace = 9.dp
+        )
 
         UniversityIndividualTitleRow()
         mainViewModel.myPlanetRank.value?.let { myRank ->

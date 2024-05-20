@@ -11,6 +11,7 @@ import com.example.planet.TAG
 import com.example.planet.presentation.ui.main.plogging.navigation.NavigationGraph
 import com.example.planet.presentation.ui.main.plogging.screen.community.screen.CommunityActivity
 import com.example.planet.presentation.ui.main.plogging.screen.community.screen.PostedInfoActivity
+import com.example.planet.presentation.ui.main.plogging.screen.user.screen.mypost.MyWritedActivity
 import com.example.planet.presentation.ui.main.plogging.screen.user.screen.UserActivity
 import com.example.planet.presentation.ui.plogging.screen.MapActivity
 import com.example.planet.presentation.ui.ui.theme.MyApplicationTheme
@@ -42,6 +43,7 @@ class MainActivity : ComponentActivity() {
                     startUserActivity = { startUserActivity() },
                     startCommunityActivity = { board, universityName -> startCommunityActivity(board, universityName) },
                     startPostedInfoActivity = { postId, board -> startPostedInfoActivity(postId, board) },
+                    startMyWritedActivity = { startPostedInfoActivity(it) }
                 )
             }
         }
@@ -97,6 +99,13 @@ class MainActivity : ComponentActivity() {
         val intent = Intent(this, PostedInfoActivity::class.java).apply {
             this.putExtra("postId", postId)
             this.putExtra("board", board)
+        }
+        startActivity(intent)
+    }
+
+    private fun startPostedInfoActivity(type: String) {
+        val intent = Intent(this, MyWritedActivity::class.java).apply {
+            this.putExtra("type", type)
         }
         startActivity(intent)
     }

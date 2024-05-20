@@ -32,11 +32,6 @@ class UserViewModel @Inject constructor(
     private val postImageUseCase: PostImageUseCase,
     private val putUserInfoUseCase: PutUserInfoUseCase
 ) : ViewModel() {
-//    init {
-//        viewModelScope.launch {
-//            getUserToken()
-//        }
-//    }
 
     val defaultImageUrl = "https://tuk-planet.s3.ap-northeast-2.amazonaws.com/user/free-icon-user-149071+3.png"
 

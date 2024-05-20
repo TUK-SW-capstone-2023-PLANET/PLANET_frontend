@@ -5,7 +5,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.planet.presentation.ui.main.plogging.screen.community.screen.FreeBoardScreen
-import com.example.planet.presentation.ui.main.plogging.screen.community.screen.PostedInfoScreen
 import com.example.planet.presentation.ui.main.plogging.screen.community.screen.PostingScreen
 import com.example.planet.presentation.ui.main.plogging.screen.community.screen.UniversityBoardScreen
 import com.example.planet.presentation.viewmodel.CommunityViewModel
@@ -40,13 +39,6 @@ fun CommunityNavGraph(
                 startPostedInfoActivity(postId, board)
             }
         }
-//        composable("${CommunityNavItem.PostedInfoScreen.screenRoute}/{title}") {
-//            PostedInfoScreen(
-//                viewModel = viewModel,
-//                navController = navController,
-//                appBarTitle = it.arguments?.getString("title") ?: "자유 게시판"
-//            )
-//        }
         composable(CommunityNavItem.PostingScreen.screenRoute) {
             PostingScreen(viewModel = viewModel, navController = navController)
         }

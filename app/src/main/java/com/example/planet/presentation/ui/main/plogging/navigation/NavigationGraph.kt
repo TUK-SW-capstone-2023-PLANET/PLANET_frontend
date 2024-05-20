@@ -38,6 +38,7 @@ fun NavigationGraph(
     startUserActivity: () -> Unit,
     startCommunityActivity: (String, String) -> Unit,
     startPostedInfoActivity: (Long, String) -> Unit,
+    startMyWritedActivity: (String) -> Unit
 ) {
 
     Scaffold(
@@ -69,8 +70,9 @@ fun NavigationGraph(
                         }
                         composable(BottomNavItem.UserScreen.screenRoute) {
                             UserScreen(
-                                mainViewModel = mainViewModel
-                            ) { startUserActivity() }
+                                mainViewModel = mainViewModel,
+                                goUserActivity = { startUserActivity() }
+                            ) { type -> startMyWritedActivity(type) }
                         }
                         composable(BottomNavItem.MessageScreen.screenRoute) {
                             MessageScreen()

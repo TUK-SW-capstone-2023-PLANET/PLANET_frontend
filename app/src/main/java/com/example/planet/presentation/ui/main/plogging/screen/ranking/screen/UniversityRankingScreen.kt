@@ -21,12 +21,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.planet.R
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.MiddleHead
-import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.SearchTextField
+import com.example.planet.presentation.ui.component.SearchTextField
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.UniversityProfile
 import com.example.planet.data.remote.dto.response.ranking.university.University
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.UniversityContentRow
@@ -99,10 +98,10 @@ fun UniversityRankingScreen(mainViewModel: MainViewModel = hiltViewModel()) {
             text = mainViewModel.searchText.value,
             onValueChange = mainViewModel.changeSearchText,
             fontSize = 12.sp,
-            placeholder = "search"
-        ) {
-            Icon(imageVector = Icons.Default.Search, contentDescription = null)
-        }
+            placeholder = "search",
+            modifier = Modifier,
+            verticalSpace = 9.dp
+        )
 
         UniversityTitleRow()
         LazyColumn(modifier = Modifier.fillMaxSize()) {

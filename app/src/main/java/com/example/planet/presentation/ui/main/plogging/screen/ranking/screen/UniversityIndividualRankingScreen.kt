@@ -18,7 +18,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,7 +33,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
@@ -42,7 +40,7 @@ import coil.request.ImageRequest
 import com.example.planet.R
 import com.example.planet.data.remote.dto.response.ranking.universityuser.UniversityUser
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.MiddleHead
-import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.SearchTextField
+import com.example.planet.presentation.ui.component.SearchTextField
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.UniversityIndividualContentRow
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.UniversityIndividualGraph
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.UniversityIndividualTitleRow
@@ -150,10 +148,10 @@ fun UniversityIndividualRankingScreen(mainViewModel: MainViewModel = hiltViewMod
             text = mainViewModel.searchText.value,
             onValueChange = mainViewModel.changeSearchText,
             fontSize = 12.sp,
-            placeholder = "search"
-        ) {
-            Icon(imageVector = Icons.Default.Search, contentDescription = null)
-        }
+            placeholder = "search",
+            modifier = Modifier,
+            verticalSpace = 9.dp
+        )
 
         UniversityIndividualTitleRow()
         mainViewModel.myUniversityRank.collectAsStateWithLifecycle().value?.let { myRank ->

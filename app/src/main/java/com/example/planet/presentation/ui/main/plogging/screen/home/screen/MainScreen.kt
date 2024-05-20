@@ -28,8 +28,8 @@ import androidx.navigation.NavHostController
 import com.example.planet.R
 import com.example.planet.TAG
 import com.example.planet.component.main.plogging.MainTopBanner
-import com.example.planet.presentation.ui.main.plogging.screen.home.component.MainTapRow
-import com.example.planet.presentation.ui.main.plogging.screen.ranking.data.ScreenNav
+import com.example.planet.presentation.ui.main.plogging.component.MainTapRow
+import com.example.planet.presentation.ui.main.plogging.component.MyTabRow
 import com.example.planet.presentation.viewmodel.MainViewModel
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -68,11 +68,15 @@ fun MainScreen(
         ) {
             /* TODO("스켈레톤 ui 적용할 것") */
             if (mainViewModel.imageUrlList.isEmpty()) {
-            CircularProgressIndicator(color = Color.Black)
+                CircularProgressIndicator(color = Color.Black)
             } else {
                 MainTopBanner { mainViewModel.imageUrlList }
             }
-            MainTapRow(pagerState = pagerState, tabItems = tabItems)
+            MyTabRow(
+                modifier = Modifier.padding(horizontal = 20.dp, vertical = 8.dp),
+                pagerState = pagerState,
+                tabItems = tabItems
+            )
 
             HorizontalPager(state = pagerState) { page ->
                 when (page) {
@@ -84,6 +88,7 @@ fun MainScreen(
                         graphHeightList = { mainViewModel.universityGraphHeightList },
                         goUniversityScreen = { screen -> mainViewModel.showRankingScreen = screen }
                     ) { screen -> mainViewModel.showRankingScreen = screen }
+
                     2 -> SeasonScreen(navController = navController, mainViewModel = mainViewModel)
                     3 -> TestScreen()
                 }

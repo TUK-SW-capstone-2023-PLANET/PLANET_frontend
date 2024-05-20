@@ -15,7 +15,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
@@ -24,13 +23,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.planet.R
 import com.example.planet.data.remote.dto.response.ranking.season.SeasonUser
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.MiddleHead
-import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.SearchTextField
+import com.example.planet.presentation.ui.component.SearchTextField
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.SeasonContentRow
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.SeasonTitleRow
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.TearProfile
@@ -110,10 +108,10 @@ fun SeasonRankingScreen(mainViewModel: MainViewModel = hiltViewModel()) {
                 text = mainViewModel.searchText.value,
                 onValueChange = mainViewModel.changeSearchText,
                 fontSize = 12.sp,
-                placeholder = "search"
-            ) {
-                Icon(imageVector = Icons.Default.Search, contentDescription = null)
-            }
+                placeholder = "search",
+                modifier = Modifier,
+                verticalSpace = 9.dp
+            )
 
             SeasonTitleRow()
             mainViewModel.mySeasonRank.collectAsStateWithLifecycle().value?.let { myRank ->

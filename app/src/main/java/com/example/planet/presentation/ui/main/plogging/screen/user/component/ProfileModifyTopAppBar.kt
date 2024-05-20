@@ -1,6 +1,7 @@
 package com.example.planet.presentation.ui.main.plogging.screen.user.component
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
@@ -18,7 +19,7 @@ import com.example.planet.R
 import com.example.planet.presentation.util.noRippleClickable
 
 @Composable
-fun ProfileModifyTopAppBar(onBack: () -> Unit, updateUserInfo: () ->Unit) {
+fun ProfileModifyTopAppBar(onBack: () -> Unit, updateUserInfo: () -> Unit) {
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
         Icon(
             imageVector = Icons.Default.ArrowBackIosNew,
@@ -44,4 +45,30 @@ fun ProfileModifyTopAppBar(onBack: () -> Unit, updateUserInfo: () ->Unit) {
                 .noRippleClickable { updateUserInfo() }
         )
     }
+}
+
+@Composable
+fun MyWritedTopAppBar(modifier: Modifier, title: String, onBack: () -> Unit) {
+    Box(modifier = modifier.fillMaxWidth()) {
+        Icon(
+            imageVector = Icons.Default.ArrowBackIosNew,
+            contentDescription = null,
+            tint = colorResource(id = R.color.font_background_color1),
+            modifier = Modifier
+                .align(Alignment.CenterStart)
+                .noRippleClickable {
+                    onBack()
+                }
+        )
+//        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+
+        Text(
+            text = title,
+            fontWeight = FontWeight.Bold,
+            fontSize = 18.sp,
+            modifier = Modifier.align(Alignment.Center)
+        )
+//        }
+    }
+
 }

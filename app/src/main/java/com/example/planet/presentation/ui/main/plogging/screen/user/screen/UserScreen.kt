@@ -52,7 +52,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun UserScreen(
     mainViewModel: MainViewModel,
-    onClick: () -> Unit
+    goUserActivity: () -> Unit,
+    goMyWritedActivity: (String) -> Unit,
 ) {
     LaunchedEffect(Unit) {
         launch {
@@ -129,7 +130,7 @@ fun UserScreen(
                 contentColor = colorResource(id = R.color.font_background_color2)
             ),
             shape = RoundedCornerShape(5.dp),
-            onClick = { onClick() },
+            onClick = { goUserActivity() },
         ) {
             Text(text = "프로필 수정", fontSize = 10.sp)
         }
@@ -227,7 +228,7 @@ fun UserScreen(
             image = painterResource(id = R.drawable.communitylogo),
             title = "커뮤니티"
         )
-        Column(modifier = Modifier.clickable { }) {
+        Column(modifier = Modifier.clickable { goMyWritedActivity("posted") }) {
             Text(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -262,29 +263,9 @@ fun UserScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 31.dp, top = 8.dp, bottom = 8.dp),
-                text = "내가 신고한 게시물",
+                text = "내 신고내역",
                 fontSize = 12.sp,
                 textAlign = TextAlign.Start
-            )
-            Divider(
-                modifier = Modifier.fillMaxWidth(),
-                thickness = 1.dp,
-                color = colorResource(id = R.color.font_background_color3)
-            )
-        }
-        Column(modifier = Modifier.clickable { }) {
-            Text(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 31.dp, top = 8.dp, bottom = 8.dp),
-                text = "내가 신고한 댓글",
-                fontSize = 12.sp,
-                textAlign = TextAlign.Start
-            )
-            Divider(
-                modifier = Modifier.fillMaxWidth(),
-                thickness = 1.dp,
-                color = colorResource(id = R.color.font_background_color3)
             )
         }
 
