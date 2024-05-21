@@ -11,12 +11,14 @@ import com.example.planet.TAG
 import com.example.planet.presentation.ui.main.plogging.navigation.NavigationGraph
 import com.example.planet.presentation.ui.main.plogging.screen.community.screen.CommunityActivity
 import com.example.planet.presentation.ui.main.plogging.screen.community.screen.PostedInfoActivity
-import com.example.planet.presentation.ui.main.plogging.screen.user.screen.mypost.MyWritedActivity
+import com.example.planet.presentation.ui.main.plogging.screen.message.screen.MessageActivity
 import com.example.planet.presentation.ui.main.plogging.screen.user.screen.UserActivity
+import com.example.planet.presentation.ui.main.plogging.screen.user.screen.mypost.MyWritedActivity
 import com.example.planet.presentation.ui.plogging.screen.MapActivity
 import com.example.planet.presentation.ui.ui.theme.MyApplicationTheme
 import com.example.planet.presentation.viewmodel.CommunityViewModel
 import com.example.planet.presentation.viewmodel.MainViewModel
+import com.example.planet.presentation.viewmodel.MessageViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -25,6 +27,7 @@ class MainActivity : ComponentActivity() {
 
     private val mainViewModel by viewModels<MainViewModel>()
     private val communityViewModel by viewModels<CommunityViewModel>()
+    private val messageViewModel by viewModels<MessageViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,11 +42,13 @@ class MainActivity : ComponentActivity() {
                     navController = navController,
                     mainViewModel = mainViewModel,
                     communityViewModel = communityViewModel,
+                    messageViewModel = messageViewModel,
                     startMapActivity = { startMapActivity() },
                     startUserActivity = { startUserActivity() },
                     startCommunityActivity = { board, universityName -> startCommunityActivity(board, universityName) },
                     startPostedInfoActivity = { postId, board -> startPostedInfoActivity(postId, board) },
-                    startMyWritedActivity = { type, userId -> startPostedInfoActivity(type,userId ) }
+                    startMyWritedActivity = { type, userId -> startPostedInfoActivity(type,userId ) },
+                    startMessageActivity = { startMessageActivity(it) }
                 )
             }
         }
@@ -106,6 +111,13 @@ class MainActivity : ComponentActivity() {
     private fun startPostedInfoActivity(type: String, userId: Long) {
         val intent = Intent(this, MyWritedActivity::class.java).apply {
             this.putExtra("type", type)
+            this.putExtra("userId", userId)
+        }
+        startActivity(intent)
+    }
+
+    private fun startMessageActivity(userId: Long) {
+        val intent = Intent(this, MessageActivity::class.java).apply {
             this.putExtra("userId", userId)
         }
         startActivity(intent)

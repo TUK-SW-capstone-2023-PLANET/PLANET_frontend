@@ -39,7 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.planet.TAG
-import com.example.planet.component.common.PloggingDialog
+import com.example.planet.component.common.PlanetDialog
 import com.example.planet.component.map.common.LockButton
 import com.example.planet.data.map.Tabltem
 import com.example.planet.presentation.viewmodel.PloggingViewModel
@@ -106,7 +106,7 @@ fun MapGraph(ploggingViewModel: PloggingViewModel = viewModel(), onClick: (Int) 
 //        })
 //    })
     if (ploggingViewModel.dialogState.value) {
-        PloggingDialog(ploggingViewModel = ploggingViewModel) { ploggingId ->
+        PlanetDialog(ploggingViewModel = ploggingViewModel) { ploggingId ->
             onClick(ploggingId)
         }
         ploggingViewModel.pauseTimer()

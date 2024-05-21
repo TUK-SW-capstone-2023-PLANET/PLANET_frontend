@@ -9,15 +9,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.planet.presentation.ui.component.SearchTextField
-import com.example.planet.presentation.ui.main.plogging.screen.message.component.MessageCard
+import com.example.planet.presentation.ui.main.plogging.screen.message.component.CharCard
+import com.example.planet.presentation.viewmodel.MessageViewModel
 
 @Composable
-@Preview(showBackground = true)
-fun MessageScreen() {
+fun MessageScreen(messageViewModel: MessageViewModel, startMessageActivity: (Long) -> Unit) {
     val titleStyle = TextStyle(
         fontSize = 20.sp,
         fontWeight = FontWeight.Bold,
@@ -29,17 +28,17 @@ fun MessageScreen() {
             SearchTextField(text = "", onValueChange = {}, fontSize = 12.sp, placeholder = "사용자 명")
         }
 
-        MessageCard(
+        CharCard(
             name = "행복한 티노",
             lastMessage = "다음에 플로깅 같이 ㄱ",
             date = "2024.04.29 01:28",
             image = ""
-        )
-        MessageCard(
+        ) { startMessageActivity(0) }
+        CharCard(
             name = "행복한 티노",
             lastMessage = "다음에 플로깅 같이 ㄱ",
             date = "2024.04.29 01:28",
             image = ""
-        )
+        ) { }
     }
 }

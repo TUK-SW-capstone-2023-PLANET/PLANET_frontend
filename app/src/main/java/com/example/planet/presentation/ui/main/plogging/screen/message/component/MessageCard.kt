@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.sp
 import com.example.planet.R
 
 @Composable
-fun MessageCard(name: String, lastMessage: String, date: String, image: String) {
+fun CharCard(name: String, lastMessage: String, date: String, image: String, onClick: () -> Unit) {
     val dateStyle = TextStyle(
         fontWeight = FontWeight.Medium,
         fontSize = 10.sp,
@@ -45,7 +45,7 @@ fun MessageCard(name: String, lastMessage: String, date: String, image: String) 
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable {  }
+            .clickable { onClick() }
             .padding(start = 29.dp, end = 20.dp, top = 12.dp, bottom = 12.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {

@@ -46,7 +46,7 @@ fun HotPostingCard(
     val titleTextStyle = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
     val contentTextStyle = TextStyle(fontSize = 11.sp, fontWeight = FontWeight.Medium)
 
-    Column(modifier = modifier.fillMaxWidth().clickable { onClick() }) {
+    Column(modifier = modifier.fillMaxWidth().clickable { onClick() }.padding(start = 30.dp, end = 30.dp, top = 9.dp, bottom = 9.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(bottom = 2.dp)) {
             Image(
                 painter = rememberAsyncImagePainter(model = image),
@@ -67,12 +67,12 @@ fun HotPostingCard(
             Text(text = content, style = contentTextStyle)
         }
 
-        PostingCardIcons(modifier = Modifier.padding(bottom = 16.dp), heartCount = heartCount, commentCount = commentCount, viewCount = viewCount)
+        PostingCardIcons(modifier = Modifier, heartCount = heartCount, commentCount = commentCount, viewCount = viewCount)
     }
 
     HorizontalDivider(
         thickness = 1.dp,
         color = colorResource(id = R.color.font_background_color3),
-        modifier = Modifier.padding(bottom = 14.dp)
+        modifier = Modifier.padding(horizontal = 10.dp)
     )
 }

@@ -16,7 +16,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.colorResource
@@ -101,7 +100,7 @@ fun CommunityScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight()
-                .padding(start = 30.dp, end = 30.dp, top = 19.dp),
+                .padding(top = 19.dp),
             verticalArrangement = Arrangement.Center
         ) {
             val titleStyle = TextStyle(
@@ -109,7 +108,7 @@ fun CommunityScreen(
                 fontWeight = FontWeight.SemiBold
             )
 
-            Text(text = "인기 게시글", style = titleStyle, modifier = Modifier.padding(bottom = 23.dp))
+            Text(text = "인기 게시글", style = titleStyle, modifier = Modifier.padding(start = 30.dp, end = 30.dp, bottom = 15.dp))
             if (communityViewModel.popularPosted.isNotEmpty()) {
                 communityViewModel.popularPosted.subList(0,3).forEach {
                     HotPostingCard(

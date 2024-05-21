@@ -26,6 +26,7 @@ import com.example.planet.presentation.ui.main.plogging.screen.ranking.screen.Un
 import com.example.planet.presentation.ui.main.plogging.screen.user.screen.UserScreen
 import com.example.planet.presentation.viewmodel.CommunityViewModel
 import com.example.planet.presentation.viewmodel.MainViewModel
+import com.example.planet.presentation.viewmodel.MessageViewModel
 
 
 @Composable
@@ -33,11 +34,13 @@ fun NavigationGraph(
     navController: NavHostController,
     mainViewModel: MainViewModel = viewModel(),
     communityViewModel: CommunityViewModel,
+    messageViewModel: MessageViewModel,
     startMapActivity: () -> Unit,
     startUserActivity: () -> Unit,
     startCommunityActivity: (String, String) -> Unit,
     startPostedInfoActivity: (Long, String) -> Unit,
-    startMyWritedActivity: (String, Long) -> Unit
+    startMyWritedActivity: (String, Long) -> Unit,
+    startMessageActivity: (Long) -> Unit
 ) {
 
     Scaffold(
@@ -74,7 +77,7 @@ fun NavigationGraph(
                             ) { type, userId -> startMyWritedActivity(type, userId) }
                         }
                         composable(BottomNavItem.MessageScreen.screenRoute) {
-                            MessageScreen()
+                            MessageScreen(messageViewModel = messageViewModel) {startMessageActivity(it)}
                         }
                         composable(BottomNavItem.CommunityScreen.screenRoute) {
                             CommunityScreen(
