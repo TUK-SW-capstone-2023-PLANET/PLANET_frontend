@@ -13,4 +13,5 @@ class MessageViewModel @Inject constructor(): ViewModel() {
     var userId:Long = 0
 
     var dialogState by mutableStateOf(false)
+    var messageInput by mutableStateOf("")
 }

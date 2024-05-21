@@ -106,8 +106,6 @@ fun PostingScreen(
             modifier = Modifier
                 .verticalScroll(scrollState)
                 .padding(top = 18.dp, start = 20.dp, end = 20.dp)
-//                .fillMaxSize()
-                .weight(1f)
                 .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Vertical)),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -245,6 +243,9 @@ fun PostingContentTextFiled(
     TextField(
         value = value,
         onValueChange = { onValueChange(it) },
+        modifier = Modifier
+            .fillMaxWidth()
+            .imePadding(),
         colors = TextFieldDefaults.colors(
             unfocusedIndicatorColor = Color.Transparent,
             focusedIndicatorColor = Color.Transparent,
@@ -252,8 +253,6 @@ fun PostingContentTextFiled(
             focusedContainerColor = Color.Transparent,
         ),
         placeholder = { Text(text = "내용을 입력하세요.", style = placeholderTextStyle) },
-        modifier = modifier
-            .fillMaxWidth()
-            .imePadding(),
+
     )
 }
