@@ -14,10 +14,9 @@ import androidx.navigation.compose.composable
 import com.example.planet.presentation.ui.main.plogging.component.BottomNavigation
 import com.example.planet.presentation.ui.main.plogging.component.MainTopSwitch
 import com.example.planet.presentation.ui.main.plogging.screen.community.screen.CommunityScreen
-import com.example.planet.presentation.ui.main.plogging.screen.community.screen.PostedInfoScreen
 import com.example.planet.presentation.ui.main.plogging.screen.home.screen.MainScreen
 import com.example.planet.presentation.ui.main.plogging.screen.home.screen.TierScreen
-import com.example.planet.presentation.ui.main.plogging.screen.message.MessageScreen
+import com.example.planet.presentation.ui.main.plogging.screen.message.screen.MessageScreen
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.data.ScreenNav
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.screen.PlanetRankingScreen
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.screen.RankingScreen

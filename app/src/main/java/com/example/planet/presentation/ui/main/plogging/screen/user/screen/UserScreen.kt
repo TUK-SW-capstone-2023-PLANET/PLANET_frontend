@@ -258,7 +258,7 @@ fun UserScreen(
                 color = colorResource(id = R.color.font_background_color3)
             )
         }
-        Column(modifier = Modifier.clickable { }) {
+        Column(modifier = Modifier.clickable { goMyWritedActivity("report", mainViewModel.userId) }) {
             Text(
                 modifier = Modifier
                     .fillMaxWidth()

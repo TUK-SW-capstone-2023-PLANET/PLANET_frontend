@@ -74,6 +74,11 @@ class MyWritedActivity : ComponentActivity() {
                             },
                             onBack = { finish() }
                         ) { postId, board -> startPostedInfoActivity(postId, board) }
+                        "report" -> MyReportScreen(
+                            myWritedViewModel = myWritedViewModel,
+                            callAllAPIs = { /*TODO*/ }) {
+                            finish()
+                        }
                     }
                 }
             }

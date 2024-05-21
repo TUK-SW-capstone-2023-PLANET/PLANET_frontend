@@ -36,7 +36,7 @@ fun SearchTextField(
     verticalSpace: Dp = 0.dp,
 ) {
     val placeholderStyle = TextStyle(
-        color = colorResource(id = R.color.font_background_color1),
+        color = colorResource(id = R.color.font_background_color2),
         fontWeight = FontWeight.SemiBold,
         fontSize = fontSize
     )

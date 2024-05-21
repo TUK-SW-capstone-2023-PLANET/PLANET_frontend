@@ -129,16 +129,18 @@ fun CommentCard(
                     style = contentTextStyle,
                     modifier = Modifier.padding(bottom = 3.dp)
                 )
-                Row {
-                    Icon(
-                        imageVector = Icons.Outlined.FavoriteBorder,
-                        contentDescription = null,
-                        modifier = Modifier
-                            .padding(end = 2.dp)
-                            .size(10.dp),
-                        tint = colorResource(id = R.color.red)
-                    )
-                    Text(text = heartCount.toString(), style = heartCountTextStyle)
+                if (heartCount >= 1) {
+                    Row {
+                        Icon(
+                            imageVector = Icons.Outlined.FavoriteBorder,
+                            contentDescription = null,
+                            modifier = Modifier
+                                .padding(end = 2.dp)
+                                .size(10.dp),
+                            tint = colorResource(id = R.color.red)
+                        )
+                        Text(text = heartCount.toString(), style = heartCountTextStyle)
+                    }
                 }
             }
         }

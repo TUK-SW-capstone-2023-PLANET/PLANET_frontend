@@ -233,7 +233,7 @@ class PloggingViewModel @Inject constructor(
                         TAG,
                         "distance: ${distance.value}\nminSpeed: ${minSpeed.value}\nMET: $met\nkcal: ${kcal}\npace: ${pace.value}"
                     )
-                    delay(5000)
+                    delay(1000)
                 }
             }
             ploggingLogJob = launch(Dispatchers.IO) {
@@ -247,9 +247,9 @@ class PloggingViewModel @Inject constructor(
                                 currentLatLng!!.longitude
                             )
                             Log.d(TAG, "거리 계산 if문 안: $distance")
-                            if (distance <= 9.0) {              // 1초 동안 1m 이하 거리이동만 측정
-                                _distance.value += distance / 1000.0
-                            }
+//                            if (distance <= 9.0) {              // 1초 동안 1m 이하 거리이동만 측정
+//                                _distance.value += distance / 1000.0
+//                            }
                             pastLatLng = currentLatLng
                         }
                         delay(1000)
