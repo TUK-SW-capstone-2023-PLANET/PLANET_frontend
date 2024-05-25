@@ -31,6 +31,7 @@ fun UniversityBoardScreen(
     onPosting: (String) -> Unit,
     onBack: () -> Unit,
     onSearch: () -> Unit,
+    startMyWritedActivity: (Long) -> Unit,
     startPostedInfoActivity: (Long, String) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
@@ -55,7 +56,7 @@ fun UniversityBoardScreen(
             text2 = "내가 쓴 글 보기",
             closeDialog = { viewModel.boardDialogState = false },
             onClick1 = { onPosting("university") },
-            onClick2 = { }
+            onClick2 = { startMyWritedActivity(viewModel.userId) }
         )
     }
 

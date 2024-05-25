@@ -15,6 +15,7 @@ fun CommunityNavGraph(
     navController: NavHostController,
     startRoute: String,
     activityFinish: () -> Unit,
+    startMyWritedActivity: (Long) -> Unit,
     startPostedInfoActivity: (Long, String) -> Unit,
 ) {
     NavHost(
@@ -26,7 +27,9 @@ fun CommunityNavGraph(
                 viewModel = viewModel,
                 onPosting = { type -> navController.navigate("${CommunityNavItem.PostingScreen.screenRoute}/${type}") },
                 onBack = { activityFinish() },
-                onSearch = {}) { postId, board ->
+                onSearch = {},
+                startMyWritedActivity = {userId: Long -> startMyWritedActivity(userId)},
+                ) { postId, board ->
                 startPostedInfoActivity(postId, board)
             }
         }
@@ -35,7 +38,9 @@ fun CommunityNavGraph(
                 viewModel = viewModel,
                 onPosting = { type -> navController.navigate("${CommunityNavItem.PostingScreen.screenRoute}/${type}") },
                 onBack = { activityFinish() },
-                onSearch = {}) { postId, board ->
+                onSearch = {},
+                startMyWritedActivity = {userId: Long -> startMyWritedActivity(userId)},
+                ) { postId, board ->
                 startPostedInfoActivity(postId, board)
             }
         }
@@ -43,4 +48,5 @@ fun CommunityNavGraph(
             PostingScreen(viewModel = viewModel, types = it.arguments?.getString("type") ?: "free", onBack = { activityFinish() })
         }
     }
+//    goMyWritedActivity("posted", mainViewModel.userId)
 }

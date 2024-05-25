@@ -47,7 +47,7 @@ class MainActivity : ComponentActivity() {
                     startUserActivity = { startUserActivity() },
                     startCommunityActivity = { board, universityName -> startCommunityActivity(board, universityName) },
                     startPostedInfoActivity = { postId, board -> startPostedInfoActivity(postId, board) },
-                    startMyWritedActivity = { type, userId -> startPostedInfoActivity(type,userId ) },
+                    startMyWritedActivity = { type, userId -> startMyWritedActivity(type, userId ) },
                     startMessageActivity = { startMessageActivity(it) }
                 )
             }
@@ -108,7 +108,7 @@ class MainActivity : ComponentActivity() {
         startActivity(intent)
     }
 
-    private fun startPostedInfoActivity(type: String, userId: Long) {
+    private fun startMyWritedActivity(type: String, userId: Long) {
         val intent = Intent(this, MyWritedActivity::class.java).apply {
             this.putExtra("type", type)
             this.putExtra("userId", userId)

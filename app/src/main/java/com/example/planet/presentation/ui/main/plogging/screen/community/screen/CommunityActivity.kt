@@ -15,6 +15,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.planet.TAG
 import com.example.planet.presentation.ui.main.plogging.screen.community.navigation.CommunityNavGraph
 import com.example.planet.presentation.ui.main.plogging.screen.community.navigation.CommunityNavItem
+import com.example.planet.presentation.ui.main.plogging.screen.user.screen.mypost.MyWritedActivity
 import com.example.planet.presentation.ui.ui.theme.MyApplicationTheme
 import com.example.planet.presentation.viewmodel.CommunityViewModel
 import com.example.planet.presentation.viewmodel.MainViewModel
@@ -43,6 +44,7 @@ class CommunityActivity : ComponentActivity() {
                         navController = navController,
                         startRoute = intent.getStringExtra("board")
                             ?: CommunityNavItem.FreeBoardScreen.screenRoute,
+                        startMyWritedActivity = {userId: Long -> startMyWritedActivity(userId)},
                         activityFinish = { finish() }
                     ) { postId, board ->
                         startPostedInfoActivity(postId, board)
@@ -56,6 +58,14 @@ class CommunityActivity : ComponentActivity() {
         val intent = Intent(this, PostedInfoActivity::class.java).apply {
             this.putExtra("postId", postId)
             this.putExtra("board", board)
+        }
+        startActivity(intent)
+    }
+
+    private fun startMyWritedActivity(userId: Long) {
+        val intent = Intent(this, MyWritedActivity::class.java).apply {
+            this.putExtra("type", "posted")
+            this.putExtra("userId", userId)
         }
         startActivity(intent)
     }
