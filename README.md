@@ -59,21 +59,22 @@
 ## UI 설명
 
 ### 메인 화면
-<img src="https://github.com/DaeYoungee/CodingTest/assets/121485300/6b54aeb2-c473-46ff-be19-d9c84d0aaf5e" width="400">
-<img src="https://github.com/DaeYoungee/CodingTest/assets/121485300/3071279f-d867-458c-b27d-d55e0daa5f4c" width="400">
-<img src="https://github.com/DaeYoungee/CodingTest/assets/121485300/c3516782-57cd-4f16-a6e5-1fc07dcee67d" width="400">
+<img src="https://github.com/DaeYoungee/CodingTest/assets/121485300/6b54aeb2-c473-46ff-be19-d9c84d0aaf5e" width="300">
+<img src="https://github.com/DaeYoungee/CodingTest/assets/121485300/3071279f-d867-458c-b27d-d55e0daa5f4c" width="300">
+<img src="https://github.com/DaeYoungee/CodingTest/assets/121485300/c3516782-57cd-4f16-a6e5-1fc07dcee67d" width="300">
 
 
 ### 랭킹 화면
-![image](https://github.com/TUK-SW-capstone-2023-PLANET/PLANET_frontend/assets/121485300/f995392f-3797-4078-bd63-f508c7042eeb)
-![image](https://github.com/DaeYoungee/CodingTest/assets/121485300/82eb6726-b85b-4086-aef7-18e8583b1b31)
+<img src="https://github.com/TUK-SW-capstone-2023-PLANET/PLANET_frontend/assets/121485300/f995392f-3797-4078-bd63-f508c7042eeb" width="300">
+<img src="https://github.com/DaeYoungee/CodingTest/assets/121485300/82eb6726-b85b-4086-aef7-18e8583b1b31" width="300">
+
 
 ### 유저 정보 화면
-![image](https://github.com/DaeYoungee/CodingTest/assets/121485300/558e1afa-4de5-4cbf-9850-3d18f37b6554)
+<img src="https://github.com/DaeYoungee/CodingTest/assets/121485300/558e1afa-4de5-4cbf-9850-3d18f37b6554" width="300">
 
 ### 커뮤니티 화면
-![image](https://github.com/DaeYoungee/CodingTest/assets/121485300/24b6e7ab-752a-411c-9378-07f7bcdb66ce)
-![image](https://github.com/DaeYoungee/CodingTest/assets/121485300/b03a70f6-0bb0-4c36-b302-72c4e0fc2b82)
+<img src="https://github.com/DaeYoungee/CodingTest/assets/121485300/24b6e7ab-752a-411c-9378-07f7bcdb66ce" width="300">
+<img src="https://github.com/DaeYoungee/CodingTest/assets/121485300/b03a70f6-0bb0-4c36-b302-72c4e0fc2b82" width="300">
 
 ### 쪽지 화면
-![image](https://github.com/DaeYoungee/CodingTest/assets/121485300/f90bb9c1-1734-4b15-9230-ce8188ec9a01)
+<img src="https://github.com/DaeYoungee/CodingTest/assets/121485300/f90bb9c1-1734-4b15-9230-ce8188ec9a01" width="300">
