@@ -5,6 +5,6 @@ import kotlinx.coroutines.flow.Flow
 import okhttp3.MultipartBody
 
 interface ImageRepository {
-
     suspend fun getImageUrl(file: MultipartBody.Part): Flow<ApiState>
+    suspend fun getImageUrls(files: List<MultipartBody.Part>): Flow<ApiState>
 }

@@ -64,6 +64,10 @@ interface MainApi {
     @POST("/image")
     suspend fun postImage(@Part file: MultipartBody.Part): ImageUrl
 
+    @Multipart
+    @POST("/images")
+    suspend fun postImages(@Part files: List<MultipartBody.Part>): List<ImageUrl>
+
     @POST("/plogging-live")
     suspend fun postPloggingLive(@Body trashImageUrlInfo: TrashImageUrlInfo): List<Trash>
 
@@ -195,8 +199,8 @@ interface MainApi {
     suspend fun readAllMyComment(@Path("userId") userId: Long, @Path("type") type: String): List<MyPostedInfo>
 
     // 게시글
-    @POST("/post")
-    suspend fun postPosting(@Body postInfo: PostingInfo): PostResponse
+    @POST("/post/{type}")
+    suspend fun postPosting(@Body postInfo: PostingInfo, @Path("type") type: String): PostResponse
 
     @GET("/post")
     suspend fun getPosted(@Query("postId") postId: Long, @Query("userId") userId: Long ): PostedInfo

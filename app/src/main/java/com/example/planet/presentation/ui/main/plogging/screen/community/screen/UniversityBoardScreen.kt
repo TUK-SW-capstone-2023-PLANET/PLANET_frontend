@@ -28,7 +28,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun UniversityBoardScreen(
     viewModel: CommunityViewModel,
-    navController: NavHostController,
+    onPosting: (String) -> Unit,
     onBack: () -> Unit,
     onSearch: () -> Unit,
     startPostedInfoActivity: (Long, String) -> Unit,
@@ -37,7 +37,7 @@ fun UniversityBoardScreen(
 
     BackHandler {
         if (viewModel.boardDialogState) viewModel.boardDialogState = false
-        else onBack()
+        else { onBack() }
     }
 
     LaunchedEffect(Unit) {
@@ -54,7 +54,7 @@ fun UniversityBoardScreen(
             text1 = "글 쓰기",
             text2 = "내가 쓴 글 보기",
             closeDialog = { viewModel.boardDialogState = false },
-            onClick1 = { navController.navigate(CommunityNavItem.PostingScreen.screenRoute) },
+            onClick1 = { onPosting("university") },
             onClick2 = { }
         )
     }
@@ -74,12 +74,6 @@ fun UniversityBoardScreen(
                 modifier = Modifier.padding(start = 19.dp, end = 19.dp, bottom = 10.dp)
             ) {
                 startPostedInfoActivity(viewModel.viewPosted!!.postId, "대학교 게시판")
-
-//                scope.launch {
-//                    viewModel.readPostedInfo(postId = viewModel.viewPosted!!.postId){
-//                        navController.navigate("${CommunityNavItem.PostedInfoScreen.screenRoute}/대학교 게시판")
-//                    }
-//                }
             }
         }
         if (viewModel.hotPosted != null) {
@@ -89,12 +83,6 @@ fun UniversityBoardScreen(
                 modifier = Modifier.padding(horizontal = 19.dp)
             ) {
                 startPostedInfoActivity(viewModel.hotPosted!!.postId, "대학교 게시판")
-
-//                scope.launch {
-//                    viewModel.readPostedInfo(postId = viewModel.hotPosted!!.postId){
-//                        navController.navigate("${CommunityNavItem.PostedInfoScreen.screenRoute}/자유 게시판")
-//                    }
-//                }
             }
         }
 

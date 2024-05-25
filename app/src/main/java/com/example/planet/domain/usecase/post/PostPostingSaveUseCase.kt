@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class PostPostingSaveUseCase @Inject constructor(private val postingRepository: PostingRepository) {
-    suspend operator fun invoke(postingInfo: PostingInfo): Flow<ApiState> {
-        return postingRepository.postPostingSave(postingInfo)
+    suspend operator fun invoke(postingInfo: PostingInfo, type: String): Flow<ApiState> {
+        return postingRepository.postPostingSave(postingInfo = postingInfo, type = type)
     }
 }

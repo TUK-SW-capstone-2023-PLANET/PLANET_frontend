@@ -24,7 +24,7 @@ fun CommunityNavGraph(
         composable(CommunityNavItem.FreeBoardScreen.screenRoute) {
             FreeBoardScreen(
                 viewModel = viewModel,
-                navController = navController,
+                onPosting = { type -> navController.navigate("${CommunityNavItem.PostingScreen.screenRoute}/${type}") },
                 onBack = { activityFinish() },
                 onSearch = {}) { postId, board ->
                 startPostedInfoActivity(postId, board)
@@ -33,14 +33,14 @@ fun CommunityNavGraph(
         composable(CommunityNavItem.UniversityBoardScreen.screenRoute) {
             UniversityBoardScreen(
                 viewModel = viewModel,
-                navController = navController,
+                onPosting = { type -> navController.navigate("${CommunityNavItem.PostingScreen.screenRoute}/${type}") },
                 onBack = { activityFinish() },
                 onSearch = {}) { postId, board ->
                 startPostedInfoActivity(postId, board)
             }
         }
-        composable(CommunityNavItem.PostingScreen.screenRoute) {
-            PostingScreen(viewModel = viewModel, navController = navController)
+        composable("${CommunityNavItem.PostingScreen.screenRoute}/{type}") {
+            PostingScreen(viewModel = viewModel, types = it.arguments?.getString("type") ?: "free", onBack = { activityFinish() })
         }
     }
 }

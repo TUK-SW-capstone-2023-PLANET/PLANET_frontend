@@ -21,4 +21,14 @@ class ImageRepositoryImpl @Inject constructor(private val mainApi: MainApi): Ima
             error.message?.let { emit(ApiState.Error(it)) }
         }
     }.flowOn(Dispatchers.IO)
+
+    override suspend fun getImageUrls(files: List<MultipartBody.Part>) = flow {
+        kotlin.runCatching {
+            mainApi.postImages(files = files)
+        }.onSuccess {
+            emit(ApiState.Success(it))
+        }.onFailure { error ->
+            error.message?.let { emit(ApiState.Error(it)) }
+        }
+    }.flowOn(Dispatchers.IO)
 }

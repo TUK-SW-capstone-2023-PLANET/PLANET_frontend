@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.planet.TAG
 import com.example.planet.data.remote.dto.ApiState
+import com.example.planet.data.remote.dto.ImageUrl
 import com.example.planet.data.remote.dto.request.post.CommentId
 import com.example.planet.data.remote.dto.request.post.CommentRequest
 import com.example.planet.data.remote.dto.request.post.PostId
@@ -30,6 +31,7 @@ import com.example.planet.domain.usecase.board.GetAllPostedUseCase
 import com.example.planet.domain.usecase.board.GetHotPostedUseCase
 import com.example.planet.domain.usecase.board.GetPopularPostedListUseCase
 import com.example.planet.domain.usecase.board.GetViewPostedUseCase
+import com.example.planet.domain.usecase.image.PostImagesUseCase
 import com.example.planet.domain.usecase.login.sharedpreference.GetUserTokenUseCase
 import com.example.planet.domain.usecase.post.DeleteCommentHeartUseCase
 import com.example.planet.domain.usecase.post.DeleteCommentUseCase
@@ -42,6 +44,7 @@ import com.example.planet.domain.usecase.post.PostCommentSaveUseCase
 import com.example.planet.domain.usecase.post.PostPostedHeartSaveUseCase
 import com.example.planet.domain.usecase.post.PostPostingSaveUseCase
 import com.example.planet.domain.usecase.user.GetMyUniversityUseCase
+import com.example.planet.presentation.util.asMultipart
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -70,6 +73,7 @@ class CommunityViewModel @Inject constructor(
     private val getPopularPostedListUseCase: GetPopularPostedListUseCase,
     private val postCommentHeartUseCase: PostCommentHeartUseCase,
     private val deleteCommentHeartUseCase: DeleteCommentHeartUseCase,
+    private val postImagesUseCase: PostImagesUseCase,
 ) : ViewModel() {
 
     var userId: Long = 0L
@@ -84,6 +88,7 @@ class CommunityViewModel @Inject constructor(
     var postingCommentInput by mutableStateOf("")
 
     var postingImageList by mutableStateOf(emptyList<Uri>())
+    var imageList by mutableStateOf(emptyList<String>())
 
     var postedInfo by mutableStateOf(PostedInfo())
 
@@ -108,32 +113,34 @@ class CommunityViewModel @Inject constructor(
     }
 
 
-    //    suspend fun getImageUrl(uri: Uri, context: Context) {
-//        uri.asMultipart("file", context.contentResolver)?.let { multipartBody ->
-//            postImageUseCase(multipartBody)
-//        }?.let { multipart ->
-//            when (val apiState = multipart.first()) {
-//                is ApiState.Success<*> -> {
-//                    Log.d(TAG, "getImageUrl success: ${apiState.value as ImageUrl}")
-//                    userInfo = userInfo.copy(imageUrl = (apiState.value).imageUrl)
-//                }
-//
-//                is ApiState.Error -> {
-//                    Log.d(TAG, "getImageUrl Error: ${apiState.errMsg}")
-//                }
-//
-//                ApiState.Loading -> TODO()
-//            }
-//        }
-//    }
+    private suspend fun getImageUrls(context: Context) {
+        postingImageList.map { uri -> uri.asMultipart("files", context.contentResolver)!! }?.let {
+            postImagesUseCase(it)
+        }?.let { api ->
+            when (val apiState = api.first()) {
+                is ApiState.Success<*> -> {
+                    imageList = (apiState.value as List<ImageUrl>).map { it.imageUrl }
+                }
+
+                is ApiState.Error -> {
+                    Log.d(TAG, "getImageUrls Error: ${apiState.errMsg}")
+                }
+
+                ApiState.Loading -> TODO()
+            }
+        }
+    }
+
     private suspend fun getUserToken(userTokenKey: String = "userToken") {
         when (val result = getUserTokenUseCase(userTokenKey).first()) {
             is ApiState.Success<*> -> {
                 userId = result.value as Long
             }
+
             is ApiState.Error -> {
                 Log.d(TAG, "getUserToken() 실패: ${result.errMsg}")
             }
+
             ApiState.Loading -> TODO()
         }
     }
@@ -143,9 +150,11 @@ class CommunityViewModel @Inject constructor(
             is ApiState.Success<*> -> {
                 _universityInfo.emit((apiState.value as UserUniversityInfo))
             }
+
             is ApiState.Error -> {
                 Log.d("daeYoung", "getUniversityName() 실패: ${apiState.errMsg}")
             }
+
             ApiState.Loading -> TODO()
         }
     }
@@ -155,33 +164,36 @@ class CommunityViewModel @Inject constructor(
             is ApiState.Success<*> -> {
                 popularPosted = apiState.value as List<PopularPostedInfo>
             }
+
             is ApiState.Error -> {
                 Log.d("daeYoung", "deleteComment() 실패: ${apiState.errMsg}")
             }
+
             ApiState.Loading -> TODO()
         }
     }
 
-    suspend fun savePosting(onBack: () -> Unit) {
+    suspend fun savePosting(type: String, onBack: () -> Unit) {
+        getImageUrls(context)
         val postingInfo = PostingInfo(
             userId = userId,
-            // TODO: 승민이가 멀티파일 리스트 api 만들면 수정
-            imageUrl = listOf(
-                "https://tuk-planet.s3.ap-northeast-2.amazonaws.com/cat/%EB%A9%94~%EB%A0%81.jpg",
-                "https://tuk-planet.s3.ap-northeast-2.amazonaws.com/cat/%EA%B3%A0%EC%96%91%EC%9D%B4%ED%95%9C%ED%85%8C+%EB%A7%9E%EC%95%84%EB%B3%B8%EC%A0%81+%EC%9E%88%EB%8B%88.png"
-            ),
+            imageUrl = imageList,
             title = postingTitleInput,
             content = postingContentInput
         )
-        when (val apiState = postPostingSaveUseCase(postingInfo).first()) {
+
+        when (val apiState =
+            postPostingSaveUseCase(postingInfo = postingInfo, type = type).first()) {
             is ApiState.Success<*> -> {
                 apiState.value as PostResponse
                 Toast.makeText(context, "게시물 저장", Toast.LENGTH_SHORT).show()
                 onBack()
             }
+
             is ApiState.Error -> {
                 Log.d("daeYoung", "savePosting() 실패: ${apiState.errMsg}")
             }
+
             ApiState.Loading -> TODO()
         }
     }
@@ -191,9 +203,11 @@ class CommunityViewModel @Inject constructor(
             is ApiState.Success<*> -> {
                 postedInfo = apiState.value as PostedInfo
             }
+
             is ApiState.Error -> {
                 Log.d("daeYoung", "readPostedInfo() 실패: ${apiState.errMsg}")
             }
+
             ApiState.Loading -> TODO()
         }
     }
@@ -208,13 +222,14 @@ class CommunityViewModel @Inject constructor(
                     onBack()
                 }
             }
+
             is ApiState.Error -> {
                 Log.d("daeYoung", "readPostedInfo() 실패: ${apiState.errMsg}")
             }
+
             ApiState.Loading -> TODO()
         }
     }
-
 
 
     suspend fun savePostedHeart(postId: Long) {
@@ -223,27 +238,34 @@ class CommunityViewModel @Inject constructor(
         when (val apiState = postPostedHeartSaveUseCase(postId).first()) {
             is ApiState.Success<*> -> {
                 if ((apiState.value as PostResponse).message == "게시물 좋아요 저장 성공") {
-                    postedInfo = postedInfo.copy(heart = true, heartCount = postedInfo.heartCount + 1)
+                    postedInfo =
+                        postedInfo.copy(heart = true, heartCount = postedInfo.heartCount + 1)
                 }
             }
+
             is ApiState.Error -> {
                 Log.d("daeYoung", "savePostedHeart() 실패: ${apiState.errMsg}")
             }
+
             ApiState.Loading -> TODO()
         }
     }
+
     suspend fun deletePostedHeart(postId: Long) {
         val postId = PostId(userId, postId)
 
         when (val apiState = deletePostedHeartSaveUseCase(postId).first()) {
             is ApiState.Success<*> -> {
                 if ((apiState.value as PostResponse).message == "게시물 좋아요 삭제 성공") {
-                    postedInfo = postedInfo.copy(heart = false, heartCount = postedInfo.heartCount -1)
+                    postedInfo =
+                        postedInfo.copy(heart = false, heartCount = postedInfo.heartCount - 1)
                 }
             }
+
             is ApiState.Error -> {
                 Log.d("daeYoung", "deletePostedHeart() 실패: ${apiState.errMsg}")
             }
+
             ApiState.Loading -> TODO()
         }
     }
@@ -260,15 +282,17 @@ class CommunityViewModel @Inject constructor(
                 readCommentList(postedInfo.postId)
                 keyboardOnHide()
             }
+
             is ApiState.Error -> {
                 Log.d("daeYoung", "saveComment() 실패: ${apiState.errMsg}")
             }
+
             ApiState.Loading -> TODO()
         }
     }
 
     suspend fun readCommentList(postId: Long) {
-        when (val apiState = getCommentListReadUseCase(postId = postId , userId = userId).first()) {
+        when (val apiState = getCommentListReadUseCase(postId = postId, userId = userId).first()) {
             is ApiState.Success<*> -> {
                 commentList = (apiState.value as List<CommentInfo>)
 //                (apiState.value as List<CommentInfo>).forEach { comment ->
@@ -276,9 +300,11 @@ class CommunityViewModel @Inject constructor(
 //                }
                 Log.d("daeYoung", "_commentList: ${commentList}")
             }
+
             is ApiState.Error -> {
                 Log.d("daeYoung", "readCommentList() 실패: ${apiState.errMsg}")
             }
+
             ApiState.Loading -> TODO()
         }
     }
@@ -288,14 +314,16 @@ class CommunityViewModel @Inject constructor(
 
         when (val apiState = deleteCommentUseCase(commentId).first()) {
             is ApiState.Success<*> -> {
-                if((apiState.value as CommentResponse).message == "댓글 삭제 성공") {
+                if ((apiState.value as CommentResponse).message == "댓글 삭제 성공") {
                     readCommentList(postedInfo.postId)
                     menuOnHide()
                 }
             }
+
             is ApiState.Error -> {
                 Log.d("daeYoung", "deleteComment() 실패: ${apiState.errMsg}")
             }
+
             ApiState.Loading -> TODO()
         }
     }
@@ -308,15 +336,20 @@ class CommunityViewModel @Inject constructor(
                 if (result.message == "댓글 좋아요 저장 성공") {
                     commentList = commentList.map { comment ->
                         if (comment.commentId == result.commentId) {
-                            comment.copy(heartCount = comment.heartCount + 1, heart = !comment.heart)
+                            comment.copy(
+                                heartCount = comment.heartCount + 1,
+                                heart = !comment.heart
+                            )
                         } else comment
                     }
                 }
 
             }
+
             is ApiState.Error -> {
                 Log.d("daeYoung", "saveCommentHeart() 실패: ${apiState.errMsg}")
             }
+
             ApiState.Loading -> TODO()
         }
     }
@@ -329,15 +362,20 @@ class CommunityViewModel @Inject constructor(
                 if (result.message == "댓글 좋아요 삭제 성공") {
                     commentList = commentList.map { comment ->
                         if (comment.commentId == result.commentId) {
-                            comment.copy(heartCount = comment.heartCount -1, heart = !comment.heart)
+                            comment.copy(
+                                heartCount = comment.heartCount - 1,
+                                heart = !comment.heart
+                            )
                         } else comment
                     }
                 }
 
             }
+
             is ApiState.Error -> {
                 Log.d("daeYoung", "deleteCommentHeart() 실패: ${apiState.errMsg}")
             }
+
             ApiState.Loading -> TODO()
         }
     }
@@ -348,9 +386,11 @@ class CommunityViewModel @Inject constructor(
                 postedList = (apiState.value as List<Posted>)
 
             }
+
             is ApiState.Error -> {
                 Log.d("daeYoung", "readAllPosted() 실패: ${apiState.errMsg}")
             }
+
             ApiState.Loading -> TODO()
         }
     }
@@ -360,9 +400,11 @@ class CommunityViewModel @Inject constructor(
             is ApiState.Success<*> -> {
                 viewPosted = (apiState.value as ViewPosted)
             }
+
             is ApiState.Error -> {
                 Log.d("daeYoung", "readViewPosted() 실패: ${apiState.errMsg}")
             }
+
             ApiState.Loading -> TODO()
         }
     }
@@ -372,15 +414,14 @@ class CommunityViewModel @Inject constructor(
             is ApiState.Success<*> -> {
                 hotPosted = (apiState.value as HotPosted)
             }
+
             is ApiState.Error -> {
                 Log.d("daeYoung", "readViewPosted() 실패: ${apiState.errMsg}")
             }
+
             ApiState.Loading -> TODO()
         }
     }
-
-
-
 
 
 }

@@ -26,7 +26,7 @@ import kotlinx.coroutines.awaitAll
 @Composable
 fun FreeBoardScreen(
     viewModel: CommunityViewModel,
-    navController: NavHostController,
+    onPosting: (String) -> Unit,
     onBack: () -> Unit,
     onSearch: () -> Unit,
     startPostedInfoActivity: (Long, String) -> Unit,
@@ -51,7 +51,7 @@ fun FreeBoardScreen(
             text1 = "글 쓰기",
             text2 = "내가 쓴 글 보기",
             closeDialog = { viewModel.boardDialogState = false },
-            onClick1 = { navController.navigate(CommunityNavItem.PostingScreen.screenRoute) },
+            onClick1 = { onPosting("free") },
             onClick2 = { }
         )
     }

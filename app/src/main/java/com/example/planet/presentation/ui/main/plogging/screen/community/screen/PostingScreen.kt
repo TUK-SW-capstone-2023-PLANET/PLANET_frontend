@@ -3,7 +3,6 @@ package com.example.planet.presentation.ui.main.plogging.screen.community.screen
 import android.app.Activity
 import android.content.Intent
 import android.provider.MediaStore
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
@@ -27,10 +26,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.outlined.Add
-import androidx.compose.material.icons.outlined.Photo
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -44,17 +41,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.planet.R
-import com.example.planet.TAG
 import com.example.planet.presentation.ui.main.plogging.screen.community.component.PostingTopAppBar
 import com.example.planet.presentation.util.noRippleClickable
 import com.example.planet.presentation.viewmodel.CommunityViewModel
@@ -63,7 +57,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun PostingScreen(
     viewModel: CommunityViewModel,
-    navController: NavHostController,
+    types: String,
+    onBack: () -> Unit
 ) {
     val scrollState = rememberScrollState()
     val scope = rememberCoroutineScope()
@@ -96,10 +91,10 @@ fun PostingScreen(
         PostingTopAppBar(
             modifier = Modifier,
             title = "글쓰기",
-            onBack = { navController.popBackStack() }
+            onBack = { onBack() }
         ) {
             scope.launch {
-                viewModel.savePosting{ navController.popBackStack() }
+                viewModel.savePosting(types){ onBack() }
             }
         }
         Column(
@@ -112,7 +107,6 @@ fun PostingScreen(
             if (viewModel.postingImageList.isEmpty()) {
                 Image(
                     painter = painterResource(id = R.drawable.empty_image),
-//                    painter = painterResource(id = assets),
                     contentDescription = null,
                     modifier = Modifier
                         .size(160.dp)

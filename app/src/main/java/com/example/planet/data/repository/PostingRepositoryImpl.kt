@@ -17,9 +17,9 @@ import javax.inject.Inject
 class PostingRepositoryImpl @Inject constructor(
     private val mainApi: MainApi,
 ): PostingRepository {
-    override suspend fun postPostingSave(postingInfo: PostingInfo): Flow<ApiState> = flow {
+    override suspend fun postPostingSave(postingInfo: PostingInfo, type: String): Flow<ApiState> = flow {
         kotlin.runCatching {
-            mainApi.postPosting(postingInfo)
+            mainApi.postPosting(postingInfo, type)
         }.onSuccess {
             emit(ApiState.Success(it))
         }.onFailure { error ->
