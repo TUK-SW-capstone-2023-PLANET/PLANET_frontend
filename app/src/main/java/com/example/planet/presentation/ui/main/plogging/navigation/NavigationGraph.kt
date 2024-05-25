@@ -77,7 +77,7 @@ fun NavigationGraph(
                             ) { type, userId -> startMyWritedActivity(type, userId) }
                         }
                         composable(BottomNavItem.MessageScreen.screenRoute) {
-                            MessageScreen(messageViewModel = messageViewModel) {startMessageActivity(it)}
+                            MessageScreen(messageViewModel = messageViewModel, userId = mainViewModel.userId) {startMessageActivity(it)}
                         }
                         composable(BottomNavItem.CommunityScreen.screenRoute) {
                             CommunityScreen(

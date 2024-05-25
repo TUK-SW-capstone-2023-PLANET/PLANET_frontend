@@ -12,6 +12,8 @@ import com.example.planet.data.remote.dto.request.post.PostId
 import com.example.planet.data.remote.dto.request.post.PostingInfo
 import com.example.planet.data.remote.dto.request.signin.LoginInfo
 import com.example.planet.data.remote.dto.request.signup.PlanetUser
+import com.example.planet.data.remote.dto.request.chat.ChatSave
+import com.example.planet.data.remote.dto.response.chat.ChatResponse
 import com.example.planet.data.remote.dto.response.plogging.PloggingComplete
 import com.example.planet.data.remote.dto.response.plogging.PloggingId
 import com.example.planet.data.remote.dto.response.plogging.PloggingResult
@@ -20,7 +22,6 @@ import com.example.planet.data.remote.dto.response.post.CommentInfo
 import com.example.planet.data.remote.dto.response.post.CommentResponse
 import com.example.planet.data.remote.dto.response.post.HotPosted
 import com.example.planet.data.remote.dto.response.post.MyPostedInfo
-import com.example.planet.data.remote.dto.response.post.PopularPosted
 import com.example.planet.data.remote.dto.response.post.PopularPostedInfo
 import com.example.planet.data.remote.dto.response.post.PostResponse
 import com.example.planet.data.remote.dto.response.post.Posted
@@ -229,4 +230,7 @@ interface MainApi {
 
     @HTTP(method = "DELETE", path = "/comment-heart", hasBody = true)
     suspend fun deleteCommentHeart(@Body commentId: CommentId): CommentResponse
+
+    @POST("/chat")
+    suspend fun postChat(@Body chat: ChatSave): ChatResponse
 }

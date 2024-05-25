@@ -9,6 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
@@ -18,9 +19,12 @@ import androidx.compose.ui.unit.sp
 import com.example.planet.presentation.ui.main.plogging.screen.message.component.SendMessageTopAppBar
 import com.example.planet.presentation.viewmodel.MessageViewModel
 import com.example.planet.R
+import kotlinx.coroutines.launch
 
 @Composable
 fun SendMessageScreen(messageViewModel: MessageViewModel, onBack: () -> Unit) {
+
+    val scope = rememberCoroutineScope()
     val placeholderStyle = TextStyle(
         fontSize = 12.sp,
         fontWeight = FontWeight.SemiBold,
@@ -28,7 +32,14 @@ fun SendMessageScreen(messageViewModel: MessageViewModel, onBack: () -> Unit) {
     )
 
     Column(modifier = Modifier.fillMaxSize()) {
-        SendMessageTopAppBar(title = "쪽지 보내기", onBack = { onBack() }) {}
+        SendMessageTopAppBar(title = "쪽지 보내기", onBack = { onBack() }) {
+            scope.launch {
+                messageViewModel.saveChat(
+                    receiverId = 0,
+                    content = messageViewModel.messageInput
+                ) { onBack() }
+            }
+        }
         TextField(
             value = messageViewModel.messageInput,
             onValueChange = { messageViewModel.messageInput = it },
