@@ -26,6 +26,7 @@ fun MessageScreen(messageViewModel: MessageViewModel, userId: Long, startMessage
 
     LaunchedEffect(Unit) {
         messageViewModel.readAllChatroom(userId)
+        // git merge issue -> try commit
     }
 
     Column(modifier = Modifier.fillMaxSize()) {
