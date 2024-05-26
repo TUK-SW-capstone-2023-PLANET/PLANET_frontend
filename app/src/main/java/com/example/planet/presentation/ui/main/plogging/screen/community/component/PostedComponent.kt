@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -35,6 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -246,14 +248,21 @@ fun PostedContent(
                     .fillMaxWidth()
             ) {
                 items(image.size) {
-                    Image(
-                        painter = rememberAsyncImagePainter(model = image[it]),
-                        contentDescription = null,
+                    Card(
                         modifier = Modifier
                             .padding(end = if (it != 8) 6.dp else 0.dp)
                             .size(150.dp)
-                            .clip(RoundedCornerShape(6.dp))
-                    )
+                            .aspectRatio(1f),
+                        shape = RoundedCornerShape(6.dp)
+                    ) {
+                        Image(
+                            painter = rememberAsyncImagePainter(model = image[it]),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .fillMaxSize(),
+                            contentScale = ContentScale.Crop
+                        )
+                    }
                 }
             }
         }

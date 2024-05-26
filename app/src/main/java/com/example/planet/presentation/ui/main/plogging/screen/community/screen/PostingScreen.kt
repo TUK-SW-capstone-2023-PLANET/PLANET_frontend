@@ -122,16 +122,20 @@ fun PostingScreen(
                 ) {
                     items(viewModel.postingImageList.size) {
                         Box(modifier = Modifier.size(150.dp)) {
-                            Image(
-                                painter = rememberAsyncImagePainter(model = viewModel.postingImageList[it]),
-                                contentDescription = null,
+                            Card(
                                 modifier = Modifier
                                     .padding(end = 10.dp)
                                     .fillMaxSize()
-                                    .aspectRatio(1f)
-                                    .clip(RoundedCornerShape(6.dp)),
-                                contentScale = ContentScale.Crop
-                            )
+                                    .aspectRatio(1f),
+                                shape = RoundedCornerShape(6.dp)
+                            ) {
+                                Image(
+                                    painter = rememberAsyncImagePainter(model = viewModel.postingImageList[it]),
+                                    contentDescription = null,
+                                    modifier = Modifier.fillMaxSize(),
+                                    contentScale = ContentScale.Crop,
+                                )
+                            }
                             Card(
                                 modifier = Modifier
                                     .padding(end = 2.dp)

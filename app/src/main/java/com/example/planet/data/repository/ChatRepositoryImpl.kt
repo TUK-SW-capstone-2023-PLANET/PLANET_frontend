@@ -19,4 +19,14 @@ class ChatRepositoryImpl @Inject constructor(private val mainApi: MainApi): Chat
             error.message?.let { emit(ApiState.Error(it)) }
         }
     }.flowOn(Dispatchers.IO)
+
+    override suspend fun readAllChatroom(userId: Long) = flow {
+        kotlin.runCatching {
+            mainApi.getChatroomList(userId)
+        }.onSuccess {
+            emit(ApiState.Success(it))
+        }.onFailure { error ->
+            error.message?.let { emit(ApiState.Error(it)) }
+        }
+    }.flowOn(Dispatchers.IO)
 }

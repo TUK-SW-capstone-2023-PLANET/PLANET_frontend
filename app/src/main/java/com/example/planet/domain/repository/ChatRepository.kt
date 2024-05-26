@@ -6,4 +6,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface ChatRepository {
     suspend fun saveChat(chat: ChatSave): Flow<ApiState>
+    suspend fun readAllChatroom(userId: Long): Flow<ApiState>
 }

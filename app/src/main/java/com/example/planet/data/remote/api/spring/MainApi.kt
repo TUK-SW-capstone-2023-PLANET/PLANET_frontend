@@ -4,6 +4,7 @@ import com.example.planet.data.remote.dto.Advertisement
 import com.example.planet.data.remote.dto.ImageUrl
 import com.example.planet.data.remote.dto.Tier
 import com.example.planet.data.remote.dto.TrashCan
+import com.example.planet.data.remote.dto.request.chat.ChatSave
 import com.example.planet.data.remote.dto.request.plogging.PloggingInfo
 import com.example.planet.data.remote.dto.request.plogging.TrashImageUrlInfo
 import com.example.planet.data.remote.dto.request.post.CommentId
@@ -12,7 +13,7 @@ import com.example.planet.data.remote.dto.request.post.PostId
 import com.example.planet.data.remote.dto.request.post.PostingInfo
 import com.example.planet.data.remote.dto.request.signin.LoginInfo
 import com.example.planet.data.remote.dto.request.signup.PlanetUser
-import com.example.planet.data.remote.dto.request.chat.ChatSave
+import com.example.planet.data.remote.dto.response.chat.ChatInfo
 import com.example.planet.data.remote.dto.response.chat.ChatResponse
 import com.example.planet.data.remote.dto.response.plogging.PloggingComplete
 import com.example.planet.data.remote.dto.response.plogging.PloggingId
@@ -233,4 +234,7 @@ interface MainApi {
 
     @POST("/chat")
     suspend fun postChat(@Body chat: ChatSave): ChatResponse
+
+    @GET("/chat/chat-room/user/{userId}")
+    suspend fun getChatroomList(@Path("userId") userId: Long): List<ChatInfo>
 }

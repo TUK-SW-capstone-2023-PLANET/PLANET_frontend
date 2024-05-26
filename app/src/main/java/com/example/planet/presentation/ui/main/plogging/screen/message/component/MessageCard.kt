@@ -16,11 +16,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberAsyncImagePainter
 import com.example.planet.R
 
 @Composable
@@ -51,7 +51,7 @@ fun CharCard(name: String, lastMessage: String, date: String, image: String, onC
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Image(
-                painter = painterResource(id = R.drawable.temporary_user_icon),
+                painter = rememberAsyncImagePainter(model = image),
                 contentDescription = null,
                 modifier = Modifier
                     .clip(CircleShape)
