@@ -14,6 +14,8 @@ import com.example.planet.data.remote.dto.request.post.PostingInfo
 import com.example.planet.data.remote.dto.request.signin.LoginInfo
 import com.example.planet.data.remote.dto.request.signup.PlanetUser
 import com.example.planet.data.remote.dto.response.chat.ChatInfo
+import com.example.planet.data.remote.dto.response.chat.ChatInfoResponse
+import com.example.planet.data.remote.dto.response.chat.ChatroomInfo
 import com.example.planet.data.remote.dto.response.chat.ChatResponse
 import com.example.planet.data.remote.dto.response.plogging.PloggingComplete
 import com.example.planet.data.remote.dto.response.plogging.PloggingId
@@ -236,5 +238,8 @@ interface MainApi {
     suspend fun postChat(@Body chat: ChatSave): ChatResponse
 
     @GET("/chat/chat-room/user/{userId}")
-    suspend fun getChatroomList(@Path("userId") userId: Long): List<ChatInfo>
+    suspend fun getAllChatroom(@Path("userId") userId: Long): List<ChatroomInfo>
+
+    @GET("/chat/chat-room/{chatRoomId}/user/{userId}")
+    suspend fun getAllChat(@Path("chatRoomId") chatRoomId: Long, @Path("userId") userId: Long): ChatInfoResponse
 }

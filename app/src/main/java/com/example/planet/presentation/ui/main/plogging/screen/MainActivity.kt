@@ -48,7 +48,7 @@ class MainActivity : ComponentActivity() {
                     startCommunityActivity = { board, universityName -> startCommunityActivity(board, universityName) },
                     startPostedInfoActivity = { postId, board -> startPostedInfoActivity(postId, board) },
                     startMyWritedActivity = { type, userId -> startMyWritedActivity(type, userId ) },
-                    startMessageActivity = { startMessageActivity(it) }
+                    startMessageActivity = { userId, chatroomId, reciever -> startMessageActivity(userId, chatroomId, reciever) }
                 )
             }
         }
@@ -116,9 +116,11 @@ class MainActivity : ComponentActivity() {
         startActivity(intent)
     }
 
-    private fun startMessageActivity(userId: Long) {
+    private fun startMessageActivity(userId: Long, chatroomId: Long, reciever: String) {
         val intent = Intent(this, MessageActivity::class.java).apply {
             this.putExtra("userId", userId)
+            this.putExtra("chatroomId", chatroomId)
+            this.putExtra("reciever", reciever)
         }
         startActivity(intent)
     }

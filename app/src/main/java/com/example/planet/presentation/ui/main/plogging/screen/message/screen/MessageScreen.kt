@@ -18,7 +18,11 @@ import com.example.planet.presentation.ui.main.plogging.screen.message.component
 import com.example.planet.presentation.viewmodel.MessageViewModel
 
 @Composable
-fun MessageScreen(messageViewModel: MessageViewModel, userId: Long, startMessageActivity: (Long) -> Unit) {
+fun MessageScreen(
+    messageViewModel: MessageViewModel,
+    userId: Long,
+    startMessageActivity: (Long, Long, String) -> Unit
+) {
     val titleStyle = TextStyle(
         fontSize = 20.sp,
         fontWeight = FontWeight.Bold,
@@ -26,7 +30,6 @@ fun MessageScreen(messageViewModel: MessageViewModel, userId: Long, startMessage
 
     LaunchedEffect(Unit) {
         messageViewModel.readAllChatroom(userId)
-        // git merge issue -> try commit
     }
 
     Column(modifier = Modifier.fillMaxSize()) {
@@ -42,7 +45,11 @@ fun MessageScreen(messageViewModel: MessageViewModel, userId: Long, startMessage
                     date = messageViewModel.chatrooms[it].uploadTime,
                     image = messageViewModel.chatrooms[it].partnerUserImage
                 ) {
-                    startMessageActivity(userId)
+                    startMessageActivity(
+                        userId,
+                        messageViewModel.chatrooms[it].chatRoomId,
+                        messageViewModel.chatrooms[it].partnerUserName
+                    )
                 }
             }
         }

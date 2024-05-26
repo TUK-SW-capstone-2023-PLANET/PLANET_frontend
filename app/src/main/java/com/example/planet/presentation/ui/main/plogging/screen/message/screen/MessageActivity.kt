@@ -25,6 +25,8 @@ class MessageActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         messageViewModel.userId = intent.getLongExtra("userId", 0)
+        messageViewModel.chatroomId = intent.getLongExtra("chatroomId", 0)
+        messageViewModel.reciever = intent.getStringExtra("reciever") ?: "알 수 없음"
 
         setContent {
             val navController = rememberNavController()

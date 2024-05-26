@@ -5,6 +5,7 @@ import com.example.planet.data.remote.dto.ApiState
 import com.example.planet.data.remote.dto.request.chat.ChatSave
 import com.example.planet.domain.repository.ChatRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
@@ -22,7 +23,17 @@ class ChatRepositoryImpl @Inject constructor(private val mainApi: MainApi): Chat
 
     override suspend fun readAllChatroom(userId: Long) = flow {
         kotlin.runCatching {
-            mainApi.getChatroomList(userId)
+            mainApi.getAllChatroom(userId)
+        }.onSuccess {
+            emit(ApiState.Success(it))
+        }.onFailure { error ->
+            error.message?.let { emit(ApiState.Error(it)) }
+        }
+    }.flowOn(Dispatchers.IO)
+
+    override suspend fun readAllChat(userId: Long, chatroomId: Long) = flow {
+        kotlin.runCatching {
+            mainApi.getAllChat(chatRoomId = chatroomId, userId = userId)
         }.onSuccess {
             emit(ApiState.Success(it))
         }.onFailure { error ->

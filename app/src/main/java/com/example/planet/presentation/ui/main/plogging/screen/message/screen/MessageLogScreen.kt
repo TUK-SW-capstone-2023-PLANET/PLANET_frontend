@@ -7,6 +7,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import com.example.planet.presentation.ui.main.plogging.screen.message.component.MessageDialog
 import com.example.planet.presentation.ui.main.plogging.screen.message.component.MessageLogCard
@@ -20,6 +21,9 @@ fun MessageLogScreen(
     onBack: () -> Unit,
     goSendScreen: () -> Unit
 ) {
+    LaunchedEffect(Unit) {
+        messageViewModel.readAllChat()
+    }
 
     if (messageViewModel.dialogState == true) {
         MessageDialog(
@@ -35,18 +39,19 @@ fun MessageLogScreen(
 
     Column(modifier = Modifier.fillMaxSize()) {
         MessageTopAppBar(
-            title = "행복한 티노",
+            title = messageViewModel.reciever,
             onBack = { onBack() },
             goSendScreen = { goSendScreen() }) {
             messageViewModel.dialogState = true
         }
 
         LazyColumn(modifier = Modifier.fillMaxSize()) {
-            items(5) {
-                MessageLogCard(type = "받은 쪽지", date = "2024.04.29 01:28", content = "오늘 플로깅 재미있었다.")
-            }
-            items(5) {
-                MessageLogCard(type = "보낸 쪽지", date = "2024.04.29 01:28", content = "오늘 플로깅 재미있었다.")
+            items(messageViewModel.chats.size) {
+                MessageLogCard(
+                    type = messageViewModel.chats[it].type,
+                    date = messageViewModel.chats[it].uploadTime,
+                    content = messageViewModel.chats[it].content
+                )
             }
         }
     }

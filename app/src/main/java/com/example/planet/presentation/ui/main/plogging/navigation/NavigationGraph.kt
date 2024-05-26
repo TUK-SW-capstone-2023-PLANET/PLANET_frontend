@@ -40,7 +40,7 @@ fun NavigationGraph(
     startCommunityActivity: (String, String) -> Unit,
     startPostedInfoActivity: (Long, String) -> Unit,
     startMyWritedActivity: (String, Long) -> Unit,
-    startMessageActivity: (Long) -> Unit
+    startMessageActivity: (Long, Long, String) -> Unit
 ) {
 
     Scaffold(
@@ -77,12 +77,20 @@ fun NavigationGraph(
                             ) { type, userId -> startMyWritedActivity(type, userId) }
                         }
                         composable(BottomNavItem.MessageScreen.screenRoute) {
-                            MessageScreen(messageViewModel = messageViewModel, userId = mainViewModel.userId) {startMessageActivity(it)}
+                            MessageScreen(
+                                messageViewModel = messageViewModel,
+                                userId = mainViewModel.userId
+                            ) { userId, chatroomId, reciever -> startMessageActivity(userId, chatroomId, reciever)  }
                         }
                         composable(BottomNavItem.CommunityScreen.screenRoute) {
                             CommunityScreen(
                                 communityViewModel = communityViewModel,
-                                startPostedInfoActivity = { postId, board -> startPostedInfoActivity(postId, board) },
+                                startPostedInfoActivity = { postId, board ->
+                                    startPostedInfoActivity(
+                                        postId,
+                                        board
+                                    )
+                                },
                             ) { board, universityName ->
                                 startCommunityActivity(board, universityName)
                             }
@@ -108,6 +116,7 @@ fun NavigationGraph(
                 ScreenNav.UniversityRankingScreen -> {
                     UniversityRankingScreen(mainViewModel = mainViewModel)
                 }
+
                 else -> {}
             }
         }
