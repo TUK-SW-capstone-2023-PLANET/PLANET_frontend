@@ -30,6 +30,7 @@ fun PostingCard(
     heartCount: Int,
     commentCount: Int,
     viewCount: Int,
+    imageCount: Int,
     onClick: () -> Unit
 ) {
     val titleStyle = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
@@ -39,13 +40,41 @@ fun PostingCard(
         fontWeight = FontWeight.Medium,
         color = colorResource(id = R.color.font_background_color2)
     )
+    val imageCountStyle = TextStyle(
+        fontSize = 10.sp,
+        color = colorResource(id = R.color.font_background_color2)
+    )
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onClick() }
             .padding(start = 19.dp, end = 19.dp, top = 14.dp, bottom = 10.dp)
     ) {
-        Text(text = title, style = titleStyle, modifier = Modifier.padding(bottom = 4.dp))
+        Row(
+            modifier = Modifier
+                .padding(bottom = 4.dp)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.Top,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(text = title, style = titleStyle, modifier = Modifier.padding(bottom = 4.dp))
+            if (imageCount >= 1) {
+                Row(
+//                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.image_count_icon),
+                        contentDescription = null,
+                        modifier = Modifier.size(11.dp)
+                    )
+                    Text(
+                        text = imageCount.toString(),
+                        style = imageCountStyle,
+                        modifier = Modifier.padding(start = 2.dp)
+                    )
+                }
+            }
+        }
         Text(text = content, style = contentStyle, modifier = Modifier.padding(bottom = 5.dp))
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             Row {
@@ -69,13 +98,21 @@ fun PostingCard(
 }
 
 @Composable
-fun PostingCardIcons(modifier: Modifier = Modifier, heartCount: Int, commentCount: Int, viewCount: Int) {
+fun PostingCardIcons(
+    modifier: Modifier = Modifier,
+    heartCount: Int,
+    commentCount: Int,
+    viewCount: Int
+) {
     val textStyle = TextStyle(
         fontSize = 10.sp,
         color = colorResource(id = R.color.font_background_color2)
     )
     Row(modifier = modifier) {
-        Row(modifier = Modifier.padding(end = 5.dp), verticalAlignment = Alignment.CenterVertically) {
+        Row(
+            modifier = Modifier.padding(end = 5.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             Image(
                 painter = painterResource(id = R.drawable.heartborder_icon),
                 contentDescription = null,
@@ -87,7 +124,10 @@ fun PostingCardIcons(modifier: Modifier = Modifier, heartCount: Int, commentCoun
                 modifier = Modifier.padding(start = 2.dp)
             )
         }
-        Row(modifier = Modifier.padding(end = 5.dp), verticalAlignment = Alignment.CenterVertically) {
+        Row(
+            modifier = Modifier.padding(end = 5.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             Image(
                 painter = painterResource(id = R.drawable.commentborder_icon),
                 contentDescription = null,

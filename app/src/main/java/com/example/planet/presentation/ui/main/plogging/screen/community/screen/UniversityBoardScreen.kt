@@ -101,7 +101,8 @@ fun UniversityBoardScreen(
                     name = viewModel.postedList[it].nickName,
                     heartCount = viewModel.postedList[it].heartCount,
                     commentCount = viewModel.postedList[it].commentCount,
-                    viewCount = viewModel.postedList[it].viewCount
+                    viewCount = viewModel.postedList[it].viewCount,
+                    imageCount = viewModel.postedList[it].imageCount
                 ) {
                     startPostedInfoActivity(viewModel.postedList[it].postId, "대학교 게시판")
                 }

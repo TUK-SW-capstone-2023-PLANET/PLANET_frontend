@@ -173,7 +173,8 @@ fun SearchingArea(searchResult: List<Posted>) {
                 name = searchResult[it].nickName,
                 heartCount = searchResult[it].heartCount,
                 commentCount = searchResult[it].commentCount,
-                viewCount = searchResult[it].viewCount
+                viewCount = searchResult[it].viewCount,
+                imageCount = searchResult[it].imageCount
             ) {
                 
             }
