@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.planet.presentation.ui.main.plogging.screen.community.screen.FreeBoardScreen
 import com.example.planet.presentation.ui.main.plogging.screen.community.screen.PostingScreen
+import com.example.planet.presentation.ui.main.plogging.screen.community.screen.SearchScreen
 import com.example.planet.presentation.ui.main.plogging.screen.community.screen.UniversityBoardScreen
 import com.example.planet.presentation.viewmodel.CommunityViewModel
 
@@ -27,7 +28,7 @@ fun CommunityNavGraph(
                 viewModel = viewModel,
                 onPosting = { type -> navController.navigate("${CommunityNavItem.PostingScreen.screenRoute}/${type}") },
                 onBack = { activityFinish() },
-                onSearch = {},
+                onSearch = { type -> navController.navigate("${CommunityNavItem.FreeBoardSearchScreen.screenRoute}/${type}") },
                 startMyWritedActivity = {userId: Long -> startMyWritedActivity(userId)},
                 ) { postId, board ->
                 startPostedInfoActivity(postId, board)
@@ -38,7 +39,7 @@ fun CommunityNavGraph(
                 viewModel = viewModel,
                 onPosting = { type -> navController.navigate("${CommunityNavItem.PostingScreen.screenRoute}/${type}") },
                 onBack = { activityFinish() },
-                onSearch = {},
+                onSearch = { type -> navController.navigate("${CommunityNavItem.FreeBoardSearchScreen.screenRoute}/${type}") },
                 startMyWritedActivity = {userId: Long -> startMyWritedActivity(userId)},
                 ) { postId, board ->
                 startPostedInfoActivity(postId, board)
@@ -47,6 +48,9 @@ fun CommunityNavGraph(
         composable("${CommunityNavItem.PostingScreen.screenRoute}/{type}") {
             PostingScreen(viewModel = viewModel, types = it.arguments?.getString("type") ?: "free", onBack = { activityFinish() })
         }
+        composable("${CommunityNavItem.FreeBoardSearchScreen.screenRoute}/{type}") {
+            SearchScreen(viewModel = viewModel, types = it.arguments?.getString("type") ?: "free", onBack = { activityFinish() })
+        }
     }
-//    goMyWritedActivity("posted", mainViewModel.userId)
+
 }

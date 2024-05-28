@@ -59,7 +59,10 @@ fun BulletinBoardTopAppBar(
                     Icon(
                         imageVector = Icons.Outlined.Search,
                         contentDescription = null,
-                        tint = iconColor
+                        tint = iconColor,
+                        modifier = Modifier.noRippleClickable {
+                            onSearch()
+                        }
                     )
                     Spacer(modifier = Modifier.width(10.dp))
                     Icon(
@@ -165,6 +168,44 @@ fun PostingTopAppBar(
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 15.sp,
                     modifier = Modifier.noRippleClickable { onComplete() }
+                )
+            }
+            Text(
+                text = title,
+                fontWeight = FontWeight.Bold,
+                fontSize = 18.sp,
+                modifier = Modifier.align(Alignment.TopCenter)
+            )
+        }
+    }
+}
+
+@Composable
+fun SearchTopAppBar(
+    modifier: Modifier = Modifier,
+    title: String,
+    onBack: () -> Unit,
+) {
+    val iconColor = colorResource(id = R.color.font_background_color1)
+
+    Column(modifier = modifier) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 22.dp, vertical = 16.dp),
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                Icon(
+                    imageVector = Icons.Default.ArrowBackIosNew,
+                    contentDescription = null,
+                    tint = iconColor,
+                    modifier = Modifier
+                        .noRippleClickable {
+                            onBack()
+                        }
                 )
             }
             Text(

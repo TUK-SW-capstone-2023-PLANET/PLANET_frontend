@@ -30,7 +30,7 @@ fun UniversityBoardScreen(
     viewModel: CommunityViewModel,
     onPosting: (String) -> Unit,
     onBack: () -> Unit,
-    onSearch: () -> Unit,
+    onSearch: (String) -> Unit,
     startMyWritedActivity: (Long) -> Unit,
     startPostedInfoActivity: (Long, String) -> Unit,
 ) {
@@ -64,7 +64,7 @@ fun UniversityBoardScreen(
         BulletinBoardTopAppBar(
             title = "대학교 게시판",
             onBack = { onBack() },
-            onSearch = { onSearch() }) {
+            onSearch = { onSearch("대학교 게시판") }) {
             viewModel.boardDialogState = true
         }
 

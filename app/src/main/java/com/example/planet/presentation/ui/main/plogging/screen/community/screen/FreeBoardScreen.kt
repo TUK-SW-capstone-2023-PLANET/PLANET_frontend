@@ -28,7 +28,7 @@ fun FreeBoardScreen(
     viewModel: CommunityViewModel,
     onPosting: (String) -> Unit,
     onBack: () -> Unit,
-    onSearch: () -> Unit,
+    onSearch: (String) -> Unit,
     startMyWritedActivity: (Long) -> Unit,
     startPostedInfoActivity: (Long, String) -> Unit,
 ) {
@@ -62,7 +62,7 @@ fun FreeBoardScreen(
             modifier = Modifier.padding(bottom = 18.dp),
             title = "자유 게시판",
             onBack = { onBack() },
-            onSearch = { onSearch() }) {
+            onSearch = { onSearch("자유 게시판") }) {
             viewModel.boardDialogState = true
         }
         if (viewModel.viewPosted != null) {

@@ -93,8 +93,6 @@ class CommunityViewModel @Inject constructor(
     var postedInfo by mutableStateOf(PostedInfo())
 
     var commentList by mutableStateOf(emptyList<CommentInfo>())
-//    private var _commentList = mutableStateListOf<CommentInfo>()
-//    val commentList: List<CommentInfo> = _commentList
 
     var postedList by mutableStateOf(emptyList<Posted>())
     var viewPosted by mutableStateOf<ViewPosted?>(null)
@@ -104,6 +102,11 @@ class CommunityViewModel @Inject constructor(
     val universityInfo: StateFlow<UserUniversityInfo?> = _universityInfo.asStateFlow()
 
     var popularPosted by mutableStateOf(emptyList<PopularPostedInfo>())
+
+    var searchInput by mutableStateOf("")
+//    var recentlySearch by mutableStateOf(emptyList<String>())
+    var recentlySearch by mutableStateOf(listOf("모자", "핸드폰", "셔틀콕", "배드민턴", "테이프"))
+    var searchResult by mutableStateOf(emptyList<Posted>())
 
 
     init {
