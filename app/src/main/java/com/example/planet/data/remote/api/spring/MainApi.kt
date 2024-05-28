@@ -4,6 +4,7 @@ import com.example.planet.data.remote.dto.Advertisement
 import com.example.planet.data.remote.dto.ImageUrl
 import com.example.planet.data.remote.dto.Tier
 import com.example.planet.data.remote.dto.TrashCan
+import com.example.planet.data.remote.dto.request.chat.ChatRoomId
 import com.example.planet.data.remote.dto.request.chat.ChatSave
 import com.example.planet.data.remote.dto.request.plogging.PloggingInfo
 import com.example.planet.data.remote.dto.request.plogging.TrashImageUrlInfo
@@ -13,10 +14,9 @@ import com.example.planet.data.remote.dto.request.post.PostId
 import com.example.planet.data.remote.dto.request.post.PostingInfo
 import com.example.planet.data.remote.dto.request.signin.LoginInfo
 import com.example.planet.data.remote.dto.request.signup.PlanetUser
-import com.example.planet.data.remote.dto.response.chat.ChatInfo
 import com.example.planet.data.remote.dto.response.chat.ChatInfoResponse
-import com.example.planet.data.remote.dto.response.chat.ChatroomInfo
 import com.example.planet.data.remote.dto.response.chat.ChatResponse
+import com.example.planet.data.remote.dto.response.chat.ChatroomInfo
 import com.example.planet.data.remote.dto.response.plogging.PloggingComplete
 import com.example.planet.data.remote.dto.response.plogging.PloggingId
 import com.example.planet.data.remote.dto.response.plogging.PloggingResult
@@ -234,6 +234,7 @@ interface MainApi {
     @HTTP(method = "DELETE", path = "/comment-heart", hasBody = true)
     suspend fun deleteCommentHeart(@Body commentId: CommentId): CommentResponse
 
+    // 쪽지
     @POST("/chat")
     suspend fun postChat(@Body chat: ChatSave): ChatResponse
 
@@ -242,4 +243,7 @@ interface MainApi {
 
     @GET("/chat/chat-room/{chatRoomId}/user/{userId}")
     suspend fun getAllChat(@Path("chatRoomId") chatRoomId: Long, @Path("userId") userId: Long): ChatInfoResponse
+
+    @HTTP(method = "DELETE", path = "/chat/chat-room", hasBody = true)
+    suspend fun deleteChatRoom(@Body chatRoomId: ChatRoomId): ChatResponse
 }

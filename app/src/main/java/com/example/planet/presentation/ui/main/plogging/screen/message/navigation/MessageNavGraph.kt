@@ -12,11 +12,12 @@ import com.example.planet.presentation.viewmodel.MessageViewModel
 fun MessageNavGraph(
     messageViewModel: MessageViewModel,
     navController: NavHostController,
+    startRoute: String,
     onBack: () -> Unit
 ) {
     NavHost(
         navController = navController,
-        startDestination = MessageNavItem.MessageLogScreen.screenRoute
+        startDestination = startRoute
     ) {
         composable(MessageNavItem.MessageLogScreen.screenRoute) {
             MessageLogScreen(messageViewModel = messageViewModel, onBack = { onBack() }) {

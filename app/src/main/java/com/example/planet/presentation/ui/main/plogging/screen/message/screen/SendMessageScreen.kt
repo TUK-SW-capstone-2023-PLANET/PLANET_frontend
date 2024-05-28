@@ -3,8 +3,6 @@ package com.example.planet.presentation.ui.main.plogging.screen.message.screen
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -16,9 +14,9 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import com.example.planet.R
 import com.example.planet.presentation.ui.main.plogging.screen.message.component.SendMessageTopAppBar
 import com.example.planet.presentation.viewmodel.MessageViewModel
-import com.example.planet.R
 import kotlinx.coroutines.launch
 
 @Composable
@@ -35,7 +33,7 @@ fun SendMessageScreen(messageViewModel: MessageViewModel, onBack: () -> Unit) {
         SendMessageTopAppBar(title = "쪽지 보내기", onBack = { onBack() }) {
             scope.launch {
                 messageViewModel.saveChat(
-                    receiverId = 0,
+                    receiverId = messageViewModel.recieverId,
                     content = messageViewModel.messageInput
                 ) { onBack() }
             }

@@ -8,11 +8,13 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import com.example.planet.presentation.ui.main.plogging.screen.message.component.MessageDialog
 import com.example.planet.presentation.ui.main.plogging.screen.message.component.MessageLogCard
 import com.example.planet.presentation.ui.main.plogging.screen.message.component.MessageTopAppBar
 import com.example.planet.presentation.viewmodel.MessageViewModel
+import kotlinx.coroutines.launch
 
 
 @Composable
@@ -21,6 +23,8 @@ fun MessageLogScreen(
     onBack: () -> Unit,
     goSendScreen: () -> Unit
 ) {
+    val scope = rememberCoroutineScope()
+
     LaunchedEffect(Unit) {
         messageViewModel.readAllChat()
     }
@@ -32,7 +36,7 @@ fun MessageLogScreen(
             content2 = "예",
             icon1 = Icons.Default.Close,
             icon2 = Icons.Default.Check,
-            onClick = { /*TODO*/ },
+            onClick = { scope.launch{ messageViewModel.deleteChatRoom{onBack()} } },
             onClose = { messageViewModel.dialogState = it }
         )
     }

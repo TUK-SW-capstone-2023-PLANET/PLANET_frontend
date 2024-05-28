@@ -8,11 +8,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.planet.data.remote.dto.ApiState
+import com.example.planet.data.remote.dto.request.chat.ChatRoomId
 import com.example.planet.data.remote.dto.request.chat.ChatSave
 import com.example.planet.data.remote.dto.response.chat.ChatInfo
 import com.example.planet.data.remote.dto.response.chat.ChatInfoResponse
-import com.example.planet.data.remote.dto.response.chat.ChatroomInfo
 import com.example.planet.data.remote.dto.response.chat.ChatResponse
+import com.example.planet.data.remote.dto.response.chat.ChatroomInfo
+import com.example.planet.domain.usecase.chat.DeleteChatRoomUseCase
 import com.example.planet.domain.usecase.chat.GetAllChatUseCase
 import com.example.planet.domain.usecase.chat.GetAllChatroomUseCase
 import com.example.planet.domain.usecase.chat.PostChatUseCase
@@ -26,11 +28,13 @@ class MessageViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val postChatUseCase: PostChatUseCase,
     private val getAllChatroomUseCase: GetAllChatroomUseCase,
-    private val getAllChatUseCase: GetAllChatUseCase
+    private val getAllChatUseCase: GetAllChatUseCase,
+    private val deleteChatRoomUseCase: DeleteChatRoomUseCase
 ) : ViewModel() {
 
     var userId: Long = 0
     var chatroomId: Long = 0
+    var recieverId: Long = 0
     var reciever: String = ""
 
     var dialogState by mutableStateOf(false)
@@ -89,6 +93,26 @@ class MessageViewModel @Inject constructor(
             ApiState.Loading -> TODO()
         }
     }
+
+    suspend fun deleteChatRoom(onBack: () -> Unit) {
+        val chatRoomId = ChatRoomId(
+            userId = userId,
+            chatRoomId = chatroomId
+        )
+        when (val apiState = deleteChatRoomUseCase(chatRoomId).first()) {
+            is ApiState.Success<*> -> {
+                if ((apiState.value as ChatResponse).message == "채팅방 삭제 성공") {
+                    onBack()
+                }
+            }
+            is ApiState.Error -> {
+                Log.d("daeYoung", "readAllChat() 실패: ${apiState.errMsg}")
+            }
+            ApiState.Loading -> TODO()
+        }
+    }
+
+
 
 
 }

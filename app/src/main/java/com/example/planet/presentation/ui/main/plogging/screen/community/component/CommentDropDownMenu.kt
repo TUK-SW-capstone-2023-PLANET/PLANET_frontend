@@ -12,7 +12,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.patrykandpatrick.vico.core.component.dimension.Padding
 import com.example.planet.R
 
 @Composable
@@ -43,16 +42,19 @@ fun CommentDropDownMenu(
         onDismissRequest = { onDismissRequest() },
         modifier = modifier
     ) {
-        DropdownMenuItem(
-            text = {
-                Text(
-                    text = "쪽지 보내기",
-                    style = textStyle,
-                    modifier = Modifier.fillMaxWidth()
-                )
-            },
-            contentPadding = PaddingValues(0.dp),
-            onClick = { /*TODO*/ })
+        if (!isMyComment()) {
+            DropdownMenuItem(
+                text = {
+                    Text(
+                        text = "쪽지 보내기",
+                        style = textStyle,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                },
+                contentPadding = PaddingValues(0.dp),
+                onClick = { onSend() })
+        }
+
         DropdownMenuItem(text = {
             Text(
                 text = if (!isFavorite()) "공감하기" else "공감 취소",

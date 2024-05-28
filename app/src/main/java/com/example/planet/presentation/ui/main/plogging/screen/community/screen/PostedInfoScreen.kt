@@ -45,7 +45,8 @@ import kotlinx.coroutines.launch
 fun PostedInfoScreen(
     viewModel: CommunityViewModel,
     appBarTitle: String,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    startMessageActivity: (Long, Long) -> Unit
 ) {
     val scrollState = rememberScrollState()
     val scope = rememberCoroutineScope()
@@ -103,7 +104,11 @@ fun PostedInfoScreen(
                     onNotFavorite = { viewModel.deletePostedHeart(it) },
                 )
 
-                CommentArea(viewModel = viewModel, comment = { viewModel.commentList })
+                CommentArea(
+                    viewModel = viewModel,
+                    comment = { viewModel.commentList }) { userId, recieverId ->
+                    startMessageActivity(userId, recieverId)
+                }
             }
             CommentTextField(
                 modifier = Modifier
@@ -125,7 +130,11 @@ fun PostedInfoScreen(
 }
 
 @Composable
-fun CommentArea(viewModel: CommunityViewModel, comment: () -> List<CommentInfo>) {
+fun CommentArea(
+    viewModel: CommunityViewModel,
+    comment: () -> List<CommentInfo>,
+    startMessageActivity: (Long, Long) -> Unit
+) {
     Column {
         comment().forEach { comment ->
             CommentCard(
@@ -139,7 +148,9 @@ fun CommentArea(viewModel: CommunityViewModel, comment: () -> List<CommentInfo>)
                 date = comment.uploadTime,
                 isHeart = comment.heart,
                 heartCount = comment.heartCount
-            )
+            ) { userId, recieverId ->
+                startMessageActivity(userId, recieverId)
+            }
         }
     }
 }
