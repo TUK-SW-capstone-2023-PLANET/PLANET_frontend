@@ -45,14 +45,31 @@ class MainActivity : ComponentActivity() {
                     messageViewModel = messageViewModel,
                     startMapActivity = { startMapActivity() },
                     startUserActivity = { startUserActivity() },
-                    startCommunityActivity = { board, universityName -> startCommunityActivity(board, universityName) },
-                    startPostedInfoActivity = { postId, board -> startPostedInfoActivity(postId, board) },
-                    startMyWritedActivity = { type, userId -> startMyWritedActivity(type, userId ) },
-                    startMessageActivity = { userId, chatroomId, reciever -> startMessageActivity(userId, chatroomId, reciever) }
+                    startCommunityActivity = { board, universityName ->
+                        startCommunityActivity(
+                            board,
+                            universityName
+                        )
+                    },
+                    startPostedInfoActivity = { postId, board ->
+                        startPostedInfoActivity(
+                            postId,
+                            board
+                        )
+                    },
+                    startMyWritedActivity = { type, userId -> startMyWritedActivity(type, userId) },
+                    startMessageActivity = { userId, chatroomId, reciever ->
+                        startMessageActivity(
+                            userId,
+                            chatroomId,
+                            reciever
+                        )
+                    }
                 )
             }
         }
     }
+
 
     override fun onStart() {
         super.onStart()
@@ -64,11 +81,13 @@ class MainActivity : ComponentActivity() {
         Log.d(TAG, "MainActivity onResume()")
 
     }
+
     override fun onPause() {
         super.onPause()
         Log.d(TAG, "MainActivity onPause()")
 
     }
+
     override fun onStop() {
         super.onStop()
         Log.d(TAG, "MainActivity onStop()")
@@ -80,7 +99,6 @@ class MainActivity : ComponentActivity() {
         Log.d(TAG, "MainActivity onCreate()")
 
     }
-
 
 
     private fun startMapActivity() {
@@ -96,7 +114,8 @@ class MainActivity : ComponentActivity() {
     private fun startCommunityActivity(bulletinBoard: String, universityName: String) {
         val intent = Intent(this, CommunityActivity::class.java).apply {
             this.putExtra("board", bulletinBoard)
-            this.putExtra("university", universityName) }
+            this.putExtra("university", universityName)
+        }
         startActivity(intent)
     }
 
@@ -125,5 +144,6 @@ class MainActivity : ComponentActivity() {
         startActivity(intent)
     }
 }
+
 
 

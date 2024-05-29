@@ -5,6 +5,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -108,6 +109,9 @@ class MainViewModel @Inject constructor(
         300.dp,
         300.dp,
     )
+
+    var switchState by mutableStateOf(0)
+
 
     private val _ploggingOrRecordSwitch = mutableStateOf(true)
     val ploggingOrRecordSwitch: State<Boolean> = _ploggingOrRecordSwitch

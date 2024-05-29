@@ -2,6 +2,7 @@ package com.example.planet.presentation.ui.main.plogging.navigation
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -47,16 +48,20 @@ fun NavigationGraph(
         bottomBar = {
             BottomNavigation(navController = navController)
         }
-    ) {
+    ) { paddingValue ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(it),
+                .padding(paddingValue),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             when (mainViewModel.showRankingScreen) {
                 ScreenNav.HomeScreen -> {
-                    MainTopSwitch(mainViewModel = mainViewModel)
+                    MainTopSwitch(
+                        isChecked = mainViewModel.switchState,
+                        onCheckedChange = { mainViewModel.switchState = it },
+                        modifier = Modifier.fillMaxWidth(0.5f)
+                    )
                     NavHost(
                         navController = navController,
                         startDestination = BottomNavItem.HomeScreen.screenRoute
@@ -80,7 +85,13 @@ fun NavigationGraph(
                             MessageScreen(
                                 messageViewModel = messageViewModel,
                                 userId = mainViewModel.userId
-                            ) { userId, chatroomId, reciever -> startMessageActivity(userId, chatroomId, reciever)  }
+                            ) { userId, chatroomId, reciever ->
+                                startMessageActivity(
+                                    userId,
+                                    chatroomId,
+                                    reciever
+                                )
+                            }
                         }
                         composable(BottomNavItem.CommunityScreen.screenRoute) {
                             CommunityScreen(

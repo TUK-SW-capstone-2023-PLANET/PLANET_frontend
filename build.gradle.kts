@@ -3,7 +3,7 @@ buildscript {
     extra.apply {
         set("compileSdk", 34)
         set("targetSdk", 34)
-        set("minSdk", 24)
+        set("minSdk", 25)
         set("versionName", "1.0")
         set("versionCode", 1)
         set("core-ktxVersion", "1.12.0")

@@ -1,6 +1,5 @@
 package com.example.planet.component.main.plogging
 
-import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.interaction.collectIsDraggedAsState
@@ -31,7 +30,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.example.planet.R
-import com.example.planet.TAG
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 
