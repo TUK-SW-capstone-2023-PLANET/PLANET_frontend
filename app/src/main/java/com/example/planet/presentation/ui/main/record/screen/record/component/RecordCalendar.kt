@@ -17,6 +17,7 @@ import java.time.format.DateTimeFormatter
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun RecordCalendar(
+    modifier: Modifier,
     currentDate: LocalDate = LocalDate.now(),
     today: LocalDate,
     selectedDate: LocalDate?,
@@ -27,7 +28,7 @@ fun RecordCalendar(
     val dateTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM")
 
     Card(
-        modifier = Modifier
+        modifier = modifier
             .padding(horizontal = 16.dp)
             .fillMaxWidth(),
         shape = RoundedCornerShape(10.dp),

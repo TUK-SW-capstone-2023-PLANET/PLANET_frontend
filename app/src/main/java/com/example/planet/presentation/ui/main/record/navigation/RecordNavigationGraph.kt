@@ -1,5 +1,7 @@
 package com.example.planet.presentation.ui.main.record.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,6 +25,7 @@ import com.example.planet.presentation.ui.main.record.theme.RECORDTheme
 import com.example.planet.presentation.viewmodel.MainViewModel
 import com.example.planet.presentation.viewmodel.RecordViewModel
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun RecordNavigationGraph(
     mainViewModel: MainViewModel,

@@ -3,6 +3,7 @@ package com.example.planet.presentation.ui.main.record.navigation
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AddChart
 import androidx.compose.material.icons.rounded.BarChart
+import androidx.compose.material.icons.rounded.CalendarMonth
 import androidx.compose.material.icons.rounded.Chat
 import androidx.compose.material.icons.rounded.DeleteSweep
 import androidx.compose.material.icons.rounded.Home
@@ -32,7 +33,7 @@ sealed class BottomNavItem(
 
     data object RecordScreen : BottomNavItem(
         screenRoute = RECORD,
-        bottomIcon = Icons.Rounded.ReceiptLong,
+        bottomIcon = Icons.Rounded.CalendarMonth,
         bottomTitle = "기록",
     )
 
