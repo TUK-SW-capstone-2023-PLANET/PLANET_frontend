@@ -17,6 +17,7 @@ import com.example.planet.presentation.ui.main.record.navigation.RecordNavigatio
 import com.example.planet.presentation.viewmodel.CommunityViewModel
 import com.example.planet.presentation.viewmodel.MainViewModel
 import com.example.planet.presentation.viewmodel.MessageViewModel
+import com.example.planet.presentation.viewmodel.RecordViewModel
 
 @Composable
 fun MainNavigationGraph(
@@ -24,6 +25,7 @@ fun MainNavigationGraph(
     mainViewModel: MainViewModel = viewModel(),
     communityViewModel: CommunityViewModel,
     messageViewModel: MessageViewModel,
+    recordViewModel: RecordViewModel,
     startMapActivity: () -> Unit,
     startUserActivity: () -> Unit,
     startCommunityActivity: (String, String) -> Unit,
@@ -86,6 +88,7 @@ fun MainNavigationGraph(
             composable(TopNavItem.RecordNavigationGraph.screenRoute) {
                 RecordNavigationGraph(
                     mainViewModel = mainViewModel,
+                    recordViewModel = recordViewModel,
                     startMapActivity = { startMapActivity() },
                 )
             }

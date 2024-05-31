@@ -16,15 +16,17 @@ import androidx.navigation.compose.rememberNavController
 import com.example.planet.presentation.ui.main.plogging.screen.home.screen.MainScreen
 import com.example.planet.presentation.ui.main.record.component.RecordBottomNavigation
 import com.example.planet.presentation.ui.main.record.screen.MapScreen
-import com.example.planet.presentation.ui.main.record.screen.RecordScreen
+import com.example.planet.presentation.ui.main.record.screen.record.screen.RecordScreen
 import com.example.planet.presentation.ui.main.record.screen.ScoreScreen
 import com.example.planet.presentation.ui.main.record.screen.StatisticsScreen
 import com.example.planet.presentation.ui.main.record.theme.RECORDTheme
 import com.example.planet.presentation.viewmodel.MainViewModel
+import com.example.planet.presentation.viewmodel.RecordViewModel
 
 @Composable
 fun RecordNavigationGraph(
     mainViewModel: MainViewModel,
+    recordViewModel: RecordViewModel,
     startMapActivity: () -> Unit
 ) {
     val navController = rememberNavController()
@@ -56,7 +58,7 @@ fun RecordNavigationGraph(
                             ) { startMapActivity() }
                         }
                         composable(BottomNavItem.RecordScreen.screenRoute) {
-                            RecordScreen()
+                            RecordScreen(recordViewModel = recordViewModel)
                         }
                         composable(BottomNavItem.StatisticsScreen.screenRoute) {
                             StatisticsScreen()

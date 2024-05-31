@@ -19,6 +19,7 @@ import com.example.planet.presentation.ui.ui.theme.MyApplicationTheme
 import com.example.planet.presentation.viewmodel.CommunityViewModel
 import com.example.planet.presentation.viewmodel.MainViewModel
 import com.example.planet.presentation.viewmodel.MessageViewModel
+import com.example.planet.presentation.viewmodel.RecordViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -28,6 +29,7 @@ class MainActivity : ComponentActivity() {
     private val mainViewModel by viewModels<MainViewModel>()
     private val communityViewModel by viewModels<CommunityViewModel>()
     private val messageViewModel by viewModels<MessageViewModel>()
+    private val recordViewModel by viewModels<RecordViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +44,7 @@ class MainActivity : ComponentActivity() {
                     mainViewModel = mainViewModel,
                     communityViewModel = communityViewModel,
                     messageViewModel = messageViewModel,
+                    recordViewModel = recordViewModel,
                     startMapActivity = { startMapActivity() },
                     startUserActivity = { startUserActivity() },
                     startCommunityActivity = { board, universityName ->
