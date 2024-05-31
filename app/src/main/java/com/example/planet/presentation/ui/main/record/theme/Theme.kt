@@ -1,4 +1,4 @@
-package com.example.planet.presentation.ui.splash.ui.theme
+package com.example.planet.presentation.ui.main.record.theme
 
 import android.app.Activity
 import android.os.Build
@@ -16,15 +16,17 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
+    primary = White,
     secondary = PurpleGrey80,
-    tertiary = Pink80
+    tertiary = Pink80,
+    background = DarkGrey
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
+    primary = White,
     secondary = PurpleGrey40,
-    tertiary = Pink40
+    tertiary = Pink40,
+    background = DarkGrey
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
@@ -38,7 +40,7 @@ private val LightColorScheme = lightColorScheme(
 )
 
 @Composable
-fun PLANETTheme(
+fun RECORDTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,

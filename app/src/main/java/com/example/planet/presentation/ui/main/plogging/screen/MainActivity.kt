@@ -8,7 +8,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.navigation.compose.rememberNavController
 import com.example.planet.TAG
-import com.example.planet.presentation.ui.main.plogging.navigation.NavigationGraph
+import com.example.planet.presentation.ui.main.navigation.MainNavigationGraph
 import com.example.planet.presentation.ui.main.plogging.screen.community.screen.CommunityActivity
 import com.example.planet.presentation.ui.main.plogging.screen.community.screen.PostedInfoActivity
 import com.example.planet.presentation.ui.main.plogging.screen.message.screen.MessageActivity
@@ -31,14 +31,13 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d(TAG, "MainActivity onCreate()")
 
         setContent {
             val navController = rememberNavController()
             mainViewModel
             MyApplicationTheme {
 //                RequestPermission()
-                NavigationGraph(
+                MainNavigationGraph(
                     navController = navController,
                     mainViewModel = mainViewModel,
                     communityViewModel = communityViewModel,
@@ -46,24 +45,14 @@ class MainActivity : ComponentActivity() {
                     startMapActivity = { startMapActivity() },
                     startUserActivity = { startUserActivity() },
                     startCommunityActivity = { board, universityName ->
-                        startCommunityActivity(
-                            board,
-                            universityName
-                        )
+                        startCommunityActivity(board, universityName)
                     },
                     startPostedInfoActivity = { postId, board ->
-                        startPostedInfoActivity(
-                            postId,
-                            board
-                        )
+                        startPostedInfoActivity(postId, board)
                     },
                     startMyWritedActivity = { type, userId -> startMyWritedActivity(type, userId) },
                     startMessageActivity = { userId, chatroomId, reciever ->
-                        startMessageActivity(
-                            userId,
-                            chatroomId,
-                            reciever
-                        )
+                        startMessageActivity(userId, chatroomId, reciever)
                     }
                 )
             }

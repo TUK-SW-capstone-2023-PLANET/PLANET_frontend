@@ -1,4 +1,4 @@
-package com.example.planet.presentation.ui.main.plogging.component
+package com.example.planet.presentation.ui.main.record.component
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
@@ -22,19 +22,17 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.planet.R
-import com.example.planet.presentation.ui.main.plogging.navigation.BottomNavItem
-
+import com.example.planet.presentation.ui.main.record.navigation.BottomNavItem
 
 @Composable
-fun BottomNavigation(navController: NavHostController) {
+fun RecordBottomNavigation(navController: NavHostController) {
     val items = listOf<BottomNavItem>(
-        BottomNavItem.MessageScreen,
-        BottomNavItem.CommunityScreen,
+        BottomNavItem.ScoreScreen,
+        BottomNavItem.MapScreen,
         BottomNavItem.HomeScreen,
-        BottomNavItem.RankingScreen,
-        BottomNavItem.UserScreen,
-
-    )
+        BottomNavItem.StatisticsScreen,
+        BottomNavItem.RecordScreen,
+        )
     val color = colorResource(id = R.color.font_background_color2)
     NavigationBar(
         modifier = Modifier
@@ -69,8 +67,6 @@ fun BottomNavigation(navController: NavHostController) {
                         fontSize = 9.sp,
                     )
                 },
-//                selectedContentColor = Color(0xFF007AFF),
-//                unselectedContentColor = Color.Black,
                 selected = selected,
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = colorResource(id = R.color.main_color1),

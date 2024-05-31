@@ -9,10 +9,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.planet.presentation.ui.main.plogging.component.BottomNavigation
+import androidx.navigation.compose.rememberNavController
+import com.example.planet.presentation.ui.main.plogging.component.PloggingBottomNavigation
 import com.example.planet.presentation.ui.main.plogging.component.MainTopSwitch
 import com.example.planet.presentation.ui.main.plogging.screen.community.screen.CommunityScreen
 import com.example.planet.presentation.ui.main.plogging.screen.home.screen.MainScreen
@@ -31,9 +31,8 @@ import com.example.planet.presentation.viewmodel.MessageViewModel
 
 
 @Composable
-fun NavigationGraph(
-    navController: NavHostController,
-    mainViewModel: MainViewModel = viewModel(),
+fun PloggingNavigationGraph(
+    mainViewModel: MainViewModel,
     communityViewModel: CommunityViewModel,
     messageViewModel: MessageViewModel,
     startMapActivity: () -> Unit,
@@ -43,10 +42,11 @@ fun NavigationGraph(
     startMyWritedActivity: (String, Long) -> Unit,
     startMessageActivity: (Long, Long, String) -> Unit
 ) {
+    val navController = rememberNavController()
 
     Scaffold(
         bottomBar = {
-            BottomNavigation(navController = navController)
+            PloggingBottomNavigation(navController = navController)
         }
     ) { paddingValue ->
         Column(
@@ -57,11 +57,6 @@ fun NavigationGraph(
         ) {
             when (mainViewModel.showRankingScreen) {
                 ScreenNav.HomeScreen -> {
-                    MainTopSwitch(
-                        isChecked = mainViewModel.switchState,
-                        onCheckedChange = { mainViewModel.switchState = it },
-                        modifier = Modifier.fillMaxWidth(0.5f)
-                    )
                     NavHost(
                         navController = navController,
                         startDestination = BottomNavItem.HomeScreen.screenRoute

@@ -8,8 +8,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import com.example.planet.presentation.ui.main.plogging.screen.MainActivity
 import com.example.planet.presentation.ui.signin.screen.SignInActivity
-import com.example.planet.presentation.ui.splash.ui.theme.PLANETTheme
-import com.example.planet.presentation.viewmodel.SignInViewModel
+import com.example.planet.presentation.ui.ui.theme.MyApplicationTheme
 import com.example.planet.presentation.viewmodel.SplashViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -21,7 +20,7 @@ class SplashActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            PLANETTheme {
+            MyApplicationTheme {
                 Handler().postDelayed(Runnable {
                     splashViewModel.goActivity(
                         listOf({ startMainActivity() }, { startSignInActivity() })

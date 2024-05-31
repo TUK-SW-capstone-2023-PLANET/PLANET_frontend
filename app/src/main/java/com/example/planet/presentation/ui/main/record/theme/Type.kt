@@ -1,4 +1,4 @@
-package com.example.planet.presentation.ui.splash.ui.theme
+package com.example.planet.presentation.ui.main.record.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
