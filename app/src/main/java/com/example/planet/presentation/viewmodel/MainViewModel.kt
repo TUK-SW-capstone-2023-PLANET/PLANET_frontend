@@ -199,10 +199,6 @@ class MainViewModel @Inject constructor(
 
     private fun getGraphHeightList1(list: List<University>): List<Dp> {
         val graphHeight1th = 120 // 기준을 120dp로 잡음
-        Log.d(
-            "daeYoung",
-            "getGraphHeightList1():  1->${list}\n2-> ${(graphHeight1th * list[1].score)}\n3->${(graphHeight1th * list[1].score) / list[0].score}"
-        )
         val graphHeight2th = (graphHeight1th * list[1].score) / list[0].score
         val graphHeight3th = (graphHeight1th * list[2].score) / list[0].score
         // 2등, 1등, 3등 순서대로 저장

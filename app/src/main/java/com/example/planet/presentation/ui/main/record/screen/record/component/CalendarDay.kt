@@ -1,6 +1,7 @@
 package com.example.planet.presentation.ui.main.record.screen.record.component
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -20,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import com.example.planet.R
+import com.example.planet.TAG
 import com.example.planet.presentation.util.noRippleClickable
 import java.time.LocalDate
 
@@ -28,21 +30,26 @@ import java.time.LocalDate
 fun CalendarDay(
     day: LocalDate,
     isToday: Boolean,
-    isSelected: Boolean,
+    isSelected: () -> Boolean,
     isPlogging: Boolean,
     modifier: Modifier,
-    onClick: () -> Unit
+    onClick: () -> Unit = {}
 ) {
     val dayStyle = androidx.compose.ui.text.TextStyle(
-        color = if (isToday || isSelected) Color.White else Color.Black
+        color = if (isToday || isSelected()) Color.White else Color.Black
     )
-    Column(modifier = modifier.noRippleClickable { if (isPlogging) onClick() },
+    Column(
+        modifier = modifier.noRippleClickable {
+//            if (isPlogging) onClick()
+                                              },
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
             painter = painterResource(id = if (isPlogging) R.drawable.green_sprout else R.drawable.grey_sprout),
-            modifier = Modifier.weight(0.6f).fillMaxSize(),
+            modifier = Modifier
+                .weight(0.6f)
+                .fillMaxSize(),
             contentDescription = null
         )
 
@@ -54,10 +61,12 @@ fun CalendarDay(
                     .align(Alignment.Center),
                 shape = CircleShape,
                 colors = CardDefaults.cardColors(
-                    containerColor = if (isToday) {
-                        colorResource(id = R.color.font_background_color1)
-                    } else if (isSelected) {
+                    containerColor = if (isSelected()) {
+//                        Log.d(TAG, "isSelected, day: $day")
                         colorResource(id = R.color.red)
+                    } else if (isToday) {
+//                        Log.d(TAG, "isToday, day: $day")
+                        colorResource(id = R.color.font_background_color1)
                     } else {
                         Color.Transparent
                     },

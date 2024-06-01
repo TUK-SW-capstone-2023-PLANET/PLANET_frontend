@@ -78,4 +78,17 @@ class PloggingRepositoryImpl @Inject constructor(
         }
     }.flowOn(Dispatchers.IO)
 
+    override suspend fun getPloggingActiveList(
+        userId: Long,
+        year: Int,
+        month: Int
+    ) = flow {
+        kotlin.runCatching {
+            mainApi.getPloggingActiveList(userId, year, month)
+        }.onSuccess {
+            emit(ApiState.Success(it))
+        }.onFailure { error ->
+            error.message?.let { emit(ApiState.Error(it)) }
+        }
+    }.flowOn(Dispatchers.IO)
 }

@@ -58,6 +58,11 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
+//        freeCompilerArgs += listOf(
+//            "-P",
+//            "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=${rootProject.file(".").absolutePath}/compose_compile"
+//        )
+
     }
     buildFeatures {
         compose = true
@@ -172,4 +177,7 @@ dependencies {
 
     // collectAsStateWithLifecycle 사용
     implementation ("androidx.lifecycle:lifecycle-runtime-compose:2.7.0")
+
+    // immutable 객체
+    implementation ("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5")
 }

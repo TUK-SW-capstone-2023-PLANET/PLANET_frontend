@@ -1,6 +1,7 @@
 package com.example.planet.presentation.ui.main.record.navigation
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -15,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.planet.TAG
 import com.example.planet.presentation.ui.main.plogging.screen.home.screen.MainScreen
 import com.example.planet.presentation.ui.main.record.component.RecordBottomNavigation
 import com.example.planet.presentation.ui.main.record.screen.MapScreen
@@ -32,6 +34,8 @@ fun RecordNavigationGraph(
     recordViewModel: RecordViewModel,
     startMapActivity: () -> Unit
 ) {
+    Log.d(TAG, "RecordNavigationGraph 리컴포지션")
+
     val navController = rememberNavController()
     RECORDTheme {
         Surface(
@@ -61,7 +65,9 @@ fun RecordNavigationGraph(
                             ) { startMapActivity() }
                         }
                         composable(BottomNavItem.RecordScreen.screenRoute) {
-                            RecordScreen(recordViewModel = recordViewModel)
+                            RecordScreen(
+                                recordViewModel = recordViewModel
+                            )
                         }
                         composable(BottomNavItem.StatisticsScreen.screenRoute) {
                             StatisticsScreen()

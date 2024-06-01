@@ -18,6 +18,7 @@ import com.example.planet.data.remote.dto.response.chat.ChatInfoResponse
 import com.example.planet.data.remote.dto.response.chat.ChatResponse
 import com.example.planet.data.remote.dto.response.chat.ChatroomInfo
 import com.example.planet.data.remote.dto.response.plogging.PloggingComplete
+import com.example.planet.data.remote.dto.response.plogging.PloggingDayInfo
 import com.example.planet.data.remote.dto.response.plogging.PloggingId
 import com.example.planet.data.remote.dto.response.plogging.PloggingResult
 import com.example.planet.data.remote.dto.response.plogging.Trash
@@ -58,6 +59,8 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface MainApi {
+
+    // Plogging 관련 -----------------------------------------------------------------------------
     @GET("/trash-can/all")
     suspend fun getAllTrashCanLocation(): List<TrashCan>
 
@@ -81,6 +84,13 @@ interface MainApi {
 
     @GET("/plogging/{ploggingId}")
     suspend fun getPloggingInfo(@Path("ploggingId") ploggingId: Int): PloggingResult
+
+    @GET("/plogging/user/{userId}/year/{year}/month/{month}")
+    suspend fun getPloggingActiveList(
+        @Path("userId") userId: Long,
+        @Path("year") year: Int,
+        @Path("month") month: Int
+    ): List<Map<Int, List<PloggingDayInfo>>>
 
     @GET("/advertisement")
     suspend fun getTopBanner(): List<Advertisement>
@@ -148,7 +158,7 @@ interface MainApi {
 
     // 유저 정보 조회
     @GET("/user/{userId}")
-    suspend fun getUserInfo(@Path("userId")userId: Long ): UserInfo
+    suspend fun getUserInfo(@Path("userId") userId: Long): UserInfo
 
     // 유저 정보 수정 TODO(UserInfoResponse 수정하면 UserId로 바꿀 것)
     @PUT("/user")
@@ -197,17 +207,23 @@ interface MainApi {
     suspend fun readHotPosted(@Path("type") type: String): HotPosted
 
     @GET("/post/my/{userId}/{type}")
-    suspend fun readAllMyPosted(@Path("userId") userId: Long, @Path("type") type: String): List<MyPostedInfo>
+    suspend fun readAllMyPosted(
+        @Path("userId") userId: Long,
+        @Path("type") type: String
+    ): List<MyPostedInfo>
 
     @GET("/post/my/comment/{userId}/{type}")
-    suspend fun readAllMyComment(@Path("userId") userId: Long, @Path("type") type: String): List<MyPostedInfo>
+    suspend fun readAllMyComment(
+        @Path("userId") userId: Long,
+        @Path("type") type: String
+    ): List<MyPostedInfo>
 
     // 게시글
     @POST("/post/{type}")
     suspend fun postPosting(@Body postInfo: PostingInfo, @Path("type") type: String): PostResponse
 
     @GET("/post")
-    suspend fun getPosted(@Query("postId") postId: Long, @Query("userId") userId: Long ): PostedInfo
+    suspend fun getPosted(@Query("postId") postId: Long, @Query("userId") userId: Long): PostedInfo
 
     @HTTP(method = "DELETE", path = "/post", hasBody = true)
     suspend fun deletePosted(@Body postId: PostId): PostResponse
@@ -223,7 +239,10 @@ interface MainApi {
     suspend fun postComment(@Body comment: CommentRequest): CommentResponse
 
     @GET("/comment")
-    suspend fun getComment(@Query("postId") postId: Long, @Query("userId") userId: Long): List<CommentInfo>
+    suspend fun getComment(
+        @Query("postId") postId: Long,
+        @Query("userId") userId: Long
+    ): List<CommentInfo>
 
     @HTTP(method = "DELETE", path = "/comment", hasBody = true)
     suspend fun deleteComment(@Body commentId: CommentId): CommentResponse
@@ -242,7 +261,10 @@ interface MainApi {
     suspend fun getAllChatroom(@Path("userId") userId: Long): List<ChatroomInfo>
 
     @GET("/chat/chat-room/{chatRoomId}/user/{userId}")
-    suspend fun getAllChat(@Path("chatRoomId") chatRoomId: Long, @Path("userId") userId: Long): ChatInfoResponse
+    suspend fun getAllChat(
+        @Path("chatRoomId") chatRoomId: Long,
+        @Path("userId") userId: Long
+    ): ChatInfoResponse
 
     @HTTP(method = "DELETE", path = "/chat/chat-room", hasBody = true)
     suspend fun deleteChatRoom(@Body chatRoomId: ChatRoomId): ChatResponse

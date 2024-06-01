@@ -1,5 +1,8 @@
 package com.example.planet.presentation.ui.main.record.screen.record.component
 
+import android.os.Build
+import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,10 +18,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.planet.TAG
 import com.example.planet.presentation.util.noRippleClickable
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun CalendarHeader(yearMonth: String, onNextMonth: () -> Unit, onPreviousMonth: () -> Unit) {
+fun CalendarHeader(
+    yearMonth: LocalDate,
+    onNextMonth: () -> Unit,
+    onPreviousMonth: () -> Unit
+) {
+    Log.d(TAG, "CalendarHeader 리컴포지션")
+
+    val dateTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM")
+
     val titleStyle = androidx.compose.ui.text.TextStyle(
         fontSize = 18.sp,
         fontWeight = FontWeight.SemiBold,
@@ -26,12 +41,12 @@ fun CalendarHeader(yearMonth: String, onNextMonth: () -> Unit, onPreviousMonth: 
 
     Row(
         modifier = Modifier
-            .padding(horizontal = 16.dp, vertical = 16.dp)
+            .padding(horizontal = 16.dp, vertical = 12.dp)
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text = yearMonth, style = titleStyle)
+        Text(text = yearMonth.format(dateTimeFormatter), style = titleStyle)
         Row {
             Icon(imageVector = Icons.Default.KeyboardArrowLeft,
                 contentDescription = null,

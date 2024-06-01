@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -15,7 +16,7 @@ import androidx.compose.ui.unit.dp
 fun HorizontalDayOfWeek() {
     Row(
         modifier = Modifier
-            .padding(vertical = 8.dp)
+            .padding(bottom = 8.dp)
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -24,7 +25,7 @@ fun HorizontalDayOfWeek() {
             Box(
                 modifier = Modifier
                     .weight(1f)
-                    .aspectRatio(1f),
+                    .aspectRatio(2f),
             ) {
                 Text(
                     text = dayOfWeek[it],
