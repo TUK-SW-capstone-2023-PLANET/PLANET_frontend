@@ -38,7 +38,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 @Composable
-fun PlanetDialog(ploggingViewModel: PloggingViewModel = viewModel(), onClick: (Int) -> Unit) {
+fun PlanetDialog(ploggingViewModel: PloggingViewModel = viewModel(), onClick: (Long) -> Unit) {
     val scope = rememberCoroutineScope()
     Dialog(onDismissRequest = {
         ploggingViewModel.displayOnDialog()
@@ -55,7 +55,7 @@ fun PlanetDialog(ploggingViewModel: PloggingViewModel = viewModel(), onClick: (I
                 stop = {
                     scope.launch {
                         val result = async { ploggingViewModel.postPlogging() }.await()
-                        if (result != 0) {
+                        if (result != 0L) {
                             onClick(result)
                         }
                     }

@@ -3,7 +3,7 @@ package com.example.planet.data.remote.dto.request.plogging
 import com.example.planet.data.remote.dto.Location
 
 data class PloggingInfo(
-    val ploggingId: Int,
+    val ploggingId: Long,
     val userId: Long,
     val location: List<Location>,
     val trash: List<Map<String, Int>>,

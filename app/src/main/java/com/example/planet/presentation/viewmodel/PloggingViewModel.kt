@@ -68,7 +68,7 @@ class PloggingViewModel @Inject constructor(
 
     var userId: Long = 0                                                // userToken
 
-    var ploggingId: Int = 0                                             // 플로깅 PK
+    var ploggingId: Long = 0                                             // 플로깅 PK
     private lateinit var timerJob: Job                                  // 타이머 코루틴
     private lateinit var distanceCalcJob: Job                           // 1초마다 위도,경도의 거리를 계산하는 코루틴
     private lateinit var ploggingLogJob: Job                           // 1초마다 위도,경도의 거리를 계산하는 코루틴
@@ -250,6 +250,7 @@ class PloggingViewModel @Inject constructor(
 //                            if (distance <= 9.0) {              // 1초 동안 1m 이하 거리이동만 측정
 //                                _distance.value += distance / 1000.0
 //                            }
+                            _distance.value += distance / 1000.0
                             pastLatLng = currentLatLng
                         }
                         delay(1000)
@@ -415,7 +416,7 @@ class PloggingViewModel @Inject constructor(
         }
     }
 
-    suspend fun postPlogging(): Int {
+    suspend fun postPlogging(): Long {
 
         var trashMapList: MutableList<Map<String, Int>> = mutableListOf()
         trashList.forEach { trash ->

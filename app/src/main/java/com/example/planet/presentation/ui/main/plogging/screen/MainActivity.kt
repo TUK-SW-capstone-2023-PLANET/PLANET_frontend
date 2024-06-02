@@ -15,6 +15,7 @@ import com.example.planet.presentation.ui.main.plogging.screen.message.screen.Me
 import com.example.planet.presentation.ui.main.plogging.screen.user.screen.UserActivity
 import com.example.planet.presentation.ui.main.plogging.screen.user.screen.mypost.MyWritedActivity
 import com.example.planet.presentation.ui.plogging.screen.MapActivity
+import com.example.planet.presentation.ui.plogging.screen.PloggingResultActivity
 import com.example.planet.presentation.ui.ui.theme.MyApplicationTheme
 import com.example.planet.presentation.viewmodel.CommunityViewModel
 import com.example.planet.presentation.viewmodel.MainViewModel
@@ -56,7 +57,8 @@ class MainActivity : ComponentActivity() {
                     startMyWritedActivity = { type, userId -> startMyWritedActivity(type, userId) },
                     startMessageActivity = { userId, chatroomId, reciever ->
                         startMessageActivity(userId, chatroomId, reciever)
-                    }
+                    },
+                    startPloggingResultActivity = {startPloggingResultActivity(it)}
                 )
             }
         }
@@ -132,6 +134,13 @@ class MainActivity : ComponentActivity() {
             this.putExtra("userId", userId)
             this.putExtra("chatroomId", chatroomId)
             this.putExtra("reciever", reciever)
+        }
+        startActivity(intent)
+    }
+
+    private fun startPloggingResultActivity(ploggingId: Long) {
+        val intent = Intent(this, PloggingResultActivity::class.java).also {
+            it.putExtra("ploggingId", ploggingId)
         }
         startActivity(intent)
     }

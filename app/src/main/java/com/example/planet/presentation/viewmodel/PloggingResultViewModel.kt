@@ -24,7 +24,7 @@ class PloggingResultViewModel @Inject constructor(
     val ploggingInfo: StateFlow<ApiState> = _ploggingInfo
 
 
-    suspend fun getPloggingInfo(ploggingId: Int) {
+    suspend fun getPloggingInfo(ploggingId: Long) {
         when (val apiState = getPloggingInfoUseCase(ploggingId).first()) {
             is ApiState.Success<*> -> {
                 _ploggingInfo.emit(apiState)

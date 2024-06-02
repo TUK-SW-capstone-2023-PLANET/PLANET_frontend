@@ -32,7 +32,8 @@ import com.example.planet.presentation.viewmodel.RecordViewModel
 fun RecordNavigationGraph(
     mainViewModel: MainViewModel,
     recordViewModel: RecordViewModel,
-    startMapActivity: () -> Unit
+    startMapActivity: () -> Unit,
+    startPloggingResultActivity: (Long) -> Unit
 ) {
     Log.d(TAG, "RecordNavigationGraph 리컴포지션")
 
@@ -66,7 +67,8 @@ fun RecordNavigationGraph(
                         }
                         composable(BottomNavItem.RecordScreen.screenRoute) {
                             RecordScreen(
-                                recordViewModel = recordViewModel
+                                recordViewModel = recordViewModel,
+                                startPloggingResultActivity = {startPloggingResultActivity(it)}
                             )
                         }
                         composable(BottomNavItem.StatisticsScreen.screenRoute) {

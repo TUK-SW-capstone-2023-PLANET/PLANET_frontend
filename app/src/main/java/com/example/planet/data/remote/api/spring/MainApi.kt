@@ -83,7 +83,7 @@ interface MainApi {
 
 
     @GET("/plogging/{ploggingId}")
-    suspend fun getPloggingInfo(@Path("ploggingId") ploggingId: Int): PloggingResult
+    suspend fun getPloggingInfo(@Path("ploggingId") ploggingId: Long): PloggingResult
 
     @GET("/plogging/user/{userId}/year/{year}/month/{month}")
     suspend fun getPloggingActiveList(

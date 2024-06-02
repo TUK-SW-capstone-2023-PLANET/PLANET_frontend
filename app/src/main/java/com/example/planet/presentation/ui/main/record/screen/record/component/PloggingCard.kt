@@ -1,6 +1,7 @@
 package com.example.planet.presentation.ui.main.record.screen.record.component
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -39,7 +40,7 @@ fun PloggingCard(
     trashCount: Int,
     distance: String,
     ploggingTime: String,
-
+    onClick: () -> Unit
     ) {
     val addressStyle = TextStyle(
         fontSize = 13.sp,
@@ -68,6 +69,7 @@ fun PloggingCard(
     ) {
         Row(
             modifier = Modifier
+                .clickable { onClick() }
                 .padding(horizontal = 13.dp, vertical = 8.dp)
                 .fillMaxWidth()
                 .height(80.dp)
@@ -80,7 +82,9 @@ fun PloggingCard(
                     .aspectRatio(1f)
                     .clip(RoundedCornerShape(10.dp))
             )
-            Column(modifier = Modifier.padding(start = 13.dp).fillMaxHeight(), verticalArrangement = Arrangement.SpaceBetween) {
+            Column(modifier = Modifier
+                .padding(start = 13.dp)
+                .fillMaxHeight(), verticalArrangement = Arrangement.SpaceBetween) {
                 Text(text = address, style = addressStyle)
                 Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.Center) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -99,7 +103,7 @@ fun PloggingCard(
                             modifier = Modifier.size(14.dp),
                             tint = colorResource(id = R.color.font_background_color2)
                         )
-                        Text(text = distance, style = trashCountStyle)
+                        Text(text = "${distance} km", style = trashCountStyle)
                     }
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(

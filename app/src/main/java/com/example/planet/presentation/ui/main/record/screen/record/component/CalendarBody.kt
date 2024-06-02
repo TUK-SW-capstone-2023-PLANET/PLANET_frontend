@@ -9,10 +9,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.planet.TAG
@@ -24,9 +25,9 @@ import java.time.LocalDate
 fun CalendarBody(
     currentDate: LocalDate,
     today: LocalDate,
-    selectedDate: LocalDate?,
-    ploggingActivityList: ImmutableList<Int>,
-//    onSelectedDate: (LocalDate) -> Unit
+    ploggingActivityList: List<Int>,
+    setSelectedPloggingList: (Int) -> Unit,
+    getPloggingActiveList: (Int, Int, () -> Unit) -> Unit
 ) {
     Log.d(TAG, "CalendarBody: 리컴포지션")
 
@@ -34,6 +35,9 @@ fun CalendarBody(
     val lastDay = currentDate.lengthOfMonth()        // 마지막 일자, ex) 31
     val days = IntRange(1, lastDay).toList()    // ex) 1, 2, 3, 4, ... , 31
     var dayIndex = 0
+    var selectedDate: LocalDate? by remember {
+        mutableStateOf(null)
+    }
 
     Column(modifier = Modifier.padding(bottom = 16.dp)) {
         HorizontalDayOfWeek()
@@ -43,27 +47,39 @@ fun CalendarBody(
             Row(modifier = Modifier.fillMaxWidth()) {
                 repeat(7) {
                     if (it < firstDayOfWeek) {
-                        Box(modifier = Modifier.weight(1f).aspectRatio(1.3f))
+                        Box(modifier = Modifier
+                            .weight(1f)
+                            .aspectRatio(1.3f))
                     } else {
                         val date = currentDate.withDayOfMonth(days[dayIndex])
                         CalendarDay(
                             day = date,
                             isToday = (date == today),
-                            isSelected = {(date == selectedDate)},
+                            isSelected = { (date == selectedDate) },
                             isPlogging = (ploggingActivityList.contains(days[dayIndex++])),
                             modifier = Modifier
                                 .weight(1f)
                                 .aspectRatio(1.3f)
-                        ) { /*onSelectedDate(date)*/ }
+                        ) {
+                            if (selectedDate == date) {
+                                selectedDate = null
+                            } else {
+                                selectedDate = date
+                                setSelectedPloggingList(date.dayOfMonth)
+                            }
+
+                        }
                     }
                 }
             }
-            while (dayIndex+1 <= lastDay+(lastDay%7)) {
+            while (dayIndex + 1 <= lastDay + (lastDay % 7)) {
                 Row(modifier = Modifier.fillMaxWidth()) {
-                    run loop@ {
+                    run loop@{
                         repeat(7) {
                             if (dayIndex > days.lastIndex) {
-                                Box(modifier = Modifier.weight(1f).aspectRatio(1.3f))
+                                Box(modifier = Modifier
+                                    .weight(1f)
+                                    .aspectRatio(1.3f))
                                 dayIndex++
                             } else {
                                 Log.d(TAG, "dayIndex: $dayIndex, day: ${days[dayIndex]}")
@@ -72,12 +88,19 @@ fun CalendarBody(
                                 CalendarDay(
                                     day = date,
                                     isToday = (date == today),
-                                    isSelected = {(date == selectedDate)},
+                                    isSelected = { (date == selectedDate) },
                                     isPlogging = (ploggingActivityList.contains(days[dayIndex++])),
                                     modifier = Modifier
                                         .weight(1f)
                                         .aspectRatio(1.3f)
-                                ) { /*onSelectedDate(date)*/ }
+                                ) {
+                                    if (selectedDate == date) {
+                                        selectedDate = null
+                                    } else {
+                                        selectedDate = date
+                                        setSelectedPloggingList(date.dayOfMonth)
+                                    }
+                                }
                             }
                         }
                     }

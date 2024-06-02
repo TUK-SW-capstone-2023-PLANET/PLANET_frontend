@@ -28,7 +28,7 @@ class PloggingResultActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         lifecycleScope.launch {
-            ploggingResultViewModel.getPloggingInfo(intent.getIntExtra("ploggingId", 0))
+            ploggingResultViewModel.getPloggingInfo(intent.getLongExtra("ploggingId", 0))
         }
         setContent {
             MyApplicationTheme {
@@ -52,10 +52,6 @@ class PloggingResultActivity : ComponentActivity() {
     }
 
     private fun startMainActivity(isApiCall: Boolean = true) {
-//        val intent = Intent(this, MainActivity::class.java).apply {
-//            this.putExtra("API_call", isApiCall)
-//        }
-////        startActivity(intent)
         finish()
     }
 }

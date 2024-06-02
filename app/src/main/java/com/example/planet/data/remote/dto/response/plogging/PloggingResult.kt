@@ -3,7 +3,7 @@ package com.example.planet.data.remote.dto.response.plogging
 import com.example.planet.data.remote.dto.Location
 
 data class PloggingResult(
-    val ploggingId: Int,
+    val ploggingId: Long,
     val uploadTime: String,
     val runningTime: String,
     val ploggingTime: Long,   // 초 단위로 전달

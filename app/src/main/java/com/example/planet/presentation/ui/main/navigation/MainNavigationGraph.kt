@@ -31,7 +31,8 @@ fun MainNavigationGraph(
     startCommunityActivity: (String, String) -> Unit,
     startPostedInfoActivity: (Long, String) -> Unit,
     startMyWritedActivity: (String, Long) -> Unit,
-    startMessageActivity: (Long, Long, String) -> Unit
+    startMessageActivity: (Long, Long, String) -> Unit,
+    startPloggingResultActivity: (Long) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -90,6 +91,7 @@ fun MainNavigationGraph(
                     mainViewModel = mainViewModel,
                     recordViewModel = recordViewModel,
                     startMapActivity = { startMapActivity() },
+                    startPloggingResultActivity = { startPloggingResultActivity(it) }
                 )
             }
         }

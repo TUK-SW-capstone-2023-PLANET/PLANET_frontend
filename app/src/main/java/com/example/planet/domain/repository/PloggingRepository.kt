@@ -17,7 +17,7 @@ interface PloggingRepository {
 
     suspend fun postPlogging(ploggingInfo: PloggingInfo): Flow<ApiState>
 
-    suspend fun getPloggingInfo(ploggingId: Int): Flow<ApiState>
+    suspend fun getPloggingInfo(ploggingId: Long): Flow<ApiState>
 
     suspend fun getPloggingActiveList(
         userId: Long,

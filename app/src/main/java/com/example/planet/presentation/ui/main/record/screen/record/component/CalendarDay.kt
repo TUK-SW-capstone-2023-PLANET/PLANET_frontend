@@ -15,6 +15,10 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -33,15 +37,15 @@ fun CalendarDay(
     isSelected: () -> Boolean,
     isPlogging: Boolean,
     modifier: Modifier,
-    onClick: () -> Unit = {}
+    onClick: () -> Unit
 ) {
     val dayStyle = androidx.compose.ui.text.TextStyle(
         color = if (isToday || isSelected()) Color.White else Color.Black
     )
     Column(
-        modifier = modifier.noRippleClickable {
-//            if (isPlogging) onClick()
-                                              },
+        modifier = modifier.noRippleClickable { if (isPlogging) {
+            onClick()
+        } },
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -62,10 +66,8 @@ fun CalendarDay(
                 shape = CircleShape,
                 colors = CardDefaults.cardColors(
                     containerColor = if (isSelected()) {
-//                        Log.d(TAG, "isSelected, day: $day")
                         colorResource(id = R.color.red)
                     } else if (isToday) {
-//                        Log.d(TAG, "isToday, day: $day")
                         colorResource(id = R.color.font_background_color1)
                     } else {
                         Color.Transparent

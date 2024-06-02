@@ -28,7 +28,7 @@ class MapActivity : ComponentActivity() {
         }
     }
 
-    private fun showPloggingResultActivity(ploggingId: Int) {
+    private fun showPloggingResultActivity(ploggingId: Long) {
         val intent = Intent(this, PloggingResultActivity::class.java).also {
             it.putExtra("ploggingId", ploggingId)
         }

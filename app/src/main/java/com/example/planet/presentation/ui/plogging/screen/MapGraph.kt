@@ -47,7 +47,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun MapGraph(ploggingViewModel: PloggingViewModel = viewModel(), onClick: (Int) -> Unit) {
+fun MapGraph(ploggingViewModel: PloggingViewModel = viewModel(), onClick: (Long) -> Unit) {
 
     val coroutineScope = rememberCoroutineScope()
 

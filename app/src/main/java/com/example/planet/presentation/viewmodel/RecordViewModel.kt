@@ -3,6 +3,7 @@ package com.example.planet.presentation.viewmodel
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -34,47 +35,69 @@ class RecordViewModel @Inject constructor(
     var today by mutableStateOf(LocalDate.now())
     var selectedDate: LocalDate? by mutableStateOf(null)
     var allPloggingActiveMap = hashMapOf<Int, List<PloggingDayInfo>>()
-    var allPloggingActiveDays by mutableStateOf(mutableListOf<Int>())
+    var allPloggingActiveDays = mutableListOf<Int>()
     var selectedPloggingActiveList by mutableStateOf(emptyList<PloggingDayInfo>())
 
     init {
-        viewModelScope.launch {getUserToken() }
-        viewModelScope.launch {getUserToken() }
+        viewModelScope.launch { getUserToken() }
+        viewModelScope.launch { getUserToken() }
     }
 
 
     private suspend fun getUserToken(userTokenKey: String = "userToken") {
         when (val result = getUserTokenUseCase(userTokenKey).first()) {
-            is ApiState.Success<*> -> { userId = result.value as Long }
-            is ApiState.Error -> { Log.d(TAG, "getUserToken() 실패: ${result.errMsg}") }
-            ApiState.Loading -> TODO()
-        }
-    }
-    suspend fun readPloggingActiveList(year: Int, month: Int) {
-        when (val apiState = getPloggingActiveList(userId = 1, year = year, month = month).first()) {
             is ApiState.Success<*> -> {
-                Log.d("daeYoung", "readPloggingActiveList() 성공: ${apiState.value as List<Map<Int, List<PloggingDayInfo>>>}")
-//                currentDate = currentDate.plusMonths(1).withDayOfMonth(1)
-//                if (allPloggingActiveDays.isNotEmpty()) {
-//                    allPloggingActiveDays = mutableListOf()
-//                }
-//                apiState.value.forEach { map ->
-//                    allPloggingActiveMap[map.keys.toIntArray()[0]] = map.values.toList()[0]
-//                    allPloggingActiveDays.add(map.keys.toIntArray()[0])
-//                }
-                Log.d("daeYoung", "성공: ${allPloggingActiveDays}")
+                userId = result.value as Long
             }
 
             is ApiState.Error -> {
-                Log.d("daeYoung", "readPloggingActiveList() 실패: ${apiState.errMsg}")
+                Log.d(TAG, "getUserToken() 실패: ${result.errMsg}")
             }
 
             ApiState.Loading -> TODO()
         }
     }
 
-    fun setSelectedList() {
+    fun readPloggingActiveList(year: Int, month: Int, changeCurrentDate: () -> Unit) {
+        viewModelScope.launch {
+            when (val apiState =
+                getPloggingActiveList(userId = userId, year = year, month = month).first()) {
+                is ApiState.Success<*> -> {
+                    Log.d(
+                        "daeYoung",
+                        "readPloggingActiveList() 성공: ${apiState.value as List<Map<Int, List<PloggingDayInfo>>>}"
+                    )
 
+                    if ((apiState.value as List<Map<Int, List<PloggingDayInfo>>>).isNotEmpty()) {
+                        if (allPloggingActiveDays.isNotEmpty()) {
+                            allPloggingActiveDays.clear()
+                        }
+                        apiState.value.forEach { map ->
+                            allPloggingActiveMap[map.keys.toIntArray()[0]] = map.values.toList()[0]
+                            allPloggingActiveDays.add(map.keys.toIntArray()[0])
+                        }
+                    } else {
+                        allPloggingActiveDays.clear()
+                        selectedPloggingActiveList = emptyList()
+                    }
+
+                    Log.d("daeYoung", "성공: ${allPloggingActiveDays}, allPloggingActiveMap: $allPloggingActiveMap")
+                    changeCurrentDate()
+
+                }
+
+                is ApiState.Error -> {
+                    Log.d("daeYoung", "readPloggingActiveList() 실패: ${apiState.errMsg}")
+                }
+
+                ApiState.Loading -> TODO()
+            }
+        }
+
+    }
+
+    fun setSelectedList(date: Int) {
+        selectedPloggingActiveList = allPloggingActiveMap[date]!!
     }
 
 
