@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -36,11 +37,10 @@ import com.example.planet.presentation.util.noRippleClickable
 import com.example.planet.presentation.util.numberComma
 
 @Composable
-fun UniversityRankingScreen(mainViewModel: MainViewModel = hiltViewModel()) {
+fun UniversityRankingScreen(mainViewModel: MainViewModel, onBack: () -> Unit) {
     val universityList: LazyPagingItems<University> =
         mainViewModel.totalUniversity.collectAsLazyPagingItems()
 
-    BackHandler { mainViewModel.showRankingScreen = ScreenNav.HomeScreen }
 
     LaunchedEffect(Unit) {
         mainViewModel.getAllUniversities()
@@ -52,14 +52,14 @@ fun UniversityRankingScreen(mainViewModel: MainViewModel = hiltViewModel()) {
             .padding(16.dp)
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp)
         ) {
             Icon(imageVector = Icons.Default.ArrowBackIosNew,
                 contentDescription = null,
                 tint = colorResource(id = R.color.font_background_color1),
-                modifier = Modifier.noRippleClickable {
-                    mainViewModel.showRankingScreen = ScreenNav.HomeScreen
-                })
+                modifier = Modifier.noRippleClickable { onBack() })
         }
         MiddleHead(
             image = painterResource(id = R.drawable.plogging_ranking_universitylogo),
@@ -67,32 +67,44 @@ fun UniversityRankingScreen(mainViewModel: MainViewModel = hiltViewModel()) {
             description = "학교를 인증하여, 학교의 위상을 높히세요!!",
         )
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            verticalAlignment = Alignment.Bottom
-        ) {
-            UniversityProfile(
-                imageUrl = mainViewModel.higherUniversity[1].imageUrl,
-                imageSize = 55.dp,
-                medal = painterResource(id = R.drawable.medal_2st),
-                universityName = mainViewModel.higherUniversity[1].name
-            )
+        if (mainViewModel.higherUniversity.isEmpty()) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.Bottom
+            ) {
+                CircularProgressIndicator()
+            }
+        } else {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.Bottom
+            ) {
+                UniversityProfile(
+                    imageUrl = mainViewModel.higherUniversity[1].imageUrl,
+                    imageSize = 55.dp,
+                    medal = painterResource(id = R.drawable.medal_2st),
+                    universityName = mainViewModel.higherUniversity[1].name
+                )
 
-            UniversityProfile(
-                imageUrl = mainViewModel.higherUniversity[0].imageUrl,
-                imageSize = 65.dp,
-                medal = painterResource(id = R.drawable.medal_1st),
-                universityName = mainViewModel.higherUniversity[0].name
-            )
+                UniversityProfile(
+                    imageUrl = mainViewModel.higherUniversity[0].imageUrl,
+                    imageSize = 65.dp,
+                    medal = painterResource(id = R.drawable.medal_1st),
+                    universityName = mainViewModel.higherUniversity[0].name
+                )
 
-            UniversityProfile(
-                imageUrl = mainViewModel.higherUniversity[2].imageUrl,
-                imageSize = 55.dp,
-                medal = painterResource(id = R.drawable.medal_3st),
-                universityName = mainViewModel.higherUniversity[2].name
-            )
+                UniversityProfile(
+                    imageUrl = mainViewModel.higherUniversity[2].imageUrl,
+                    imageSize = 55.dp,
+                    medal = painterResource(id = R.drawable.medal_3st),
+                    universityName = mainViewModel.higherUniversity[2].name
+                )
+            }
         }
+
+
 
         SearchTextField(
             text = mainViewModel.searchText.value,

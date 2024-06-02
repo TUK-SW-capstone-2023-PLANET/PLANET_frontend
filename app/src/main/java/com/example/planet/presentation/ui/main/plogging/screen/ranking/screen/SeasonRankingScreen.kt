@@ -38,11 +38,10 @@ import com.example.planet.presentation.util.noRippleClickable
 import com.example.planet.presentation.util.numberComma
 
 @Composable
-fun SeasonRankingScreen(mainViewModel: MainViewModel = hiltViewModel()) {
+fun SeasonRankingScreen(mainViewModel: MainViewModel, onBack: () -> Unit) {
     val seasonUserList: LazyPagingItems<SeasonUser> =
         mainViewModel.totalSeasonUser.collectAsLazyPagingItems()
 
-    BackHandler { mainViewModel.showRankingScreen = ScreenNav.HomeScreen }
 
     LaunchedEffect(Unit) {
         mainViewModel.getAllSeasonUser()
@@ -69,9 +68,7 @@ fun SeasonRankingScreen(mainViewModel: MainViewModel = hiltViewModel()) {
                 Icon(imageVector = Icons.Default.ArrowBackIosNew,
                     contentDescription = null,
                     tint = colorResource(id = R.color.font_background_color1),
-                    modifier = Modifier.noRippleClickable {
-                        mainViewModel.showRankingScreen = ScreenNav.HomeScreen
-                    })
+                    modifier = Modifier.noRippleClickable { onBack() })
             }
             MiddleHead(
                 image = painterResource(id = R.drawable.plogging_ranking_season),

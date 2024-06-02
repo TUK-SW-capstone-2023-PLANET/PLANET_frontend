@@ -25,7 +25,7 @@ import com.example.planet.presentation.viewmodel.RecordViewModel
 @Composable
 fun RecordScreen(
     recordViewModel: RecordViewModel,
-    startPloggingResultActivity: (Long) -> Unit
+    startPloggingResultActivity: (Long, String) -> Unit
 ) {
     val scrollState = rememberScrollState()
     val scope = rememberCoroutineScope()
@@ -60,7 +60,7 @@ fun RecordScreen(
                 distance = recordViewModel.selectedPloggingActiveList[it].distance,
                 ploggingTime = recordViewModel.selectedPloggingActiveList[it].ploggingTime
             ) {
-                startPloggingResultActivity(recordViewModel.selectedPloggingActiveList[it].ploddingId)
+                startPloggingResultActivity(recordViewModel.selectedPloggingActiveList[it].ploddingId, "dark")
             }
         }
     }

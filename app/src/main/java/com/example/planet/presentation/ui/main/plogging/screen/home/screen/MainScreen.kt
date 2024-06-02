@@ -23,10 +23,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.example.planet.R
 import com.example.planet.TAG
 import com.example.planet.component.main.plogging.MainTopBanner
 import com.example.planet.presentation.ui.main.plogging.component.MyTabRow
@@ -37,7 +35,8 @@ import com.example.planet.presentation.viewmodel.MainViewModel
 fun MainScreen(
     navController: NavHostController,
     mainViewModel: MainViewModel,
-    onClick: () -> Unit
+    startMapActivity: () -> Unit,
+    startRankingActivity: (String) -> Unit,
 ) {
     Log.d(TAG, "MainScreen 실행")
 
@@ -50,7 +49,7 @@ fun MainScreen(
                 contentColor = Color.White,
                 containerColor = MaterialTheme.colorScheme.primary,
                 shape = CircleShape,
-                onClick = { onClick() }) {
+                onClick = { startMapActivity() }) {
                 Icon(
                     imageVector = Icons.Rounded.DirectionsRun,
                     contentDescription = null,
@@ -87,10 +86,9 @@ fun MainScreen(
                         universityUserList = { mainViewModel.higherMyUniversityUsers },
                         universityList = { mainViewModel.higherUniversity },
                         graphHeightList = { mainViewModel.universityGraphHeightList },
-                        goUniversityScreen = { screen -> mainViewModel.showRankingScreen = screen }
-                    ) { screen -> mainViewModel.showRankingScreen = screen }
+                    ) { type -> startRankingActivity(type) }
 
-                    2 -> SeasonScreen(navController = navController, mainViewModel = mainViewModel)
+                    2 -> SeasonScreen(navController = navController, mainViewModel = mainViewModel) { type -> startRankingActivity(type) }
                     3 -> TestScreen()
                 }
             }

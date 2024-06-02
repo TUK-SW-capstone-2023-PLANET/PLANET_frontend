@@ -1,5 +1,7 @@
 package com.example.planet.presentation.ui.main.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,6 +23,7 @@ import com.example.planet.presentation.viewmodel.MainViewModel
 import com.example.planet.presentation.viewmodel.MessageViewModel
 import com.example.planet.presentation.viewmodel.RecordViewModel
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MainNavigationGraph(
     navController: NavHostController,
@@ -34,7 +37,8 @@ fun MainNavigationGraph(
     startPostedInfoActivity: (Long, String) -> Unit,
     startMyWritedActivity: (String, Long) -> Unit,
     startMessageActivity: (Long, Long, String) -> Unit,
-    startPloggingResultActivity: (Long) -> Unit
+    startPloggingResultActivity: (Long, String) -> Unit,
+    startRankingActivity: (String) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -83,18 +87,29 @@ fun MainNavigationGraph(
                     startPostedInfoActivity = { postId, board ->
                         startPostedInfoActivity(postId, board)
                     },
-                    startMyWritedActivity = { type, userId -> startMyWritedActivity(type, userId) }
-                ) { userId, chatroomId, reciever ->
-                    startMessageActivity(userId, chatroomId, reciever)
+                    startMyWritedActivity = { type, userId -> startMyWritedActivity(type, userId) },
+                    startMessageActivity = { userId, chatroomId, reciever ->
+                        startMessageActivity(userId, chatroomId, reciever)
+                    }
+                ) {
+                    startRankingActivity(it)
                 }
+
             }
             composable(TopNavItem.RecordNavigationGraph.screenRoute) {
                 RecordNavigationGraph(
                     mainViewModel = mainViewModel,
                     recordViewModel = recordViewModel,
                     startMapActivity = { startMapActivity() },
-                    startPloggingResultActivity = { startPloggingResultActivity(it) }
-                )
+                    startPloggingResultActivity = { ploggingId, theme ->
+                        startPloggingResultActivity(
+                            ploggingId,
+                            theme
+                        )
+                    }
+                ) {
+                    startRankingActivity(it)
+                }
             }
         }
     }

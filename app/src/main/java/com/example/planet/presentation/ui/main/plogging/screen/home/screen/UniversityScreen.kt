@@ -68,9 +68,8 @@ fun UniversityScreen(
     universityUserList: () -> List<ExpandedUniversityUser>,
     universityList: () -> List<University>,
     graphHeightList: () -> List<Dp>,
-    goUniversityScreen: (ScreenNav) -> Unit,
-    goUniversityIndividualScreen: (ScreenNav) -> Unit
-    ) {
+    startRankingActivity: (String) -> Unit
+) {
 
     var visible by remember { mutableStateOf(true) }
     var scrollState = rememberScrollState()
@@ -109,7 +108,7 @@ fun UniversityScreen(
                     description = "학교를 인증하여, 학교의 위상을 높히세요!!",
                     modifier = Modifier.fillMaxHeight(0.1f)
                 ) {
-                    goUniversityScreen(ScreenNav.UniversityRankingScreen)
+                    startRankingActivity("university")
                 }
 
                 Row(
@@ -165,7 +164,7 @@ fun UniversityScreen(
                     description = "내 학교와 같이 뛰면 즐거움과 성취감 두 배!",
                     modifier = Modifier.fillMaxHeight(0.1f)
                 ) {
-                    goUniversityIndividualScreen(ScreenNav.UniversityIndividualRankingScreen)
+                    startRankingActivity("universityIndividual")
                 }
 
                 Row(
@@ -197,7 +196,9 @@ fun UniversityScreen(
                             AsyncImage(
                                 model = ImageRequest.Builder(LocalContext.current)
                                     .data(universityUserList()[0].universityLogo).crossfade(true)
-                                    .build(), contentDescription = null, modifier = Modifier.size(25.dp)
+                                    .build(),
+                                contentDescription = null,
+                                modifier = Modifier.size(25.dp)
                             )
                             Text(
                                 text = universityUserList()[0].universityName,

@@ -170,22 +170,6 @@ class MainViewModel @Inject constructor(
     private val _searchText = mutableStateOf("")
     val searchText: State<String> = _searchText
 
-    var showRankingScreen: ScreenNav by mutableStateOf(ScreenNav.HomeScreen)
-
-
-
-
-    fun changePloggingScreen() {
-        _ploggingOrRecordSwitch.value = false
-    }
-
-    fun changeRecordScreen() {
-        _ploggingOrRecordSwitch.value = true
-    }
-
-    fun changeSeasonScreen() {
-        _tierList.value = emptyList()
-    }
 
 
     val changeSearchText: (String) -> Unit = { text ->
@@ -355,20 +339,8 @@ class MainViewModel @Inject constructor(
     suspend fun getTop4UniversityUser() {
         when (val apiState = getHigherUniversityUserRankUseCase(userId).first()) {
             is ApiState.Success<*> -> {
-                Log.d("daeYoung", "getUniversityUserTop4Ranking() 호출")
                 val result = apiState.value as List<Map<Int, ExpandedUniversityUser>>
                 higherMyUniversityUsers = result[0].values.toList()
-//                if (higherMyUniversityUsers.isNotEmpty()) {
-//                    var list = emptyList<ExpandedUniversityUser>()
-//                    result[0].values.forEach { university ->
-//                        list = list + university
-//                    }
-//                    higherMyUniversityUsers = list
-//                } else {
-//                    result[0].values.forEach { university ->
-//                        higherMyUniversityUsers = higherMyUniversityUsers + university
-//                    }
-//                }
 
                 universityUserGraphHeightList = getGraphHeightList(list = higherMyUniversityUsers)
             }

@@ -1,42 +1,30 @@
-package com.example.planet.presentation.ui.ui.theme
+package com.example.planet.presentation.ui.main.plogging.screen.ranking.screen.ui.theme
 
 import android.app.Activity
+import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.dynamicDarkColorScheme
+import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 private val DarkColorScheme = darkColorScheme(
-    primary = White,
-    onPrimary = MainGreen3,
-    secondary = White,
-    onSecondary = White,
-    tertiary = Pink80,
-    background = DarkGrey,
-    onBackground = White,
-    surfaceVariant = DarkGrey2,
-    surface = DarkGrey2,
-    onSurface = Grey2,
-    onSurfaceVariant = DarkGrey
+    primary = Purple80,
+    secondary = PurpleGrey80,
+    tertiary = Pink80
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = MainGreen,
-    onPrimary = White,
-    secondary = DarkGrey,
-    onSecondary = DarkGrey2,
-    tertiary = Pink40,
-    background = White,
-    onBackground = DarkGrey,
-    surfaceVariant = White,
-    surface = Grey,
-    onSurface = DarkGrey,
-    onSurfaceVariant = DarkGrey2
+    primary = Purple40,
+    secondary = PurpleGrey40,
+    tertiary = Pink40
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
@@ -50,17 +38,18 @@ private val LightColorScheme = lightColorScheme(
 )
 
 @Composable
-fun MyApplicationTheme(
+fun PlanetTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
-//        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-//            val context = LocalContext.current
-//            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-//        }
+        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
+            val context = LocalContext.current
+            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+        }
+
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }

@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -22,12 +23,12 @@ import com.example.planet.R
 fun ScoreCard(modifier: Modifier = Modifier, text: String, unit: String) {
     val semiBoldStyle =
         TextStyle(
-            color = colorResource(id = R.color.font_background_color1),
+            color = MaterialTheme.colorScheme.secondary,
             fontSize = 14.sp,
             fontWeight = FontWeight.SemiBold
         )
     val mediumStyle = TextStyle(
-        color = colorResource(id = R.color.font_background_color2),
+        color = MaterialTheme.colorScheme.onSecondary,
         fontSize = 10.sp,
         fontWeight = FontWeight.Medium
     )

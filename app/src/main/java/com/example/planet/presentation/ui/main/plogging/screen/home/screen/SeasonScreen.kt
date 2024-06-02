@@ -51,7 +51,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @Composable
-fun SeasonScreen(navController: NavHostController, mainViewModel: MainViewModel) {
+
+fun SeasonScreen(
+    navController: NavHostController,
+    mainViewModel: MainViewModel,
+    startRankingActivity: (String) -> Unit
+) {
     var scrollState = rememberScrollState()
     val coroutineScope = rememberCoroutineScope()
 
@@ -81,9 +86,11 @@ fun SeasonScreen(navController: NavHostController, mainViewModel: MainViewModel)
                 verticalAlignment = Alignment.Top,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Column(modifier = Modifier
-                    .wrapContentSize()
-                    .padding(bottom = 16.dp)) {
+                Column(
+                    modifier = Modifier
+                        .wrapContentSize()
+                        .padding(bottom = 16.dp)
+                ) {
                     SubTitle(title = "대학교 순위", modifier = Modifier.padding(end = 8.dp))
                     Text(
                         text = "PLANET TIER SYSTEM",

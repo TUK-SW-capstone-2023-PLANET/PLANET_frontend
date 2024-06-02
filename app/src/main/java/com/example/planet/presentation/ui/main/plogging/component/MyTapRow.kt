@@ -49,7 +49,7 @@ fun MyTab(modifier: Modifier, selected: () -> Boolean, text: String, onClick: ()
             containerColor = if (selected()) colorResource(id = R.color.main_color2)
             else colorResource(id = R.color.font_background_color3),
             contentColor = if (selected()) Color.White
-            else MaterialTheme.colorScheme.onSecondary
+            else colorResource(id = R.color.font_background_color2)
         )
     ) {
         Text(

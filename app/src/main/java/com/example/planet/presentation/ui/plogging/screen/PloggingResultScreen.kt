@@ -1,6 +1,7 @@
 package com.example.planet.presentation.ui.plogging.screen
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -10,6 +11,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberStandardBottomSheetState
@@ -45,7 +47,7 @@ fun PloggingResultScreen(ploggingInfo: PloggingResult, onBack: (Boolean) -> Unit
     val scrollState = rememberScrollState()
     val bottomSheetTitleStyle =
         TextStyle(
-            color = colorResource(id = R.color.font_background_color1),
+            color = MaterialTheme.colorScheme.secondary,
             fontSize = 14.sp,
             fontWeight = FontWeight.SemiBold,
         )
@@ -61,7 +63,7 @@ fun PloggingResultScreen(ploggingInfo: PloggingResult, onBack: (Boolean) -> Unit
 //        sheetPeekHeight = 0.dp,
         sheetTonalElevation = 5.dp,
         sheetShadowElevation = 1.dp,
-        sheetContainerColor = Color.White,
+        sheetContainerColor = MaterialTheme.colorScheme.surfaceVariant,
         sheetContent = {
             Column(
                 modifier = Modifier.fillMaxSize(),
@@ -79,6 +81,7 @@ fun PloggingResultScreen(ploggingInfo: PloggingResult, onBack: (Boolean) -> Unit
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
                 .padding(bottom = 80.dp)
                 .verticalScroll(scrollState)
         ) {

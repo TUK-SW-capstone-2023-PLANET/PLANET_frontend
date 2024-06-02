@@ -12,6 +12,7 @@ import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -27,11 +28,11 @@ import com.example.planet.presentation.util.noRippleClickable
 @Composable
 fun PloggingResultTopAppBar(onDone: (Boolean) -> Unit) {
     val textStyle = TextStyle(
-        color = colorResource(id = R.color.font_background_color1),
+        color = MaterialTheme.colorScheme.secondary,
         fontSize = 15.sp,
         fontWeight = FontWeight.SemiBold,
     )
-    val iconColor = colorResource(id = R.color.font_background_color1)
+    val iconColor = MaterialTheme.colorScheme.secondary
 
     Box(modifier = Modifier
         .fillMaxWidth()

@@ -14,6 +14,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -52,7 +53,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun UniversityIndividualRankingScreen(mainViewModel: MainViewModel = hiltViewModel()) {
+fun UniversityIndividualRankingScreen(mainViewModel: MainViewModel, onBack: () -> Unit) {
     val universityUserList: LazyPagingItems<UniversityUser> =
         mainViewModel.totalUniversityUser.collectAsLazyPagingItems()
 
@@ -68,8 +69,6 @@ fun UniversityIndividualRankingScreen(mainViewModel: MainViewModel = hiltViewMod
         }
     }
 
-    BackHandler { mainViewModel.showRankingScreen = ScreenNav.HomeScreen }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -83,9 +82,7 @@ fun UniversityIndividualRankingScreen(mainViewModel: MainViewModel = hiltViewMod
             Icon(imageVector = Icons.Default.ArrowBackIosNew,
                 contentDescription = null,
                 tint = colorResource(id = R.color.font_background_color1),
-                modifier = Modifier.noRippleClickable {
-                    mainViewModel.showRankingScreen = ScreenNav.HomeScreen
-                })
+                modifier = Modifier.noRippleClickable { onBack() })
         }
         MiddleHead(
             image = painterResource(id = R.drawable.plogging_ranking_universitylogo),
@@ -93,54 +90,69 @@ fun UniversityIndividualRankingScreen(mainViewModel: MainViewModel = hiltViewMod
             description = "대학교 랭킹의 나의 기여도는?"
         )
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(160.dp)
-                .padding(start = 24.dp, end = 24.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            verticalAlignment = Alignment.Bottom
-        ) {
+        if (mainViewModel.higherMyUniversityUsers.isEmpty()) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(160.dp)
+                    .padding(start = 24.dp, end = 24.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.Bottom
+            ) {
+                CircularProgressIndicator()
+            }
+        } else {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(0.4f)
+                    .padding(start = 24.dp, end = 24.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.Bottom
+            ) {
 
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(mainViewModel.higherMyUniversityUsers[0].universityLogo)
-                        .crossfade(true).build(),
-                    contentDescription = null,
-                    modifier = Modifier.size(65.dp)
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    AsyncImage(
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data(mainViewModel.higherMyUniversityUsers[0].universityLogo)
+                            .crossfade(true).build(),
+                        contentDescription = null,
+                        modifier = Modifier.size(65.dp)
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Text(
+                        text = mainViewModel.higherMyUniversityUsers[0].universityName,
+                        color = colorResource(id = R.color.font_background_color1),
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+
+                UniversityIndividualGraph(
+                    visible = visible,
+                    score = mainViewModel.higherMyUniversityUsers[1].score.numberComma(),
+                    graphHeight = mainViewModel.universityUserGraphHeightList[0],
+                    colors = listOf(Color(0XFFD1CFCF), Color(0XFFFFFFFF)),
+                    userName = mainViewModel.higherMyUniversityUsers[1].nickName,
                 )
-                Spacer(modifier = Modifier.height(12.dp))
-                Text(
-                    text = mainViewModel.higherMyUniversityUsers[0].universityName,
-                    color = colorResource(id = R.color.font_background_color1),
-                    fontSize = 11.sp,
-                    fontWeight = FontWeight.Bold
+                UniversityIndividualGraph(
+                    visible = visible,
+                    score = mainViewModel.higherMyUniversityUsers[0].score.numberComma(),
+                    graphHeight = mainViewModel.universityUserGraphHeightList[1],
+                    colors = listOf(Color(0xFFFFCC31), Color(0XFFFFFFFF)),
+                    userName = mainViewModel.higherMyUniversityUsers[0].nickName,
+                )
+                UniversityIndividualGraph(
+                    visible = visible,
+                    score = mainViewModel.higherMyUniversityUsers[2].score.numberComma(),
+                    graphHeight = mainViewModel.universityUserGraphHeightList[2],
+                    colors = listOf(Color(0xFFE1B983), Color(0XFFFFFFFF)),
+                    userName = mainViewModel.higherMyUniversityUsers[2].nickName,
                 )
             }
-
-            UniversityIndividualGraph(
-                visible = visible,
-                score = mainViewModel.higherMyUniversityUsers[1].score.numberComma(),
-                graphHeight = mainViewModel.universityUserGraphHeightList[0],
-                colors = listOf(Color(0XFFD1CFCF), Color(0XFFFFFFFF)),
-                userName = mainViewModel.higherMyUniversityUsers[1].nickName,
-            )
-            UniversityIndividualGraph(
-                visible = visible,
-                score = mainViewModel.higherMyUniversityUsers[0].score.numberComma(),
-                graphHeight = mainViewModel.universityUserGraphHeightList[1],
-                colors = listOf(Color(0xFFFFCC31), Color(0XFFFFFFFF)),
-                userName = mainViewModel.higherMyUniversityUsers[0].nickName,
-            )
-            UniversityIndividualGraph(
-                visible = visible,
-                score = mainViewModel.higherMyUniversityUsers[2].score.numberComma(),
-                graphHeight = mainViewModel.universityUserGraphHeightList[2],
-                colors = listOf(Color(0xFFE1B983), Color(0XFFFFFFFF)),
-                userName = mainViewModel.higherMyUniversityUsers[2].nickName,
-            )
         }
+
+
 
         Spacer(modifier = Modifier.padding(bottom = 24.dp))
 
@@ -164,7 +176,7 @@ fun UniversityIndividualRankingScreen(mainViewModel: MainViewModel = hiltViewMod
             )
         }
 
-        LazyColumn(modifier = Modifier.fillMaxSize()) {
+        LazyColumn(modifier = Modifier.weight(0.5f)) {
             items(universityUserList.itemCount) { index ->
                 universityUserList[index]?.let {
                     UniversityIndividualContentRow(

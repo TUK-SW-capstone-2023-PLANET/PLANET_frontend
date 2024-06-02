@@ -30,8 +30,9 @@ class PloggingResultActivity : ComponentActivity() {
         lifecycleScope.launch {
             ploggingResultViewModel.getPloggingInfo(intent.getLongExtra("ploggingId", 0))
         }
+
         setContent {
-            MyApplicationTheme {
+            MyApplicationTheme(intent.getBooleanExtra("theme", false)) {
                 val ploggingInfoState =
                     ploggingResultViewModel.ploggingInfo.collectAsStateWithLifecycle().value
                 if (ploggingInfoState is ApiState.Success<*>) {

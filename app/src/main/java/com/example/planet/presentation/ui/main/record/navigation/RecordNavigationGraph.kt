@@ -18,6 +18,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.planet.TAG
 import com.example.planet.presentation.ui.main.plogging.screen.home.screen.MainScreen
+import com.example.planet.presentation.ui.main.plogging.screen.home.screen.TierScreen
+import com.example.planet.presentation.ui.main.plogging.screen.ranking.data.ScreenNav
 import com.example.planet.presentation.ui.main.record.component.RecordBottomNavigation
 import com.example.planet.presentation.ui.main.record.screen.MapScreen
 import com.example.planet.presentation.ui.main.record.screen.record.screen.RecordScreen
@@ -33,7 +35,8 @@ fun RecordNavigationGraph(
     mainViewModel: MainViewModel,
     recordViewModel: RecordViewModel,
     startMapActivity: () -> Unit,
-    startPloggingResultActivity: (Long) -> Unit
+    startPloggingResultActivity: (Long, String) -> Unit,
+    startRankingActivity: (String) -> Unit
 ) {
     Log.d(TAG, "RecordNavigationGraph 리컴포지션")
 
@@ -62,13 +65,14 @@ fun RecordNavigationGraph(
                     composable(BottomNavItem.HomeScreen.screenRoute) {
                         MainScreen(
                             navController = navController,
-                            mainViewModel = mainViewModel
-                        ) { startMapActivity() }
+                            mainViewModel = mainViewModel,
+                            startMapActivity = { startMapActivity() },
+                        ) { startRankingActivity(it) }
                     }
                     composable(BottomNavItem.RecordScreen.screenRoute) {
                         RecordScreen(
                             recordViewModel = recordViewModel,
-                            startPloggingResultActivity = { startPloggingResultActivity(it) }
+                            startPloggingResultActivity = {ploggingId, theme -> startPloggingResultActivity(ploggingId, theme)}
                         )
                     }
                     composable(BottomNavItem.StatisticsScreen.screenRoute) {
@@ -80,7 +84,9 @@ fun RecordNavigationGraph(
                     composable(BottomNavItem.MapScreen.screenRoute) {
                         MapScreen()
                     }
-
+                    composable(ScreenNav.TierScreen.screenRoute) {
+                        TierScreen(tierList = mainViewModel.tierList.value)
+                    }
                 }
             }
         }

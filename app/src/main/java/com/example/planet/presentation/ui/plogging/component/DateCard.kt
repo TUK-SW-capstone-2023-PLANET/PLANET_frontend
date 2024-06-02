@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -26,13 +27,13 @@ fun DateCard(yearMonth: String, hourMinutes: String) {
             text = yearMonth,
             fontWeight = FontWeight.SemiBold,
             fontSize = 12.sp,
-            color = colorResource(id = R.color.font_background_color1)
+            color = MaterialTheme.colorScheme.secondary
         )
         Text(
             text = hourMinutes,
             fontSize = 10.sp,
             fontWeight = FontWeight.Medium,
-            color = colorResource(id = R.color.font_background_color2)
+            color = MaterialTheme.colorScheme.secondary
         )
     }
     HorizontalDivider(modifier = Modifier.fillMaxWidth().shadow(1.dp), color = colorResource(id = R.color.font_background_color3))

@@ -24,19 +24,26 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".presentation.ui.main.plogging.screen.ranking.screen.RankingActivity"
+            android:exported="false"
+            android:label="@string/title_activity_ranking"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.MyApplication"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
             android:name=".presentation.ui.main.plogging.screen.message.screen.MessageActivity"
             android:exported="false"
             android:label="@string/title_activity_message"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"
-            android:theme="@style/Theme.MyApplication" />
+            android:theme="@style/Theme.MyApplication"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".presentation.ui.main.plogging.screen.user.screen.mypost.MyWritedActivity"
             android:exported="false"
             android:label="@string/title_activity_my_writed"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"
-            android:theme="@style/Theme.MyApplication" />
+            android:theme="@style/Theme.MyApplication"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".presentation.ui.main.plogging.screen.community.screen.PostedInfoActivity"
             android:exported="false"

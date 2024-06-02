@@ -1,6 +1,5 @@
 package com.example.planet.presentation.ui.main.plogging.screen.ranking.screen
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,7 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -20,23 +19,21 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.planet.R
 import com.example.planet.data.remote.dto.response.ranking.planet.PlanetRankingUser
-import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.MiddleHead
 import com.example.planet.presentation.ui.component.SearchTextField
+import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.MiddleHead
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.TrophyProfile
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.UniversityIndividualContentRow
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.UniversityIndividualTitleRow
-import com.example.planet.presentation.ui.main.plogging.screen.ranking.data.ScreenNav
 import com.example.planet.presentation.util.noRippleClickable
 import com.example.planet.presentation.util.numberComma
 import com.example.planet.presentation.viewmodel.MainViewModel
 
 @Composable
-fun PlanetRankingScreen(mainViewModel: MainViewModel = hiltViewModel()) {
+fun PlanetRankingScreen(mainViewModel: MainViewModel, onBack: () -> Unit) {
 
     val planetUserList: LazyPagingItems<PlanetRankingUser> =
         mainViewModel.totalPlanetRankingUser.collectAsLazyPagingItems()
@@ -45,8 +42,6 @@ fun PlanetRankingScreen(mainViewModel: MainViewModel = hiltViewModel()) {
         mainViewModel.getAllPlanetUserRanking()
     }
 
-
-    BackHandler { mainViewModel.showRankingScreen = ScreenNav.HomeScreen }
 
     Column(
         modifier = Modifier
@@ -62,7 +57,7 @@ fun PlanetRankingScreen(mainViewModel: MainViewModel = hiltViewModel()) {
                 imageVector = Icons.Default.ArrowBackIosNew,
                 contentDescription = null,
                 tint = colorResource(id = R.color.font_background_color1),
-                modifier = Modifier.noRippleClickable { mainViewModel.showRankingScreen = ScreenNav.HomeScreen }
+                modifier = Modifier.noRippleClickable { onBack() }
             )
         }
         MiddleHead(
@@ -71,32 +66,44 @@ fun PlanetRankingScreen(mainViewModel: MainViewModel = hiltViewModel()) {
             description = "플래닛 누적점수를 통해 최고의 자리를 차지하세요.",
         )
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            verticalAlignment = Alignment.Bottom
-        ) {
-            TrophyProfile(
-                image = painterResource(id = R.drawable.plogging_ranking_2st_trophy),
-                imageSize = 50.dp,
-                userIconUrl = mainViewModel.higherPlanetUsers[1].imageUrl,
-                userName = mainViewModel.higherPlanetUsers[1].nickName
-            )
+        if (mainViewModel.higherPlanetUsers.isEmpty()) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.Bottom
+            ) {
+                CircularProgressIndicator()
+            }
+        } else {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.Bottom
+            ) {
+                TrophyProfile(
+                    image = painterResource(id = R.drawable.plogging_ranking_2st_trophy),
+                    imageSize = 50.dp,
+                    userIconUrl = mainViewModel.higherPlanetUsers[1].imageUrl,
+                    userName = mainViewModel.higherPlanetUsers[1].nickName
+                )
 
-            TrophyProfile(
-                image = painterResource(id = R.drawable.plogging_ranking_1st_trophy),
-                imageSize = 60.dp,
-                userIconUrl = mainViewModel.higherPlanetUsers[0].imageUrl,
-                userName = mainViewModel.higherPlanetUsers[0].nickName
-            )
+                TrophyProfile(
+                    image = painterResource(id = R.drawable.plogging_ranking_1st_trophy),
+                    imageSize = 60.dp,
+                    userIconUrl = mainViewModel.higherPlanetUsers[0].imageUrl,
+                    userName = mainViewModel.higherPlanetUsers[0].nickName
+                )
 
-            TrophyProfile(
-                image = painterResource(id = R.drawable.plogging_ranking_3st_trophy),
-                imageSize = 40.dp,
-                userIconUrl = mainViewModel.higherPlanetUsers[2].imageUrl,
-                userName = mainViewModel.higherPlanetUsers[2].nickName
-            )
+                TrophyProfile(
+                    image = painterResource(id = R.drawable.plogging_ranking_3st_trophy),
+                    imageSize = 40.dp,
+                    userIconUrl = mainViewModel.higherPlanetUsers[2].imageUrl,
+                    userName = mainViewModel.higherPlanetUsers[2].nickName
+                )
+            }
         }
+
+
 
         SearchTextField(
             text = mainViewModel.searchText.value,

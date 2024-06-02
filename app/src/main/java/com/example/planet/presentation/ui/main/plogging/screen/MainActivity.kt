@@ -1,11 +1,13 @@
 package com.example.planet.presentation.ui.main.plogging.screen
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -16,6 +18,7 @@ import com.example.planet.presentation.ui.main.navigation.MainNavigationGraph
 import com.example.planet.presentation.ui.main.plogging.screen.community.screen.CommunityActivity
 import com.example.planet.presentation.ui.main.plogging.screen.community.screen.PostedInfoActivity
 import com.example.planet.presentation.ui.main.plogging.screen.message.screen.MessageActivity
+import com.example.planet.presentation.ui.main.plogging.screen.ranking.screen.RankingActivity
 import com.example.planet.presentation.ui.main.plogging.screen.user.screen.UserActivity
 import com.example.planet.presentation.ui.main.plogging.screen.user.screen.mypost.MyWritedActivity
 import com.example.planet.presentation.ui.plogging.screen.MapActivity
@@ -36,6 +39,7 @@ class MainActivity : ComponentActivity() {
     private val messageViewModel by viewModels<MessageViewModel>()
     private val recordViewModel by viewModels<RecordViewModel>()
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -65,7 +69,8 @@ class MainActivity : ComponentActivity() {
                         startMessageActivity = { userId, chatroomId, reciever ->
                             startMessageActivity(userId, chatroomId, reciever)
                         },
-                        startPloggingResultActivity = {startPloggingResultActivity(it)}
+                        startPloggingResultActivity = {ploggingId, theme -> startPloggingResultActivity(ploggingId, theme)},
+                        startRankingActivity = { startRankingActivity(it) }
                     )
                 }
 //                RequestPermission()
@@ -148,9 +153,18 @@ class MainActivity : ComponentActivity() {
         startActivity(intent)
     }
 
-    private fun startPloggingResultActivity(ploggingId: Long) {
+    private fun startPloggingResultActivity(ploggingId: Long, theme: String) {
+        val isDark = theme == "dark"
         val intent = Intent(this, PloggingResultActivity::class.java).also {
             it.putExtra("ploggingId", ploggingId)
+            it.putExtra("theme", isDark)
+        }
+        startActivity(intent)
+    }
+
+    private fun startRankingActivity(type: String) {
+        val intent = Intent(this, RankingActivity::class.java).also {
+            it.putExtra("type", type)
         }
         startActivity(intent)
     }

@@ -41,7 +41,8 @@ import com.example.planet.presentation.viewmodel.MainViewModel
 import com.example.planet.presentation.util.numberComma
 
 @Composable
-fun RankingScreen(mainViewModel: MainViewModel = hiltViewModel()) {
+
+fun RankingScreen(mainViewModel: MainViewModel, startRankingActivity: (String) -> Unit) {
 
     val scrollState = rememberScrollState()
 
@@ -58,7 +59,7 @@ fun RankingScreen(mainViewModel: MainViewModel = hiltViewModel()) {
             title = "플래닛 랭킹",
             description = "플래닛 누적점수를 통해 최고의 자리를 차지하세요.",
             icon = {
-                TripleArrowIcon { mainViewModel.showRankingScreen = ScreenNav.PlanetRankingScreen }
+                TripleArrowIcon { startRankingActivity("planet") }
             }
         )
         Row(
@@ -94,7 +95,7 @@ fun RankingScreen(mainViewModel: MainViewModel = hiltViewModel()) {
             title = "Spring Season IV",
             description = "아름다운 자연과 함께 봄의 주인공이 되어 보세요!",
             icon = {
-                TripleArrowIcon { mainViewModel.showRankingScreen = ScreenNav.SeasonRankingScreen }
+                TripleArrowIcon { startRankingActivity("season") }
             }
         )
         Row(
@@ -127,9 +128,7 @@ fun RankingScreen(mainViewModel: MainViewModel = hiltViewModel()) {
             title = "대학교 랭킹",
             description = "학교를 인증하여, 학교의 위상을 높히세요!!",
             icon = {
-                TripleArrowIcon {
-                    mainViewModel.showRankingScreen = ScreenNav.UniversityRankingScreen
-                }
+                TripleArrowIcon { startRankingActivity("university") }
             }
         )
         Row(
@@ -165,9 +164,7 @@ fun RankingScreen(mainViewModel: MainViewModel = hiltViewModel()) {
             title = "대학교 개인 랭킹",
             description = "대학교 랭킹의 나의 기여도는?",
             icon = {
-                TripleArrowIcon {
-                    mainViewModel.showRankingScreen = ScreenNav.UniversityIndividualRankingScreen
-                }
+                TripleArrowIcon { startRankingActivity("universityIndividual") }
             }
         )
 

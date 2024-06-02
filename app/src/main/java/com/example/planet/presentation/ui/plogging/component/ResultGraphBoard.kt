@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
@@ -96,7 +97,7 @@ fun ResultGraphBoard(trashList: List<PloggingTrash>, totalScore: Int, totalCount
 @Composable
 fun GraphTitle(text: String) {
     val textStyle = TextStyle(
-        color = colorResource(id = R.color.font_background_color1),
+        color = MaterialTheme.colorScheme.secondary,
         fontSize = 13.sp,
         fontWeight = FontWeight.SemiBold,
     )
@@ -115,7 +116,7 @@ fun GraphDescription(color1: Color, text1: String, color2: Color, text2: String)
     val textMeasurer1 = rememberTextMeasurer()
     val style1 = TextStyle(
         fontSize = 11.sp,
-        color = colorResource(id = R.color.font_background_color2),
+        color = MaterialTheme.colorScheme.onSecondary,
     )
     val textLayoutResult1 = remember(text1, style1) {
         textMeasurer1.measure(text1, style1)
@@ -123,7 +124,7 @@ fun GraphDescription(color1: Color, text1: String, color2: Color, text2: String)
     val textMeasurer2 = rememberTextMeasurer()
     val style2 = TextStyle(
         fontSize = 11.sp,
-        color = colorResource(id = R.color.font_background_color2),
+        color = MaterialTheme.colorScheme.onSecondary,
     )
     val textLayoutResult2 = remember(text2, style2) {
         textMeasurer2.measure(text2, style2)
@@ -194,7 +195,7 @@ fun TrashGraphCard(
 
     val trashTextStyle =
         TextStyle(
-            color = colorResource(id = R.color.font_background_color1),
+            color = MaterialTheme.colorScheme.secondary,
             fontSize = 12.sp,
             fontWeight = FontWeight.Medium
         )
