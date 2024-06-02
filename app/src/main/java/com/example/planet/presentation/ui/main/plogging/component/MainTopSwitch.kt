@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -87,24 +88,24 @@ fun MainTopSwitch(
     val leftTextStyle = if (isChecked == 0) {
         TextStyle(
             fontSize = 11.sp,
-            color = colorResource(id = R.color.font_background_color1),
+            color = MaterialTheme.colorScheme.onSurface,
         )
     } else {
         TextStyle(
             fontSize = 11.sp,
-            color = colorResource(id = R.color.font_background_color2),
+            color = MaterialTheme.colorScheme.onSurface,
         )
     }
 
     val rightTextStyle = if (isChecked == 0) {
         TextStyle(
             fontSize = 11.sp,
-            color = colorResource(id = R.color.font_background_color2),
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
     } else {
         TextStyle(
             fontSize = 11.sp,
-            color = colorResource(id = R.color.font_background_color1),
+            color =MaterialTheme.colorScheme.onSurfaceVariant,
         )
     }
 
@@ -141,7 +142,7 @@ fun MainTopSwitch(
                     }
                 )
             }
-            .background(colorResource(id = R.color.font_background_color3))
+            .background(MaterialTheme.colorScheme.surface)
             .onSizeChanged {
                 size = it
             }
@@ -158,7 +159,7 @@ fun MainTopSwitch(
                 text = "플로깅",
                 style = leftTextStyle,
                 modifier = Modifier.weight(1f),
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
             )
             Text(
                 text = "기록",

@@ -16,6 +16,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.planet.TAG
 import java.time.LocalDate
@@ -46,7 +47,8 @@ fun RecordCalendar(
             .padding(horizontal = 16.dp)
             .fillMaxWidth(),
         shape = RoundedCornerShape(10.dp),
-        elevation = CardDefaults.elevatedCardElevation(3.dp)
+        elevation = CardDefaults.elevatedCardElevation(3.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
         Column {
             CalendarHeader(

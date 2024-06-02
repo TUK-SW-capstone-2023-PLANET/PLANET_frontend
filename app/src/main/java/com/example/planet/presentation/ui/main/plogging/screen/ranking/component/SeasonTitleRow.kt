@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -28,7 +30,7 @@ import com.example.planet.R
 
 @Composable
 fun SeasonTitleRow() {
-    Divider(
+    HorizontalDivider(
         thickness = 1.dp,
         modifier = Modifier
             .fillMaxWidth(),
@@ -48,13 +50,13 @@ fun SeasonTitleRow() {
             Spacer(modifier = Modifier.width(24.dp))
             Text(
                 text = "순위",
-                color = colorResource(id = R.color.font_background_color2),
+                color = MaterialTheme.colorScheme.onSecondary,
                 fontSize = 12.sp,
                 modifier = Modifier.fillMaxWidth(0.5f)
             )
             Text(
                 text = "티어",
-                color = colorResource(id = R.color.font_background_color2),
+                color = MaterialTheme.colorScheme.onSecondary,
                 fontSize = 12.sp,
                 modifier = Modifier.fillMaxWidth()
             )
@@ -62,7 +64,7 @@ fun SeasonTitleRow() {
 
         Text(
             text = "이름",
-            color = colorResource(id = R.color.font_background_color2),
+            color = MaterialTheme.colorScheme.onSecondary,
             fontSize = 12.sp,
             modifier = Modifier.weight(1f),
             textAlign = TextAlign.Start
@@ -75,13 +77,13 @@ fun SeasonTitleRow() {
         ) {
             Text(
                 text = "점수",
-                color = colorResource(id = R.color.font_background_color2),
+                color = MaterialTheme.colorScheme.onSecondary,
                 fontSize = 12.sp,
                 modifier = Modifier.weight(1f)
             )
             Text(
                 text = "소속",
-                color = colorResource(id = R.color.font_background_color2),
+                color = MaterialTheme.colorScheme.onSecondary,
                 fontSize = 12.sp,
                 modifier = Modifier.weight(1f)
             )
@@ -107,7 +109,6 @@ fun SeasonContentRow(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(color = color)
             .padding(vertical = 2.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -180,7 +181,7 @@ fun SeasonContentRow(
             }
             Text(
                 text = rank.toString() + "등",
-                color = colorResource(id = R.color.font_background_color2),
+                color = MaterialTheme.colorScheme.onSecondary,
                 fontSize = 12.sp,
                 modifier = Modifier.weight(1f)
             )
@@ -197,7 +198,7 @@ fun SeasonContentRow(
         }
         Text(
             text = nickname,
-            color = colorResource(id = R.color.font_background_color2),
+            color = MaterialTheme.colorScheme.onSecondary,
             fontSize = 12.sp,
             modifier = Modifier.weight(1f),
             textAlign = TextAlign.Start
@@ -210,7 +211,7 @@ fun SeasonContentRow(
         ) {
             Text(
                 text = "${score}점",
-                color = colorResource(id = R.color.font_background_color2),
+                color = MaterialTheme.colorScheme.onSecondary,
                 fontSize = 12.sp,
                 modifier = Modifier.weight(1f)
             )

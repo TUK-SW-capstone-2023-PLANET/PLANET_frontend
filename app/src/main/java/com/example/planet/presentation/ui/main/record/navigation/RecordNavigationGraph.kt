@@ -38,50 +38,49 @@ fun RecordNavigationGraph(
     Log.d(TAG, "RecordNavigationGraph 리컴포지션")
 
     val navController = rememberNavController()
-    RECORDTheme {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background
-        ) {
-            Scaffold(
-                bottomBar = {
-                    RecordBottomNavigation(navController = navController)
-                }
-            ) { paddingValue ->
-                Column(
-                    modifier = Modifier
-                        .background(color = MaterialTheme.colorScheme.background)
-                        .fillMaxSize()
-                        .padding(paddingValue),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    NavHost(
-                        navController = navController,
-                        startDestination = BottomNavItem.HomeScreen.screenRoute
-                    ) {
-                        composable(BottomNavItem.HomeScreen.screenRoute) {
-                            MainScreen(
-                                navController = navController,
-                                mainViewModel = mainViewModel
-                            ) { startMapActivity() }
-                        }
-                        composable(BottomNavItem.RecordScreen.screenRoute) {
-                            RecordScreen(
-                                recordViewModel = recordViewModel,
-                                startPloggingResultActivity = {startPloggingResultActivity(it)}
-                            )
-                        }
-                        composable(BottomNavItem.StatisticsScreen.screenRoute) {
-                            StatisticsScreen()
-                        }
-                        composable(BottomNavItem.ScoreScreen.screenRoute) {
-                            ScoreScreen()
-                        }
-                        composable(BottomNavItem.MapScreen.screenRoute) {
-                            MapScreen()
-                        }
 
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.background
+    ) {
+        Scaffold(
+            bottomBar = {
+                RecordBottomNavigation(navController = navController)
+            }
+        ) { paddingValue ->
+            Column(
+                modifier = Modifier
+                    .background(color = MaterialTheme.colorScheme.background)
+                    .fillMaxSize()
+                    .padding(paddingValue),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                NavHost(
+                    navController = navController,
+                    startDestination = BottomNavItem.HomeScreen.screenRoute
+                ) {
+                    composable(BottomNavItem.HomeScreen.screenRoute) {
+                        MainScreen(
+                            navController = navController,
+                            mainViewModel = mainViewModel
+                        ) { startMapActivity() }
                     }
+                    composable(BottomNavItem.RecordScreen.screenRoute) {
+                        RecordScreen(
+                            recordViewModel = recordViewModel,
+                            startPloggingResultActivity = { startPloggingResultActivity(it) }
+                        )
+                    }
+                    composable(BottomNavItem.StatisticsScreen.screenRoute) {
+                        StatisticsScreen()
+                    }
+                    composable(BottomNavItem.ScoreScreen.screenRoute) {
+                        ScoreScreen()
+                    }
+                    composable(BottomNavItem.MapScreen.screenRoute) {
+                        MapScreen()
+                    }
+
                 }
             }
         }

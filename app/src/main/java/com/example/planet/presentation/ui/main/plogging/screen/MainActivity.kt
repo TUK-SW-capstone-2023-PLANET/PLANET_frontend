@@ -6,6 +6,10 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.example.planet.TAG
 import com.example.planet.presentation.ui.main.navigation.MainNavigationGraph
@@ -38,28 +42,34 @@ class MainActivity : ComponentActivity() {
         setContent {
             val navController = rememberNavController()
             mainViewModel
-            MyApplicationTheme {
+            MyApplicationTheme(mainViewModel.themeState.value) {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    MainNavigationGraph(
+                        navController = navController,
+                        mainViewModel = mainViewModel,
+                        communityViewModel = communityViewModel,
+                        messageViewModel = messageViewModel,
+                        recordViewModel = recordViewModel,
+                        startMapActivity = { startMapActivity() },
+                        startUserActivity = { startUserActivity() },
+                        startCommunityActivity = { board, universityName ->
+                            startCommunityActivity(board, universityName)
+                        },
+                        startPostedInfoActivity = { postId, board ->
+                            startPostedInfoActivity(postId, board)
+                        },
+                        startMyWritedActivity = { type, userId -> startMyWritedActivity(type, userId) },
+                        startMessageActivity = { userId, chatroomId, reciever ->
+                            startMessageActivity(userId, chatroomId, reciever)
+                        },
+                        startPloggingResultActivity = {startPloggingResultActivity(it)}
+                    )
+                }
 //                RequestPermission()
-                MainNavigationGraph(
-                    navController = navController,
-                    mainViewModel = mainViewModel,
-                    communityViewModel = communityViewModel,
-                    messageViewModel = messageViewModel,
-                    recordViewModel = recordViewModel,
-                    startMapActivity = { startMapActivity() },
-                    startUserActivity = { startUserActivity() },
-                    startCommunityActivity = { board, universityName ->
-                        startCommunityActivity(board, universityName)
-                    },
-                    startPostedInfoActivity = { postId, board ->
-                        startPostedInfoActivity(postId, board)
-                    },
-                    startMyWritedActivity = { type, userId -> startMyWritedActivity(type, userId) },
-                    startMessageActivity = { userId, chatroomId, reciever ->
-                        startMessageActivity(userId, chatroomId, reciever)
-                    },
-                    startPloggingResultActivity = {startPloggingResultActivity(it)}
-                )
+
             }
         }
     }

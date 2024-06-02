@@ -43,7 +43,6 @@ import com.example.planet.presentation.ui.main.plogging.component.SubTitle
 import com.example.planet.presentation.ui.main.plogging.component.SubTitleDescription
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.SeasonContentRow
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.SeasonTitleRow
-import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.UniversityIndividualContentRow
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.data.ScreenNav
 import com.example.planet.presentation.util.noRippleClickable
 import com.example.planet.presentation.util.numberComma

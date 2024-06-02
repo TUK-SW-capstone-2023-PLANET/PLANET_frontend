@@ -40,7 +40,7 @@ fun CalendarDay(
     onClick: () -> Unit
 ) {
     val dayStyle = androidx.compose.ui.text.TextStyle(
-        color = if (isToday || isSelected()) Color.White else Color.Black
+        color = if (isToday || isSelected()) Color.White else colorResource(id = R.color.font_background_color2)
     )
     Column(
         modifier = modifier.noRippleClickable { if (isPlogging) {

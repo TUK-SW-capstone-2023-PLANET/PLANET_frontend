@@ -16,6 +16,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -47,13 +48,14 @@ fun MainScreen(
         floatingActionButton = {
             FloatingActionButton(
                 contentColor = Color.White,
-                containerColor = colorResource(id = R.color.main_color1),
+                containerColor = MaterialTheme.colorScheme.primary,
                 shape = CircleShape,
                 onClick = { onClick() }) {
                 Icon(
                     imageVector = Icons.Rounded.DirectionsRun,
                     contentDescription = null,
-                    modifier = Modifier.size(33.dp)
+                    modifier = Modifier.size(33.dp),
+                    tint = MaterialTheme.colorScheme.onPrimary
                 )
             }
         },

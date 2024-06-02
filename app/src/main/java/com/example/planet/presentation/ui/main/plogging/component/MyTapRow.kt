@@ -9,6 +9,7 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
@@ -48,7 +49,7 @@ fun MyTab(modifier: Modifier, selected: () -> Boolean, text: String, onClick: ()
             containerColor = if (selected()) colorResource(id = R.color.main_color2)
             else colorResource(id = R.color.font_background_color3),
             contentColor = if (selected()) Color.White
-            else colorResource(id = R.color.font_background_color2)
+            else MaterialTheme.colorScheme.onSecondary
         )
     ) {
         Text(

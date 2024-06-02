@@ -10,7 +10,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
+import com.example.planet.R
 
 @Composable
 fun HorizontalDayOfWeek() {
@@ -29,7 +31,8 @@ fun HorizontalDayOfWeek() {
             ) {
                 Text(
                     text = dayOfWeek[it],
-                    modifier = Modifier.align(Alignment.Center)
+                    modifier = Modifier.align(Alignment.Center),
+                    color = colorResource(id = R.color.font_background_color1)
                 )
             }
 

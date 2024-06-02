@@ -19,6 +19,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -202,20 +203,20 @@ fun UniversityScreen(
                                 text = universityUserList()[0].universityName,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 15.sp,
-                                color = colorResource(id = R.color.font_background_color1),
+                                color = MaterialTheme.colorScheme.secondary,
                                 modifier = Modifier.padding(horizontal = 4.dp)
                             )
                         }
                         Text(
                             text = universityUserList()[0].nickName,
                             fontSize = 16.sp,
-                            color = colorResource(id = R.color.font_background_color1)
+                            color = MaterialTheme.colorScheme.secondary
                         )
                         Text(text = buildAnnotatedString {
                             withStyle(
                                 style = SpanStyle(
                                     fontSize = 14.sp,
-                                    color = colorResource(id = R.color.font_background_color1)
+                                    color = MaterialTheme.colorScheme.secondary
                                 )
                             ) {
                                 append(universityUserList()[0].score.numberComma())
@@ -238,7 +239,7 @@ fun UniversityScreen(
                             withStyle(
                                 style = SpanStyle(
                                     fontSize = 12.sp,
-                                    color = colorResource(id = R.color.font_background_color1)
+                                    color = MaterialTheme.colorScheme.secondary
                                 )
                             ) {
                                 append(universityUserList()[0].rank.toString())

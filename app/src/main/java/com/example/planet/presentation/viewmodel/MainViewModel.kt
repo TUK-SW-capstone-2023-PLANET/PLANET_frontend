@@ -2,6 +2,7 @@ package com.example.planet.presentation.viewmodel
 
 import android.util.Log
 import androidx.compose.runtime.State
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -95,6 +96,9 @@ class MainViewModel @Inject constructor(
                 async(Dispatchers.IO) { getTop3Universities() }
             ).awaitAll()
         }
+    }
+    var themeState = derivedStateOf {
+        switchState != 0
     }
 
     // userToken

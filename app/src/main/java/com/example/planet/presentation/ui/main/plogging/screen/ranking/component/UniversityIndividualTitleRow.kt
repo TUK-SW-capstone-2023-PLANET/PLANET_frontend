@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -77,7 +79,6 @@ fun UniversityIndividualContentRow(
         modifier = Modifier
             .fillMaxWidth()
             .height(IntrinsicSize.Min)
-            .background(color = color)
             .padding(vertical = 2.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -119,31 +120,31 @@ fun UniversityIndividualContentRow(
 
         Text(
             text = rank.toString(),
-            color = colorResource(id = R.color.font_background_color2),
+            color = MaterialTheme.colorScheme.onSecondary,
             fontSize = 12.sp,
             modifier = Modifier.weight(0.15f)
         )
         Text(
             text = nickname,
-            color = colorResource(id = R.color.font_background_color2),
+            color = MaterialTheme.colorScheme.onSecondary,
             fontSize = 12.sp,
             modifier = Modifier.weight(0.35f)
         )
 
         Text(
             text = "${score}점",
-            color = colorResource(id = R.color.font_background_color2),
+            color = MaterialTheme.colorScheme.onSecondary,
             fontSize = 12.sp,
             modifier = Modifier.weight(0.3f)
         )
         Text(
             text = "${contribution.round()}%",
-            color = colorResource(id = R.color.font_background_color2),
+            color = MaterialTheme.colorScheme.onSecondary,
             fontSize = 12.sp,
             modifier = Modifier.weight(0.2f)
         )
     }
-    Divider(
+    HorizontalDivider(
         thickness = 1.dp,
         modifier = Modifier.fillMaxWidth(),
         color = colorResource(id = R.color.font_background_color3)

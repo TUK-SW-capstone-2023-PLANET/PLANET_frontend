@@ -45,8 +45,8 @@ fun RecordBottomNavigation(navController: NavHostController) {
                 )
             }
             .clip(shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)),
-        containerColor = Color.White,
-        contentColor = Color.Black,
+        containerColor = colorResource(id = R.color.font_background_color2),
+        contentColor = Color.White,
         tonalElevation = 10.dp
     ) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -71,9 +71,9 @@ fun RecordBottomNavigation(navController: NavHostController) {
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = colorResource(id = R.color.main_color1),
                     selectedTextColor = colorResource(id = R.color.main_color1),
-                    unselectedIconColor = Color.Black,
-                    unselectedTextColor = Color.Black,
-                    indicatorColor = Color.White
+                    unselectedIconColor = Color.White,
+                    unselectedTextColor = Color.White,
+                    indicatorColor = Color.Transparent
                 ),
                 alwaysShowLabel = true,
                 onClick = {
