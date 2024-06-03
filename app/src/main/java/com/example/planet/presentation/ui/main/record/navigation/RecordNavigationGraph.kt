@@ -4,14 +4,13 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -21,11 +20,10 @@ import com.example.planet.presentation.ui.main.plogging.screen.home.screen.MainS
 import com.example.planet.presentation.ui.main.plogging.screen.home.screen.TierScreen
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.data.ScreenNav
 import com.example.planet.presentation.ui.main.record.component.RecordBottomNavigation
-import com.example.planet.presentation.ui.main.record.screen.MapScreen
+import com.example.planet.presentation.ui.main.record.screen.map.screen.MapScreen
 import com.example.planet.presentation.ui.main.record.screen.record.screen.RecordScreen
 import com.example.planet.presentation.ui.main.record.screen.ScoreScreen
 import com.example.planet.presentation.ui.main.record.screen.StatisticsScreen
-import com.example.planet.presentation.ui.main.record.theme.RECORDTheme
 import com.example.planet.presentation.viewmodel.MainViewModel
 import com.example.planet.presentation.viewmodel.RecordViewModel
 
@@ -36,6 +34,7 @@ fun RecordNavigationGraph(
     recordViewModel: RecordViewModel,
     startMapActivity: () -> Unit,
     startPloggingResultActivity: (Long, String) -> Unit,
+    startSearchActivity: () -> Unit,
     startRankingActivity: (String) -> Unit
 ) {
     Log.d(TAG, "RecordNavigationGraph 리컴포지션")
@@ -51,12 +50,11 @@ fun RecordNavigationGraph(
                 RecordBottomNavigation(navController = navController)
             }
         ) { paddingValue ->
-            Column(
+            Box(
                 modifier = Modifier
                     .background(color = MaterialTheme.colorScheme.background)
                     .fillMaxSize()
                     .padding(paddingValue),
-                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 NavHost(
                     navController = navController,
@@ -72,7 +70,12 @@ fun RecordNavigationGraph(
                     composable(BottomNavItem.RecordScreen.screenRoute) {
                         RecordScreen(
                             recordViewModel = recordViewModel,
-                            startPloggingResultActivity = {ploggingId, theme -> startPloggingResultActivity(ploggingId, theme)}
+                            startPloggingResultActivity = { ploggingId, theme ->
+                                startPloggingResultActivity(
+                                    ploggingId,
+                                    theme
+                                )
+                            }
                         )
                     }
                     composable(BottomNavItem.StatisticsScreen.screenRoute) {
@@ -82,7 +85,10 @@ fun RecordNavigationGraph(
                         ScoreScreen()
                     }
                     composable(BottomNavItem.MapScreen.screenRoute) {
-                        MapScreen()
+                        MapScreen(
+                            trashCans = recordViewModel.trashCans,
+                            hotPlaces = emptyList(),
+                            startSearchActivity = { startSearchActivity() })
                     }
                     composable(ScreenNav.TierScreen.screenRoute) {
                         TierScreen(tierList = mainViewModel.tierList.value)

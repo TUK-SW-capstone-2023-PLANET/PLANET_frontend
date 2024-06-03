@@ -33,7 +33,7 @@ fun RecordBottomNavigation(navController: NavHostController) {
         BottomNavItem.StatisticsScreen,
         BottomNavItem.RecordScreen,
         )
-    val color = colorResource(id = R.color.font_background_color2)
+    val color = colorResource(id = R.color.font_background_color3)
     NavigationBar(
         modifier = Modifier
             .fillMaxWidth()

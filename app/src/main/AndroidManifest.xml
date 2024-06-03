@@ -24,6 +24,13 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".presentation.ui.main.record.screen.map.screen.SearchActivity"
+            android:exported="false"
+            android:label="@string/title_activity_search"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/Theme.MyApplication" />
+        <activity
             android:name=".presentation.ui.main.plogging.screen.ranking.screen.RankingActivity"
             android:exported="false"
             android:label="@string/title_activity_ranking"

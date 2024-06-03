@@ -75,29 +75,7 @@ fun SearchScreen(
     }
 }
 
-@Composable
-fun EmptyRecentlySearch() {
-    val testStyle = TextStyle(
-        color = colorResource(id = R.color.font_background_color2),
-        fontSize = 14.sp,
-        fontWeight = FontWeight.SemiBold
-    )
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Icon(
-            imageVector = Icons.Default.Search,
-            contentDescription = null,
-            tint = colorResource(id = R.color.font_background_color3),
-            modifier = Modifier
-                .fillMaxWidth(0.33f)
-                .aspectRatio(1f)
-        )
-        Text(text = "최근 검색어가 없습니다.", style = testStyle)
-    }
-}
+
 
 @Composable
 fun RecentlySearch(recentlySearch: List<String>, onSearch: () -> Unit, onDelete: () -> Unit) {

@@ -38,7 +38,8 @@ fun MainNavigationGraph(
     startMyWritedActivity: (String, Long) -> Unit,
     startMessageActivity: (Long, Long, String) -> Unit,
     startPloggingResultActivity: (Long, String) -> Unit,
-    startRankingActivity: (String) -> Unit
+    startRankingActivity: (String) -> Unit,
+    startSearchActivity: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -106,7 +107,8 @@ fun MainNavigationGraph(
                             ploggingId,
                             theme
                         )
-                    }
+                    },
+                    startSearchActivity = {startSearchActivity()}
                 ) {
                     startRankingActivity(it)
                 }

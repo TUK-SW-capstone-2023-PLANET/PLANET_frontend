@@ -28,7 +28,6 @@ fun NaverMapClustering(items: List<TrashCanItem> = emptyList()) {
                 TedNaverClustering.with<TrashCanItem>(context, map)
                     .customMarker { clusterItem ->
                         Marker(clusterItem.itemPosition).apply {
-//                            icon = MarkerIcons.RED
                             icon = OverlayImage.fromResource(R.drawable.trash_icon)
                             width = 110
                             height = 110

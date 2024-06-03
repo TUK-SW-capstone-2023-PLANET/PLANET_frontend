@@ -18,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -31,6 +32,7 @@ fun SearchTextField(
     text: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
+    backGroundColor: Color = colorResource(id = R.color.font_background_color4),
     fontSize: TextUnit,
     placeholder: String = "",
     verticalSpace: Dp = 0.dp,
@@ -45,7 +47,7 @@ fun SearchTextField(
     BasicTextField(modifier = modifier
         .fillMaxWidth()
         .background(
-            color = colorResource(id = R.color.font_background_color4),
+            color = backGroundColor,
             shape = RoundedCornerShape(10.dp),
         ),
         value = text,

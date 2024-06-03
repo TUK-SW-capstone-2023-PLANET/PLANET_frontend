@@ -21,6 +21,7 @@ import com.example.planet.presentation.ui.main.plogging.screen.message.screen.Me
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.screen.RankingActivity
 import com.example.planet.presentation.ui.main.plogging.screen.user.screen.UserActivity
 import com.example.planet.presentation.ui.main.plogging.screen.user.screen.mypost.MyWritedActivity
+import com.example.planet.presentation.ui.main.record.screen.map.screen.SearchActivity
 import com.example.planet.presentation.ui.plogging.screen.MapActivity
 import com.example.planet.presentation.ui.plogging.screen.PloggingResultActivity
 import com.example.planet.presentation.ui.ui.theme.MyApplicationTheme
@@ -70,7 +71,8 @@ class MainActivity : ComponentActivity() {
                             startMessageActivity(userId, chatroomId, reciever)
                         },
                         startPloggingResultActivity = {ploggingId, theme -> startPloggingResultActivity(ploggingId, theme)},
-                        startRankingActivity = { startRankingActivity(it) }
+                        startRankingActivity = { startRankingActivity(it) },
+                        startSearchActivity = {startSearchActivity()}
                     )
                 }
 //                RequestPermission()
@@ -166,6 +168,11 @@ class MainActivity : ComponentActivity() {
         val intent = Intent(this, RankingActivity::class.java).also {
             it.putExtra("type", type)
         }
+        startActivity(intent)
+    }
+
+    private fun startSearchActivity() {
+        val intent = Intent(this, SearchActivity::class.java)
         startActivity(intent)
     }
 }

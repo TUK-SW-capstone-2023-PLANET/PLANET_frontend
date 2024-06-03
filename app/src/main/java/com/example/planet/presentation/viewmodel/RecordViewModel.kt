@@ -11,7 +11,9 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.planet.TAG
+import com.example.planet.component.map.map.TrashCanItem
 import com.example.planet.data.remote.dto.ApiState
+import com.example.planet.data.remote.dto.TrashCan
 import com.example.planet.data.remote.dto.response.plogging.PloggingDayInfo
 import com.example.planet.domain.usecase.login.sharedpreference.GetUserTokenUseCase
 import com.example.planet.domain.usecase.plogging.GetPloggingActiveList
@@ -29,14 +31,11 @@ class RecordViewModel @Inject constructor(
 ) : ViewModel() {
     var userId: Long = 0L
 
-    @Stable
-    var currentDate by mutableStateOf(LocalDate.now())
-
-    var today by mutableStateOf(LocalDate.now())
-    var selectedDate: LocalDate? by mutableStateOf(null)
     var allPloggingActiveMap = hashMapOf<Int, List<PloggingDayInfo>>()
     var allPloggingActiveDays = mutableListOf<Int>()
     var selectedPloggingActiveList by mutableStateOf(emptyList<PloggingDayInfo>())
+
+    var trashCans by mutableStateOf(emptyList<TrashCanItem>())
 
     init {
         viewModelScope.launch { getUserToken() }
