@@ -40,9 +40,9 @@ import com.example.planet.presentation.viewmodel.SearchViewModel
 
 
 @Composable
-fun SearchScreen(searchViewModel: SearchViewModel) {
+fun SearchScreen(searchViewModel: SearchViewModel, onBack: () -> Unit) {
     Column(modifier = Modifier.fillMaxSize()) {
-        SearchTextField {
+        SearchTextField(onBack = { onBack() }) {
             searchViewModel.search(it)
         }
         HorizontalDivider(
@@ -61,7 +61,7 @@ fun SearchScreen(searchViewModel: SearchViewModel) {
 
 
 @Composable
-fun SearchTextField(onClick: (String) -> Unit) {
+fun SearchTextField(onBack: () -> Unit, onClick: (String) -> Unit, ) {
     var text by remember {
         mutableStateOf("")
     }
@@ -80,7 +80,7 @@ fun SearchTextField(onClick: (String) -> Unit) {
             Icon(
                 imageVector = Icons.Default.ArrowBackIosNew,
                 contentDescription = null,
-                modifier = Modifier.size(20.dp)
+                modifier = Modifier.size(20.dp).noRippleClickable { onBack() }
             )
         },
         placeholder = {

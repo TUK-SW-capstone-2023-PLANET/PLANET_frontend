@@ -26,7 +26,7 @@ class SearchActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    SearchScreen(searchViewModel = searchViewModel)
+                    SearchScreen(searchViewModel = searchViewModel, onBack = {finish()})
                 }
             }
         }

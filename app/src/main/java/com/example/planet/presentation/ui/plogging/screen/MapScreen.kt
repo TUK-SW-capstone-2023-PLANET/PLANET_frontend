@@ -104,7 +104,7 @@ fun MapScreen(
             }) {
 
             NaverMapClustering(items = ploggingViewModel.trashCanItem)
-            // PathOverlay(coords = list)  // 내가 해왔던 경로 찍으면 됌
+
         }
 
         MyLocationButton(

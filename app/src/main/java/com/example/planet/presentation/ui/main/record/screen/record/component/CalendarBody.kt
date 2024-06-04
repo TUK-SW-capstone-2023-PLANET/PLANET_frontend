@@ -26,7 +26,7 @@ fun CalendarBody(
     currentDate: LocalDate,
     today: LocalDate,
     ploggingActivityList: List<Int>,
-    setSelectedPloggingList: (Int) -> Unit,
+    setSelectedPloggingList: (LocalDate) -> Unit,
     getPloggingActiveList: (Int, Int, () -> Unit) -> Unit
 ) {
     Log.d(TAG, "CalendarBody: 리컴포지션")
@@ -65,7 +65,7 @@ fun CalendarBody(
                                 selectedDate = null
                             } else {
                                 selectedDate = date
-                                setSelectedPloggingList(date.dayOfMonth)
+                                setSelectedPloggingList(date)
                             }
 
                         }
@@ -98,7 +98,7 @@ fun CalendarBody(
                                         selectedDate = null
                                     } else {
                                         selectedDate = date
-                                        setSelectedPloggingList(date.dayOfMonth)
+                                        setSelectedPloggingList(date)
                                     }
                                 }
                             }

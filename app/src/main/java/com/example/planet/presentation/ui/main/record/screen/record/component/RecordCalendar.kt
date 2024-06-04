@@ -26,7 +26,7 @@ import java.time.LocalDate
 fun RecordCalendar(
     modifier: Modifier,
     ploggingActivityList: List<Int>,
-    setSelectedPloggingList: (Int) -> Unit,
+    setSelectedPloggingList: (LocalDate) -> Unit,
     getPloggingActiveList: (Int, Int, () -> Unit) -> Unit
 ) {
 
