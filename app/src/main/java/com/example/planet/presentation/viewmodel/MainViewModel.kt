@@ -6,7 +6,6 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -18,21 +17,16 @@ import com.example.planet.TAG
 import com.example.planet.data.remote.dto.Advertisement
 import com.example.planet.data.remote.dto.ApiState
 import com.example.planet.data.remote.dto.Tier
-import com.example.planet.data.remote.dto.request.post.CommentId
-import com.example.planet.data.remote.dto.response.post.CommentResponse
-import com.example.planet.data.remote.dto.response.post.PopularPostedInfo
 import com.example.planet.data.remote.dto.response.ranking.planet.HigherPlanetUser
 import com.example.planet.data.remote.dto.response.ranking.planet.PlanetRankingUser
 import com.example.planet.data.remote.dto.response.ranking.season.SeasonUser
 import com.example.planet.data.remote.dto.response.ranking.university.University
 import com.example.planet.data.remote.dto.response.ranking.universityuser.ExpandedUniversityUser
 import com.example.planet.data.remote.dto.response.ranking.universityuser.UniversityUser
-import com.example.planet.data.remote.dto.response.signup.UserId
+import com.example.planet.data.remote.dto.response.search.PlanetRank
 import com.example.planet.data.remote.dto.response.user.UserInfo
-import com.example.planet.data.remote.dto.response.user.UserUniversityInfo
 import com.example.planet.domain.usecase.GetBannerUseCase
 import com.example.planet.domain.usecase.GetTierListUseCase
-import com.example.planet.domain.usecase.board.GetPopularPostedListUseCase
 import com.example.planet.domain.usecase.login.sharedpreference.GetUserTokenUseCase
 import com.example.planet.domain.usecase.ranking.planet.GetAllPlanetUserRankUseCase
 import com.example.planet.domain.usecase.ranking.planet.GetHigherPlanetUserUseCase
@@ -46,9 +40,8 @@ import com.example.planet.domain.usecase.ranking.university.GetMyUniversityInfoU
 import com.example.planet.domain.usecase.ranking.university.GetMyUniversityRankUseCase
 import com.example.planet.domain.usecase.ranking.universityuser.GetAllUniversityUserRankUseCase
 import com.example.planet.domain.usecase.ranking.universityuser.GetHigherUniversityUserRankUseCase
-import com.example.planet.domain.usecase.user.GetMyUniversityUseCase
+import com.example.planet.domain.usecase.search.GetPlanetUserUseCase
 import com.example.planet.domain.usecase.user.GetUserInfoUseCase
-import com.example.planet.presentation.ui.main.plogging.screen.ranking.data.ScreenNav
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -79,6 +72,7 @@ class MainViewModel @Inject constructor(
     private val getMyUniversityInfoUseCase: GetMyUniversityInfoUseCase,
     private val getUserInfoUseCase: GetUserInfoUseCase,
     private val getUserTokenUseCase: GetUserTokenUseCase,
+    private val getPlanetUserUseCase: GetPlanetUserUseCase,
     ) : ViewModel() {
     init {
         viewModelScope.launch {
@@ -170,6 +164,7 @@ class MainViewModel @Inject constructor(
     private val _searchText = mutableStateOf("")
     val searchText: State<String> = _searchText
 
+    var planetRankResult by mutableStateOf<List<PlanetRankingUser>>(emptyList())
 
 
     val changeSearchText: (String) -> Unit = { text ->
@@ -389,6 +384,21 @@ class MainViewModel @Inject constructor(
 
             is ApiState.Error -> {
                 Log.d("daeYoung", "getUserInfo() 실패: ${apiState.errMsg}")
+            }
+
+            ApiState.Loading -> TODO()
+        }
+    }
+
+    suspend fun searchPlanetUser(query: String) {
+        when (val apiState = getPlanetUserUseCase(query).first()) {
+            is ApiState.Success<*> -> {
+                planetRankResult = apiState.value as List<PlanetRankingUser>
+                Log.d(TAG, "search result: ${apiState.value}")
+            }
+
+            is ApiState.Error -> {
+                Log.d("daeYoung", "searchPlanetUser() 실패: ${apiState.errMsg}")
             }
 
             ApiState.Loading -> TODO()

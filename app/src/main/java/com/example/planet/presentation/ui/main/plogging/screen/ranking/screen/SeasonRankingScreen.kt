@@ -76,29 +76,39 @@ fun SeasonRankingScreen(mainViewModel: MainViewModel, onBack: () -> Unit) {
                 description = "아름다운 자연과 함께 봄의 주인공이 되어 보세요!",
             )
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                verticalAlignment = Alignment.Bottom
-            ) {
-                TearProfile(
-                    imageUrl = mainViewModel.higherSeasonUsers[2].tierImageUrl,
-                    imageSize = 80.dp,
-                    userName = mainViewModel.higherSeasonUsers[2].userName,
-                    userScore = mainViewModel.higherSeasonUsers[2].score.numberComma()
-                )
-                TearProfile(
-                    imageUrl = mainViewModel.higherSeasonUsers[1].tierImageUrl,
-                    imageSize = 95.dp,
-                    userName = mainViewModel.higherSeasonUsers[1].userName,
-                    userScore = mainViewModel.higherSeasonUsers[1].score.numberComma()
-                )
-                TearProfile(
-                    imageUrl = mainViewModel.higherSeasonUsers[3].tierImageUrl,
-                    imageSize = 80.dp,
-                    userName = mainViewModel.higherSeasonUsers[3].userName,
-                    userScore = mainViewModel.higherSeasonUsers[3].score.numberComma()
-                )
+            if (mainViewModel.higherSeasonUsers.isEmpty()) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    verticalAlignment = Alignment.Bottom
+                ) {
+                    CircularProgressIndicator()
+                }
+            } else {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    verticalAlignment = Alignment.Bottom
+                ) {
+                    TearProfile(
+                        imageUrl = mainViewModel.higherSeasonUsers[2].tierImageUrl,
+                        imageSize = 80.dp,
+                        userName = mainViewModel.higherSeasonUsers[2].userName,
+                        userScore = mainViewModel.higherSeasonUsers[2].score.numberComma()
+                    )
+                    TearProfile(
+                        imageUrl = mainViewModel.higherSeasonUsers[1].tierImageUrl,
+                        imageSize = 95.dp,
+                        userName = mainViewModel.higherSeasonUsers[1].userName,
+                        userScore = mainViewModel.higherSeasonUsers[1].score.numberComma()
+                    )
+                    TearProfile(
+                        imageUrl = mainViewModel.higherSeasonUsers[3].tierImageUrl,
+                        imageSize = 80.dp,
+                        userName = mainViewModel.higherSeasonUsers[3].userName,
+                        userScore = mainViewModel.higherSeasonUsers[3].score.numberComma()
+                    )
+                }
             }
 
             SearchTextField(

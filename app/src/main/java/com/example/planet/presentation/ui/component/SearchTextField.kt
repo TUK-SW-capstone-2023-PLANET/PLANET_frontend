@@ -16,6 +16,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,6 +27,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import com.example.planet.R
+import com.example.planet.presentation.util.noRippleClickable
+import kotlinx.coroutines.launch
 
 @Composable
 fun SearchTextField(
@@ -36,7 +39,10 @@ fun SearchTextField(
     fontSize: TextUnit,
     placeholder: String = "",
     verticalSpace: Dp = 0.dp,
+    onClick: suspend () -> Unit = {}
 ) {
+    val scope = rememberCoroutineScope()
+
     val placeholderStyle = TextStyle(
         color = colorResource(id = R.color.font_background_color2),
         fontWeight = FontWeight.SemiBold,
@@ -74,7 +80,11 @@ fun SearchTextField(
                     imageVector = Icons.Default.Search,
                     contentDescription = null,
                     tint = colorResource(id = R.color.font_background_color1),
-                    modifier = Modifier.size(23.dp)
+                    modifier = Modifier
+                        .size(23.dp)
+                        .noRippleClickable {
+                            scope.launch { onClick() }
+                        }
                 )
             }
         }

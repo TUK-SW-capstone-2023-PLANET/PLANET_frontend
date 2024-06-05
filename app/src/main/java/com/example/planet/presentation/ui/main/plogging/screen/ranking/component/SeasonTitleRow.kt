@@ -109,6 +109,7 @@ fun SeasonContentRow(
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .background(color)
             .padding(vertical = 2.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {

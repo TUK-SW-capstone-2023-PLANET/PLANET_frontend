@@ -2,10 +2,12 @@ package com.example.planet.presentation.ui.main.plogging.screen.ranking.componen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -18,15 +20,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 import com.example.planet.R
-import com.example.planet.presentation.util.round
 
 @Composable
-fun UniversityIndividualTitleRow() {
+fun PlanetTitleRow(modifier: Modifier = Modifier) {
     Divider(
         thickness = 1.dp,
         modifier = Modifier.fillMaxWidth(),
@@ -56,11 +60,12 @@ fun UniversityIndividualTitleRow() {
             modifier = Modifier.weight(0.3f)
         )
         Text(
-            text = "기여도",
+            text = "소속",
             color = colorResource(id = R.color.font_background_color2),
             fontSize = 12.sp,
-            modifier = Modifier.weight(0.2f)
+            modifier = Modifier.weight(0.08f)
         )
+        Box(modifier = Modifier.weight(0.12f))
     }
     Divider(
         thickness = 1.dp,
@@ -70,11 +75,11 @@ fun UniversityIndividualTitleRow() {
 }
 
 @Composable
-fun UniversityIndividualContentRow(
+fun PlanetContentRow(
     rank: Int,
     nickname: String,
     score: String,
-    contribution: Double,
+    universityLogo: String,
     color: Color = Color.White
 ) {
     Row(
@@ -140,12 +145,18 @@ fun UniversityIndividualContentRow(
             fontSize = 12.sp,
             modifier = Modifier.weight(0.3f)
         )
-        Text(
-            text = "${contribution.round()}%",
-            color = MaterialTheme.colorScheme.onSecondary,
-            fontSize = 12.sp,
-            modifier = Modifier.weight(0.2f)
-        )
+        Box(
+            modifier = Modifier
+                .weight(0.08f)
+        ) {
+            Image(
+                painter = rememberAsyncImagePainter(model = universityLogo),
+                contentDescription = null,
+                modifier = Modifier
+            )
+        }
+        Box(modifier = Modifier.weight(0.12f))
+
     }
     HorizontalDivider(
         thickness = 1.dp,

@@ -41,6 +41,9 @@ import com.example.planet.data.remote.dto.response.ranking.university.University
 import com.example.planet.data.remote.dto.response.ranking.universityuser.ExpandedUniversityUser
 import com.example.planet.data.remote.dto.response.ranking.universityuser.PagingUniversityUser
 import com.example.planet.data.remote.dto.response.ranking.universityuser.UniversityUser
+import com.example.planet.data.remote.dto.response.search.PlanetRank
+import com.example.planet.data.remote.dto.response.search.UniversityRank
+import com.example.planet.data.remote.dto.response.search.UniversityUserRank
 import com.example.planet.data.remote.dto.response.signin.LoginResponse
 import com.example.planet.data.remote.dto.response.signup.SignUpResponse
 import com.example.planet.data.remote.dto.response.signup.UserId
@@ -268,4 +271,21 @@ interface MainApi {
 
     @HTTP(method = "DELETE", path = "/chat/chat-room", hasBody = true)
     suspend fun deleteChatRoom(@Body chatRoomId: ChatRoomId): ChatResponse
+
+    @GET("/search/user/rank")
+    suspend fun searchPlanetRank(@Query("search") search: String): List<PlanetRankingUser>
+
+    @GET("/search/user/")
+    suspend fun searchUniversityRank(@Query("search") search: String): List<UniversityRank>
+
+    @GET("/search/university/rank/user/{userId}")
+    suspend fun searchUniversityUserRank(
+        @Query("search") search: String,
+        @Path("userId") userId: Long
+    ): List<UniversityUserRank>
+
+    @GET("/search/season/rank")
+    suspend fun searchSeasonRank(
+        @Path("userId") userId: Long
+    ): List<SeasonUser>
 }

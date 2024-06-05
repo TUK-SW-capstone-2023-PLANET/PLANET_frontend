@@ -25,6 +25,8 @@ import com.example.planet.R
 import com.example.planet.data.remote.dto.response.ranking.planet.PlanetRankingUser
 import com.example.planet.presentation.ui.component.SearchTextField
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.MiddleHead
+import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.PlanetContentRow
+import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.PlanetTitleRow
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.TrophyProfile
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.UniversityIndividualContentRow
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.UniversityIndividualTitleRow
@@ -103,8 +105,6 @@ fun PlanetRankingScreen(mainViewModel: MainViewModel, onBack: () -> Unit) {
             }
         }
 
-
-
         SearchTextField(
             text = mainViewModel.searchText.value,
             onValueChange = mainViewModel.changeSearchText,
@@ -112,30 +112,47 @@ fun PlanetRankingScreen(mainViewModel: MainViewModel, onBack: () -> Unit) {
             placeholder = "search",
             modifier = Modifier,
             verticalSpace = 9.dp
-        )
-
-        UniversityIndividualTitleRow()
-        mainViewModel.myPlanetRank.value?.let { myRank ->
-            UniversityIndividualContentRow(
-                rank = myRank.rank,
-                nickname = myRank.nickName,
-                score = myRank.score.numberComma(),
-                contribution = 1.7,  /* TODO(기여도 대학교 로고로 바꿀 것)*/
-                color = colorResource(id = R.color.main_color4)
-            )
+        ) {
+            mainViewModel.searchPlanetUser(mainViewModel.searchText.value)
         }
 
-        LazyColumn(modifier = Modifier.fillMaxSize()) {
-            items(planetUserList.itemCount) { index ->
-                planetUserList[index]?.let {
-                    UniversityIndividualContentRow(
-                        rank = it.rank,
-                        nickname = it.nickName,
-                        score = it.score.numberComma(),
-                        contribution = 1.7,  /* TODO(기여도 대학교 로고로 바꿀 것)*/
-                    )
+        PlanetTitleRow()
+
+        if (mainViewModel.searchText.value.isEmpty()) {
+            mainViewModel.planetRankResult = emptyList()
+            mainViewModel.myPlanetRank.value?.let { myRank ->
+                PlanetContentRow(
+                    rank = myRank.rank,
+                    nickname = myRank.nickName,
+                    score = myRank.score.numberComma(),
+                    universityLogo = myRank.universityLogo,
+                    color = colorResource(id = R.color.main_color4)
+                )
+
+                LazyColumn(modifier = Modifier.fillMaxSize()) {
+                    items(planetUserList.itemCount) { index ->
+                        planetUserList[index]?.let {
+                            PlanetContentRow(
+                                rank = it.rank,
+                                nickname = it.nickName,
+                                score = it.score.numberComma(),
+                                universityLogo = it.universityLogo,
+                            )
+                        }
+                    }
                 }
             }
+        } else {
+            mainViewModel.planetRankResult.forEach {
+                PlanetContentRow(
+                    rank = it.rank,
+                    nickname = it.nickName,
+                    score = it.score.numberComma(),
+                    universityLogo = it.universityLogo,
+                )
+            }
         }
+
+
     }
 }

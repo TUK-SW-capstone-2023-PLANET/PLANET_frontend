@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.LocalFireDepartment
 import androidx.compose.material.icons.outlined.Search
@@ -37,25 +36,18 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import com.example.planet.R
 import com.example.planet.TAG
-import com.example.planet.component.map.map.MyLocationButton
-import com.example.planet.component.map.map.NaverMapClustering
 import com.example.planet.component.map.map.TrashCanItem
 import com.example.planet.presentation.ui.main.record.screen.map.component.RecordMapTab
 import com.example.planet.presentation.ui.main.record.screen.map.component.RecordMapTextField
-import com.naver.maps.geometry.LatLng
-import com.naver.maps.map.CameraAnimation
-import com.naver.maps.map.CameraPosition
-import com.naver.maps.map.CameraUpdate
-import com.naver.maps.map.compose.CircleOverlay
+import com.naver.maps.map.compose.DisposableMapEffect
 import com.naver.maps.map.compose.ExperimentalNaverMapApi
 import com.naver.maps.map.compose.LocationTrackingMode
 import com.naver.maps.map.compose.MapProperties
 import com.naver.maps.map.compose.MapUiSettings
-import com.naver.maps.map.compose.Marker
 import com.naver.maps.map.compose.NaverMap
 import com.naver.maps.map.compose.rememberCameraPositionState
 import com.naver.maps.map.compose.rememberFusedLocationSource
-import kotlinx.coroutines.launch
+import ted.gun0912.clustering.naver.TedNaverClustering
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalNaverMapApi::class)
@@ -75,7 +67,7 @@ fun MapScreen(
             MapProperties(
                 maxZoom = 18.0,
                 minZoom = 7.0,
-                locationTrackingMode = LocationTrackingMode.Follow,
+                locationTrackingMode = LocationTrackingMode.NoFollow,
             )
         )
     }
@@ -96,6 +88,7 @@ fun MapScreen(
             )
         )
     }
+
     val locationSource = rememberFusedLocationSource(isCompassEnabled = true)
     val cameraPositionState = rememberCameraPositionState()
 
@@ -106,11 +99,7 @@ fun MapScreen(
     LaunchedEffect(tabSelected) {
         Log.d(TAG, "tabSelected: $tabSelected")
         readAllTrashCan()
-//        if (tabSelected == 0) readAllHotPlace()
-//        else {
-//            readAllTrashCan()
-//            Log.d(TAG, "readAllTrashCan() 호출")
-//        }
+        readAllHotPlace()
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -120,21 +109,40 @@ fun MapScreen(
             properties = mapProperties,
             uiSettings = mapUiSettings,
         ) {
-            Marker()
-//            Clus
-            NaverMapClustering(items = if (tabSelected == 1)trashCans else emptyList())
+            Log.d(TAG, "trashCans: $trashCans")
+
             if (tabSelected == 0) {
-                hotPlaces.forEach {
-                    // TODO: 나중에 리스트 타입 수정할 것
-                    CircleOverlay(
-                        center = LatLng(
-                            cameraPositionState.position.target.latitude,
-                            cameraPositionState.position.target.longitude
-                        ), radius = 100.0,
-                        color = colorResource(R.color.main_color2).copy(alpha = 0.7f)
-                    )
+
+            } else {
+                val context = LocalContext.current
+                var clusterManager by remember { mutableStateOf<TedNaverClustering<TrashCanItem>?>(null) }
+                DisposableMapEffect(trashCans) { map ->
+                    if (clusterManager == null) {
+                        clusterManager = TedNaverClustering.with<TrashCanItem>(context, map).make()
+                    }
+                    clusterManager?.addItems(trashCans)
+                    onDispose {
+                        clusterManager?.clearItems()
+                    }
                 }
             }
+
+
+
+//            Marker()
+//            NaverMapClustering(items = if (tabSelected == 1)trashCans else emptyList())
+//            if (tabSelected == 0) {
+//                hotPlaces.forEach {
+//                    // TODO: 나중에 리스트 타입 수정할 것
+//                    CircleOverlay(
+//                        center = LatLng(
+//                            cameraPositionState.position.target.latitude,
+//                            cameraPositionState.position.target.longitude
+//                        ), radius = 100.0,
+//                        color = colorResource(R.color.main_color2).copy(alpha = 0.7f)
+//                    )
+//                }
+//            }
         }
         Column(
             modifier = Modifier
@@ -206,3 +214,15 @@ fun MapScreen(
     }
 }
 
+//class ItemKey(val id: Int, private val latLng: LatLng) : ClusteringKey {
+//    override fun getPosition() = latLng
+//
+//    override fun equals(other: Any?): Boolean {
+//        if (this === other) return true
+//        if (other == null || javaClass != other.javaClass) return false
+//        val itemKey = other as ItemKey
+//        return id == itemKey.id
+//    }
+//
+//    override fun hashCode() = id
+//}

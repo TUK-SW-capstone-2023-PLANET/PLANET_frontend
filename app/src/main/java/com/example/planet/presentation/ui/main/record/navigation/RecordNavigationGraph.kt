@@ -39,6 +39,7 @@ fun RecordNavigationGraph(
 ) {
     Log.d(TAG, "RecordNavigationGraph 리컴포지션")
 
+
     val navController = rememberNavController()
 
     Surface(
