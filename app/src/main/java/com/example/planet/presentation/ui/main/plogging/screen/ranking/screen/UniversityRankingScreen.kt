@@ -14,6 +14,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,6 +45,9 @@ fun UniversityRankingScreen(mainViewModel: MainViewModel, onBack: () -> Unit) {
 
     LaunchedEffect(Unit) {
         mainViewModel.getAllUniversities()
+    }
+    DisposableEffect(mainViewModel.searchText.value) {
+        onDispose { mainViewModel.changeSearchText("") }
     }
 
     Column(

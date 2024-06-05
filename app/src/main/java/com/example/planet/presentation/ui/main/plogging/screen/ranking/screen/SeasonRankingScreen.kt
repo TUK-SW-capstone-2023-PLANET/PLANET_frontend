@@ -14,6 +14,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,6 +30,7 @@ import com.example.planet.R
 import com.example.planet.data.remote.dto.response.ranking.season.SeasonUser
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.MiddleHead
 import com.example.planet.presentation.ui.component.SearchTextField
+import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.PlanetContentRow
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.SeasonContentRow
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.SeasonTitleRow
 import com.example.planet.presentation.ui.main.plogging.screen.ranking.component.TearProfile
@@ -46,6 +48,10 @@ fun SeasonRankingScreen(mainViewModel: MainViewModel, onBack: () -> Unit) {
     LaunchedEffect(Unit) {
         mainViewModel.getAllSeasonUser()
     }
+    DisposableEffect(Unit) {
+        onDispose { mainViewModel.changeSearchText("") }
+    }
+
     if (seasonUserList.itemSnapshotList.items.isEmpty()) {
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -118,32 +124,46 @@ fun SeasonRankingScreen(mainViewModel: MainViewModel, onBack: () -> Unit) {
                 placeholder = "search",
                 modifier = Modifier,
                 verticalSpace = 9.dp
-            )
-
-            SeasonTitleRow()
-            mainViewModel.mySeasonRank.collectAsStateWithLifecycle().value?.let { myRank ->
-                SeasonContentRow(
-                    rank = myRank.rank,
-                    nickname = myRank.userName,
-                    tier = myRank.tierImageUrl,
-                    score = myRank.score.numberComma(),
-                    universityLogo = myRank.universityLogo,
-                    color = colorResource(id = R.color.main_color4)
-                )
+            ) {
+                mainViewModel.searchSeason(mainViewModel.searchText.value)
             }
 
+            if (mainViewModel.searchText.value.isEmpty()) {
+                SeasonTitleRow()
+                mainViewModel.mySeasonRank.collectAsStateWithLifecycle().value?.let { myRank ->
+                    SeasonContentRow(
+                        rank = myRank.rank,
+                        nickname = myRank.userName,
+                        tier = myRank.tierImageUrl,
+                        score = myRank.score.numberComma(),
+                        universityLogo = myRank.universityLogo,
+                        color = colorResource(id = R.color.main_color4)
+                    )
+                }
 
-            LazyColumn(modifier = Modifier.fillMaxSize()) {
-                items(seasonUserList.itemCount) { index ->
-                    seasonUserList[index]?.let {
-                        SeasonContentRow(
-                            rank = it.rank,
-                            nickname = it.userName,
-                            tier = it.tierImageUrl,
-                            score = it.score.numberComma(),
-                            universityLogo = it.universityLogo,
-                        )
+
+                LazyColumn(modifier = Modifier.fillMaxSize()) {
+                    items(seasonUserList.itemCount) { index ->
+                        seasonUserList[index]?.let {
+                            SeasonContentRow(
+                                rank = it.rank,
+                                nickname = it.userName,
+                                tier = it.tierImageUrl,
+                                score = it.score.numberComma(),
+                                universityLogo = it.universityLogo,
+                            )
+                        }
                     }
+                }
+            } else {
+                mainViewModel.seasonRankResult.forEach {
+                    SeasonContentRow(
+                        rank = it.rank,
+                        nickname = it.userName,
+                        tier = it.tierImageUrl,
+                        score = it.score.numberComma(),
+                        universityLogo = it.universityLogo,
+                    )
                 }
             }
         }

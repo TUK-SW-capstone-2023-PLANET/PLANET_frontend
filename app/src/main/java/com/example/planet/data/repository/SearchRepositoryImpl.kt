@@ -42,7 +42,7 @@ class SearchRepositoryImpl @Inject constructor(private val mainApi: MainApi): Se
 
     override suspend fun searchSeason(search: String) = flow {
         kotlin.runCatching {
-            mainApi.searchPlanetRank(search)
+            mainApi.searchSeasonRank(search)
         }.onSuccess {
             emit(ApiState.Success(it))
         }.onFailure { error ->

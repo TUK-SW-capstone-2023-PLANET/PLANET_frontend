@@ -18,6 +18,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -67,6 +68,9 @@ fun UniversityIndividualRankingScreen(mainViewModel: MainViewModel, onBack: () -
             delay(200)
             visible = true
         }
+    }
+    DisposableEffect(mainViewModel.searchText.value) {
+        onDispose { mainViewModel.changeSearchText("") }
     }
 
     Column(

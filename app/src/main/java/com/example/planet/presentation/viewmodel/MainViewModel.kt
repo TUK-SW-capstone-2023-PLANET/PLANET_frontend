@@ -23,7 +23,6 @@ import com.example.planet.data.remote.dto.response.ranking.season.SeasonUser
 import com.example.planet.data.remote.dto.response.ranking.university.University
 import com.example.planet.data.remote.dto.response.ranking.universityuser.ExpandedUniversityUser
 import com.example.planet.data.remote.dto.response.ranking.universityuser.UniversityUser
-import com.example.planet.data.remote.dto.response.search.PlanetRank
 import com.example.planet.data.remote.dto.response.user.UserInfo
 import com.example.planet.domain.usecase.GetBannerUseCase
 import com.example.planet.domain.usecase.GetTierListUseCase
@@ -41,6 +40,7 @@ import com.example.planet.domain.usecase.ranking.university.GetMyUniversityRankU
 import com.example.planet.domain.usecase.ranking.universityuser.GetAllUniversityUserRankUseCase
 import com.example.planet.domain.usecase.ranking.universityuser.GetHigherUniversityUserRankUseCase
 import com.example.planet.domain.usecase.search.GetPlanetUserUseCase
+import com.example.planet.domain.usecase.search.GetSeasonUseCase
 import com.example.planet.domain.usecase.user.GetUserInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -73,6 +73,7 @@ class MainViewModel @Inject constructor(
     private val getUserInfoUseCase: GetUserInfoUseCase,
     private val getUserTokenUseCase: GetUserTokenUseCase,
     private val getPlanetUserUseCase: GetPlanetUserUseCase,
+    private val getSeasonUseCase: GetSeasonUseCase,
     ) : ViewModel() {
     init {
         viewModelScope.launch {
@@ -165,6 +166,9 @@ class MainViewModel @Inject constructor(
     val searchText: State<String> = _searchText
 
     var planetRankResult by mutableStateOf<List<PlanetRankingUser>>(emptyList())
+    var universityRankResult by mutableStateOf<List<University>>(emptyList())
+    var seasonRankResult by mutableStateOf<List<SeasonUser>>(emptyList())
+    var universityUserRankResult by mutableStateOf<List<UniversityUser>>(emptyList())
 
 
     val changeSearchText: (String) -> Unit = { text ->
@@ -394,7 +398,6 @@ class MainViewModel @Inject constructor(
         when (val apiState = getPlanetUserUseCase(query).first()) {
             is ApiState.Success<*> -> {
                 planetRankResult = apiState.value as List<PlanetRankingUser>
-                Log.d(TAG, "search result: ${apiState.value}")
             }
 
             is ApiState.Error -> {
@@ -405,6 +408,40 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    suspend fun searchUniversity(query: String) {
+        when (val apiState = getPlanetUserUseCase(query).first()) {
+            is ApiState.Success<*> -> {
+                universityRankResult = apiState.value as List<University>
+            }
+            is ApiState.Error -> {
+                Log.d("daeYoung", "searchUniversity() 실패: ${apiState.errMsg}")
+            }
+            ApiState.Loading -> TODO()
+        }
+    }
 
+    suspend fun searchUniversityUser(query: String) {
+        when (val apiState = getPlanetUserUseCase(query).first()) {
+            is ApiState.Success<*> -> {
+                universityUserRankResult = apiState.value as List<UniversityUser>
+            }
+            is ApiState.Error -> {
+                Log.d("daeYoung", "searchUniversity() 실패: ${apiState.errMsg}")
+            }
+            ApiState.Loading -> TODO()
+        }
+    }
 
+    suspend fun searchSeason(query: String) {
+        when (val apiState = getSeasonUseCase(query).first()) {
+            is ApiState.Success<*> -> {
+                seasonRankResult = apiState.value as List<SeasonUser>
+                Log.d("daeYoung", "searchSeason() 성공: ${apiState.value}")
+            }
+            is ApiState.Error -> {
+                Log.d("daeYoung", "searchUniversity() 실패: ${apiState.errMsg}")
+            }
+            ApiState.Loading -> TODO()
+        }
+    }
 }

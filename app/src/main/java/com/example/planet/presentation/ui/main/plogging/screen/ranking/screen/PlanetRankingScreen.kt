@@ -12,6 +12,7 @@ import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,6 +43,9 @@ fun PlanetRankingScreen(mainViewModel: MainViewModel, onBack: () -> Unit) {
 
     LaunchedEffect(Unit) {
         mainViewModel.getAllPlanetUserRanking()
+    }
+    DisposableEffect(Unit) {
+        onDispose { mainViewModel.changeSearchText("") }
     }
 
 
