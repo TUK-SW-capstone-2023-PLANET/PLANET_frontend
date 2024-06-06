@@ -69,4 +69,14 @@ class SearchRepositoryImpl @Inject constructor(private val mainApi: MainApi): Se
             error.message?.let { emit(ApiState.Error(it)) }
         }
     }.flowOn(Dispatchers.IO)
+
+    override suspend fun searchChat(userId: Long, search: String) = flow {
+        kotlin.runCatching {
+            mainApi.searchChat(userId = userId, search = search)
+        }.onSuccess {
+            emit(ApiState.Success(it))
+        }.onFailure { error ->
+            error.message?.let { emit(ApiState.Error(it)) }
+        }
+    }.flowOn(Dispatchers.IO)
 }

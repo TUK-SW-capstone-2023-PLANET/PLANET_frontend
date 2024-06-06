@@ -33,7 +33,7 @@ fun PloggingNavigationGraph(
     startCommunityActivity: (String, String) -> Unit,
     startPostedInfoActivity: (Long, String) -> Unit,
     startMyWritedActivity: (String, Long) -> Unit,
-    startMessageActivity: (Long, Long, String) -> Unit,
+    startMessageActivity: (Long, Long, String, Long) -> Unit,
     startRankingActivity: (String) -> Unit
 ) {
     val navController = rememberNavController()
@@ -76,11 +76,12 @@ fun PloggingNavigationGraph(
                     MessageScreen(
                         messageViewModel = messageViewModel,
                         userId = mainViewModel.userId
-                    ) { userId, chatroomId, reciever ->
+                    ) { userId, chatroomId, reciever, recieverId ->
                         startMessageActivity(
                             userId,
                             chatroomId,
-                            reciever
+                            reciever,
+                            recieverId
                         )
                     }
                 }

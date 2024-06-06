@@ -36,7 +36,7 @@ fun MainNavigationGraph(
     startCommunityActivity: (String, String) -> Unit,
     startPostedInfoActivity: (Long, String) -> Unit,
     startMyWritedActivity: (String, Long) -> Unit,
-    startMessageActivity: (Long, Long, String) -> Unit,
+    startMessageActivity: (Long, Long, String, Long) -> Unit,
     startPloggingResultActivity: (Long, String) -> Unit,
     startRankingActivity: (String) -> Unit,
     startSearchActivity: () -> Unit
@@ -89,8 +89,8 @@ fun MainNavigationGraph(
                         startPostedInfoActivity(postId, board)
                     },
                     startMyWritedActivity = { type, userId -> startMyWritedActivity(type, userId) },
-                    startMessageActivity = { userId, chatroomId, reciever ->
-                        startMessageActivity(userId, chatroomId, reciever)
+                    startMessageActivity = { userId, chatroomId, reciever, recieverId ->
+                        startMessageActivity(userId, chatroomId, reciever, recieverId)
                     }
                 ) {
                     startRankingActivity(it)

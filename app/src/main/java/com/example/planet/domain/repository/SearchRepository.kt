@@ -11,7 +11,7 @@ interface SearchRepository {
     suspend fun searchSeason(search: String): Flow<ApiState>
     suspend fun searchRecentlyWord(userId: Long): Flow<ApiState>
     suspend fun searchPosted(type: String, userId: Long, search: String): Flow<ApiState>
-
+    suspend fun searchChat(userId: Long, search: String): Flow<ApiState>
 
 
 }

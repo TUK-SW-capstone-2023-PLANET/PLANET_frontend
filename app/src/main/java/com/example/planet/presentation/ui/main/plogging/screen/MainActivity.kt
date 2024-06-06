@@ -67,8 +67,8 @@ class MainActivity : ComponentActivity() {
                             startPostedInfoActivity(postId, board)
                         },
                         startMyWritedActivity = { type, userId -> startMyWritedActivity(type, userId) },
-                        startMessageActivity = { userId, chatroomId, reciever ->
-                            startMessageActivity(userId, chatroomId, reciever)
+                        startMessageActivity = { userId, chatroomId, reciever, recieverId ->
+                            startMessageActivity(userId, chatroomId, reciever, recieverId)
                         },
                         startPloggingResultActivity = {ploggingId, theme -> startPloggingResultActivity(ploggingId, theme)},
                         startRankingActivity = { startRankingActivity(it) },
@@ -146,11 +146,12 @@ class MainActivity : ComponentActivity() {
         startActivity(intent)
     }
 
-    private fun startMessageActivity(userId: Long, chatroomId: Long, reciever: String) {
+    private fun startMessageActivity(userId: Long, chatroomId: Long, reciever: String, recieverId: Long) {
         val intent = Intent(this, MessageActivity::class.java).apply {
             this.putExtra("userId", userId)
             this.putExtra("chatroomId", chatroomId)
             this.putExtra("reciever", reciever)
+            this.putExtra("recieverId", recieverId)
         }
         startActivity(intent)
     }

@@ -297,4 +297,10 @@ interface MainApi {
         @Path("userId") userId: Long,
         @Query("search") search: String
     ): List<Posted>
+
+    @GET("/search/chat/user/{userId}")
+    suspend fun searchChat(
+        @Path("userId") userId: Long,
+        @Query("search") search: String
+    ): List<ChatroomInfo>
 }

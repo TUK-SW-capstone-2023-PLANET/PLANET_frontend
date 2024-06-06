@@ -7,6 +7,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.planet.TAG
 import com.example.planet.data.remote.dto.ApiState
 import com.example.planet.data.remote.dto.request.chat.ChatRoomId
 import com.example.planet.data.remote.dto.request.chat.ChatSave
@@ -18,18 +20,23 @@ import com.example.planet.domain.usecase.chat.DeleteChatRoomUseCase
 import com.example.planet.domain.usecase.chat.GetAllChatUseCase
 import com.example.planet.domain.usecase.chat.GetAllChatroomUseCase
 import com.example.planet.domain.usecase.chat.PostChatUseCase
+import com.example.planet.domain.usecase.login.sharedpreference.GetUserTokenUseCase
+import com.example.planet.domain.usecase.search.GetChatUserUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class MessageViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
+    private val getUserTokenUseCase: GetUserTokenUseCase,
     private val postChatUseCase: PostChatUseCase,
     private val getAllChatroomUseCase: GetAllChatroomUseCase,
     private val getAllChatUseCase: GetAllChatUseCase,
-    private val deleteChatRoomUseCase: DeleteChatRoomUseCase
+    private val deleteChatRoomUseCase: DeleteChatRoomUseCase,
+    private val getChatUserUseCase: GetChatUserUseCase
 ) : ViewModel() {
 
     var userId: Long = 0
@@ -42,6 +49,27 @@ class MessageViewModel @Inject constructor(
     var chatrooms by mutableStateOf(emptyList<ChatroomInfo>())
     var chats by mutableStateOf(emptyList<ChatInfo>())
 
+    var searchInput by mutableStateOf("")
+    var searchChatroom by mutableStateOf(emptyList<ChatroomInfo>())
+
+    init {
+        viewModelScope.launch {
+            getUserToken()
+        }
+    }
+
+
+    private suspend fun getUserToken(userTokenKey: String = "userToken") {
+        when (val result = getUserTokenUseCase(userTokenKey).first()) {
+            is ApiState.Success<*> -> { userId = result.value as Long }
+
+            is ApiState.Error -> {
+                Log.d(TAG, "getUserToken() 실패: ${result.errMsg}")
+            }
+
+            ApiState.Loading -> TODO()
+        }
+    }
 
     suspend fun saveChat(content: String, receiverId: Long, onBack: () -> Unit) {
         val chat = ChatSave(
@@ -106,11 +134,25 @@ class MessageViewModel @Inject constructor(
                 }
             }
             is ApiState.Error -> {
-                Log.d("daeYoung", "readAllChat() 실패: ${apiState.errMsg}")
+                Log.d("daeYoung", "deleteChatRoom() 실패: ${apiState.errMsg}")
             }
             ApiState.Loading -> TODO()
         }
     }
+
+    suspend fun searchChatUser() {
+        when (val apiState = getChatUserUseCase(userId, searchInput).first()) {
+            is ApiState.Success<*> -> {
+                searchChatroom = apiState.value as List<ChatroomInfo>
+            }
+            is ApiState.Error -> {
+                Log.d("daeYoung", "searchChatUser() 실패: ${apiState.errMsg}")
+            }
+            ApiState.Loading -> TODO()
+        }
+    }
+
+
 
 
 
