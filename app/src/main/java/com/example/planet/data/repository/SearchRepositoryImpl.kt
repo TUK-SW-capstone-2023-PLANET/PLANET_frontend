@@ -49,4 +49,14 @@ class SearchRepositoryImpl @Inject constructor(private val mainApi: MainApi): Se
             error.message?.let { emit(ApiState.Error(it)) }
         }
     }.flowOn(Dispatchers.IO)
+
+    override suspend fun searchRecentlyWord(userId: Long) = flow {
+        kotlin.runCatching {
+            mainApi.getRecentlySearch(userId)
+        }.onSuccess {
+            emit(ApiState.Success(it))
+        }.onFailure { error ->
+            error.message?.let { emit(ApiState.Error(it)) }
+        }
+    }.flowOn(Dispatchers.IO)
 }

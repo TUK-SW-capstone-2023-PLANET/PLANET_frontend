@@ -9,4 +9,8 @@ interface SearchRepository {
     suspend fun searchUniversity(search: String): Flow<ApiState>
     suspend fun searchUniversityUser(search: String, userId: Long): Flow<ApiState>
     suspend fun searchSeason(search: String): Flow<ApiState>
+    suspend fun searchRecentlyWord(userId: Long): Flow<ApiState>
+
+
+
 }

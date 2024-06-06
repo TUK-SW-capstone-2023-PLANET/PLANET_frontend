@@ -23,6 +23,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
@@ -35,6 +36,7 @@ import com.example.planet.presentation.ui.main.plogging.screen.community.compone
 import com.example.planet.presentation.viewmodel.CommunityViewModel
 import com.example.planet.R
 import com.example.planet.data.remote.dto.response.post.Posted
+import com.example.planet.presentation.ui.component.EmptyRecentlySearch
 import com.example.planet.presentation.ui.main.plogging.screen.community.component.PostingCard
 import com.example.planet.presentation.util.noRippleClickable
 
@@ -44,6 +46,10 @@ fun SearchScreen(
     types: String,
     onBack: () -> Unit
 ) {
+    LaunchedEffect(Unit) {
+        viewModel.readRecentlySearch()
+    }
+
     Column(modifier = Modifier.fillMaxSize()) {
         SearchTopAppBar(title = types) {
             onBack()
@@ -60,18 +66,16 @@ fun SearchScreen(
                 fontSize = 12.sp,
             )
         }
-        /*
+
         if (viewModel.recentlySearch.isEmpty() && viewModel.searchResult.isEmpty()) {
             EmptyRecentlySearch()
         } else if (viewModel.searchResult.isEmpty()) {
             RecentlySearch(recentlySearch = viewModel.recentlySearch, onSearch = {}) {
-                
+
             }
         } else {
             SearchingArea(searchResult = viewModel.postedList)
         }
-        */
-        SearchingArea(searchResult = viewModel.postedList)
     }
 }
 

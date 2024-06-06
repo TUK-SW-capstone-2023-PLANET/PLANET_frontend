@@ -285,4 +285,11 @@ interface MainApi {
     suspend fun searchSeasonRank(
         @Query("search") search: String
     ): List<SeasonUser>
+
+    @GET("/search/post/history/user/{userId}")
+    suspend fun getRecentlySearch(
+        @Path("userId") userId: Long,
+    ): List<String>
+
+
 }
