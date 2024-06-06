@@ -29,8 +29,8 @@ fun CommunityNavGraph(
                 onPosting = { type -> navController.navigate("${CommunityNavItem.PostingScreen.screenRoute}/${type}") },
                 onBack = { activityFinish() },
                 onSearch = { type -> navController.navigate("${CommunityNavItem.FreeBoardSearchScreen.screenRoute}/${type}") },
-                startMyWritedActivity = {userId: Long -> startMyWritedActivity(userId)},
-                ) { postId, board ->
+                startMyWritedActivity = { userId: Long -> startMyWritedActivity(userId) },
+            ) { postId, board ->
                 startPostedInfoActivity(postId, board)
             }
         }
@@ -40,16 +40,24 @@ fun CommunityNavGraph(
                 onPosting = { type -> navController.navigate("${CommunityNavItem.PostingScreen.screenRoute}/${type}") },
                 onBack = { activityFinish() },
                 onSearch = { type -> navController.navigate("${CommunityNavItem.FreeBoardSearchScreen.screenRoute}/${type}") },
-                startMyWritedActivity = {userId: Long -> startMyWritedActivity(userId)},
-                ) { postId, board ->
+                startMyWritedActivity = { userId: Long -> startMyWritedActivity(userId) },
+            ) { postId, board ->
                 startPostedInfoActivity(postId, board)
             }
         }
         composable("${CommunityNavItem.PostingScreen.screenRoute}/{type}") {
-            PostingScreen(viewModel = viewModel, types = it.arguments?.getString("type") ?: "free", onBack = { activityFinish() })
+            PostingScreen(
+                viewModel = viewModel,
+                types = it.arguments?.getString("type") ?: "free",
+                onBack = { activityFinish() })
         }
         composable("${CommunityNavItem.FreeBoardSearchScreen.screenRoute}/{type}") {
-            SearchScreen(viewModel = viewModel, types = it.arguments?.getString("type") ?: "free", onBack = { activityFinish() })
+            SearchScreen(
+                viewModel = viewModel,
+                types = it.arguments?.getString("type") ?: "free",
+                onBack = { activityFinish() }) { postId, board ->
+                startPostedInfoActivity(postId, board)
+            }
         }
     }
 

@@ -291,5 +291,10 @@ interface MainApi {
         @Path("userId") userId: Long,
     ): List<String>
 
-
+    @GET("/search/post/{type}/user/{userId}")
+    suspend fun searchPosted(
+        @Path("type") type: String,
+        @Path("userId") userId: Long,
+        @Query("search") search: String
+    ): List<Posted>
 }

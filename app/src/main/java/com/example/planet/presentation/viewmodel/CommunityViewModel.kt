@@ -44,6 +44,7 @@ import com.example.planet.domain.usecase.post.PostCommentSaveUseCase
 import com.example.planet.domain.usecase.post.PostPostedHeartSaveUseCase
 import com.example.planet.domain.usecase.post.PostPostingSaveUseCase
 import com.example.planet.domain.usecase.search.GetRecentlySearchUseCase
+import com.example.planet.domain.usecase.search.GetSearchPostedUseCase
 import com.example.planet.domain.usecase.user.GetMyUniversityUseCase
 import com.example.planet.presentation.util.asMultipart
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -75,7 +76,8 @@ class CommunityViewModel @Inject constructor(
     private val postCommentHeartUseCase: PostCommentHeartUseCase,
     private val deleteCommentHeartUseCase: DeleteCommentHeartUseCase,
     private val postImagesUseCase: PostImagesUseCase,
-    private val getRecentlySearchUseCase: GetRecentlySearchUseCase
+    private val getRecentlySearchUseCase: GetRecentlySearchUseCase,
+    private val getSearchPostedUseCase: GetSearchPostedUseCase
 ) : ViewModel() {
 
     var userId: Long = 0L
@@ -106,7 +108,8 @@ class CommunityViewModel @Inject constructor(
     var popularPosted by mutableStateOf(emptyList<PopularPostedInfo>())
 
     var searchInput by mutableStateOf("")
-//    var recentlySearch by mutableStateOf(emptyList<String>())
+
+    //    var recentlySearch by mutableStateOf(emptyList<String>())
     var recentlySearch by mutableStateOf(emptyList<String>())
     var searchResult by mutableStateOf(emptyList<Posted>())
 
@@ -437,10 +440,25 @@ class CommunityViewModel @Inject constructor(
             is ApiState.Error -> {
                 Log.d("daeYoung", "readViewPosted() 실패: ${apiState.errMsg}")
             }
+
             ApiState.Loading -> TODO()
         }
     }
 
+    suspend fun readSearchPosted(type: String, search: String) {
+        when (val apiState =
+            getSearchPostedUseCase(type = type, userId = userId, search = search).first()) {
+            is ApiState.Success<*> -> {
+                searchResult = (apiState.value as List<Posted>)
+            }
+
+            is ApiState.Error -> {
+                Log.d("daeYoung", "readViewPosted() 실패: ${apiState.errMsg}")
+            }
+
+            ApiState.Loading -> TODO()
+        }
+    }
 
 
 }
