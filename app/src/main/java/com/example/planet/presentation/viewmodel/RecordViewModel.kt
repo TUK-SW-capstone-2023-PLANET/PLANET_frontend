@@ -44,9 +44,9 @@ class RecordViewModel @Inject constructor(
     var trashCans = mutableStateListOf<TrashCanItem>()
 
     var selectedDate by mutableStateOf("")
+    var searchResultPlace by mutableStateOf<LatLng?>(null)
 
     init {
-        viewModelScope.launch { getUserToken() }
         viewModelScope.launch { getUserToken() }
     }
 

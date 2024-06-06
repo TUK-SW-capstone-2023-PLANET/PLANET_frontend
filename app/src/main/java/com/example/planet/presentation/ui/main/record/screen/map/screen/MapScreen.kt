@@ -21,6 +21,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -39,14 +40,21 @@ import com.example.planet.TAG
 import com.example.planet.component.map.map.TrashCanItem
 import com.example.planet.presentation.ui.main.record.screen.map.component.RecordMapTab
 import com.example.planet.presentation.ui.main.record.screen.map.component.RecordMapTextField
+import com.naver.maps.geometry.LatLng
+import com.naver.maps.map.CameraAnimation
+import com.naver.maps.map.CameraPosition
+import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.compose.DisposableMapEffect
 import com.naver.maps.map.compose.ExperimentalNaverMapApi
 import com.naver.maps.map.compose.LocationTrackingMode
 import com.naver.maps.map.compose.MapProperties
 import com.naver.maps.map.compose.MapUiSettings
+import com.naver.maps.map.compose.Marker
 import com.naver.maps.map.compose.NaverMap
 import com.naver.maps.map.compose.rememberCameraPositionState
 import com.naver.maps.map.compose.rememberFusedLocationSource
+import com.naver.maps.map.compose.rememberMarkerState
+import kotlinx.coroutines.launch
 import ted.gun0912.clustering.naver.TedNaverClustering
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -55,6 +63,8 @@ import ted.gun0912.clustering.naver.TedNaverClustering
 fun MapScreen(
     trashCans: List<TrashCanItem>,
     hotPlaces: List<TrashCanItem>,
+    searchPlace: LatLng?,
+    initSearchPlace: () -> Unit,
     readAllTrashCan: suspend () -> Unit,
     readAllHotPlace: suspend () -> Unit,
     startSearchActivity: () -> Unit,
@@ -96,6 +106,23 @@ fun MapScreen(
         mutableIntStateOf(0)
     }
 
+    DisposableEffect(Unit) {
+        if (searchPlace != null) {
+            val cameraPosition =
+                CameraPosition(LatLng(searchPlace.latitude, searchPlace.longitude), 16.0)
+            coroutineScope.launch {
+                cameraPositionState.animate(
+                    CameraUpdate.toCameraPosition(cameraPosition),
+                    animation = CameraAnimation.Fly,
+                    durationMs = 3000
+                )
+            }
+        }
+        onDispose {
+            initSearchPlace()
+        }
+    }
+
     LaunchedEffect(tabSelected) {
         Log.d(TAG, "tabSelected: $tabSelected")
         readAllTrashCan()
@@ -115,7 +142,11 @@ fun MapScreen(
 
             } else {
                 val context = LocalContext.current
-                var clusterManager by remember { mutableStateOf<TedNaverClustering<TrashCanItem>?>(null) }
+                var clusterManager by remember {
+                    mutableStateOf<TedNaverClustering<TrashCanItem>?>(
+                        null
+                    )
+                }
                 DisposableMapEffect(trashCans) { map ->
                     if (clusterManager == null) {
                         clusterManager = TedNaverClustering.with<TrashCanItem>(context, map).make()
@@ -126,23 +157,10 @@ fun MapScreen(
                     }
                 }
             }
+            if (searchPlace != null) {
+                Marker(state = rememberMarkerState(position = searchPlace))
+            }
 
-
-
-//            Marker()
-//            NaverMapClustering(items = if (tabSelected == 1)trashCans else emptyList())
-//            if (tabSelected == 0) {
-//                hotPlaces.forEach {
-//                    // TODO: 나중에 리스트 타입 수정할 것
-//                    CircleOverlay(
-//                        center = LatLng(
-//                            cameraPositionState.position.target.latitude,
-//                            cameraPositionState.position.target.longitude
-//                        ), radius = 100.0,
-//                        color = colorResource(R.color.main_color2).copy(alpha = 0.7f)
-//                    )
-//                }
-//            }
         }
         Column(
             modifier = Modifier

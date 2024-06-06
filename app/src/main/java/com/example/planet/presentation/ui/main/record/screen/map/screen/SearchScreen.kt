@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.Close
@@ -23,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,17 +36,22 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.planet.R
+import com.example.planet.data.remote.dto.response.map.SearchPlace
 import com.example.planet.presentation.ui.component.EmptyRecentlySearch
 import com.example.planet.presentation.util.noRippleClickable
-import com.example.planet.presentation.viewmodel.SearchInfo
 import com.example.planet.presentation.viewmodel.SearchViewModel
+import kotlinx.coroutines.launch
 
 
 @Composable
-fun SearchScreen(searchViewModel: SearchViewModel, onBack: () -> Unit) {
+fun SearchScreen(
+    searchViewModel: SearchViewModel,
+    onBack: () -> Unit,
+    returnMainActivity: (DoubleArray) -> Unit
+) {
     Column(modifier = Modifier.fillMaxSize()) {
-        SearchTextField(onBack = { onBack() }) {
-            searchViewModel.search(it)
+        SearchTextField(onBack = { onBack() }) { text ->
+            searchViewModel.searchPlace(text) {returnMainActivity(it)}
         }
         HorizontalDivider(
             thickness = 3.dp,
@@ -61,7 +69,8 @@ fun SearchScreen(searchViewModel: SearchViewModel, onBack: () -> Unit) {
 
 
 @Composable
-fun SearchTextField(onBack: () -> Unit, onClick: (String) -> Unit, ) {
+fun SearchTextField(onBack: () -> Unit, onClick: suspend (String) -> Unit) {
+    var scope = rememberCoroutineScope()
     var text by remember {
         mutableStateOf("")
     }
@@ -80,7 +89,9 @@ fun SearchTextField(onBack: () -> Unit, onClick: (String) -> Unit, ) {
             Icon(
                 imageVector = Icons.Default.ArrowBackIosNew,
                 contentDescription = null,
-                modifier = Modifier.size(20.dp).noRippleClickable { onBack() }
+                modifier = Modifier
+                    .size(20.dp)
+                    .noRippleClickable { onBack() }
             )
         },
         placeholder = {
@@ -92,17 +103,26 @@ fun SearchTextField(onBack: () -> Unit, onClick: (String) -> Unit, ) {
                 contentDescription = null,
                 modifier = Modifier
                     .size(26.dp)
-                    .clickable { onClick(text) })
+                    .clickable { scope.launch { onClick(text) } })
         },
         colors = TextFieldDefaults.colors(
             unfocusedIndicatorColor = Color.Transparent,
             focusedIndicatorColor = Color.Transparent
+        ),
+        keyboardOptions = KeyboardOptions.Default.copy(
+            autoCorrect = true,
+            imeAction = androidx.compose.ui.text.input.ImeAction.Search
+        ),
+        keyboardActions = KeyboardActions(
+            onSearch = {
+                scope.launch { onClick(text) }
+            }
         )
     )
 }
 
 @Composable
-fun RecentSearchItem(item: SearchInfo, onDelete: (String) -> Unit) {
+fun RecentSearchItem(item: SearchPlace, onDelete: (String) -> Unit) {
     val dateStyle = TextStyle(
         fontSize = 9.sp,
         fontWeight = FontWeight.Medium,
@@ -118,7 +138,7 @@ fun RecentSearchItem(item: SearchInfo, onDelete: (String) -> Unit) {
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
-                imageVector = if (item.isAddress) Icons.Outlined.LocationOn else Icons.Outlined.Search,
+                imageVector = if (item.addressCheck) Icons.Outlined.LocationOn else Icons.Outlined.Search,
                 contentDescription = null,
                 modifier = Modifier
                     .padding(end = 5.dp)

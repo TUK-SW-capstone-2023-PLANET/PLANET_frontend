@@ -6,6 +6,9 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultCallback
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
@@ -29,6 +32,7 @@ import com.example.planet.presentation.viewmodel.CommunityViewModel
 import com.example.planet.presentation.viewmodel.MainViewModel
 import com.example.planet.presentation.viewmodel.MessageViewModel
 import com.example.planet.presentation.viewmodel.RecordViewModel
+import com.naver.maps.geometry.LatLng
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -39,6 +43,17 @@ class MainActivity : ComponentActivity() {
     private val communityViewModel by viewModels<CommunityViewModel>()
     private val messageViewModel by viewModels<MessageViewModel>()
     private val recordViewModel by viewModels<RecordViewModel>()
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    val activityForResult =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                Log.d(TAG, "SearchActivity의 반환 값: ${result.data?.getDoubleArrayExtra("latlng").contentToString()}")
+                result.data?.getDoubleArrayExtra("latlng").let {
+                    recordViewModel.searchResultPlace = LatLng(it?.getOrNull(0)!!, it.getOrNull(1)!!)
+                }
+            }
+        }
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,13 +81,23 @@ class MainActivity : ComponentActivity() {
                         startPostedInfoActivity = { postId, board ->
                             startPostedInfoActivity(postId, board)
                         },
-                        startMyWritedActivity = { type, userId -> startMyWritedActivity(type, userId) },
+                        startMyWritedActivity = { type, userId ->
+                            startMyWritedActivity(
+                                type,
+                                userId
+                            )
+                        },
                         startMessageActivity = { userId, chatroomId, reciever, recieverId ->
                             startMessageActivity(userId, chatroomId, reciever, recieverId)
                         },
-                        startPloggingResultActivity = {ploggingId, theme -> startPloggingResultActivity(ploggingId, theme)},
+                        startPloggingResultActivity = { ploggingId, theme ->
+                            startPloggingResultActivity(
+                                ploggingId,
+                                theme
+                            )
+                        },
                         startRankingActivity = { startRankingActivity(it) },
-                        startSearchActivity = {startSearchActivity()}
+                        startSearchActivity = { startSearchActivity() }
                     )
                 }
 //                RequestPermission()
@@ -146,7 +171,12 @@ class MainActivity : ComponentActivity() {
         startActivity(intent)
     }
 
-    private fun startMessageActivity(userId: Long, chatroomId: Long, reciever: String, recieverId: Long) {
+    private fun startMessageActivity(
+        userId: Long,
+        chatroomId: Long,
+        reciever: String,
+        recieverId: Long
+    ) {
         val intent = Intent(this, MessageActivity::class.java).apply {
             this.putExtra("userId", userId)
             this.putExtra("chatroomId", chatroomId)
@@ -172,10 +202,13 @@ class MainActivity : ComponentActivity() {
         startActivity(intent)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun startSearchActivity() {
         val intent = Intent(this, SearchActivity::class.java)
-        startActivity(intent)
+        activityForResult.launch((intent))
     }
+
+
 }
 
 

@@ -89,9 +89,12 @@ fun RecordNavigationGraph(
                         MapScreen(
                             trashCans = recordViewModel.trashCans,
                             hotPlaces = emptyList(),
+                            searchPlace = recordViewModel.searchResultPlace,
+                            initSearchPlace = {recordViewModel.searchResultPlace = null},
                             readAllTrashCan = { recordViewModel.readAllTrashCanLocation() },
                             readAllHotPlace = { recordViewModel.readAllHotPlaceLocation() },
-                            startSearchActivity = { startSearchActivity() })
+                            startSearchActivity = { startSearchActivity() }
+                        )
                     }
                     composable(ScreenNav.TierScreen.screenRoute) {
                         TierScreen(tierList = mainViewModel.tierList.value)

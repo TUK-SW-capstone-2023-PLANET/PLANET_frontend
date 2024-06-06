@@ -5,8 +5,8 @@ import com.example.planet.domain.repository.SearchRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class GetRecentlySearchUseCase @Inject constructor(private val searchRepository: SearchRepository) {
+class GetRecentlyMapSearchUseCase @Inject constructor(private val searchRepository: SearchRepository) {
     suspend operator fun invoke(userId: Long): Flow<ApiState> {
-        return searchRepository.readRecentlyWord(userId)
+        return searchRepository.readRecentlyMapWord(userId)
     }
 }

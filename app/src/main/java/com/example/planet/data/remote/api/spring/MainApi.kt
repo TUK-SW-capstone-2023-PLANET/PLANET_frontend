@@ -17,6 +17,7 @@ import com.example.planet.data.remote.dto.request.signup.PlanetUser
 import com.example.planet.data.remote.dto.response.chat.ChatInfoResponse
 import com.example.planet.data.remote.dto.response.chat.ChatResponse
 import com.example.planet.data.remote.dto.response.chat.ChatroomInfo
+import com.example.planet.data.remote.dto.response.map.SearchPlace
 import com.example.planet.data.remote.dto.response.plogging.PloggingComplete
 import com.example.planet.data.remote.dto.response.plogging.PloggingDayInfo
 import com.example.planet.data.remote.dto.response.plogging.PloggingId
@@ -303,4 +304,18 @@ interface MainApi {
         @Path("userId") userId: Long,
         @Query("search") search: String
     ): List<ChatroomInfo>
+
+    @GET("/search/chat/user/{userId}")
+    suspend fun getRecentlyMapSearch(
+        @Path("userId") userId: Long,
+    ): List<SearchPlace>
+
+    @GET("/search/map/user/{userId}")
+    suspend fun searchPlace(
+        @Path("userId") userId: Long,
+        @Query("search") search: String
+    ): SearchPlace
 }
+
+
+

@@ -50,7 +50,7 @@ class SearchRepositoryImpl @Inject constructor(private val mainApi: MainApi): Se
         }
     }.flowOn(Dispatchers.IO)
 
-    override suspend fun searchRecentlyWord(userId: Long) = flow {
+    override suspend fun readRecentlyWord(userId: Long) = flow {
         kotlin.runCatching {
             mainApi.getRecentlySearch(userId)
         }.onSuccess {
@@ -73,6 +73,26 @@ class SearchRepositoryImpl @Inject constructor(private val mainApi: MainApi): Se
     override suspend fun searchChat(userId: Long, search: String) = flow {
         kotlin.runCatching {
             mainApi.searchChat(userId = userId, search = search)
+        }.onSuccess {
+            emit(ApiState.Success(it))
+        }.onFailure { error ->
+            error.message?.let { emit(ApiState.Error(it)) }
+        }
+    }.flowOn(Dispatchers.IO)
+
+    override suspend fun readRecentlyMapWord(userId: Long) = flow {
+        kotlin.runCatching {
+            mainApi.getRecentlyMapSearch(userId = userId)
+        }.onSuccess {
+            emit(ApiState.Success(it))
+        }.onFailure { error ->
+            error.message?.let { emit(ApiState.Error(it)) }
+        }
+    }.flowOn(Dispatchers.IO)
+
+    override suspend fun searchPlace(userId: Long, search: String) = flow {
+        kotlin.runCatching {
+            mainApi.searchPlace(userId = userId, search = search)
         }.onSuccess {
             emit(ApiState.Success(it))
         }.onFailure { error ->
