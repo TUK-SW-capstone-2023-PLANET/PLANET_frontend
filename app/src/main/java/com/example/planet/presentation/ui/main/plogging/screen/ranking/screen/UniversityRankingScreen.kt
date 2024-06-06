@@ -46,7 +46,7 @@ fun UniversityRankingScreen(mainViewModel: MainViewModel, onBack: () -> Unit) {
     LaunchedEffect(Unit) {
         mainViewModel.getAllUniversities()
     }
-    DisposableEffect(mainViewModel.searchText.value) {
+    DisposableEffect(Unit) {
         onDispose { mainViewModel.changeSearchText("") }
     }
 
@@ -111,25 +111,40 @@ fun UniversityRankingScreen(mainViewModel: MainViewModel, onBack: () -> Unit) {
 
 
         SearchTextField(
-            text = mainViewModel.searchText.value,
+            text = { mainViewModel.searchText.value },
             onValueChange = mainViewModel.changeSearchText,
             fontSize = 12.sp,
             placeholder = "search",
             modifier = Modifier,
             verticalSpace = 9.dp
-        )
+        ) {
+            mainViewModel.searchUniversity(mainViewModel.searchText.value)
+        }
 
         UniversityTitleRow()
-        LazyColumn(modifier = Modifier.fillMaxSize()) {
-            items(universityList.itemCount) { index ->
-                universityList[index]?.let {
-                    UniversityContentRow(
-                        rank = it.rank,
-                        universityName = it.name,
-                        score = it.score.numberComma(),
-                        universityLogo = it.imageUrl,
-                    )
+
+        if (mainViewModel.searchText.value.isEmpty()) {
+            mainViewModel.universityRankResult = emptyList()
+            LazyColumn(modifier = Modifier.fillMaxSize()) {
+                items(universityList.itemCount) { index ->
+                    universityList[index]?.let {
+                        UniversityContentRow(
+                            rank = it.rank,
+                            universityName = it.name,
+                            score = it.score.numberComma(),
+                            universityLogo = it.imageUrl,
+                        )
+                    }
                 }
+            }
+        } else {
+            mainViewModel.universityRankResult.forEach {
+                UniversityContentRow(
+                    rank = it.rank,
+                    universityName = it.name,
+                    score = it.score.numberComma(),
+                    universityLogo = it.imageUrl,
+                )
             }
         }
     }

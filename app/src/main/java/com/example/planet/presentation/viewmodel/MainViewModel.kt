@@ -41,6 +41,8 @@ import com.example.planet.domain.usecase.ranking.universityuser.GetAllUniversity
 import com.example.planet.domain.usecase.ranking.universityuser.GetHigherUniversityUserRankUseCase
 import com.example.planet.domain.usecase.search.GetPlanetUserUseCase
 import com.example.planet.domain.usecase.search.GetSeasonUseCase
+import com.example.planet.domain.usecase.search.GetUniversityUseCase
+import com.example.planet.domain.usecase.search.GetUniversityUserUseCase
 import com.example.planet.domain.usecase.user.GetUserInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -74,6 +76,8 @@ class MainViewModel @Inject constructor(
     private val getUserTokenUseCase: GetUserTokenUseCase,
     private val getPlanetUserUseCase: GetPlanetUserUseCase,
     private val getSeasonUseCase: GetSeasonUseCase,
+    private val getUniversityUseCase: GetUniversityUseCase,
+    private val getUniversityUserUseCase: GetUniversityUserUseCase
     ) : ViewModel() {
     init {
         viewModelScope.launch {
@@ -409,7 +413,7 @@ class MainViewModel @Inject constructor(
     }
 
     suspend fun searchUniversity(query: String) {
-        when (val apiState = getPlanetUserUseCase(query).first()) {
+        when (val apiState = getUniversityUseCase(query).first()) {
             is ApiState.Success<*> -> {
                 universityRankResult = apiState.value as List<University>
             }
@@ -421,12 +425,12 @@ class MainViewModel @Inject constructor(
     }
 
     suspend fun searchUniversityUser(query: String) {
-        when (val apiState = getPlanetUserUseCase(query).first()) {
+        when (val apiState = getUniversityUserUseCase(query, userId).first()) {
             is ApiState.Success<*> -> {
                 universityUserRankResult = apiState.value as List<UniversityUser>
             }
             is ApiState.Error -> {
-                Log.d("daeYoung", "searchUniversity() 실패: ${apiState.errMsg}")
+                Log.d("daeYoung", "searchUniversityUser() 실패: ${apiState.errMsg}")
             }
             ApiState.Loading -> TODO()
         }
@@ -444,4 +448,6 @@ class MainViewModel @Inject constructor(
             ApiState.Loading -> TODO()
         }
     }
+
+
 }

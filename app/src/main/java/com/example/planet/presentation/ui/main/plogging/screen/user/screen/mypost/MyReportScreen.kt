@@ -51,7 +51,7 @@ fun MyReportScreen(
                 .padding(horizontal = 20.dp)
         ) {
             SearchTextField(
-                text = myWritedViewModel.postedInput,
+                text = { myWritedViewModel.postedInput },
                 onValueChange = { myWritedViewModel.postedInput = it },
                 placeholder = "글 제목",
                 fontSize = 13.sp,

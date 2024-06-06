@@ -110,7 +110,7 @@ fun PlanetRankingScreen(mainViewModel: MainViewModel, onBack: () -> Unit) {
         }
 
         SearchTextField(
-            text = mainViewModel.searchText.value,
+            text = { mainViewModel.searchText.value },
             onValueChange = mainViewModel.changeSearchText,
             fontSize = 12.sp,
             placeholder = "search",

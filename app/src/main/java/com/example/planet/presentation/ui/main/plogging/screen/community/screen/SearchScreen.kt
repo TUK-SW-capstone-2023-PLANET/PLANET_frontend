@@ -54,7 +54,7 @@ fun SearchScreen(
                 .fillMaxWidth()
         ) {
             SearchTextField(
-                text = viewModel.searchInput,
+                text = { viewModel.searchInput },
                 onValueChange = { viewModel.searchInput = it },
                 placeholder = "글 제목",
                 fontSize = 12.sp,

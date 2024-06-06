@@ -69,7 +69,7 @@ fun UniversityIndividualRankingScreen(mainViewModel: MainViewModel, onBack: () -
             visible = true
         }
     }
-    DisposableEffect(mainViewModel.searchText.value) {
+    DisposableEffect(Unit) {
         onDispose { mainViewModel.changeSearchText("") }
     }
 
@@ -161,36 +161,52 @@ fun UniversityIndividualRankingScreen(mainViewModel: MainViewModel, onBack: () -
         Spacer(modifier = Modifier.padding(bottom = 24.dp))
 
         SearchTextField(
-            text = mainViewModel.searchText.value,
+            text = { mainViewModel.searchText.value },
             onValueChange = mainViewModel.changeSearchText,
             fontSize = 12.sp,
             placeholder = "search",
             modifier = Modifier,
             verticalSpace = 9.dp
-        )
+        ) {
+            mainViewModel.searchUniversityUser(mainViewModel.searchText.value)
+        }
 
         UniversityIndividualTitleRow()
-        mainViewModel.myUniversityRank.collectAsStateWithLifecycle().value?.let { myRank ->
-            UniversityIndividualContentRow(
-                rank = myRank.rank,
-                nickname = myRank.nickName,
-                score = myRank.score.numberComma(),
-                contribution = myRank.contribution,  /* TODO(기여도 대학교 로고로 바꿀 것)*/
-                color = colorResource(id = R.color.main_color4)
-            )
-        }
 
-        LazyColumn(modifier = Modifier.weight(0.5f)) {
-            items(universityUserList.itemCount) { index ->
-                universityUserList[index]?.let {
-                    UniversityIndividualContentRow(
-                        rank = it.rank,
-                        nickname = it.nickName,
-                        score = it.score.numberComma(),
-                        contribution = it.contribution,
-                    )
+        if (mainViewModel.searchText.value.isEmpty()) {
+            mainViewModel.universityUserRankResult = emptyList()
+            mainViewModel.myUniversityRank.collectAsStateWithLifecycle().value?.let { myRank ->
+                UniversityIndividualContentRow(
+                    rank = myRank.rank,
+                    nickname = myRank.nickName,
+                    score = myRank.score.numberComma(),
+                    contribution = myRank.contribution,  /* TODO(기여도 대학교 로고로 바꿀 것)*/
+                    color = colorResource(id = R.color.main_color4)
+                )
+            }
+
+            LazyColumn(modifier = Modifier.weight(0.5f)) {
+                items(universityUserList.itemCount) { index ->
+                    universityUserList[index]?.let {
+                        UniversityIndividualContentRow(
+                            rank = it.rank,
+                            nickname = it.nickName,
+                            score = it.score.numberComma(),
+                            contribution = it.contribution,
+                        )
+                    }
                 }
             }
+        } else {
+            mainViewModel.universityUserRankResult.forEach {
+                UniversityIndividualContentRow(
+                    rank = it.rank,
+                    nickname = it.nickName,
+                    score = it.score.numberComma(),
+                    contribution = it.contribution,
+                )
+            }
         }
+
     }
 }

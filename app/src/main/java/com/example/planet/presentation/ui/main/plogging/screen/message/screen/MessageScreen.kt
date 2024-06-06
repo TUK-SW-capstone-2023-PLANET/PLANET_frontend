@@ -35,7 +35,7 @@ fun MessageScreen(
     Column(modifier = Modifier.fillMaxSize()) {
         Text(text = "쪽지함", style = titleStyle, modifier = Modifier.padding(start = 28.dp))
         Box(modifier = Modifier.padding(horizontal = 20.dp, vertical = 10.dp)) {
-            SearchTextField(text = "", onValueChange = {}, fontSize = 12.sp, placeholder = "사용자 명")
+            SearchTextField(text = {""}, onValueChange = {}, fontSize = 12.sp, placeholder = "사용자 명")
         }
         LazyColumn(Modifier.fillMaxSize()) {
             items(messageViewModel.chatrooms.size) {

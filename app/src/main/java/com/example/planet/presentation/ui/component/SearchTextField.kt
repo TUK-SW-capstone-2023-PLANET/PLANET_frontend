@@ -32,7 +32,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun SearchTextField(
-    text: String,
+    text: () -> String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     backGroundColor: Color = colorResource(id = R.color.font_background_color4),
@@ -56,7 +56,7 @@ fun SearchTextField(
             color = backGroundColor,
             shape = RoundedCornerShape(10.dp),
         ),
-        value = text,
+        value = text(),
         onValueChange = {
             onValueChange(it)
         },
@@ -69,7 +69,7 @@ fun SearchTextField(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Box(Modifier.weight(1f)) {
-                    if (text.isEmpty()) Text(
+                    if (text().isEmpty()) Text(
                         text = placeholder,
                         style = placeholderStyle,
                         color = colorResource(id = R.color.font_background_color2)

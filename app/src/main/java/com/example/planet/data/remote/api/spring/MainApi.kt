@@ -272,13 +272,13 @@ interface MainApi {
     @GET("/search/user/rank")
     suspend fun searchPlanetRank(@Query("search") search: String): List<PlanetRankingUser>
 
-    @GET("/search/user/")
+    @GET("/search/university/rank")
     suspend fun searchUniversityRank(@Query("search") search: String): List<University>
 
     @GET("/search/university/rank/user/{userId}")
     suspend fun searchUniversityUserRank(
+        @Path("userId") userId: Long,
         @Query("search") search: String,
-        @Path("userId") userId: Long
     ): List<UniversityUser>
 
     @GET("/search/season/rank")

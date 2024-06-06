@@ -118,7 +118,7 @@ fun SeasonRankingScreen(mainViewModel: MainViewModel, onBack: () -> Unit) {
             }
 
             SearchTextField(
-                text = mainViewModel.searchText.value,
+                text = { mainViewModel.searchText.value },
                 onValueChange = mainViewModel.changeSearchText,
                 fontSize = 12.sp,
                 placeholder = "search",
@@ -127,9 +127,9 @@ fun SeasonRankingScreen(mainViewModel: MainViewModel, onBack: () -> Unit) {
             ) {
                 mainViewModel.searchSeason(mainViewModel.searchText.value)
             }
-
+            SeasonTitleRow()
             if (mainViewModel.searchText.value.isEmpty()) {
-                SeasonTitleRow()
+                mainViewModel.seasonRankResult = emptyList()
                 mainViewModel.mySeasonRank.collectAsStateWithLifecycle().value?.let { myRank ->
                     SeasonContentRow(
                         rank = myRank.rank,
