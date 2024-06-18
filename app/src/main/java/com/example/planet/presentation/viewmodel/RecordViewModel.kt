@@ -15,10 +15,14 @@ import com.example.planet.data.remote.dto.ApiState
 import com.example.planet.data.remote.dto.TrashCan
 import com.example.planet.data.remote.dto.response.plogging.PloggingDayInfo
 import com.example.planet.domain.usecase.login.sharedpreference.GetUserTokenUseCase
-import com.example.planet.domain.usecase.plogging.GetAllTrashCanLocation
-import com.example.planet.domain.usecase.plogging.GetPloggingActiveList
+import com.example.planet.domain.usecase.plogging.GetAllTrashCanLocationUseCase
+import com.example.planet.domain.usecase.plogging.GetPloggingActiveListUseCase
+import com.example.planet.domain.usecase.statistics.GetMonthPloggingLogUseCase
+import com.example.planet.domain.usecase.statistics.GetWeekPloggingLogUseCsae
 import com.naver.maps.geometry.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -28,9 +32,12 @@ import javax.inject.Inject
 @RequiresApi(Build.VERSION_CODES.O)
 @HiltViewModel
 class RecordViewModel @Inject constructor(
-    private val getPloggingActiveList: GetPloggingActiveList,
+    private val getPloggingActiveListUseCase: GetPloggingActiveListUseCase,
     private val getUserTokenUseCase: GetUserTokenUseCase,
-    private val getAllTrashCanLocation: GetAllTrashCanLocation,
+    private val getAllTrashCanLocationUseCase: GetAllTrashCanLocationUseCase,
+    private val getMonthPloggingLogUseCase: GetMonthPloggingLogUseCase,
+    private val getWeekPloggingLogUseCsae: GetWeekPloggingLogUseCsae
+
 ) : ViewModel() {
 
     val dateTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일")
@@ -45,6 +52,9 @@ class RecordViewModel @Inject constructor(
 
     var selectedDate by mutableStateOf("")
     var searchResultPlace by mutableStateOf<LatLng?>(null)
+
+    private val _statisticsPloggingLogResult = MutableStateFlow<ApiState>(ApiState.Loading)
+    var statisticsPloggingLogResult: StateFlow<ApiState> = _statisticsPloggingLogResult
 
     init {
         viewModelScope.launch { getUserToken() }
@@ -68,7 +78,7 @@ class RecordViewModel @Inject constructor(
     fun readPloggingActiveList(year: Int, month: Int, changeCurrentDate: () -> Unit) {
         viewModelScope.launch {
             when (val apiState =
-                getPloggingActiveList(userId = userId, year = year, month = month).first()) {
+                getPloggingActiveListUseCase(userId = userId, year = year, month = month).first()) {
                 is ApiState.Success<*> -> {
                     Log.d(
                         "daeYoung",
@@ -104,7 +114,7 @@ class RecordViewModel @Inject constructor(
     }
 
     suspend fun readAllTrashCanLocation() {
-        when (val result = getAllTrashCanLocation().first()) {
+        when (val result = getAllTrashCanLocationUseCase().first()) {
             is ApiState.Success<*> -> {
                 Log.d(TAG, "trahes 호출: ${(result.value as List<TrashCan>)}")
 
@@ -138,6 +148,16 @@ class RecordViewModel @Inject constructor(
         selectedDate = "${localDate.format(dateTimeFormatter)} 활동기록"
         selectedPloggingActiveList = allPloggingActiveMap[localDate.dayOfMonth]!!
     }
+
+    suspend fun readMonthPloggingLog(userId: Long, year: Int, month: Int) {
+        _statisticsPloggingLogResult.value = getMonthPloggingLogUseCase(userId, year, month).first()
+    }
+
+    suspend fun readWeekPloggingLog(userId: Long) {
+        _statisticsPloggingLogResult.value = getWeekPloggingLogUseCsae(userId).first()
+    }
+
+    
 
 
 }

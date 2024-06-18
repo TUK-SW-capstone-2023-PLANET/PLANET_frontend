@@ -80,7 +80,7 @@ fun RecordNavigationGraph(
                         )
                     }
                     composable(BottomNavItem.StatisticsScreen.screenRoute) {
-                        StatisticsScreen()
+                        StatisticsScreen(recordViewModel = recordViewModel)
                     }
                     composable(BottomNavItem.ScoreScreen.screenRoute) {
                         ScoreScreen()

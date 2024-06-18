@@ -5,7 +5,7 @@ import com.example.planet.domain.repository.PloggingRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class GetAllTrashCanLocation @Inject constructor(private val ploggingRepository: PloggingRepository) {
+class GetAllTrashCanLocationUseCase @Inject constructor(private val ploggingRepository: PloggingRepository) {
     suspend operator fun invoke(): Flow<ApiState> {
         return ploggingRepository.getAllTrashCanLocation()
     }

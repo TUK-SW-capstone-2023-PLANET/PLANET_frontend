@@ -45,6 +45,7 @@ import com.example.planet.data.remote.dto.response.ranking.universityuser.Univer
 import com.example.planet.data.remote.dto.response.signin.LoginResponse
 import com.example.planet.data.remote.dto.response.signup.SignUpResponse
 import com.example.planet.data.remote.dto.response.signup.UserId
+import com.example.planet.data.remote.dto.response.statistics.StatisticsPloggingInfo
 import com.example.planet.data.remote.dto.response.user.UserInfo
 import com.example.planet.data.remote.dto.response.user.UserInfoResponse
 import com.example.planet.data.remote.dto.response.user.UserUniversityInfo
@@ -315,6 +316,18 @@ interface MainApi {
         @Path("userId") userId: Long,
         @Query("search") search: String
     ): SearchPlace
+
+    @GET("/statistics/year/{year}/month/{month}/user/{userId}")
+    suspend fun getMonthStatistics(
+        @Path("year") year: Int,
+        @Path("month") month: Int,
+        @Path("userId") userId: Long,
+    ): StatisticsPloggingInfo
+
+    @GET("/statistics/week/user/{userId}")
+    suspend fun getWeekStatistics(
+        @Path("userId") userId: Long,
+    ): StatisticsPloggingInfo
 }
 
 

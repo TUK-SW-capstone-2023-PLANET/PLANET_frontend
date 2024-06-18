@@ -24,7 +24,7 @@ import com.example.planet.data.remote.dto.response.plogging.PloggingId
 import com.example.planet.data.remote.dto.response.plogging.Trash
 import com.example.planet.data.remote.dto.response.plogging.TrashImage
 import com.example.planet.domain.usecase.login.sharedpreference.GetUserTokenUseCase
-import com.example.planet.domain.usecase.plogging.GetAllTrashCanLocation
+import com.example.planet.domain.usecase.plogging.GetAllTrashCanLocationUseCase
 import com.example.planet.domain.usecase.plogging.GetPloggingIdUseCase
 import com.example.planet.domain.usecase.plogging.PostPloggingUseCase
 import com.example.planet.domain.usecase.plogging.PostTrashImageUrlUseCase
@@ -53,7 +53,7 @@ import kotlin.math.round
 class PloggingViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val postPloggingUseCase: PostPloggingUseCase,
-    private val getAllTrashCanLocation: GetAllTrashCanLocation,
+    private val getAllTrashCanLocationUseCase: GetAllTrashCanLocationUseCase,
     private val getPloggingIdUseCase: GetPloggingIdUseCase,
     private val getUserTokenUseCase: GetUserTokenUseCase,
     private val postTrashImageUseCase: PostTrashImageUseCase,
@@ -280,7 +280,7 @@ class PloggingViewModel @Inject constructor(
 
     fun getAllTrashCanLocation() {
         viewModelScope.launch {
-            when (val apiState = getAllTrashCanLocation.invoke().first()) {
+            when (val apiState = getAllTrashCanLocationUseCase.invoke().first()) {
                 is ApiState.Success<*> -> {
                     val result = apiState.value as List<TrashCan>
 
