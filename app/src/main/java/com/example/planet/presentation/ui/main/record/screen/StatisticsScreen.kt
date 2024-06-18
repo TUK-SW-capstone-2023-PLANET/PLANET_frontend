@@ -1,43 +1,141 @@
 package com.example.planet.presentation.ui.main.record.screen
 
-import android.util.Log
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.drawText
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.rememberTextMeasurer
+import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.planet.R
 
 @Composable
 fun StatisticsScreen() {
+    var switch by remember {
+        mutableStateOf(true)
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(8.dp)
     ) {
+        val titleStyle = TextStyle(
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.White
+        )
+        val switchOffColor = colorResource(id = R.color.font_background_color3)
+        val switchOnColor = Color.White
         val randomList = listOf(
             482, 693, 245, 980, 104, 657, 387, 432, 789, 56,
             234, 874, 120, 561, 302, 918, 276, 453, 730, 667,
             350, 815, 299, 503, 142, 975, 421, 684, 238, 590
         )
-        LineGraph(
-            rowCount = randomList.size,
-            lastRowValue = 100,
-            lastColumnValue = randomList.max(),
-            list = randomList
+        Text(
+            text = "플로깅 점수 기록",
+            style = titleStyle,
+            modifier = Modifier.padding(start = 20.dp, bottom = 10.dp)
         )
+        Column(
+            modifier = Modifier
+                .background(Color.White)
+                .padding(top = 16.dp, bottom = 36.dp, start = 24.dp, end = 24.dp)
+                .fillMaxWidth(),
+        ) {
+            Box(modifier = Modifier.fillMaxWidth().padding(bottom = 15.dp), contentAlignment = Alignment.Center,) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(0.5f)
+                        .border(width = 1.dp, color = colorResource(id = R.color.font_background_color3), shape = RoundedCornerShape(5.dp))
+                        .clip(shape = RoundedCornerShape(5.dp))
+                        .background(colorResource(id = R.color.font_background_color3)),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Box(modifier = Modifier
+                        .weight(1f)
+                        .drawBehind { drawRect(if (switch) switchOnColor else switchOffColor) }
+                        .clickable { switch = true }) {
+                        Text(text = "1주일", modifier = Modifier.align(Alignment.Center), color = Color.Black, fontSize = 12.sp)
+                    }
+                    Box(modifier = Modifier
+                        .weight(1f)
+                        .drawBehind { drawRect(if (!switch) switchOnColor else switchOffColor) }
+                        .clickable { switch = false }) {
+                        Text(text = "1개월", modifier = Modifier.align(Alignment.Center), color = Color.Black, fontSize = 12.sp)
+                    }
+                }
+            }
+
+            Text(
+                text = "평균",
+                style = TextStyle(
+                    fontSize = 10.sp,
+                    color = colorResource(id = R.color.font_background_color2)
+                ),
+                modifier = Modifier.padding(bottom = 3.dp)
+            )
+            Text(
+                text = buildAnnotatedString {
+                    withStyle(
+                        style = SpanStyle(
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = Color.Black
+                        )
+                    ) {
+                        append("294")
+                    }
+                    withStyle(
+                        style = SpanStyle(
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = colorResource(id = R.color.font_background_color2)
+                        )
+                    ) {
+                        append("점")
+                    }
+                },
+                modifier = Modifier.padding(bottom = 20.dp)
+            )
+            LineGraph(
+                rowCount = randomList.size,
+                lastRowValue = 100,
+                lastColumnValue = randomList.max(),
+                list = randomList
+            )
+        }
     }
 }
 
@@ -53,74 +151,112 @@ fun LineGraph(rowCount: Int, lastRowValue: Int, lastColumnValue: Int, list: List
     )
 
     val rowDottedLineTextList = mutableListOf<TextLayoutResult>()
+    val columnDottedLineTextList = mutableListOf<TextLayoutResult>()
+
     for (i in 0..rowDottedLineCount) {
         val text = (lastRowValue * (i / rowDottedLineCount.toFloat())).toInt().toString()
         rowDottedLineTextList.add(remember(text) { textMeasurer.measure(text, style) })
     }
-
+    for (i in 0..columnDottedLineCount) {
+        val text = (lastColumnValue * (i / columnDottedLineCount.toFloat())).toInt().toString()
+        columnDottedLineTextList.add(remember(text) { textMeasurer.measure(text, style) })
+    }
+    val lastRowPadding = columnDottedLineTextList.maxOf { it.size.width }
+    val lineColor = colorResource(id = R.color.font_background_color3)
+    val dataLineColor = colorResource(id = R.color.main_color2)
+    val textColor = colorResource(id = R.color.font_background_color2)
 
     Canvas(
         modifier = Modifier
             .fillMaxWidth()
             .aspectRatio(1.2f)
     ) {
+        val rowSize = size.width - (lastRowPadding + 10f)
+        val test = size.width - lastRowPadding
         drawLine(
-            color = Color.White,
+            color = lineColor,
             start = Offset(0f, size.height),
-            end = Offset(size.width, size.height),
+            end = Offset(rowSize, size.height),
             strokeWidth = 2f
         )
         drawLine(
-            color = Color.White,
+            color = lineColor,
             start = Offset(0f, size.height),
             end = Offset(0f, 0f),
             strokeWidth = 2f
         )
+        drawLine(
+            color = lineColor,
+            start = Offset(rowSize, size.height),
+            end = Offset(rowSize, 0f),
+            strokeWidth = 2f
+        )
+        // column 점선 데이터
+        for (i in 1..columnDottedLineCount) {
+            drawText(
+                textLayoutResult = columnDottedLineTextList[i],
+                topLeft = Offset(
+                    size.width - lastRowPadding,
+                    size.height * (1 - i / columnDottedLineCount.toFloat())
+                ),
+                color = textColor
+            )
+        }
+
+
+        // row 점선 데이터
         repeat(rowDottedLineCount + 1) {
             if (it == 0) {
                 drawText(
                     textLayoutResult = rowDottedLineTextList[it],
-                    topLeft = Offset(size.width * (it / rowDottedLineCount.toFloat()), size.height)
+                    topLeft = Offset(rowSize * (it / rowDottedLineCount.toFloat()), size.height),
+                    color = textColor
                 )
             } else if (it == rowDottedLineCount) {
                 drawText(
                     textLayoutResult = rowDottedLineTextList[it],
                     topLeft = Offset(
-                        size.width * (it / rowDottedLineCount.toFloat()) - rowDottedLineTextList[it].size.width,
+                        rowSize * (it / rowDottedLineCount.toFloat()) - rowDottedLineTextList[it].size.width,
                         size.height
-                    )
+                    ),
+                    color = textColor
                 )
             } else {
                 drawText(
                     textLayoutResult = rowDottedLineTextList[it],
                     topLeft = Offset(
-                        size.width * (it / rowDottedLineCount.toFloat()) - rowDottedLineTextList[it].size.width / 2,
+                        rowSize * (it / rowDottedLineCount.toFloat()) - rowDottedLineTextList[it].size.width / 2,
                         size.height
-                    )
+                    ),
+                    color = textColor
                 )
             }
         }
 
+        // 데이터의 그래프
         for (i in 0 until list.size - 1) {
             if (i == 0) {
                 drawLine(
-                    color = Color.Blue,
-                    start = Offset(0f, size.height - size.height*list[i]/lastColumnValue),
-                    end = Offset(size.width/rowCount, size.height - size.height*list[1]/lastColumnValue),
-                    strokeWidth = 2f
+                    color = dataLineColor,
+                    start = Offset(0f, size.height * (1 - list[i] / lastColumnValue.toFloat())),
+                    end = Offset(
+                        rowSize / (rowCount - 1),
+                        size.height * (1 - list[1] / lastColumnValue.toFloat())
+                    ),
+                    strokeWidth = 5f
                 )
             } else {
-//                drawLine(
-//                    color = Color.Blue,
-//                    start = Offset(size.width*(index/rowCount), size.height),
-//                    end = Offset(size.width*(index+1/rowCount), 0f),
-//                    strokeWidth = 2f
-//                )
                 drawLine(
-                    color = Color.Blue,
-                    start = Offset(size.width*(i/rowCount.toFloat()), size.height - size.height*list[i]/lastColumnValue),
-                    end = Offset(size.width*((i+1)/rowCount.toFloat()), size.height - size.height*list[i+1]/lastColumnValue),
-                    strokeWidth = 2f
+                    color = dataLineColor,
+                    start = Offset(
+                        rowSize * (i / (rowCount - 1).toFloat()),
+                        size.height * (1 - list[i] / lastColumnValue.toFloat())
+                    ),
+                    end = Offset(
+                        rowSize * ((i + 1) / (rowCount - 1).toFloat()),
+                        size.height * (1 - list[i + 1] / lastColumnValue.toFloat())
+                    ),
+                    strokeWidth = 5f
                 )
             }
         }
