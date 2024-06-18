@@ -1,4 +1,4 @@
-package com.example.planet.domain.usecase.plogging
+package com.example.planet.domain.usecase.trash
 
 import com.example.planet.data.remote.dto.ApiState
 import com.example.planet.data.remote.dto.request.plogging.TrashImageUrlInfo

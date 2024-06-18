@@ -6,6 +6,7 @@ import com.example.planet.data.remote.dto.Tier
 import com.example.planet.data.remote.dto.TrashCan
 import com.example.planet.data.remote.dto.request.chat.ChatRoomId
 import com.example.planet.data.remote.dto.request.chat.ChatSave
+import com.example.planet.data.remote.dto.request.map.TrashCanImage
 import com.example.planet.data.remote.dto.request.plogging.PloggingInfo
 import com.example.planet.data.remote.dto.request.plogging.TrashImageUrlInfo
 import com.example.planet.data.remote.dto.request.post.CommentId
@@ -18,6 +19,7 @@ import com.example.planet.data.remote.dto.response.chat.ChatInfoResponse
 import com.example.planet.data.remote.dto.response.chat.ChatResponse
 import com.example.planet.data.remote.dto.response.chat.ChatroomInfo
 import com.example.planet.data.remote.dto.response.map.SearchPlace
+import com.example.planet.data.remote.dto.response.map.TrashCanResponse
 import com.example.planet.data.remote.dto.response.plogging.PloggingComplete
 import com.example.planet.data.remote.dto.response.plogging.PloggingDayInfo
 import com.example.planet.data.remote.dto.response.plogging.PloggingId
@@ -328,6 +330,9 @@ interface MainApi {
     suspend fun getWeekStatistics(
         @Path("userId") userId: Long,
     ): StatisticsPloggingInfo
+
+    @POST("/trash-can")
+    suspend fun postTrashCan(@Body trashCanImage: TrashCanImage): TrashCanResponse
 }
 
 

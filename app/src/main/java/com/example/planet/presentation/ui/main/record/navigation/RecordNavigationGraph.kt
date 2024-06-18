@@ -93,7 +93,9 @@ fun RecordNavigationGraph(
                             initSearchPlace = {recordViewModel.searchResultPlace = null},
                             readAllTrashCan = { recordViewModel.readAllTrashCanLocation() },
                             readAllHotPlace = { recordViewModel.readAllHotPlaceLocation() },
-                            startSearchActivity = { startSearchActivity() }
+                            startSearchActivity = { startSearchActivity() },
+                            setLocation = { recordViewModel.currentLatLng = it },
+                            onTakePicture = { recordViewModel.currentLatLng?.let { recordViewModel.postTrashCanImage(recordViewModel.userId, it) } }
                         )
                     }
                     composable(ScreenNav.TierScreen.screenRoute) {

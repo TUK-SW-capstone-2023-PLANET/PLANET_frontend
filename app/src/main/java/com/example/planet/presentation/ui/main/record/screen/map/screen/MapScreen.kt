@@ -2,7 +2,10 @@ package com.example.planet.presentation.ui.main.record.screen.map.screen
 
 import android.os.Build
 import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -40,6 +43,7 @@ import com.example.planet.TAG
 import com.example.planet.component.map.map.TrashCanItem
 import com.example.planet.presentation.ui.main.record.screen.map.component.RecordMapTab
 import com.example.planet.presentation.ui.main.record.screen.map.component.RecordMapTextField
+import com.example.planet.presentation.util.getImageUri
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraAnimation
 import com.naver.maps.map.CameraPosition
@@ -68,6 +72,8 @@ fun MapScreen(
     readAllTrashCan: suspend () -> Unit,
     readAllHotPlace: suspend () -> Unit,
     startSearchActivity: () -> Unit,
+    setLocation: (LatLng) -> Unit,
+    onTakePicture: () -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
@@ -106,6 +112,14 @@ fun MapScreen(
         mutableIntStateOf(0)
     }
 
+    val cameraLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { success ->
+            if (success) Log.d(TAG, "take picture 성공")
+            // 사진 저장하는 API 호출
+            onTakePicture()
+        }
+
+
     DisposableEffect(Unit) {
         if (searchPlace != null) {
             val cameraPosition =
@@ -135,6 +149,9 @@ fun MapScreen(
             cameraPositionState = cameraPositionState,
             properties = mapProperties,
             uiSettings = mapUiSettings,
+            onLocationChange = { location ->
+                setLocation(LatLng(location.latitude, location.longitude))
+            }
         ) {
             Log.d(TAG, "trashCans: $trashCans")
 
@@ -160,7 +177,6 @@ fun MapScreen(
             if (searchPlace != null) {
                 Marker(state = rememberMarkerState(position = searchPlace))
             }
-
         }
         Column(
             modifier = Modifier
@@ -199,7 +215,10 @@ fun MapScreen(
             modifier = Modifier
                 .padding(end = 20.dp, bottom = 20.dp)
                 .size(45.dp)
-                .align(Alignment.BottomEnd),
+                .align(Alignment.BottomEnd)
+                .clickable {
+                    cameraLauncher.launch(getImageUri(context))
+                },
             colors = CardDefaults.cardColors(
                 containerColor = colorResource(id = R.color.main_color2),
                 contentColor = Color.White

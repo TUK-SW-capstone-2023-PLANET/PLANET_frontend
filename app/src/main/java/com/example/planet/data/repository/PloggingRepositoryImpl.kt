@@ -3,6 +3,7 @@ package com.example.planet.data.repository
 import com.example.planet.data.remote.api.ai.AiApi
 import com.example.planet.data.remote.api.spring.MainApi
 import com.example.planet.data.remote.dto.ApiState
+import com.example.planet.data.remote.dto.request.map.TrashCanImage
 import com.example.planet.data.remote.dto.request.plogging.TrashImageUrlInfo
 import com.example.planet.data.remote.dto.request.plogging.PloggingInfo
 import com.example.planet.domain.repository.PloggingRepository
@@ -85,6 +86,16 @@ class PloggingRepositoryImpl @Inject constructor(
     ) = flow {
         kotlin.runCatching {
             mainApi.getPloggingActiveList(userId, year, month)
+        }.onSuccess {
+            emit(ApiState.Success(it))
+        }.onFailure { error ->
+            error.message?.let { emit(ApiState.Error(it)) }
+        }
+    }.flowOn(Dispatchers.IO)
+
+    override suspend fun saveTrashCan(trashCanImage: TrashCanImage) = flow {
+        kotlin.runCatching {
+            mainApi.postTrashCan(trashCanImage)
         }.onSuccess {
             emit(ApiState.Success(it))
         }.onFailure { error ->

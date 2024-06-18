@@ -1,6 +1,7 @@
 package com.example.planet.domain.repository
 
 import com.example.planet.data.remote.dto.ApiState
+import com.example.planet.data.remote.dto.request.map.TrashCanImage
 import com.example.planet.data.remote.dto.request.plogging.PloggingInfo
 import com.example.planet.data.remote.dto.request.plogging.TrashImageUrlInfo
 import kotlinx.coroutines.flow.Flow
@@ -24,6 +25,9 @@ interface PloggingRepository {
         year: Int,
         month: Int
     ): Flow<ApiState>
+
+    suspend fun saveTrashCan(trashCanImage: TrashCanImage): Flow<ApiState>
+
 
 
 }

@@ -24,11 +24,11 @@ import com.example.planet.data.remote.dto.response.plogging.PloggingId
 import com.example.planet.data.remote.dto.response.plogging.Trash
 import com.example.planet.data.remote.dto.response.plogging.TrashImage
 import com.example.planet.domain.usecase.login.sharedpreference.GetUserTokenUseCase
-import com.example.planet.domain.usecase.plogging.GetAllTrashCanLocationUseCase
+import com.example.planet.domain.usecase.trash.GetAllTrashCanLocationUseCase
 import com.example.planet.domain.usecase.plogging.GetPloggingIdUseCase
 import com.example.planet.domain.usecase.plogging.PostPloggingUseCase
-import com.example.planet.domain.usecase.plogging.PostTrashImageUrlUseCase
-import com.example.planet.domain.usecase.plogging.PostTrashImageUseCase
+import com.example.planet.domain.usecase.trash.PostTrashImageUrlUseCase
+import com.example.planet.domain.usecase.trash.PostTrashImageUseCase
 import com.example.planet.presentation.util.DistanceManager
 import com.example.planet.presentation.util.allDelete
 import com.example.planet.presentation.util.formatTime
