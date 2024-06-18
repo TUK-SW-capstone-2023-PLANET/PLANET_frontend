@@ -123,26 +123,26 @@ fun UniversityIndividualContentRow(
 
         Text(
             text = rank.toString(),
-            color = MaterialTheme.colorScheme.onSecondary,
+            color = colorResource(id = R.color.font_background_color2),
             fontSize = 12.sp,
             modifier = Modifier.weight(0.15f)
         )
         Text(
             text = nickname,
-            color = MaterialTheme.colorScheme.onSecondary,
+            color = colorResource(id = R.color.font_background_color2),
             fontSize = 12.sp,
             modifier = Modifier.weight(0.35f)
         )
 
         Text(
             text = "${score}점",
-            color = MaterialTheme.colorScheme.onSecondary,
+            color = colorResource(id = R.color.font_background_color2),
             fontSize = 12.sp,
             modifier = Modifier.weight(0.3f)
         )
         Text(
             text = "${contribution.round()}%",
-            color = MaterialTheme.colorScheme.onSecondary,
+            color = colorResource(id = R.color.font_background_color2),
             fontSize = 12.sp,
             modifier = Modifier.weight(0.2f)
         )

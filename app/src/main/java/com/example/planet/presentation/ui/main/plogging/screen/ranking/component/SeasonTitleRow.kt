@@ -182,7 +182,7 @@ fun SeasonContentRow(
             }
             Text(
                 text = rank.toString() + "등",
-                color = MaterialTheme.colorScheme.onSecondary,
+                color = colorResource(id = R.color.font_background_color2),
                 fontSize = 12.sp,
                 modifier = Modifier.weight(1f)
             )
@@ -199,7 +199,7 @@ fun SeasonContentRow(
         }
         Text(
             text = nickname,
-            color = MaterialTheme.colorScheme.onSecondary,
+            color = colorResource(id = R.color.font_background_color2),
             fontSize = 12.sp,
             modifier = Modifier.weight(1f),
             textAlign = TextAlign.Start
@@ -212,7 +212,7 @@ fun SeasonContentRow(
         ) {
             Text(
                 text = "${score}점",
-                color = MaterialTheme.colorScheme.onSecondary,
+                color = colorResource(id = R.color.font_background_color2),
                 fontSize = 12.sp,
                 modifier = Modifier.weight(1f)
             )
