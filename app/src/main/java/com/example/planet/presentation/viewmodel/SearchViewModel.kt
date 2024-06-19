@@ -32,13 +32,15 @@ class SearchViewModel @Inject constructor(
 
     var userId: Long = 0
 
-    var recentSearchList by mutableStateOf(
-        emptyList<SearchPlace>()
-    )
+    var recentlySearch:ApiState by mutableStateOf(ApiState.Loading)
 
 
     init {
-        viewModelScope.launch { getUserToken() }
+        viewModelScope.launch {
+            getUserToken()
+            readRecentlySearch(userId)
+        }
+
     }
 
     fun search(text: String) {
@@ -76,16 +78,9 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-    suspend fun readRecentlySearch() {
-        when (val apiState = getRecentlyMapSearchUseCase(userId).first()) {
-            is ApiState.Success<*> -> {
-                (apiState.value as List<SearchPlace>)
-            }
-            is ApiState.Error -> {
-                Log.d("daeYoung", "searchUniversity() 실패: ${apiState.errMsg}")
-            }
-            ApiState.Loading -> TODO()
-        }
+    suspend fun readRecentlySearch(userId: Long) {
+        recentlySearch = getRecentlyMapSearchUseCase(userId).first()
+
     }
 }
 

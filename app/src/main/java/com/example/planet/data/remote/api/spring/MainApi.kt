@@ -296,11 +296,7 @@ interface MainApi {
     ): List<String>
 
     @GET("/search/post/{type}/user/{userId}")
-    suspend fun searchPosted(
-        @Path("type") type: String,
-        @Path("userId") userId: Long,
-        @Query("search") search: String
-    ): List<Posted>
+    suspend fun searchPosted(@Path("type") type: String, @Path("userId") userId: Long, @Query("search") search: String): List<Posted>
 
     @GET("/search/chat/user/{userId}")
     suspend fun searchChat(
@@ -308,7 +304,7 @@ interface MainApi {
         @Query("search") search: String
     ): List<ChatroomInfo>
 
-    @GET("/search/chat/user/{userId}")
+    @GET("search/map/history/user/{userId}")
     suspend fun getRecentlyMapSearch(
         @Path("userId") userId: Long,
     ): List<SearchPlace>

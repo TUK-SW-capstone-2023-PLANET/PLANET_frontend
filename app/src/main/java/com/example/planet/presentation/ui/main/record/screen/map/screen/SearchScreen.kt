@@ -16,12 +16,14 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material.icons.outlined.Search
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,6 +38,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.planet.R
+import com.example.planet.data.remote.dto.ApiState
 import com.example.planet.data.remote.dto.response.map.SearchPlace
 import com.example.planet.presentation.ui.component.EmptyRecentlySearch
 import com.example.planet.presentation.util.noRippleClickable
@@ -49,20 +52,33 @@ fun SearchScreen(
     onBack: () -> Unit,
     returnMainActivity: (DoubleArray) -> Unit
 ) {
+    LaunchedEffect(Unit) {
+        searchViewModel.readRecentlySearch(searchViewModel.userId)
+    }
+
     Column(modifier = Modifier.fillMaxSize()) {
         SearchTextField(onBack = { onBack() }) { text ->
-            searchViewModel.searchPlace(text) {returnMainActivity(it)}
+            searchViewModel.searchPlace(text) { returnMainActivity(it) }
         }
         HorizontalDivider(
             thickness = 3.dp,
             color = colorResource(id = R.color.font_background_color3)
         )
-        if (searchViewModel.recentSearchList.isEmpty()) {
-            EmptyRecentlySearch()
-        } else {
-            searchViewModel.recentSearchList.forEach { item ->
-                RecentSearchItem(item, onDelete = { searchViewModel.delete(it) })
+        if (searchViewModel.recentlySearch is ApiState.Success<*>) {
+            val recentSearchList = (searchViewModel.recentlySearch as ApiState.Success<*>).value as List<SearchPlace>
+            if (recentSearchList.isEmpty()) {
+                EmptyRecentlySearch()
+            } else {
+                recentSearchList.forEach { item ->
+                    RecentSearchItem(
+                        item,
+                        onSearch = { searchViewModel.searchPlace(it) { returnMainActivity(it) } },
+                        onDelete = { searchViewModel.delete(it)
+                        })
+                }
             }
+        } else {
+            CircularProgressIndicator()
         }
     }
 }
@@ -122,15 +138,22 @@ fun SearchTextField(onBack: () -> Unit, onClick: suspend (String) -> Unit) {
 }
 
 @Composable
-fun RecentSearchItem(item: SearchPlace, onDelete: (String) -> Unit) {
+fun RecentSearchItem(
+    item: SearchPlace,
+    onSearch: suspend (String) -> Unit,
+    onDelete: (String) -> Unit
+) {
     val dateStyle = TextStyle(
         fontSize = 9.sp,
         fontWeight = FontWeight.Medium,
         color = colorResource(id = R.color.font_background_color2)
     )
 
+    val coroutineScope = rememberCoroutineScope()
+
     Row(
         modifier = Modifier
+            .clickable { coroutineScope.launch { onSearch(item.text) } }
             .padding(top = 10.dp, bottom = 10.dp, start = 15.dp, end = 20.dp)
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
