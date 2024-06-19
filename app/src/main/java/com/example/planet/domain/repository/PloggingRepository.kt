@@ -28,6 +28,6 @@ interface PloggingRepository {
 
     suspend fun saveTrashCan(trashCanImage: TrashCanImage): Flow<ApiState>
 
-
+    suspend fun getAllHotPlaces(): Flow<ApiState>
 
 }

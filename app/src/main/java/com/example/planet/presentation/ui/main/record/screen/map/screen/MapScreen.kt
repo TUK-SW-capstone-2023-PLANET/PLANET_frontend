@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import com.example.planet.R
 import com.example.planet.TAG
 import com.example.planet.component.map.map.TrashCanItem
+import com.example.planet.data.remote.dto.response.map.HotPlace
 import com.example.planet.presentation.ui.main.record.screen.map.component.RecordMapTab
 import com.example.planet.presentation.ui.main.record.screen.map.component.RecordMapTextField
 import com.example.planet.presentation.util.getImageUri
@@ -48,6 +49,7 @@ import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraAnimation
 import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.CameraUpdate
+import com.naver.maps.map.compose.CircleOverlay
 import com.naver.maps.map.compose.DisposableMapEffect
 import com.naver.maps.map.compose.ExperimentalNaverMapApi
 import com.naver.maps.map.compose.LocationTrackingMode
@@ -66,7 +68,7 @@ import ted.gun0912.clustering.naver.TedNaverClustering
 @Composable
 fun MapScreen(
     trashCans: List<TrashCanItem>,
-    hotPlaces: List<TrashCanItem>,
+    hotPlaces: List<HotPlace>,
     searchPlace: LatLng?,
     initSearchPlace: () -> Unit,
     readAllTrashCan: suspend () -> Unit,
@@ -156,7 +158,14 @@ fun MapScreen(
             Log.d(TAG, "trashCans: $trashCans")
 
             if (tabSelected == 0) {
-
+                hotPlaces.forEach {
+                    CircleOverlay(
+                        center = it.location,
+                        color = colorResource(id = R.color.main_color2).copy(0.3f),
+                        radius = 50.0,
+                        outlineColor = colorResource(id = R.color.main_color2),
+                    )
+                }
             } else {
                 val context = LocalContext.current
                 var clusterManager by remember {
@@ -250,16 +259,3 @@ fun MapScreen(
         }
     }
 }
-
-//class ItemKey(val id: Int, private val latLng: LatLng) : ClusteringKey {
-//    override fun getPosition() = latLng
-//
-//    override fun equals(other: Any?): Boolean {
-//        if (this === other) return true
-//        if (other == null || javaClass != other.javaClass) return false
-//        val itemKey = other as ItemKey
-//        return id == itemKey.id
-//    }
-//
-//    override fun hashCode() = id
-//}

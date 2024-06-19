@@ -102,4 +102,14 @@ class PloggingRepositoryImpl @Inject constructor(
             error.message?.let { emit(ApiState.Error(it)) }
         }
     }.flowOn(Dispatchers.IO)
+
+    override suspend fun getAllHotPlaces() = flow {
+        kotlin.runCatching {
+            mainApi.getHotPlace()
+        }.onSuccess {
+            emit(ApiState.Success(it))
+        }.onFailure { error ->
+            error.message?.let { emit(ApiState.Error(it)) }
+        }
+    }.flowOn(Dispatchers.IO)
 }

@@ -88,7 +88,7 @@ fun RecordNavigationGraph(
                     composable(BottomNavItem.MapScreen.screenRoute) {
                         MapScreen(
                             trashCans = recordViewModel.trashCans,
-                            hotPlaces = emptyList(),
+                            hotPlaces = recordViewModel.hotPlaces,
                             searchPlace = recordViewModel.searchResultPlace,
                             initSearchPlace = {recordViewModel.searchResultPlace = null},
                             readAllTrashCan = { recordViewModel.readAllTrashCanLocation() },

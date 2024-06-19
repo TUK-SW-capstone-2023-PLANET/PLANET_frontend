@@ -18,6 +18,7 @@ import com.example.planet.data.remote.dto.request.signup.PlanetUser
 import com.example.planet.data.remote.dto.response.chat.ChatInfoResponse
 import com.example.planet.data.remote.dto.response.chat.ChatResponse
 import com.example.planet.data.remote.dto.response.chat.ChatroomInfo
+import com.example.planet.data.remote.dto.response.map.HotPlace
 import com.example.planet.data.remote.dto.response.map.SearchPlace
 import com.example.planet.data.remote.dto.response.map.TrashCanResponse
 import com.example.planet.data.remote.dto.response.plogging.PloggingComplete
@@ -329,6 +330,9 @@ interface MainApi {
 
     @POST("/trash-can")
     suspend fun postTrashCan(@Body trashCanImage: TrashCanImage): TrashCanResponse
+
+    @GET("/hot-place")
+    suspend fun getHotPlace(): List<HotPlace>
 }
 
 

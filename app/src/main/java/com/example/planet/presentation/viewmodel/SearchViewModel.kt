@@ -12,6 +12,7 @@ import com.example.planet.TAG
 import com.example.planet.data.remote.dto.ApiState
 import com.example.planet.data.remote.dto.response.map.SearchPlace
 import com.example.planet.data.remote.dto.response.ranking.season.SeasonUser
+import com.example.planet.domain.usecase.hotplace.GetAllHotPlaces
 import com.example.planet.domain.usecase.login.sharedpreference.GetUserTokenUseCase
 import com.example.planet.domain.usecase.search.GetRecentlyMapSearchUseCase
 import com.example.planet.domain.usecase.search.GetSearchPlaceUseCase
@@ -27,6 +28,7 @@ class SearchViewModel @Inject constructor(
     private val getUserTokenUseCase: GetUserTokenUseCase,
     private val getRecentlyMapSearchUseCase: GetRecentlyMapSearchUseCase,
     private val getSearchPlaceUseCase: GetSearchPlaceUseCase,
+
 ) : ViewModel() {
 //    var recentSearchList by mutableStateOf(emptyList<SearchInfo>())
 
@@ -80,7 +82,6 @@ class SearchViewModel @Inject constructor(
 
     suspend fun readRecentlySearch(userId: Long) {
         recentlySearch = getRecentlyMapSearchUseCase(userId).first()
-
     }
 }
 

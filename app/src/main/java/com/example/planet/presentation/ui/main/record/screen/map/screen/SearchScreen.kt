@@ -1,4 +1,4 @@
-package com.example.planet.presentation.ui.main.record.screen.map.scree
+package com.example.planet.presentation.ui.main.record.screen.map.screen
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement

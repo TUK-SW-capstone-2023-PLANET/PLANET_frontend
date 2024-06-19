@@ -18,9 +18,11 @@ import com.example.planet.data.remote.dto.ApiState
 import com.example.planet.data.remote.dto.ImageUrl
 import com.example.planet.data.remote.dto.TrashCan
 import com.example.planet.data.remote.dto.request.map.TrashCanImage
+import com.example.planet.data.remote.dto.response.map.HotPlace
 import com.example.planet.data.remote.dto.response.map.TrashCanResponse
 import com.example.planet.data.remote.dto.response.plogging.PloggingDayInfo
 import com.example.planet.data.remote.dto.response.plogging.TrashImage
+import com.example.planet.domain.usecase.hotplace.GetAllHotPlaces
 import com.example.planet.domain.usecase.image.PostImageUseCase
 import com.example.planet.domain.usecase.login.sharedpreference.GetUserTokenUseCase
 import com.example.planet.domain.usecase.trash.GetAllTrashCanLocationUseCase
@@ -52,8 +54,8 @@ class RecordViewModel @Inject constructor(
     private val getMonthPloggingLogUseCase: GetMonthPloggingLogUseCase,
     private val getWeekPloggingLogUseCsae: GetWeekPloggingLogUseCsae,
     private val postImageUseCase: PostImageUseCase,
-    private val postTrashCanUseCase: PostTrashCanUseCase
-
+    private val postTrashCanUseCase: PostTrashCanUseCase,
+    private val getAllHotPlaces: GetAllHotPlaces
 ) : ViewModel() {
 
     val dateTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일")
@@ -65,6 +67,7 @@ class RecordViewModel @Inject constructor(
     var selectedPloggingActiveList by mutableStateOf(emptyList<PloggingDayInfo>())
 
     var trashCans = mutableStateListOf<TrashCanItem>()
+    var hotPlaces by mutableStateOf((emptyList<HotPlace>()))
 
     var selectedDate by mutableStateOf("")
     var searchResultPlace by mutableStateOf<LatLng?>(null)
@@ -158,7 +161,19 @@ class RecordViewModel @Inject constructor(
     }
 
     suspend fun readAllHotPlaceLocation() {
+        when (val result = getAllHotPlaces().first()) {
+            is ApiState.Success<*> -> {
+                hotPlaces = (result.value as List<HotPlace>)
+                Log.d(TAG, "hotPlaces: $hotPlaces")
 
+            }
+
+            is ApiState.Error -> {
+                Log.d(TAG, "readAllTrashCanLocation() 실패: ${result.errMsg}")
+            }
+
+            ApiState.Loading -> TODO()
+        }
     }
 
     fun postTrashCanImage(userId: Long, location: LatLng) {
